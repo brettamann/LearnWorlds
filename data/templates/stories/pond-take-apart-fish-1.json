@@ -1,0 +1,42 @@
+{
+  "$schema": "../../../schemas/content-template.schema.json",
+  "id": "pond-take-apart-fish-1",
+  "kind": "story",
+  "version": 1,
+  "status": "draft",
+  "concepts": ["K.OA.2", "K.OA.1"],
+  "primaryConcept": "K.OA.2",
+  "regionScope": ["sanctuary"],
+  "gradeScope": ["K"],
+  "difficulty": "concrete",
+  "telemetryId": "pond.take-apart-fish-1",
+
+  "subMode": "take-apart",
+  "creature": "fish",
+  "narrationTemplate": "There are {total} fish in the pond. {partA} are blue koi. How many are yellow tetras?",
+  "narrationSlots": {
+    "total": 8,
+    "partA": 3
+  },
+  "expectedAnswer": 5,
+  "answerFormat": "tile-select",
+  "tileOptions": [4, 5, 6],
+
+  "visualSteps": [
+    { "at": "0s", "action": "spawn", "count": 3, "position": "pond-left", "sprite": "blue-koi" },
+    { "at": "1s", "action": "spawn", "count": 5, "position": "pond-right", "sprite": "yellow-tetra" },
+    { "at": "3s", "action": "highlight", "position": "pond-left" },
+    { "at": "5s", "action": "pause" }
+  ],
+
+  "barModel": {
+    "type": "take-apart",
+    "parts": [3, 5],
+    "result": 8
+  },
+
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "narratorCharacter": "storyteller-turtle",
+
+  "notes": "Take-apart shows the whole and one part; the kid finds the other part. Uses two distinct species (blue koi, yellow tetras) for visual separation — matches the K decomposition-coloring-by-layer rule from k-activity-patterns.md (different species at Concrete layer). The highlight on the blue koi at 3s draws attention to the 'given' part before asking about the unknown."
+}

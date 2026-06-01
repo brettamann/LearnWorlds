@@ -1,0 +1,123 @@
+{
+  "$schema": "../../../../schemas/activity-narration.schema.json",
+  "activity": "scribes-tower",
+  "locale": "en-US",
+  "voiceProfile": "sanctuary-warm-naturalist",
+  "cues": [
+    {
+      "id": "trace-numeral.round-start",
+      "subMode": "trace-numeral",
+      "event": "round-start",
+      "text": "Let's write the number {numeral_name}.",
+      "slotSource": { "numeral_name": "round.numeralName" }
+    },
+    {
+      "id": "trace-numeral.round-pass",
+      "subMode": "trace-numeral",
+      "event": "round-pass",
+      "text": "{numeral_name}! Look at that — well done.",
+      "slotSource": { "numeral_name": "round.numeralName" }
+    },
+    {
+      "id": "trace-numeral.round-fail-low-score",
+      "subMode": "trace-numeral",
+      "event": "round-fail-low-score",
+      "text": "Almost. Try again — follow the dotted line."
+    },
+    {
+      "id": "trace-numeral.assisted-trace-activated",
+      "subMode": "trace-numeral",
+      "event": "assisted-trace-activated",
+      "text": "Let me help — the line will glow brighter.",
+      "notes": "Fires after 3 consecutive trace fails per Mode 1 spec."
+    },
+
+    {
+      "id": "write-from-cue-quantity.round-start",
+      "subMode": "write-from-cue",
+      "event": "round-start-quantity-variant",
+      "text": "How many fireflies? Write the number.",
+      "notes": "Quantity-cue variant: visible firefly count, prompt to write the numeral."
+    },
+    {
+      "id": "write-from-cue-quantity.round-pass",
+      "subMode": "write-from-cue",
+      "event": "round-pass-quantity-variant",
+      "text": "{numeral_name}! Yes — there were {N} fireflies.",
+      "slotSource": { "numeral_name": "round.numeralName", "N": "round.expectedNumeral" }
+    },
+    {
+      "id": "write-from-cue-quantity.round-pass-low-confidence",
+      "subMode": "write-from-cue",
+      "event": "round-pass-low-confidence",
+      "text": "I think I see a {numeral_name}. Is that right?",
+      "slotSource": { "numeral_name": "round.recognizedNumeralName" }
+    },
+    {
+      "id": "write-from-cue-quantity.round-fail-wrong-digit",
+      "subMode": "write-from-cue",
+      "event": "round-fail-wrong-digit",
+      "text": "That's a {recognized}. There were {expected} fireflies. Try again.",
+      "slotSource": { "recognized": "round.recognizedNumeralName", "expected": "round.expectedNumeralName" }
+    },
+
+    {
+      "id": "write-from-cue-audio.round-start",
+      "subMode": "write-from-cue",
+      "event": "round-start-audio-variant",
+      "text": "Write {numeral_name}.",
+      "slotSource": { "numeral_name": "round.numeralName" }
+    },
+    {
+      "id": "write-from-cue-audio.round-pass",
+      "subMode": "write-from-cue",
+      "event": "round-pass-audio-variant",
+      "text": "{numeral_name} — perfect.",
+      "slotSource": { "numeral_name": "round.numeralName" }
+    },
+
+    {
+      "id": "match-numeral.round-start",
+      "subMode": "match-numeral",
+      "event": "round-start",
+      "text": "This is {numeral_name}. Tap the picture with {numeral_name}.",
+      "slotSource": { "numeral_name": "round.numeralName" }
+    },
+    {
+      "id": "match-numeral.round-pass",
+      "subMode": "match-numeral",
+      "event": "round-pass",
+      "text": "{numeral_name} — yes.",
+      "slotSource": { "numeral_name": "round.numeralName" }
+    },
+    {
+      "id": "match-numeral.round-fail",
+      "subMode": "match-numeral",
+      "event": "round-fail",
+      "text": "{numeral_name} — count the dots.",
+      "slotSource": { "numeral_name": "round.numeralName" }
+    },
+
+    {
+      "id": "audio-only-teens.round-start",
+      "subMode": "audio-only-teens",
+      "event": "round-start",
+      "text": "Write {numeral_name} — no peeking at fireflies this time.",
+      "slotSource": { "numeral_name": "round.numeralName" }
+    },
+    {
+      "id": "audio-only-teens.round-pass",
+      "subMode": "audio-only-teens",
+      "event": "round-pass",
+      "text": "{numeral_name}! Big number.",
+      "slotSource": { "numeral_name": "round.numeralName" }
+    },
+
+    {
+      "id": "hesitation-10s-trace",
+      "event": "hesitation-10s-trace",
+      "text": "Start at the {first_stroke_label} — follow the dotted line.",
+      "slotSource": { "first_stroke_label": "round.firstStrokeLabel" }
+    }
+  ]
+}

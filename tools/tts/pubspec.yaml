@@ -1,0 +1,15 @@
+name: critmath_tts
+description: TTS pipeline tooling for CritMath. Stage 1 = harvester (walks specs + lesson runtime JSONs, extracts narration cues for TTS generation).
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  args: ^2.4.2
+  path: ^1.9.0
+
+dev_dependencies:
+  test: ^1.25.0
+  lints: ^4.0.0

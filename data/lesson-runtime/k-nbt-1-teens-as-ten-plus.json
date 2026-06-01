@@ -1,0 +1,133 @@
+{
+  "$schema": "../../schemas/lesson-runtime.schema.json",
+  "id": "lesson-k-nbt-1-teens-as-ten-plus",
+  "specRef": "specs/lessons/k-nbt-1-teens-as-ten-plus.md",
+  "version": 1,
+  "conceptId": "K.NBT.1",
+  "standardCode": "K.NBT.1",
+  "region": "sanctuary",
+  "introducingActivity": "ten-frame-pond",
+  "subModeTarget": "ten-plus-n",
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "totalDurationTargetSec": 70,
+  "prerequisites": ["lesson-k-oa-3-decomposition", "lesson-k-oa-4-make-ten"],
+
+  "phases": {
+    "iShow": {
+      "durationSec": 25,
+      "scene": {
+        "background": "ten-frame-pond-wider-view",
+        "musicBed": "sanctuary-low",
+        "layout": "two-ten-frames-side-by-side",
+        "leftFrame": { "state": "collapsed-to-ten-pearl", "pearlColor": "soft-gold-white" },
+        "rightFrame": { "state": "empty-2x5-lily-pads" },
+        "sourcePool": "standard-drifting-fish",
+        "countBadge": {
+          "format": "two-line",
+          "topLine": "10 + 0",
+          "bottomLine": "10"
+        },
+        "buddyPosition": "lower-left-mossy-stone",
+        "hud": { "doneButton": "hidden" }
+      },
+      "animationSteps": [
+        { "at": "0s",  "action": "scene-fade-up" },
+        { "at": "0s",  "action": "music-bed-in" },
+        { "at": "2s",  "action": "narrator-begin" },
+        { "at": "5s",  "action": "ten-pearl-pulse" },
+        { "at": "5s",  "action": "count-badge-top-line-pulse" },
+        { "at": "8s",  "action": "pointer-appear", "params": { "position": "source-pool" } },
+        { "at": "10s", "action": "pointer-drag-fish-to-pad", "params": { "frame": "right", "pad": "top-row-1" } },
+        { "at": "10s", "action": "count-badge-update", "params": { "topLine": "10 + 1", "bottomLine": "11" } },
+        { "at": "13s", "action": "pointer-drag-fish-to-pad", "params": { "frame": "right", "pad": "top-row-2" } },
+        { "at": "13s", "action": "count-badge-update", "params": { "topLine": "10 + 2", "bottomLine": "12" } },
+        { "at": "16s", "action": "pointer-drag-fish-to-pad", "params": { "frame": "right", "pad": "top-row-3" } },
+        { "at": "16s", "action": "ive-got-this-button-show" },
+        { "at": "16s", "action": "count-badge-update", "params": { "topLine": "10 + 3", "bottomLine": "13" } },
+        { "at": "19s", "action": "pointer-fade-out" },
+        { "at": "19s", "action": "count-badge-glow" },
+        { "at": "25s", "action": "phase-end" }
+      ],
+      "narrationScript": [
+        { "at": "2s",  "text": "Look at this pond — it's bigger now. Two frames." },
+        { "at": "5s",  "text": "The left side is already full. We have ten." },
+        { "at": "8s",  "text": "Now let's add some more." },
+        { "at": "10s", "text": "Eleven — ten and one." },
+        { "at": "13s", "text": "Twelve — ten and two." },
+        { "at": "16s", "text": "Thirteen — ten and three." },
+        { "at": "21s", "text": "Teen numbers are ten and some more. Eleven is ten and one. Twelve is ten and two. Thirteen is ten and three." }
+      ],
+      "skipToYouDoAvailableAfterSec": 16
+    },
+
+    "weTry": {
+      "durationSec": 20,
+      "scene": {
+        "background": "ten-frame-pond-wider-view",
+        "layout": "two-ten-frames-side-by-side",
+        "leftFrame": { "state": "collapsed-to-ten-pearl" },
+        "rightFrame": { "state": "empty" },
+        "target": 15,
+        "countBadge": { "format": "two-line", "topLine": "10 + 0", "bottomLine": "10" }
+      },
+      "choreography": [
+        { "at": "0s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-start" } },
+        { "at": "3s",            "type": "system-action",       "params": { "action": "halo-pulse", "target": "right-frame-pad-1" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-fish-to-right-frame", "tolerantOfMiss": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "count-badge-update", "topLine": "10 + 1", "bottomLine": "11" } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-after-1" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "halo-pulse", "target": "next-empty-pad" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-prompt-keep-going" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-fish-to-right-frame", "tolerantOfMiss": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "count-badge-update", "topLine": "10 + 2", "bottomLine": "12" } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-after-2" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "pointer-auto-drag-fish", "count": 3 } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "count-badge-update", "topLine": "10 + 5", "bottomLine": "15" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-auto-complete" } },
+        { "at": "18s",           "type": "system-action",       "params": { "action": "count-badge-glow" } },
+        { "at": "18s",           "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-closing" } },
+        { "at": "20s",           "type": "system-action",       "params": { "action": "phase-end" } }
+      ],
+      "narrationScript": [
+        { "at": "we-try-start",            "text": "Your turn. Make fifteen. We already have ten." },
+        { "at": "we-try-after-1",          "text": "Eleven — ten and one." },
+        { "at": "we-try-prompt-keep-going","text": "Keep going to fifteen." },
+        { "at": "we-try-after-2",          "text": "Twelve." },
+        { "at": "we-try-auto-complete",    "text": "Thirteen. Fourteen. Fifteen." },
+        { "at": "we-try-closing",          "text": "Fifteen — ten and five." }
+      ],
+      "hesitationRule": {
+        "thresholdSec": 5,
+        "action": "highlight-target"
+      },
+      "passCondition": "Any kid drag onto the right frame passes. Even one is enough."
+    },
+
+    "youDo": {
+      "activityId": "ten-frame-pond",
+      "subMode": "ten-plus-n",
+      "isContinuation": false,
+      "roundParameters": {
+        "target": 17,
+        "leftFrame": "pre-collapsed-ten-pearl",
+        "rightFrame": "empty",
+        "extrasNeeded": 7,
+        "hintThresholds": {
+          "highlightNextSec": 5,
+          "narratorReminderSec": 10
+        }
+      },
+      "maxAttempts": 3,
+      "cpaLayer": "Concrete"
+    }
+  },
+
+  "libraryEntry": {
+    "thumbnail": "assets/lessons/k-nbt-1/thumbnail.png",
+    "shortLabel": "Ten and some more",
+    "regionBadge": "sanctuary-leaf",
+    "replayDurationSec": 70
+  },
+
+  "telemetryExtensions": []
+}

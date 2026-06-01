@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://critmath/schemas/telemetry-event.schema.json",
+  "title": "Telemetry Event",
+  "description": "Schema for telemetry events emitted by activities, lessons, the scaffolding engine, the reward economy, and other runtime systems. Each event has a common envelope plus an event-specific payload validated against the event's catalog entry.",
+
+  "type": "object",
+  "required": ["eventId", "eventName", "timestamp", "kidId", "sessionId", "payload"],
+  "additionalProperties": false,
+  "properties": {
+    "eventId": {
+      "type": "string",
+      "description": "Unique ID for this event instance (typically a ULID or UUID)."
+    },
+    "eventName": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$",
+      "description": "Hierarchical name. Conventions: shared events use system namespaces (scaffold.*, economy.*, lesson.*, numwrite.*, notebook.*). Activity-defined events use the activity slug prefix (e.g., counting_parade.*, tenframe.*)."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the event was generated, client-side."
+    },
+    "kidId": { "type": "string" },
+    "sessionId": { "type": "string" },
+    "activityId": {
+      "type": "string",
+      "description": "Activity slug if the event was emitted from within an activity. Omitted for system-level events fired outside any activity."
+    },
+    "schemaVersion": {
+      "type": "integer",
+      "description": "Schema version of the payload. Allows backward-compat parsing as payload shapes evolve."
+    },
+    "payload": {
+      "type": "object",
+      "description": "Event-specific payload. Validated against the event's entry in the telemetry catalog (data/telemetry-catalog/*.json).",
+      "additionalProperties": true
+    }
+  }
+}

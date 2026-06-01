@@ -1,0 +1,197 @@
+{
+  "$schema": "../../schemas/standards-reference.schema.json",
+  "version": 1,
+  "source": "Utah Core State Standards for Mathematics, Elementary Levels (K–5), Adopted August 2010, Revised April 2016. Utah State Office of Education.",
+  "lastUpdated": "2026-05-30",
+  "_note": "Kindergarten standards transcribed from the canonical Utah publication. Grades 1–5 will be added as activity coverage expands.",
+
+  "grades": [
+    {
+      "gradeLevel": "K",
+      "instructionalFocus": "In kindergarten, instructional time should focus on two critical areas: (1) representing, relating, and operating on whole numbers, initially with sets of objects; (2) describing shapes and space. More learning time in kindergarten should be devoted to number than to other topics.",
+      "strands": [
+        {
+          "code": "CC",
+          "name": "Counting and Cardinality",
+          "headingText": "Know number names and the counting sequence (Standards K.CC.1–3). Count to tell the number of objects (Standards K.CC.4–5). Identify and compare quantities of objects and numerals (Standards K.CC.6–7).",
+          "clusters": [
+            {
+              "heading": "Know number names and the counting sequence.",
+              "standards": [
+                {
+                  "code": "K.CC.1",
+                  "canonicalText": "Count to 100 by ones and by tens."
+                },
+                {
+                  "code": "K.CC.2",
+                  "canonicalText": "Count forward beginning from a given number within the known sequence (instead of having to begin at 1)."
+                },
+                {
+                  "code": "K.CC.3",
+                  "canonicalText": "Read and write numbers using base ten numerals from 0 to 20. Represent a number of objects with a written numeral, in or out of sequence (0 represents a count of no objects)."
+                }
+              ]
+            },
+            {
+              "heading": "Count to tell the number of objects.",
+              "standards": [
+                {
+                  "code": "K.CC.4",
+                  "canonicalText": "Understand the relationship between numbers and quantities; connect counting to cardinality.",
+                  "subStandards": [
+                    { "letter": "a", "canonicalText": "When counting objects, say the numbers in the standard order. Pair each quantity of objects with one and only one number and each number with the correct quantity of objects." },
+                    { "letter": "b", "canonicalText": "Understand that the last number said represents the number of objects counted. The number of objects is the same regardless of their arrangement or the order in which they were counted." },
+                    { "letter": "c", "canonicalText": "Understand that each successive number refers to a quantity that is one greater than the previous number." }
+                  ]
+                },
+                {
+                  "code": "K.CC.5",
+                  "canonicalText": "Use counting to answer questions about \"how many.\" Using a number from 1–20, count out that many objects.",
+                  "exampleText": "20 or fewer objects arranged in a line, a rectangular array, or circle; 10 or fewer objects in a scattered configuration."
+                }
+              ]
+            },
+            {
+              "heading": "Identify and compare quantities of objects and numerals.",
+              "standards": [
+                {
+                  "code": "K.CC.6",
+                  "canonicalText": "Use matching or counting strategies to identify whether the number of objects in one group is greater than, less than, or equal to the number of objects in another group. Include groups with up to ten objects."
+                },
+                {
+                  "code": "K.CC.7",
+                  "canonicalText": "Compare two numbers between 1 and 10 presented as written numerals using \"greater than,\" \"less than,\" or \"equal to.\""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "code": "OA",
+          "name": "Operations and Algebraic Thinking",
+          "headingText": "Understand addition as putting together and adding to, and understand subtraction as taking apart and taking from (Standards K.OA.1–5).",
+          "clusters": [
+            {
+              "heading": "Understand addition as putting together and adding to, and understand subtraction as taking apart and taking from.",
+              "standards": [
+                {
+                  "code": "K.OA.1",
+                  "canonicalText": "Represent addition and subtraction with objects, fingers, mental images, simple drawings, or sounds.",
+                  "exampleText": "Use clapping, act out situations, and use verbal explanations, expressions, or equations."
+                },
+                {
+                  "code": "K.OA.2",
+                  "canonicalText": "Solve addition and subtraction word problems within 10. Use objects or drawings to represent the problem."
+                },
+                {
+                  "code": "K.OA.3",
+                  "canonicalText": "Decompose numbers less than or equal to 10 into pairs in more than one way by using objects or drawings. Record each decomposition by a drawing or equation.",
+                  "exampleText": "5 = 2 + 3 and 5 = 4 + 1."
+                },
+                {
+                  "code": "K.OA.4",
+                  "canonicalText": "Make sums of 10 using any number from 1 to 9. Use objects or drawings to represent and record the answer.",
+                  "exampleText": "2 + 8 = 10."
+                },
+                {
+                  "code": "K.OA.5",
+                  "canonicalText": "Fluently add and subtract using numbers within 5."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "code": "NBT",
+          "name": "Number and Operations in Base Ten",
+          "headingText": "Compose and decompose numbers 11–19 to gain foundations for place value (Standard K.NBT.1).",
+          "clusters": [
+            {
+              "heading": "Compose and decompose numbers 11–19 to gain foundations for place value.",
+              "standards": [
+                {
+                  "code": "K.NBT.1",
+                  "canonicalText": "Compose and decompose numbers from 11–19 into ten ones and some further ones. Use objects or drawings and record each composition or decomposition by a drawing or equation. Understand that these numbers are composed of ten ones and one, two, three, four, five, six, seven, eight, or nine ones.",
+                  "exampleText": "18 = 10 + 8."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "code": "MD",
+          "name": "Measurement and Data",
+          "headingText": "Describe and compare measurable attributes of objects (Standards K.MD.1–2) and classify objects and count the number of objects in each category (Standard K.MD.3).",
+          "clusters": [
+            {
+              "heading": "Describe and compare measurable attributes of objects.",
+              "standards": [
+                {
+                  "code": "K.MD.1",
+                  "canonicalText": "Describe measurable attributes of objects, such as length or weight. Describe several measurable attributes of a single object."
+                },
+                {
+                  "code": "K.MD.2",
+                  "canonicalText": "Directly compare two objects with a measurable attribute in common, to see which object has \"more of\"/\"less of\" the attribute, and describe the difference.",
+                  "exampleText": "Directly compare the length of two pencils and describe one as shorter or longer."
+                }
+              ]
+            },
+            {
+              "heading": "Classify objects and count the number of objects in each category.",
+              "standards": [
+                {
+                  "code": "K.MD.3",
+                  "canonicalText": "Classify objects into given categories; count the numbers of objects in each category and sort the categories by count. Limit the category counts to less than or equal to 10."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "code": "G",
+          "name": "Geometry",
+          "headingText": "Identify and describe shapes, including squares, circles, triangles, rectangles, hexagons, cubes, cones, cylinders, and spheres (Standards K.G.1–3). Analyze, compare, create, and compose shapes (Standards K.G.4–6).",
+          "clusters": [
+            {
+              "heading": "Identify and describe shapes.",
+              "standards": [
+                {
+                  "code": "K.G.1",
+                  "canonicalText": "Describe objects in the environment using names of shapes, and describe the relative positions of these objects using terms such as above, below, beside, in front of, behind, and next to."
+                },
+                {
+                  "code": "K.G.2",
+                  "canonicalText": "Correctly name shapes regardless of their orientations or overall sizes."
+                },
+                {
+                  "code": "K.G.3",
+                  "canonicalText": "Identify shapes as two-dimensional (\"flat\") or three-dimensional (\"solid\")."
+                }
+              ]
+            },
+            {
+              "heading": "Analyze, compare, create, and compose shapes.",
+              "standards": [
+                {
+                  "code": "K.G.4",
+                  "canonicalText": "Analyze, compare, and sort two- and three-dimensional shapes and objects, in different sizes and orientations, using informal language to describe their similarities, differences, and other attributes.",
+                  "exampleText": "Color, size, shape, number of sides."
+                },
+                {
+                  "code": "K.G.5",
+                  "canonicalText": "Model and create shapes from components such as sticks and clay balls."
+                },
+                {
+                  "code": "K.G.6",
+                  "canonicalText": "Compose simple shapes to form larger shapes.",
+                  "exampleText": "Can you join these two triangles with full sides touching to make a rectangle?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

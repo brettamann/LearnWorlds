@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://critmath/schemas/telemetry-catalog.schema.json",
+  "title": "Telemetry Event Catalog",
+  "description": "Catalog of all telemetry events the runtime may emit, with payload schemas. Activities and shared systems register their events here so the runtime can validate at emit time. The catalog also feeds the dashboard's event-to-mastery-event routing.",
+
+  "type": "object",
+  "required": ["version", "events"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "_note": { "type": "string" },
+    "version": { "type": "integer" },
+    "lastUpdated": { "type": "string", "format": "date" },
+    "events": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/EventDefinition" }
+    }
+  },
+
+  "$defs": {
+    "EventDefinition": {
+      "type": "object",
+      "required": ["eventName", "namespace", "purpose", "payloadFields"],
+      "additionalProperties": false,
+      "properties": {
+        "eventName": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+        },
+        "namespace": {
+          "type": "string",
+          "enum": ["scaffold", "lesson", "economy", "numwrite", "notebook", "session", "activity"]
+        },
+        "purpose": {
+          "type": "string",
+          "description": "One-line description of what this event signals."
+        },
+        "firedBy": {
+          "type": "string",
+          "description": "What system / activity fires this event (e.g., 'adaptive-scaffolding engine', 'counting-parade')."
+        },
+        "consumedBy": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["mastery-engine", "reward-engine", "dashboard", "analytics", "session-log", "hub-view"]
+          },
+          "description": "Which runtime systems read this event."
+        },
+        "payloadFields": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/PayloadField" }
+        },
+        "exampleEmit": {
+          "type": "object",
+          "description": "Example payload values for documentation.",
+          "additionalProperties": true
+        },
+        "rateExpectation": {
+          "type": "string",
+          "enum": ["per-round", "per-session", "per-attempt", "per-interaction", "rare"],
+          "description": "Roughly how often this event fires; informs analytics ingestion and storage planning."
+        },
+        "containsPII": {
+          "type": "boolean",
+          "description": "If true, the payload contains kid-identifying or sensitive data and must be handled per privacy rules.",
+          "default": false
+        }
+      }
+    },
+
+    "PayloadField": {
+      "type": "object",
+      "required": ["name", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": ["string", "integer", "number", "boolean", "array<string>", "array<integer>", "object", "timestamp", "duration-ms"]
+        },
+        "required": { "type": "boolean", "default": true },
+        "description": { "type": "string" },
+        "enum": {
+          "type": "array",
+          "description": "For string types, an optional enum of valid values."
+        }
+      }
+    }
+  }
+}

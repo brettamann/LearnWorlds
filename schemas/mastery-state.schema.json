@@ -1,0 +1,240 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://critmath/schemas/mastery-state.schema.json",
+  "title": "Mastery State (per kid)",
+  "description": "Runtime per-kid persisted data. One file per kid (or one record per kid in a database). Holds concept states, session log, and aggregate counters that feed the dashboard and the adaptive scaffolding engine. Sourced from /specs/shared/adaptive-scaffolding.md.",
+
+  "type": "object",
+  "required": ["schemaVersion", "kidId", "conceptStates", "sessionLog", "aggregates"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "description": "Schema version. Bump on breaking changes; runtime migrates older versions on load."
+    },
+    "kidId": {
+      "type": "string",
+      "description": "Stable identifier for the kid. Profile-scoped (multi-profile devices have one record per profile)."
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+
+    "conceptStates": {
+      "type": "array",
+      "description": "One entry per concept the kid has touched. For per-instance concepts, one entry per (conceptId, instanceKey) pair.",
+      "items": { "$ref": "#/$defs/ConceptState" }
+    },
+
+    "exercisesOnlyTracking": {
+      "type": "object",
+      "description": "Per-concept tracking for exercises-only mastery (coverage-based). Keyed by conceptId.",
+      "additionalProperties": { "$ref": "#/$defs/ExercisesOnlyTracking" }
+    },
+
+    "sessionLog": {
+      "type": "array",
+      "description": "Recent sessions (rolling window; older sessions archive separately).",
+      "items": { "$ref": "#/$defs/SessionRecord" }
+    },
+
+    "aggregates": {
+      "$ref": "#/$defs/AggregateCounters"
+    },
+
+    "lessonLibrary": {
+      "type": "array",
+      "description": "Lessons the kid has unlocked (filed in their Stamp Wall / Spell Book / Casebook).",
+      "items": { "$ref": "#/$defs/LessonLibraryEntry" }
+    }
+  },
+
+  "$defs": {
+    "ConceptState": {
+      "type": "object",
+      "required": ["conceptId", "currentLayer", "firstEncounter", "layerStats", "sessionsTouched", "lastUpdated", "masteryStatus"],
+      "additionalProperties": false,
+      "properties": {
+        "conceptId": {
+          "type": "string",
+          "description": "References a concept registry id."
+        },
+        "instanceKey": {
+          "type": "string",
+          "description": "For per-instance concepts: the specific instance this state tracks (e.g., '5' for the numeral 5). Absent for concept-wide concepts."
+        },
+        "currentLayer": {
+          "type": "string",
+          "enum": ["Concrete", "Pictorial", "Abstract"]
+        },
+        "firstEncounter": {
+          "type": "boolean",
+          "description": "True until the MicroLesson (if any) has played. Resets to true after 60 days idle (per the firstEncounter decay rule)."
+        },
+        "lastEncounteredAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of the kid's most recent touch of this concept. Used for the 60-day decay check."
+        },
+        "layerStats": {
+          "type": "object",
+          "required": ["Concrete", "Pictorial", "Abstract"],
+          "properties": {
+            "Concrete": { "$ref": "#/$defs/LayerStat" },
+            "Pictorial": { "$ref": "#/$defs/LayerStat" },
+            "Abstract": { "$ref": "#/$defs/LayerStat" }
+          }
+        },
+        "sessionsTouched": {
+          "type": "array",
+          "description": "Session IDs in which this concept was attempted. Used for mastery's session-distinctness rule.",
+          "items": { "type": "string" }
+        },
+        "consecutiveFailures": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Count of consecutive failures at the current configuration. Resets on success; reaches 2 to fire demote_struggle."
+        },
+        "currentSubModeId": {
+          "type": "string",
+          "description": "If the activity has multiple sub-modes, this tracks the kid's current sub-mode placement (for staggered demotion's sub-mode step)."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "masteryStatus": {
+          "type": "string",
+          "enum": ["Introduced", "Practicing", "Mastered"]
+        },
+        "masteredAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Set when masteryStatus transitions to Mastered."
+        },
+        "tileFallbackCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "How many times the kid has used the number-writing tile fallback for this concept/instance. Surfaced to teacher dashboard if persistent."
+        }
+      }
+    },
+
+    "LayerStat": {
+      "type": "object",
+      "required": ["attempts", "successes", "currentStreak"],
+      "additionalProperties": false,
+      "properties": {
+        "attempts": { "type": "integer", "minimum": 0 },
+        "successes": { "type": "integer", "minimum": 0 },
+        "currentStreak": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Consecutive successes at this layer. Resets on failure. Reaches 3 to fire promote_success."
+        }
+      }
+    },
+
+    "ExercisesOnlyTracking": {
+      "type": "object",
+      "required": ["modesDemonstrated", "modeSessionCounts", "practiceCount"],
+      "additionalProperties": false,
+      "properties": {
+        "modesDemonstrated": {
+          "type": "array",
+          "description": "Distinct demonstration modes the kid has used (matches the concept registry's demonstrationModes).",
+          "items": { "type": "string" }
+        },
+        "modeSessionCounts": {
+          "type": "object",
+          "description": "Per-mode count of sessions in which the kid used that mode.",
+          "additionalProperties": { "type": "integer", "minimum": 1 }
+        },
+        "practiceCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total successes in any activity that exercises this concept. Used by the fallback path to mastery."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+
+    "SessionRecord": {
+      "type": "object",
+      "required": ["sessionId", "startedAt", "endedAt", "activityCounts"],
+      "additionalProperties": false,
+      "properties": {
+        "sessionId": { "type": "string" },
+        "startedAt": { "type": "string", "format": "date-time" },
+        "endedAt": { "type": "string", "format": "date-time" },
+        "activityCounts": {
+          "type": "object",
+          "description": "Per-activity round counts in this session.",
+          "additionalProperties": { "type": "integer", "minimum": 1 }
+        },
+        "conceptsTouched": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "lessonsPlayed": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "dailyQuestCompleted": { "type": "boolean" },
+        "totalCoinsEarned": { "type": "integer", "minimum": 0 }
+      }
+    },
+
+    "AggregateCounters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "totalSessions": { "type": "integer", "minimum": 0 },
+        "totalRoundsCompleted": { "type": "integer", "minimum": 0 },
+        "totalCoinsEarned": { "type": "integer", "minimum": 0 },
+        "totalCoinsSpent": { "type": "integer", "minimum": 0 },
+        "currentCoinBalance": { "type": "integer", "minimum": 0 },
+        "dailyQuestStreak": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "currentStreakDays": { "type": "integer", "minimum": 0 },
+            "longestStreakDays": { "type": "integer", "minimum": 0 },
+            "lastQuestCompletedAt": { "type": "string", "format": "date-time" }
+          }
+        },
+        "perActivityRoundsCompleted": {
+          "type": "object",
+          "description": "Lifetime round count per activity. Feeds milestone events (problems_25, problems_100).",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+
+    "LessonLibraryEntry": {
+      "type": "object",
+      "required": ["lessonId", "conceptId", "firstFiledAt", "replayCount"],
+      "additionalProperties": false,
+      "properties": {
+        "lessonId": { "type": "string" },
+        "conceptId": { "type": "string" },
+        "firstFiledAt": { "type": "string", "format": "date-time" },
+        "lastReplayedAt": { "type": "string", "format": "date-time" },
+        "replayCount": { "type": "integer", "minimum": 0 },
+        "youDoOutcome": {
+          "type": "string",
+          "enum": ["passed", "failed-out"],
+          "description": "Outcome of the You-Do phase on first lesson play. Failed-out is tracked but doesn't suppress filing."
+        }
+      }
+    }
+  }
+}

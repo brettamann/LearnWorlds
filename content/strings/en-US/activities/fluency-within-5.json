@@ -1,0 +1,92 @@
+{
+  "$schema": "../../../../schemas/activity-narration.schema.json",
+  "activity": "fluency-within-5",
+  "locale": "en-US",
+  "voiceProfile": "sanctuary-warm-naturalist",
+  "cues": [
+    {
+      "id": "casual.round-start",
+      "subMode": "casual",
+      "event": "round-start",
+      "text": "Quick practice with the Buddy. Easy ones today."
+    },
+    {
+      "id": "casual.combo-milestone-3",
+      "subMode": "casual",
+      "event": "combo-milestone-3",
+      "text": "Three in a row!"
+    },
+    {
+      "id": "casual.incorrect-answer",
+      "subMode": "casual",
+      "event": "incorrect-answer",
+      "text": "{fact} is {result}. Try the next one.",
+      "slotSource": { "fact": "round.factDisplay", "result": "round.expectedAnswer" }
+    },
+    {
+      "id": "casual.round-pass",
+      "subMode": "casual",
+      "event": "round-pass",
+      "text": "{N} of 8! Buddy gets a treat.",
+      "slotSource": { "N": "round.correctCount" }
+    },
+    {
+      "id": "casual.round-fail",
+      "subMode": "casual",
+      "event": "round-fail",
+      "text": "Good practice. Want to keep going?"
+    },
+
+    {
+      "id": "speed-run.round-start",
+      "subMode": "speed-run",
+      "event": "round-start",
+      "text": "Faster this time. See how many you can get in a row!"
+    },
+    {
+      "id": "speed-run.combo-2",
+      "subMode": "speed-run",
+      "event": "combo-2",
+      "text": "Two!"
+    },
+    {
+      "id": "speed-run.combo-3",
+      "subMode": "speed-run",
+      "event": "combo-3",
+      "text": "Three!"
+    },
+    {
+      "id": "speed-run.combo-reset",
+      "subMode": "speed-run",
+      "event": "combo-reset",
+      "text": "Almost! Combo reset — keep going."
+    },
+    {
+      "id": "speed-run.round-pass",
+      "subMode": "speed-run",
+      "event": "round-pass",
+      "text": "Top combo: {maxCombo}!",
+      "slotSource": { "maxCombo": "round.maxCombo" }
+    },
+
+    {
+      "id": "number-range-stretch.round-start",
+      "subMode": "number-range-stretch",
+      "event": "round-start",
+      "text": "Bigger numbers today. Same idea — go!"
+    },
+
+    {
+      "id": "hesitation-5s",
+      "event": "hesitation-5s",
+      "text": "{fact} — what's the answer?",
+      "slotSource": { "fact": "round.factDisplay" }
+    },
+    {
+      "id": "hesitation-10s-reveal",
+      "event": "hesitation-10s-reveal",
+      "text": "{fact} is {result}.",
+      "slotSource": { "fact": "round.factDisplay", "result": "round.expectedAnswer" }
+    }
+  ]
+}

@@ -1,0 +1,631 @@
+{
+  "$schema": "../../schemas/slot-vocabulary.schema.json",
+  "locale": "en-US",
+  "lastUpdated": "2026-05-31",
+
+  "aliases": {
+    "N": "round.finalCount",
+    "Buddy_name": "kid.buddyName",
+    "creature": "round.creatureSpecies",
+    "creature_plural": "round.creatureSpeciesPlural",
+    "startN": "round.startN",
+    "changeN": "round.changeN",
+    "resultN": "round.resultN",
+    "A": "round.partA",
+    "B": "round.partB",
+    "total": "round.total",
+    "actual": "round.kidCount",
+    "missing": "round.delta",
+    "extra": "round.delta",
+    "target": "round.target",
+    "shape_plural": "round.targetShapePlural",
+    "attribute": "round.attributeName",
+    "attribute1": "round.attribute1",
+    "attribute2": "round.attribute2",
+    "position_word": "round.positionWord",
+    "landmark": "round.referenceLandmark",
+    "landmark1": "round.landmark1",
+    "landmark2": "round.landmark2",
+    "actual_position": "round.kidDropZone",
+    "target_position": "round.positionWord",
+    "frame_shape": "round.frameShape",
+    "piece": "round.nextPieceType",
+    "position": "round.nextSlotName",
+    "creature_name": "round.creatureName",
+    "rule": "round.sortRule",
+    "item": "round.nextItemName",
+    "category": "round.nextCategoryName",
+    "biggest_count": "round.biggestCount",
+    "biggest_category": "round.biggestCategoryName",
+    "next_count": "round.middleCount",
+    "next_category": "round.middleCategoryName",
+    "least_count": "round.leastCount",
+    "least_category": "round.leastCategoryName",
+    "object": "round.objectName",
+    "object_plural": "round.objectNamePlural",
+    "objectA": "round.objectAName",
+    "objectB": "round.objectBName",
+    "actual_heavier": "round.heavierObjectName",
+    "actual_longer": "round.longerObjectName",
+    "treat_A": "round.basketAContent",
+    "treat_B": "round.basketBContent",
+    "treat_A_plural": "round.basketAContentPlural",
+    "treat_B_plural": "round.basketBContentPlural",
+    "countA": "round.basketACount",
+    "countB": "round.basketBCount",
+    "comparison": "round.comparisonWord",
+    "leftN": "round.leftNumeral",
+    "rightN": "round.rightNumeral",
+    "larger_basket": "round.largerBasketLabel",
+    "least_basket": "round.leastBasketLabel",
+    "most_basket": "round.mostBasketLabel",
+    "numeral_name": "round.numeralName",
+    "expected": "round.expectedNumeralName",
+    "recognized": "round.recognizedNumeralName",
+    "first_stroke_label": "round.firstStrokeLabel",
+    "fact": "round.factDisplay",
+    "result": "round.expectedAnswer",
+    "maxCombo": "round.maxCombo",
+    "groups": "round.clusterCount",
+    "n": "round.extrasNeeded",
+    "delta": "round.delta",
+    "start": "round.startingAmount",
+    "tagWord": "round.tagWord",
+    "leave_verb": "round.leaveVerb",
+    "remainder": "round.partB",
+    "final": "round.finalN"
+  },
+
+  "vocabularies": {
+
+    "kid.buddyName": {
+      "type": "string",
+      "description": "Kid-entered name for their Math Buddy.",
+      "valueSet": "user-supplied",
+      "ttsExpansionStrategy": "runtime-only"
+    },
+    "kid.avatarName": {
+      "type": "string",
+      "description": "Kid-entered name for their Avatar.",
+      "valueSet": "user-supplied",
+      "ttsExpansionStrategy": "runtime-only"
+    },
+    "kid.homeName": {
+      "type": "string",
+      "description": "Kid-chosen name for their Hub home.",
+      "valueSet": "user-supplied",
+      "ttsExpansionStrategy": "runtime-only"
+    },
+
+    "round.creatureSpecies": {
+      "type": "enum",
+      "description": "Singular species for the round's creature population.",
+      "values": ["fawn", "duck", "frog", "dragonling", "baby-gryphon", "unicorn", "koi", "goat", "hatchling-dragon"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.creatureSpeciesPlural": {
+      "type": "enum",
+      "description": "Plural form of round.creatureSpecies.",
+      "derivedFrom": "round.creatureSpecies",
+      "values": {
+        "fawn": "fawns",
+        "duck": "ducks",
+        "frog": "frogs",
+        "dragonling": "dragonlings",
+        "baby-gryphon": "baby gryphons",
+        "unicorn": "unicorns",
+        "koi": "koi",
+        "goat": "goats",
+        "hatchling-dragon": "hatchling dragons"
+      },
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.targetCount": {
+      "type": "integer",
+      "description": "Target count for the round.",
+      "range": { "min": 1, "max": 100 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.finalCount": {
+      "type": "integer",
+      "description": "The kid's final count at round end.",
+      "range": { "min": 0, "max": 100 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.startN": {
+      "type": "integer",
+      "description": "Starting count (count-forward-from-N).",
+      "range": { "min": 0, "max": 20 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.kidCount": {
+      "type": "integer",
+      "description": "The count the kid actually achieved (for failure narration).",
+      "range": { "min": 0, "max": 20 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.delta": {
+      "type": "integer",
+      "description": "Difference between target and kid count.",
+      "range": { "min": 1, "max": 10 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.clusterCount": {
+      "type": "integer",
+      "description": "Number of clusters in tens-parade.",
+      "range": { "min": 2, "max": 10 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+
+    "round.startingAmount": {
+      "type": "integer",
+      "description": "Pre-placed count in make-ten and similar sub-modes.",
+      "range": { "min": 0, "max": 10 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.target": {
+      "type": "integer",
+      "description": "Target amount the kid is building toward.",
+      "range": { "min": 1, "max": 30 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.extrasNeeded": {
+      "type": "integer",
+      "description": "Additional units needed (ten-plus-n).",
+      "range": { "min": 1, "max": 19 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.partA": {
+      "type": "integer",
+      "description": "First addend / first decomposition part.",
+      "range": { "min": 0, "max": 10 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.partB": {
+      "type": "integer",
+      "description": "Second addend / second decomposition part.",
+      "range": { "min": 0, "max": 10 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.resultN": {
+      "type": "integer",
+      "description": "Result of the operation (sum/difference).",
+      "range": { "min": 0, "max": 10 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.changeN": {
+      "type": "integer",
+      "description": "Change amount in add-to / take-from stories.",
+      "range": { "min": 1, "max": 10 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.total": {
+      "type": "integer",
+      "description": "Total in put-together / take-apart stories.",
+      "range": { "min": 0, "max": 20 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.finalN": {
+      "type": "integer",
+      "description": "Final result in two-step stories.",
+      "range": { "min": 0, "max": 20 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.leaveVerb": {
+      "type": "enum",
+      "description": "Verb describing how creatures leave the pond (take-from sub-mode).",
+      "values": ["swim away", "fly off", "splash out", "hop away"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+
+    "round.targetShape": {
+      "type": "enum",
+      "description": "Singular target shape (K.G.2 find-shape).",
+      "values": ["triangle", "circle", "square", "rectangle", "pentagon", "hexagon", "star"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.targetShapePlural": {
+      "type": "enum",
+      "description": "Plural form.",
+      "derivedFrom": "round.targetShape",
+      "values": {
+        "triangle": "triangles",
+        "circle": "circles",
+        "square": "squares",
+        "rectangle": "rectangles",
+        "pentagon": "pentagons",
+        "hexagon": "hexagons",
+        "star": "stars"
+      },
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.foundCount": {
+      "type": "integer",
+      "description": "Number of target shapes the kid found.",
+      "range": { "min": 1, "max": 10 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.attributeName": {
+      "type": "enum",
+      "description": "Which attribute is being sorted by (K.G.4 sort-by-attribute).",
+      "values": ["number of sides", "curvy or straight", "color paired with shape"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.attribute1": {
+      "type": "enum",
+      "description": "First attribute in two-attribute hunt.",
+      "values": ["4-sided", "3-sided", "5-sided", "curvy", "straight", "red", "blue", "yellow", "large", "small"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.attribute2": {
+      "type": "enum",
+      "description": "Second attribute in two-attribute hunt.",
+      "values": ["4-sided", "3-sided", "5-sided", "curvy", "straight", "red", "blue", "yellow", "large", "small"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.sortedCount": {
+      "type": "integer",
+      "description": "Number of shapes correctly sorted.",
+      "range": { "min": 1, "max": 20 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+
+    "round.positionWord": {
+      "type": "enum",
+      "description": "Positional word (K.G.1).",
+      "values": ["above", "below", "beside", "in front of", "behind", "next to", "between"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.referenceLandmark": {
+      "type": "enum",
+      "description": "Singular landmark name in Where's Buddy?",
+      "values": ["tree", "well", "mushroom", "rock cluster", "cottage"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.landmark1": {
+      "type": "enum",
+      "description": "First landmark in relational mode.",
+      "values": ["tree", "well", "mushroom", "rock cluster", "cottage"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.landmark2": {
+      "type": "enum",
+      "description": "Second landmark in relational mode.",
+      "values": ["tree", "well", "mushroom", "rock cluster", "cottage"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.kidDropZone": {
+      "type": "enum",
+      "description": "Position word describing where the kid actually dropped Buddy.",
+      "values": ["above", "below", "beside", "in front of", "behind", "next to", "between"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+
+    "round.residentCreature": {
+      "type": "enum",
+      "description": "Creature moving into the built habitat.",
+      "values": ["fawn", "unicorn", "hatchling-dragon", "baby-gryphon"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.creatureName": {
+      "type": "string",
+      "description": "Named character instance (e.g., 'Pip the fawn').",
+      "valueSet": "system-derived",
+      "ttsExpansionStrategy": "runtime-only"
+    },
+    "round.frameShape": {
+      "type": "enum",
+      "description": "Target 2D frame shape.",
+      "values": ["triangle", "square", "rectangle", "pentagon", "hexagon"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.nextPieceType": {
+      "type": "enum",
+      "description": "3D piece type (cube/cone/cylinder/sphere) needed next.",
+      "values": ["cube", "cone", "cylinder", "sphere"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.nextSlotName": {
+      "type": "enum",
+      "description": "Named position slot in Phase 2 builds.",
+      "values": ["body", "roof", "chimney", "doorknob", "top", "wall"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+
+    "round.sortRule": {
+      "type": "enum",
+      "description": "Sort rule in Care Pantry unfamiliar-rules sub-mode.",
+      "values": ["color", "size", "texture"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.nextItemName": {
+      "type": "enum",
+      "description": "Item being sorted next (Care Pantry).",
+      "values": ["treat", "bed", "toy", "grooming-tool"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.nextCategoryName": {
+      "type": "enum",
+      "description": "Category name for Care Pantry bins.",
+      "values": ["treats", "beds", "toys", "grooming"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.biggestCount": {
+      "type": "integer",
+      "description": "Count of the largest category at end of sort.",
+      "range": { "min": 1, "max": 10 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.middleCount": {
+      "type": "integer",
+      "description": "Count of the middle category.",
+      "range": { "min": 1, "max": 10 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.leastCount": {
+      "type": "integer",
+      "description": "Count of the smallest category.",
+      "range": { "min": 1, "max": 10 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.biggestCategoryName": {
+      "type": "enum",
+      "description": "Name of the largest category at round end.",
+      "values": ["treats", "beds", "toys", "grooming"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.middleCategoryName": {
+      "type": "enum",
+      "description": "Name of the middle category.",
+      "values": ["treats", "beds", "toys", "grooming"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.leastCategoryName": {
+      "type": "enum",
+      "description": "Name of the smallest category.",
+      "values": ["treats", "beds", "toys", "grooming"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+
+    "round.basketAContent": {
+      "type": "enum",
+      "description": "Singular content type of basket A.",
+      "values": ["apple slice", "sparkleberry", "biscuit", "carrot"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.basketBContent": {
+      "type": "enum",
+      "description": "Singular content type of basket B.",
+      "values": ["apple slice", "sparkleberry", "biscuit", "carrot"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.basketAContentPlural": {
+      "type": "enum",
+      "description": "Plural form of basket A content.",
+      "derivedFrom": "round.basketAContent",
+      "values": {
+        "apple slice": "apple slices",
+        "sparkleberry": "sparkleberries",
+        "biscuit": "biscuits",
+        "carrot": "carrots"
+      },
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.basketBContentPlural": {
+      "type": "enum",
+      "description": "Plural form of basket B content.",
+      "derivedFrom": "round.basketBContent",
+      "values": {
+        "apple slice": "apple slices",
+        "sparkleberry": "sparkleberries",
+        "biscuit": "biscuits",
+        "carrot": "carrots"
+      },
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.basketACount": {
+      "type": "integer",
+      "description": "Count of items in basket A.",
+      "range": { "min": 0, "max": 10 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.basketBCount": {
+      "type": "integer",
+      "description": "Count of items in basket B.",
+      "range": { "min": 0, "max": 10 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.comparisonWord": {
+      "type": "enum",
+      "description": "Comparison phrase for numeral or count comparisons.",
+      "values": ["greater than", "less than", "equal to"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.leftNumeral": {
+      "type": "integer",
+      "description": "Left-side numeral in numeral-compare.",
+      "range": { "min": 0, "max": 10 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.rightNumeral": {
+      "type": "integer",
+      "description": "Right-side numeral in numeral-compare.",
+      "range": { "min": 0, "max": 10 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.largerBasketLabel": {
+      "type": "enum",
+      "description": "Which basket has more (A, B, or equal).",
+      "values": ["A", "B", "equal"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.leastBasketLabel": {
+      "type": "enum",
+      "description": "Which basket has the fewest in three-way compare.",
+      "values": ["A", "B", "C"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.mostBasketLabel": {
+      "type": "enum",
+      "description": "Which basket has the most in three-way compare.",
+      "values": ["A", "B", "C"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+
+    "round.objectName": {
+      "type": "enum",
+      "description": "Singular name of the object on the Caretaker's Bench.",
+      "values": ["feather", "glow-stone", "rock", "ribbon", "twig", "apple", "wooden spoon", "dragon scale", "acorn"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.objectNamePlural": {
+      "type": "enum",
+      "description": "Plural form.",
+      "derivedFrom": "round.objectName",
+      "values": {
+        "feather": "feathers",
+        "glow-stone": "glow-stones",
+        "rock": "rocks",
+        "ribbon": "ribbons",
+        "twig": "twigs",
+        "apple": "apples",
+        "wooden spoon": "wooden spoons",
+        "dragon scale": "dragon scales",
+        "acorn": "acorns"
+      },
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.objectAName": {
+      "type": "enum",
+      "description": "First object in compare-two.",
+      "values": ["feather", "glow-stone", "rock", "ribbon", "twig", "apple", "wooden spoon", "dragon scale", "acorn"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.objectBName": {
+      "type": "enum",
+      "description": "Second object in compare-two.",
+      "values": ["feather", "glow-stone", "rock", "ribbon", "twig", "apple", "wooden spoon", "dragon scale", "acorn"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.tagWord": {
+      "type": "enum",
+      "description": "Attribute tag word.",
+      "values": ["light", "smooth", "soft", "heavy", "rough", "shiny", "dull"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.attributesPlaced": {
+      "type": "integer",
+      "description": "Number of attribute tags successfully placed.",
+      "range": { "min": 2, "max": 5 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.heavierObjectName": {
+      "type": "enum",
+      "description": "Object identified as heavier.",
+      "values": ["feather", "glow-stone", "rock", "ribbon", "twig", "apple", "wooden spoon", "dragon scale", "acorn"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.longerObjectName": {
+      "type": "enum",
+      "description": "Object identified as longer.",
+      "values": ["feather", "glow-stone", "rock", "ribbon", "twig", "apple", "wooden spoon", "dragon scale", "acorn"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+
+    "round.numeralName": {
+      "type": "enum",
+      "description": "Number-word for the target numeral.",
+      "values": ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.expectedNumeral": {
+      "type": "integer",
+      "description": "Numeric value the kid was supposed to write.",
+      "range": { "min": 0, "max": 20 },
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.expectedNumeralName": {
+      "type": "enum",
+      "description": "Number-word for the expected value.",
+      "values": ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.recognizedNumeralName": {
+      "type": "enum",
+      "description": "Number-word for what the classifier read (for correction narration).",
+      "values": ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.firstStrokeLabel": {
+      "type": "enum",
+      "description": "Stroke-order indicator label for trace-mode prompts.",
+      "values": ["the 1", "the dot", "the top"],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+
+    "round.factDisplay": {
+      "type": "enum",
+      "description": "Spoken form of a K.OA.5 fact.",
+      "values": [
+        "zero plus zero", "zero plus one", "zero plus two", "zero plus three", "zero plus four", "zero plus five",
+        "one plus zero", "one plus one", "one plus two", "one plus three", "one plus four",
+        "two plus zero", "two plus one", "two plus two", "two plus three",
+        "three plus zero", "three plus one", "three plus two",
+        "four plus zero", "four plus one",
+        "five plus zero",
+        "one take away zero", "one take away one",
+        "two take away zero", "two take away one", "two take away two",
+        "three take away zero", "three take away one", "three take away two", "three take away three",
+        "four take away zero", "four take away one", "four take away two", "four take away three", "four take away four",
+        "five take away zero", "five take away one", "five take away two", "five take away three", "five take away four", "five take away five"
+      ],
+      "ttsExpansionStrategy": "expand-per-value"
+    },
+    "round.expectedAnswer": {
+      "type": "integer",
+      "description": "Expected fluency answer.",
+      "range": { "min": 0, "max": 10 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.correctCount": {
+      "type": "integer",
+      "description": "Correct answers in a fluency round.",
+      "range": { "min": 0, "max": 8 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    },
+    "round.maxCombo": {
+      "type": "integer",
+      "description": "Highest combo achieved in a speed-run.",
+      "range": { "min": 1, "max": 10 },
+      "spokenAs": "numeral-as-word",
+      "ttsExpansionStrategy": "digit-stitched"
+    }
+  }
+}

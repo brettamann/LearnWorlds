@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://critmath/schemas/lesson-runtime.schema.json",
+  "title": "Lesson (Runtime Form)",
+  "description": "Machine-actionable lesson data the runtime consumes. Generated from the lesson's design spec in /specs/lessons/<id>.md via the lesson-pipeline (TBD tooling). The markdown spec is the design source of truth; this JSON is the runtime form.",
+
+  "type": "object",
+  "required": ["id", "conceptId", "standardCode", "region", "introducingActivity", "narratorVoice", "totalDurationTargetSec", "phases", "libraryEntry"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": {
+      "type": "string",
+      "pattern": "^lesson-[a-z0-9-]+$"
+    },
+    "specRef": {
+      "type": "string",
+      "description": "Relative path to the design spec markdown file. Useful for traceability."
+    },
+    "version": { "type": "integer" },
+    "conceptId": { "type": "string" },
+    "instanceKey": {
+      "type": "string",
+      "description": "Optional. Present iff this lesson is per-instance specific (most lessons are concept-wide)."
+    },
+    "standardCode": { "type": "string" },
+    "region": {
+      "type": "string",
+      "enum": ["sanctuary", "wundletown", "mathopolis"]
+    },
+    "introducingActivity": {
+      "type": "string",
+      "description": "Activity slug that introduces this lesson."
+    },
+    "subModeTarget": {
+      "type": "string",
+      "description": "The activity sub-mode this lesson's You-Do phase runs in."
+    },
+    "narratorVoice": {
+      "type": "string",
+      "enum": ["sanctuary-warm-naturalist", "wundletown-frazzled-wizard", "mathopolis-radio-announcer", "buddy"]
+    },
+    "narratorCharacter": {
+      "type": "string",
+      "description": "Optional visible narrator character (e.g., 'storyteller-turtle')."
+    },
+    "totalDurationTargetSec": {
+      "type": "integer",
+      "description": "Target lesson duration. ≤90 s per the micro-lessons.md policy."
+    },
+    "prerequisites": {
+      "type": "array",
+      "description": "Lesson IDs that should be completed first (e.g., K.OA.4's lesson lists K.OA.3 as prerequisite).",
+      "items": { "type": "string" }
+    },
+
+    "phases": {
+      "type": "object",
+      "required": ["iShow", "weTry", "youDo"],
+      "additionalProperties": false,
+      "properties": {
+        "iShow": { "$ref": "#/$defs/IShowPhase" },
+        "weTry": { "$ref": "#/$defs/WeTryPhase" },
+        "youDo": { "$ref": "#/$defs/YouDoPhase" }
+      }
+    },
+
+    "libraryEntry": { "$ref": "#/$defs/LibraryEntry" },
+
+    "telemetryExtensions": {
+      "type": "array",
+      "description": "Custom telemetry event names this lesson emits beyond the shared lesson.* events. Each must be registered in the telemetry catalog.",
+      "items": { "type": "string" }
+    }
+  },
+
+  "$defs": {
+    "IShowPhase": {
+      "type": "object",
+      "required": ["durationSec", "scene", "animationSteps", "narrationScript"],
+      "additionalProperties": false,
+      "properties": {
+        "durationSec": { "type": "integer", "minimum": 10, "maximum": 35 },
+        "scene": {
+          "type": "object",
+          "description": "Scene setup at lesson start.",
+          "additionalProperties": true
+        },
+        "animationSteps": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/AnimationStep" }
+        },
+        "narrationScript": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/NarrationCue" }
+        },
+        "skipToYouDoAvailableAfterSec": {
+          "type": "integer",
+          "description": "When the 'I've got this' button becomes visible. Per micro-lessons.md, this is after ~15 s."
+        }
+      }
+    },
+
+    "WeTryPhase": {
+      "type": "object",
+      "required": ["durationSec", "scene", "choreography", "narrationScript", "passCondition"],
+      "additionalProperties": false,
+      "properties": {
+        "durationSec": { "type": "integer", "minimum": 10, "maximum": 35 },
+        "scene": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "choreography": {
+          "type": "array",
+          "description": "Sequence of system actions interleaved with kid input expectations.",
+          "items": { "$ref": "#/$defs/ChoreographyStep" }
+        },
+        "narrationScript": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/NarrationCue" }
+        },
+        "hesitationRule": {
+          "type": "object",
+          "required": ["thresholdSec", "action"],
+          "additionalProperties": false,
+          "properties": {
+            "thresholdSec": { "type": "integer", "description": "Seconds of no input before auto-help fires. Default 5 per stylus-mechanics.md." },
+            "action": { "type": "string", "enum": ["highlight-target", "narrator-prompt", "auto-complete"] }
+          }
+        },
+        "passCondition": {
+          "type": "string",
+          "description": "Free-text description of what counts as a pass (per micro-lessons.md, We-Try is forgiving)."
+        }
+      }
+    },
+
+    "YouDoPhase": {
+      "type": "object",
+      "required": ["activityId", "subMode", "roundParameters", "maxAttempts"],
+      "additionalProperties": false,
+      "properties": {
+        "activityId": { "type": "string" },
+        "subMode": { "type": "string" },
+        "isContinuation": {
+          "type": "boolean",
+          "description": "True if this You-Do continues the current round (e.g., Build-a-Habitat's intra-round lesson chain). Default false (You-Do is a fresh round)."
+        },
+        "roundParameters": {
+          "type": "object",
+          "description": "Activity-specific parameters that configure the You-Do round (e.g., targetCount, arrangement, creature).",
+          "additionalProperties": true
+        },
+        "maxAttempts": {
+          "type": "integer",
+          "description": "First-encounter forgiveness: 3 attempts before failed-out. Failed-out does NOT trigger CPA demotion."
+        },
+        "cpaLayer": {
+          "type": "string",
+          "enum": ["Concrete", "Pictorial", "Abstract"],
+          "description": "CPA layer the You-Do runs at. Typically Concrete (per K starting layer); override per spec."
+        }
+      }
+    },
+
+    "AnimationStep": {
+      "type": "object",
+      "required": ["at", "action"],
+      "additionalProperties": false,
+      "properties": {
+        "at": { "type": "string", "pattern": "^[0-9]+(\\.[0-9]+)?s$" },
+        "action": { "type": "string" },
+        "params": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+
+    "ChoreographyStep": {
+      "type": "object",
+      "required": ["at", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "at": {
+          "type": "string",
+          "description": "Either a timestamp (e.g., '0s', '3s') OR 'on-kid-input' for system steps that wait for kid action."
+        },
+        "type": { "type": "string", "enum": ["system-action", "kid-action-expected", "auto-complete-on-pause"] },
+        "params": { "type": "object", "additionalProperties": true }
+      }
+    },
+
+    "NarrationCue": {
+      "type": "object",
+      "required": ["at", "text"],
+      "additionalProperties": false,
+      "properties": {
+        "at": {
+          "type": "string",
+          "description": "Timestamp or trigger (e.g., 'on-kid-tap-1', 'on-pass')."
+        },
+        "text": {
+          "type": "string",
+          "description": "Narration text with {slot} placeholders. Slot fills resolved from runtime state."
+        },
+        "slotSource": {
+          "type": "object",
+          "description": "Maps slot names to where their values come from (e.g., { count: 'kidScore', N: 'round.target' }).",
+          "additionalProperties": true
+        }
+      }
+    },
+
+    "LibraryEntry": {
+      "type": "object",
+      "required": ["thumbnail", "shortLabel", "regionBadge", "replayDurationSec"],
+      "additionalProperties": false,
+      "properties": {
+        "thumbnail": { "type": "string" },
+        "shortLabel": { "type": "string" },
+        "regionBadge": {
+          "type": "string",
+          "enum": ["sanctuary-leaf", "sanctuary-leaf-with-star", "wundletown-wand", "mathopolis-badge"]
+        },
+        "replayDurationSec": { "type": "integer" }
+      }
+    }
+  }
+}

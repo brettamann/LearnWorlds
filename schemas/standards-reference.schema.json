@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://critmath/schemas/standards-reference.schema.json",
+  "title": "Standards Reference",
+  "description": "Canonical reference data for the Utah Core State Standards for Mathematics (K–5 in our scope). The concept registry references this for the canonical standard text. Sourced from the Utah State Office of Education Mathematics Core Standards, Revised April 2016.",
+
+  "type": "object",
+  "required": ["version", "source", "grades"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "_note": { "type": "string" },
+    "version": { "type": "integer" },
+    "source": {
+      "type": "string",
+      "description": "Provenance — which Utah Core publication / revision."
+    },
+    "lastUpdated": { "type": "string", "format": "date" },
+    "grades": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/GradeBlock" }
+    }
+  },
+
+  "$defs": {
+    "GradeBlock": {
+      "type": "object",
+      "required": ["gradeLevel", "instructionalFocus", "strands"],
+      "additionalProperties": false,
+      "properties": {
+        "gradeLevel": { "type": "string", "enum": ["K", "1", "2", "3", "4", "5"] },
+        "instructionalFocus": {
+          "type": "string",
+          "description": "Grade-level overview text from the standards document (the 'critical areas' passage)."
+        },
+        "strands": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/StrandBlock" }
+        }
+      }
+    },
+
+    "StrandBlock": {
+      "type": "object",
+      "required": ["code", "name", "clusters"],
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": ["CC", "OA", "NBT", "NF", "MD", "G", "MP"],
+          "description": "CC=Counting & Cardinality, OA=Operations & Algebraic Thinking, NBT=Number & Operations in Base Ten, NF=Number & Operations — Fractions, MD=Measurement & Data, G=Geometry, MP=Mathematical Practices."
+        },
+        "name": { "type": "string" },
+        "headingText": {
+          "type": "string",
+          "description": "Strand-level intro text from the standards document."
+        },
+        "clusters": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ClusterBlock" }
+        }
+      }
+    },
+
+    "ClusterBlock": {
+      "type": "object",
+      "required": ["heading", "standards"],
+      "additionalProperties": false,
+      "properties": {
+        "heading": { "type": "string" },
+        "standards": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/StandardEntry" }
+        }
+      }
+    },
+
+    "StandardEntry": {
+      "type": "object",
+      "required": ["code", "canonicalText"],
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[K12345]\\.[A-Z]+\\.[0-9]+[a-z]?$",
+          "description": "The standard's canonical code (e.g., 'K.CC.4a')."
+        },
+        "canonicalText": {
+          "type": "string",
+          "description": "The official standard text from the Utah Core publication."
+        },
+        "subStandards": {
+          "type": "array",
+          "description": "Sub-letters (a, b, c) when the standard has explicit lettered sub-points.",
+          "items": {
+            "type": "object",
+            "required": ["letter", "canonicalText"],
+            "additionalProperties": false,
+            "properties": {
+              "letter": { "type": "string", "enum": ["a", "b", "c", "d", "e"] },
+              "canonicalText": { "type": "string" }
+            }
+          }
+        },
+        "exampleText": {
+          "type": "string",
+          "description": "The standard's example text from the publication, if any (often italicized)."
+        }
+      }
+    }
+  }
+}

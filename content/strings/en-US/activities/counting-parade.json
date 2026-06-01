@@ -1,0 +1,116 @@
+{
+  "$schema": "../../../../schemas/activity-narration.schema.json",
+  "activity": "counting-parade",
+  "locale": "en-US",
+  "voiceProfile": "sanctuary-warm-naturalist",
+  "cues": [
+    {
+      "id": "count-the-parade.round-start",
+      "subMode": "count-the-parade",
+      "event": "round-start",
+      "text": "Let's count the {creature_plural} coming up the path.",
+      "slotSource": { "creature_plural": "round.creatureSpeciesPlural" }
+    },
+    {
+      "id": "count-the-parade.mid-hesitation-10s",
+      "subMode": "count-the-parade",
+      "event": "mid-hesitation-10s",
+      "text": "Take your time — count them one by one."
+    },
+    {
+      "id": "count-the-parade.round-pass",
+      "subMode": "count-the-parade",
+      "event": "round-pass",
+      "rotation": "primary",
+      "text": "{N}! There are {N} {creature_plural}.",
+      "slotSource": { "N": "round.finalCount", "creature_plural": "round.creatureSpeciesPlural" }
+    },
+    {
+      "id": "count-the-parade.round-pass-alt",
+      "subMode": "count-the-parade",
+      "event": "round-pass",
+      "rotation": "celebratory",
+      "text": "Look at that — you counted {N} of them!",
+      "slotSource": { "N": "round.finalCount" }
+    },
+    {
+      "id": "count-the-parade.round-fail-miscount",
+      "subMode": "count-the-parade",
+      "event": "round-fail-miscount",
+      "text": "Almost. Watch — I'll count them with you."
+    },
+
+    {
+      "id": "count-forward-from-n.round-start",
+      "subMode": "count-forward-from-n",
+      "event": "round-start",
+      "text": "We have {N} {creature_plural} already. Let's count the new ones from {N}.",
+      "slotSource": { "N": "round.startN", "creature_plural": "round.creatureSpeciesPlural" }
+    },
+    {
+      "id": "count-forward-from-n.round-pass",
+      "subMode": "count-forward-from-n",
+      "event": "round-pass",
+      "text": "Yes — {total} all together.",
+      "slotSource": { "total": "round.finalCount" }
+    },
+
+    {
+      "id": "count-out-n.round-start",
+      "subMode": "count-out-n",
+      "event": "round-start",
+      "text": "{Buddy_name} would love {N} berries. Can you give them {N}?",
+      "slotSource": { "Buddy_name": "kid.buddyName", "N": "round.targetCount" }
+    },
+    {
+      "id": "count-out-n.round-pass",
+      "subMode": "count-out-n",
+      "event": "round-pass",
+      "text": "Perfect — {N} berries for {Buddy_name}.",
+      "slotSource": { "N": "round.targetCount", "Buddy_name": "kid.buddyName" }
+    },
+    {
+      "id": "count-out-n.round-fail-too-few",
+      "subMode": "count-out-n",
+      "event": "round-fail-too-few",
+      "text": "{Buddy_name} has {actual} berries. They asked for {N}. Just {missing} more.",
+      "slotSource": { "Buddy_name": "kid.buddyName", "actual": "round.kidCount", "N": "round.targetCount", "missing": "round.delta" }
+    },
+    {
+      "id": "count-out-n.round-fail-too-many",
+      "subMode": "count-out-n",
+      "event": "round-fail-too-many",
+      "text": "{Buddy_name} has {actual}. They only need {N}. We can put {extra} back.",
+      "slotSource": { "Buddy_name": "kid.buddyName", "actual": "round.kidCount", "N": "round.targetCount", "extra": "round.delta" }
+    },
+
+    {
+      "id": "long-parade.round-start",
+      "subMode": "long-parade",
+      "event": "round-start",
+      "text": "A long parade today! Tap each {creature} as it walks in. Take your time.",
+      "slotSource": { "creature": "round.creatureSpecies" }
+    },
+    {
+      "id": "long-parade.round-pass",
+      "subMode": "long-parade",
+      "event": "round-pass",
+      "text": "{N} {creature_plural}! That's a lot of counting.",
+      "slotSource": { "N": "round.finalCount", "creature_plural": "round.creatureSpeciesPlural" }
+    },
+
+    {
+      "id": "tens-parade.round-start",
+      "subMode": "tens-parade",
+      "event": "round-start",
+      "text": "Big herd today! They're coming in groups of ten. Let's count by tens."
+    },
+    {
+      "id": "tens-parade.round-pass",
+      "subMode": "tens-parade",
+      "event": "round-pass",
+      "text": "Beautiful — {N} {creature_plural} in {groups} groups.",
+      "slotSource": { "N": "round.finalCount", "creature_plural": "round.creatureSpeciesPlural", "groups": "round.clusterCount" }
+    }
+  ]
+}

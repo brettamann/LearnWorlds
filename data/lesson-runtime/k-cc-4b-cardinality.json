@@ -1,0 +1,148 @@
+{
+  "$schema": "../../schemas/lesson-runtime.schema.json",
+  "id": "lesson-k-cc-4b-cardinality",
+  "specRef": "specs/lessons/k-cc-4b-cardinality.md",
+  "version": 1,
+  "conceptId": "K.CC.4b",
+  "standardCode": "K.CC.4b",
+  "region": "sanctuary",
+  "introducingActivity": "counting-parade",
+  "subModeTarget": "count-the-parade",
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "totalDurationTargetSec": 62,
+  "prerequisites": ["lesson-k-cc-4a-one-to-one"],
+
+  "phases": {
+    "iShow": {
+      "durationSec": 24,
+      "scene": {
+        "background": "counting-parade-grass-path",
+        "lighting": "soft-afternoon",
+        "musicBed": "sanctuary-low",
+        "creatures": {
+          "species": "fawn",
+          "count": 3,
+          "arrangement": "line",
+          "motion": "idle-standing"
+        },
+        "buddyPosition": "lower-left",
+        "hud": {
+          "countBadge": "hidden",
+          "doneButton": "hidden"
+        }
+      },
+      "animationSteps": [
+        { "at": "0s",  "action": "scene-fade-up" },
+        { "at": "0s",  "action": "music-bed-in" },
+        { "at": "1s",  "action": "narrator-begin" },
+        { "at": "4s",  "action": "pointer-appear" },
+        { "at": "4s",  "action": "pointer-touch", "params": { "target": "fawn-1" } },
+        { "at": "4s",  "action": "sparkle", "params": { "target": "fawn-1" } },
+        { "at": "4s",  "action": "count-badge-show", "params": { "value": 1 } },
+        { "at": "6s",  "action": "pointer-touch", "params": { "target": "fawn-2" } },
+        { "at": "6s",  "action": "sparkle", "params": { "target": "fawn-2" } },
+        { "at": "6s",  "action": "count-badge-update", "params": { "value": 2 } },
+        { "at": "8s",  "action": "pointer-touch", "params": { "target": "fawn-3" } },
+        { "at": "8s",  "action": "sparkle", "params": { "target": "fawn-3" } },
+        { "at": "8s",  "action": "count-badge-update", "params": { "value": 3 } },
+        { "at": "11s", "action": "count-badge-pulse-glow", "params": { "value": 3 } },
+        { "at": "12s", "action": "pointer-fade-out" },
+        { "at": "15s", "action": "ive-got-this-button-show" },
+        { "at": "15s", "action": "successor-sparkle-sequence", "params": { "targets": ["fawn-1", "fawn-2", "fawn-3"], "spacingSec": 0.8, "purpose": "K.CC.4c-plus-one-callout" } },
+        { "at": "24s", "action": "phase-end" }
+      ],
+      "narrationScript": [
+        { "at": "1s",  "text": "Let's count these fawns again." },
+        { "at": "4s",  "text": "One. Two. Three." },
+        { "at": "11s", "text": "Listen — the last number I said was three. That means there are three fawns. Three is how many." },
+        { "at": "15s", "text": "And see — each fawn made the count grow by just one. One, two, three. Each one is one more than the last." },
+        { "at": "20s", "text": "The last number you say tells you how many. Every time." }
+      ],
+      "skipToYouDoAvailableAfterSec": 15
+    },
+
+    "weTry": {
+      "durationSec": 22,
+      "scene": {
+        "background": "counting-parade-grass-path",
+        "musicBed": "sanctuary-low",
+        "creatures": {
+          "species": "fawn",
+          "count": 4,
+          "arrangement": "line"
+        },
+        "hud": {
+          "countBadge": "hidden-until-first-tap",
+          "doneButton": "hidden"
+        },
+        "numeralTileRow": {
+          "visibility": "hidden-until-counting-finishes",
+          "tiles": [3, 4, 5]
+        }
+      },
+      "choreography": [
+        { "at": "0s",            "type": "system-action",       "params": { "action": "halo-pulse", "target": "fawn-1" } },
+        { "at": "0s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-start" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedTarget": "fawn-1", "tolerantOfMiss": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "sparkle", "target": "fawn-1" } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "count-badge-show", "value": 1 } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-tap-1" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "halo-pulse", "target": "fawn-2" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-prompt-2" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedTarget": "fawn-2", "tolerantOfMiss": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "sparkle", "target": "fawn-2" } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "count-badge-update", "value": 2 } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-tap-2" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "pointer-auto-tap-sequence", "targets": ["fawn-3", "fawn-4"], "spacingSec": 1.0 } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "count-badge-update", "value": 4 } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-auto-complete" } },
+        { "at": "+1s",           "type": "system-action",       "params": { "action": "numeral-tile-row-show", "tiles": [3, 4, 5] } },
+        { "at": "+1s",           "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-cardinality-prompt" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "tile-tap", "expectedValue": 4, "tolerantOfMiss": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "tile-feedback", "passCue": "we-try-correct", "failCue": "we-try-incorrect" } },
+        { "at": "+2s",           "type": "system-action",       "params": { "action": "phase-end" } }
+      ],
+      "narrationScript": [
+        { "at": "we-try-start",              "text": "Your turn. Touch each fawn." },
+        { "at": "we-try-tap-1",              "text": "One." },
+        { "at": "we-try-prompt-2",           "text": "Next." },
+        { "at": "we-try-tap-2",              "text": "Two." },
+        { "at": "we-try-auto-complete",      "text": "Three. Four." },
+        { "at": "we-try-cardinality-prompt", "text": "How many fawns altogether?" },
+        { "at": "we-try-correct",            "text": "Four. The last number you said. That's how many." },
+        { "at": "we-try-incorrect",          "text": "Listen — what was the last number you counted? Four. Tap four." }
+      ],
+      "hesitationRule": {
+        "thresholdSec": 5,
+        "action": "highlight-target"
+      },
+      "passCondition": "The kid taps any tile (correct preferred; near-misses still pass)."
+    },
+
+    "youDo": {
+      "activityId": "counting-parade",
+      "subMode": "count-the-parade",
+      "isContinuation": false,
+      "roundParameters": {
+        "arrangement": "line",
+        "targetCount": 5,
+        "singleSpecies": true,
+        "hintThresholds": {
+          "highlightNextSec": 5,
+          "narratorReminderSec": 10
+        }
+      },
+      "maxAttempts": 3,
+      "cpaLayer": "Concrete"
+    }
+  },
+
+  "libraryEntry": {
+    "thumbnail": "assets/lessons/k-cc-4b/thumbnail.png",
+    "shortLabel": "The last number is how many",
+    "regionBadge": "sanctuary-leaf",
+    "replayDurationSec": 60
+  },
+
+  "telemetryExtensions": ["lesson.wetry_tile_tapped"]
+}

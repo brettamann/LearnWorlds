@@ -1,0 +1,5 @@
+# Platform adapters per specs/shared/platform-architecture.md.
+# This is the Phase 1 (Flutter) / Phase 2 (native iPadOS) swap boundary.
+# Each adapter has an interface (e.g., stylus_input_provider.dart) and an
+# implementation (e.g., stylus_input_provider_flutter.dart) that gets swapped
+# in Phase 2 for a native version (stylus_input_provider_pencilkit.swift).

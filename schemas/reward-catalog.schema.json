@@ -1,0 +1,341 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://critmath/schemas/reward-catalog.schema.json",
+  "title": "Reward Catalog",
+  "description": "Canonical catalog of all earnable / purchasable items, chest contents, blueprints, special parts, collectible sets, and trophies. Sourced from /specs/shared/reward-economy.md and activity-specific Reward Emissions tables.",
+
+  "type": "object",
+  "required": ["version", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "_note": { "type": "string" },
+    "version": { "type": "integer" },
+    "lastUpdated": { "type": "string", "format": "date" },
+    "items": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Item" }
+    },
+    "chests": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Chest" }
+    },
+    "blueprints": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Blueprint" }
+    },
+    "specialParts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/SpecialPart" }
+    },
+    "collectibleSets": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/CollectibleSet" }
+    },
+    "trophies": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Trophy" }
+    }
+  },
+
+  "$defs": {
+    "Item": {
+      "type": "object",
+      "required": ["id", "displayName", "category", "rarity"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "displayName": { "type": "string" },
+        "category": {
+          "type": "string",
+          "enum": [
+            "avatar-clothing",
+            "avatar-hair",
+            "avatar-accessory",
+            "buddy-outfit",
+            "buddy-toy",
+            "buddy-treat",
+            "home-furniture",
+            "home-decor",
+            "home-bookshelf",
+            "home-poster",
+            "home-themed-set",
+            "home-exterior-decor",
+            "foundry-frame",
+            "foundry-part",
+            "foundry-paint",
+            "foundry-upgrade",
+            "foundry-creation",
+            "foundry-vehicle",
+            "avatar-prop",
+            "buddy-prop",
+            "ink-color",
+            "stamp",
+            "creature-card",
+            "story-memento",
+            "habitat-fixture",
+            "trophy"
+          ],
+          "description": "What kind of item this is. Routes where it displays in the Hub."
+        },
+        "rarity": {
+          "type": "string",
+          "enum": ["common", "uncommon", "rare", "prestige"]
+        },
+        "coinPrice": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "description": "Coin price in the shop. Null if not directly purchasable (e.g., only earnable via chest or as a blueprint-built item)."
+        },
+        "sources": {
+          "type": "array",
+          "description": "Where this item can be obtained.",
+          "items": { "$ref": "#/$defs/ItemSource" }
+        },
+        "regionTheme": {
+          "type": "string",
+          "enum": ["sanctuary", "wundletown", "mathopolis", "foundry", "portal-pirate-planet", "portal-dino-dig", "portal-atlantis", "portal-corona-castle", "portal-gooblon", "portal-bakery", "portal-port", "portal-botanical-garden", "portal-farmers-market", "portal-factory", "portal-insect-biosphere", "universal"]
+        },
+        "thumbnail": { "type": "string", "description": "Asset reference." },
+        "description": { "type": "string" }
+      }
+    },
+
+    "ItemSource": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["shop", "chest", "milestone", "daily-streak", "challenge", "mastery", "lesson-completion", "activity-drop", "portal-chapter", "portal-arc", "foundry-build", "birthday-event", "seasonal-event"]
+        },
+        "shop": {
+          "type": "string",
+          "enum": ["avatar", "buddy", "home", "foundry"],
+          "description": "Which shop the item is purchasable from. Present iff type=shop."
+        },
+        "chestId": { "type": "string", "description": "Present iff type=chest." },
+        "milestoneId": { "type": "string" },
+        "streakDays": { "type": "integer", "minimum": 1 },
+        "challengeActivityId": { "type": "string" },
+        "lessonId": { "type": "string" },
+        "activityId": { "type": "string" },
+        "dropRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Probability per relevant event (e.g., per round-pass for activity-drop)."
+        },
+        "portalId": { "type": "string" },
+        "chapterIndex": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+
+    "Chest": {
+      "type": "object",
+      "required": ["id", "tier", "displayName", "guaranteedCategories"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "tier": {
+          "type": "string",
+          "enum": ["small", "medium", "large", "prestige", "portal-themed", "challenge"]
+        },
+        "displayName": { "type": "string" },
+        "guaranteedCategories": {
+          "type": "array",
+          "description": "Categories of items the chest guarantees to contain. Surfaced to the kid before opening per the transparency rule in reward-economy.md.",
+          "items": { "$ref": "#/$defs/ChestSlot" }
+        },
+        "coinPayoutRange": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "min": { "type": "integer", "minimum": 0 },
+            "max": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "pityTimer": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Nth chest of this kind guarantees a rare drop. Per reward-economy.md's transparent pity timer rule."
+        },
+        "regionTheme": {
+          "type": "string",
+          "enum": ["sanctuary", "wundletown", "mathopolis", "universal", "portal-pirate-planet", "portal-dino-dig", "portal-atlantis", "portal-corona-castle", "portal-gooblon"]
+        }
+      }
+    },
+
+    "ChestSlot": {
+      "type": "object",
+      "required": ["category", "count", "pool"],
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "Item category the slot resolves to (e.g., 'avatar-clothing', 'buddy-outfit'). Or 'rare-{category}' for the pity-timer guarantee slot."
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of items the slot awards."
+        },
+        "pool": {
+          "type": "array",
+          "description": "Item IDs the slot can roll from.",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "rarityFilter": {
+          "type": "string",
+          "enum": ["common", "uncommon", "rare", "prestige", "any"],
+          "default": "any"
+        }
+      }
+    },
+
+    "Blueprint": {
+      "type": "object",
+      "required": ["id", "displayName", "buildsItemId", "requiredParts", "coinCost"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "displayName": { "type": "string" },
+        "buildsItemId": {
+          "type": "string",
+          "description": "Item ID this blueprint can build (typically a foundry-creation)."
+        },
+        "requiredParts": {
+          "type": "array",
+          "description": "Special parts needed to build. Each entry: { partId, count }.",
+          "items": {
+            "type": "object",
+            "required": ["partId", "count"],
+            "additionalProperties": false,
+            "properties": {
+              "partId": { "type": "string" },
+              "count": { "type": "integer", "minimum": 1 }
+            }
+          }
+        },
+        "coinCost": { "type": "integer", "minimum": 0 },
+        "sources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ItemSource" }
+        }
+      }
+    },
+
+    "SpecialPart": {
+      "type": "object",
+      "required": ["id", "displayName"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "displayName": { "type": "string" },
+        "rarity": {
+          "type": "string",
+          "enum": ["common", "uncommon", "rare", "prestige"]
+        },
+        "sources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ItemSource" }
+        }
+      }
+    },
+
+    "CollectibleSet": {
+      "type": "object",
+      "required": ["id", "setName", "itemIds"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "setName": { "type": "string" },
+        "itemIds": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "unlocksTrophyId": { "type": "string" },
+        "activityId": {
+          "type": "string",
+          "description": "The activity that primarily earns this set."
+        },
+        "_note": { "type": "string" }
+      }
+    },
+
+    "Trophy": {
+      "type": "object",
+      "required": ["id", "displayName", "unlockCondition"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "displayName": { "type": "string" },
+        "tier": {
+          "type": "string",
+          "enum": ["milestone", "trophy"],
+          "default": "trophy",
+          "description": "milestone = intermediate progress marker (e.g., 'first 5 stamps', 'all addition mastered'). trophy = capstone for a full set/condition. Milestones are smaller celebrations along the path; trophies are the big completion moments."
+        },
+        "unlockCondition": {
+          "type": "object",
+          "required": ["type"],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "complete-collectible-set",
+                "fixture-map-complete",
+                "mastery-set",
+                "concept-instance-subset-mastered",
+                "concept-instance-count-mastered",
+                "lifetime-rounds",
+                "daily-streak"
+              ]
+            },
+            "collectibleSetId": { "type": "string" },
+            "fixtureType": { "type": "string" },
+            "fixtureCount": { "type": "integer", "minimum": 1 },
+            "conceptIds": { "type": "array", "items": { "type": "string" } },
+            "conceptId": {
+              "type": "string",
+              "description": "Single concept id, used by concept-instance-subset-mastered and concept-instance-count-mastered."
+            },
+            "instanceKeys": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Explicit subset of a per-instance concept's instanceKeys that must all be Mastered. Used by concept-instance-subset-mastered."
+            },
+            "instanceKeyCount": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "How many instance keys (any of them) must be Mastered. Used by concept-instance-count-mastered for 'first N of any' milestones."
+            },
+            "lifetimeRounds": { "type": "integer", "minimum": 1 },
+            "streakDays": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "celebrationStyle": {
+          "type": "string",
+          "enum": ["quiet-pop", "stinger", "fanfare"],
+          "default": "stinger",
+          "description": "Audio + visual celebration intensity when this is unlocked. Milestones use quiet-pop or stinger; capstone trophies use fanfare."
+        },
+        "hubDisplay": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "region": { "type": "string" },
+            "shelfCategory": { "type": "string" }
+          }
+        },
+        "thumbnail": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    }
+  }
+}

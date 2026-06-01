@@ -1,0 +1,135 @@
+{
+  "$schema": "../../schemas/lesson-runtime.schema.json",
+  "id": "lesson-k-cc-3-write-numerals",
+  "specRef": "specs/lessons/k-cc-3-write-numerals.md",
+  "version": 1,
+  "conceptId": "K.CC.3",
+  "standardCode": "K.CC.3",
+  "region": "sanctuary",
+  "introducingActivity": "scribes-tower",
+  "subModeTarget": "trace-numeral",
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "totalDurationTargetSec": 75,
+  "prerequisites": ["lesson-k-cc-4a-one-to-one", "lesson-k-cc-4b-cardinality"],
+
+  "phases": {
+    "iShow": {
+      "durationSec": 22,
+      "scene": {
+        "background": "scribes-tower-interior",
+        "lighting": "stained-glass",
+        "musicBed": "sanctuary-low",
+        "centralDesk": {
+          "ghostNumeral": "5",
+          "ghostOpacity": "bright-dotted",
+          "strokeOrderIndicators": [
+            { "id": "stroke-1-start", "position": "top-left", "label": "1" },
+            { "id": "stroke-2-start", "position": "middle-left", "label": "2" }
+          ],
+          "quantityReferenceAbove": {
+            "type": "fireflies",
+            "count": 5,
+            "arrangement": "loose-cluster"
+          }
+        },
+        "buddyPosition": "lower-left-reading-cushion",
+        "hud": {
+          "doneButton": "hidden"
+        }
+      },
+      "animationSteps": [
+        { "at": "0s",  "action": "scene-fade-up" },
+        { "at": "0s",  "action": "music-bed-in" },
+        { "at": "2s",  "action": "narrator-begin" },
+        { "at": "5s",  "action": "firefly-pulse-sequence", "params": { "count": 5, "totalDurationSec": 1.5 } },
+        { "at": "9s",  "action": "ghost-numeral-glow", "params": { "numeral": "5" } },
+        { "at": "11s", "action": "narration-cue", "params": { "cueId": "watch-how-write" } },
+        { "at": "13s", "action": "pointer-appear", "params": { "position": "stroke-1-start" } },
+        { "at": "14s", "action": "pointer-trace", "params": { "strokePath": "stroke-1", "durationSec": 2 } },
+        { "at": "15s", "action": "ive-got-this-button-show" },
+        { "at": "16s", "action": "pointer-lift" },
+        { "at": "16s", "action": "indicator-pulse", "params": { "target": "stroke-2-start" } },
+        { "at": "17s", "action": "pointer-trace", "params": { "strokePath": "stroke-2", "durationSec": 2 } },
+        { "at": "19s", "action": "numeral-comes-to-life", "params": { "numeral": "5", "personality": "bouncy" } },
+        { "at": "19s", "action": "fireflies-rearrange-to-five-shape" },
+        { "at": "22s", "action": "phase-end" }
+      ],
+      "narrationScript": [
+        { "at": "2s",  "text": "Look at the desk. Five fireflies — and the dotted shape is the number five." },
+        { "at": "5s",  "text": "One. Two. Three. Four. Five." },
+        { "at": "9s",  "text": "This is five. The shape and the count go together." },
+        { "at": "11s", "text": "Watch how we write it." },
+        { "at": "14s", "text": "Down the side..." },
+        { "at": "17s", "text": "...and around the curve." },
+        { "at": "22s", "text": "That's five. Numerals are signs we draw to show how many." }
+      ],
+      "skipToYouDoAvailableAfterSec": 15
+    },
+
+    "weTry": {
+      "durationSec": 25,
+      "scene": {
+        "background": "scribes-tower-interior",
+        "musicBed": "sanctuary-low",
+        "centralDesk": {
+          "ghostNumeral": "8",
+          "strokeOrderIndicators": [
+            { "id": "stroke-1-start", "position": "top-of-loop", "label": "1" }
+          ],
+          "singleContinuousLoop": true,
+          "quantityReferenceAbove": { "type": "fireflies", "count": 8, "static": true }
+        }
+      },
+      "choreography": [
+        { "at": "0s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-start" } },
+        { "at": "4s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-prompt" } },
+        { "at": "4s",            "type": "system-action",       "params": { "action": "halo-pulse", "target": "stroke-1-start" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "trace-stroke", "strokeId": "stroke-1-loop", "scoringMode": "geometric-mode-1", "passThreshold": 0.80, "allowLifts": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "trail-glow", "alongStroke": "stroke-1-loop" } },
+        { "at": "on-stroke-complete-pass", "type": "system-action", "params": { "action": "numeral-comes-to-life", "numeral": "8", "animation": "loop-the-loop" } },
+        { "at": "on-stroke-complete-pass", "type": "system-action", "params": { "action": "narration", "cueId": "we-try-pass" } },
+        { "at": "on-stroke-complete-fail", "type": "system-action", "params": { "action": "narration", "cueId": "we-try-retry" } },
+        { "at": "25s",           "type": "system-action",       "params": { "action": "phase-end" } }
+      ],
+      "narrationScript": [
+        { "at": "we-try-start",   "text": "Now a different number. The eight. Same idea — follow the dotted line." },
+        { "at": "we-try-prompt",  "text": "Start at the top — it's all one loop, no lifting." },
+        { "at": "we-try-pass",    "text": "That's eight — well done. Same procedure, different number." },
+        { "at": "we-try-retry",   "text": "Almost — let's go slowly. Follow the dotted line." }
+      ],
+      "hesitationRule": {
+        "thresholdSec": 5,
+        "action": "highlight-target"
+      },
+      "passCondition": "Any kid attempt to trace passes the lesson — even a low-score trace counts as participation."
+    },
+
+    "youDo": {
+      "activityId": "scribes-tower",
+      "subMode": "trace-numeral",
+      "isContinuation": false,
+      "roundParameters": {
+        "targetNumeral": "3",
+        "quantityReferenceCount": 3,
+        "quantityReferenceType": "firefly",
+        "strokeOrderIndicators": true,
+        "passThresholdScore": 0.80,
+        "hintThresholds": {
+          "highlightNextSec": 5,
+          "narratorReminderSec": 10
+        }
+      },
+      "maxAttempts": 3,
+      "cpaLayer": "Concrete"
+    }
+  },
+
+  "libraryEntry": {
+    "thumbnail": "assets/lessons/k-cc-3/thumbnail.png",
+    "shortLabel": "How to write a numeral",
+    "regionBadge": "sanctuary-leaf",
+    "replayDurationSec": 60
+  },
+
+  "telemetryExtensions": []
+}

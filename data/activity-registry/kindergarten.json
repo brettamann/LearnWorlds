@@ -1,0 +1,291 @@
+{
+  "$schema": "../../schemas/activity-registry.schema.json",
+  "version": 1,
+  "lastUpdated": "2026-05-30",
+  "activities": [
+    {
+      "id": "counting-parade",
+      "displayName": "Counting Parade",
+      "region": "sanctuary",
+      "grade": "K",
+      "status": "ready-to-build",
+      "specRef": "specs/activities/kindergarten/counting-parade.md",
+      "lastUpdated": "2026-05-30",
+      "concepts": [
+        { "conceptId": "K.CC.1", "role": "introduces" },
+        { "conceptId": "K.CC.2", "role": "introduces" },
+        { "conceptId": "K.CC.4a", "role": "introduces" },
+        { "conceptId": "K.CC.4b", "role": "introduces" },
+        { "conceptId": "K.CC.4c", "role": "exercises-no-introducer" },
+        { "conceptId": "K.CC.5", "role": "exercises-no-introducer" },
+        { "conceptId": "K.CC.3", "role": "exercises" }
+      ],
+      "subModes": [
+        { "id": "count-the-parade", "isDefault": true, "primaryConcepts": ["K.CC.4a", "K.CC.4b"] },
+        { "id": "count-forward-from-n", "primaryConcepts": ["K.CC.2"] },
+        { "id": "count-out-n", "primaryConcepts": ["K.CC.5"] },
+        { "id": "long-parade", "primaryConcepts": ["K.CC.1"] },
+        { "id": "tens-parade", "isChallenge": true, "primaryConcepts": ["K.CC.1"] }
+      ],
+      "stylusMechanics": ["tap-pick", "drag-and-drop-snap-to-target"],
+      "mathNotebookRelationship": "optional",
+      "challengeVariant": {
+        "subModeId": "tens-parade",
+        "entryFrequency": "1-per-day",
+        "rewardChestTier": "small"
+      },
+      "rewards": {
+        "canonicalEvents": ["round.passed", "round.notebook_bonus", "streak.session_3", "streak.session_5", "streak.session_10", "milestone.problems_25", "milestone.problems_100", "mastery.standard_practicing", "mastery.standard_mastered", "challenge.completed"],
+        "activityDefinedEvents": [
+          { "eventName": "counting-parade.collectible_dropped", "rewardType": "collectible", "description": "Sanctuary Creature Cards drop at ~1 in 5 round-pass events." }
+        ],
+        "collectibleSets": [
+          { "setName": "Sanctuary Creature Cards", "itemCount": 24, "unlocksTrophy": "Sanctuary Atlas" }
+        ]
+      }
+    },
+    {
+      "id": "ten-frame-pond",
+      "displayName": "Ten-Frame Pond",
+      "region": "sanctuary",
+      "grade": "K",
+      "status": "ready-to-build",
+      "specRef": "specs/activities/kindergarten/ten-frame-pond.md",
+      "lastUpdated": "2026-05-30",
+      "concepts": [
+        { "conceptId": "K.OA.3", "role": "introduces" },
+        { "conceptId": "K.OA.4", "role": "introduces" },
+        { "conceptId": "K.NBT.1", "role": "introduces" },
+        { "conceptId": "K.CC.4c", "role": "exercises-no-introducer" },
+        { "conceptId": "K.OA.1", "role": "exercises-no-introducer" }
+      ],
+      "subModes": [
+        { "id": "fill-to-target", "isDefault": true, "isDemotionFloor": true, "primaryConcepts": ["K.OA.3"] },
+        { "id": "two-ways", "primaryConcepts": ["K.OA.3"] },
+        { "id": "make-ten", "primaryConcepts": ["K.OA.4"] },
+        { "id": "ten-plus-n", "primaryConcepts": ["K.NBT.1"] },
+        { "id": "three-frames", "isChallenge": true, "primaryConcepts": ["K.NBT.1"] }
+      ],
+      "stylusMechanics": ["drag-and-drop-snap-to-grid", "tap-pick"],
+      "mathNotebookRelationship": "optional",
+      "challengeVariant": {
+        "subModeId": "three-frames",
+        "entryFrequency": "1-per-day",
+        "rewardChestTier": "small"
+      },
+      "rewards": {
+        "canonicalEvents": ["round.passed", "round.notebook_bonus", "streak.session_3", "streak.session_5", "streak.session_10", "milestone.problems_25", "milestone.problems_100", "mastery.standard_practicing", "mastery.standard_mastered", "challenge.completed"],
+        "activityDefinedEvents": [
+          { "eventName": "ten-frame-pond.strategy_variety_bonus", "rewardType": "collectible", "description": "Three distinct decompositions of the same target within one session earns a rare Sanctuary Reef fish." },
+          { "eventName": "ten-frame-pond.frame_collapsed_to_ten", "rewardType": "library-entry", "description": "Visual reward (ten pearl); no separate reward fired, animation only." },
+          { "eventName": "ten-frame-pond.collectible_dropped", "rewardType": "collectible", "description": "Sanctuary Reef Cards drop at ~1 in 5 round-pass events." }
+        ],
+        "collectibleSets": [
+          { "setName": "Sanctuary Reef Cards", "itemCount": 20, "unlocksTrophy": "Reef Atlas" },
+          { "setName": "Rare Sanctuary Reef", "itemCount": 6, "isRare": true, "unlocksTrophy": "Reef Atlas (rare set)" }
+        ]
+      }
+    },
+    {
+      "id": "shape-garden",
+      "displayName": "Shape Garden",
+      "region": "sanctuary",
+      "grade": "K",
+      "status": "ready-to-build",
+      "specRef": "specs/activities/kindergarten/shape-garden.md",
+      "lastUpdated": "2026-05-30",
+      "concepts": [
+        { "conceptId": "K.G.2", "role": "introduces" },
+        { "conceptId": "K.G.3", "role": "introduces" },
+        { "conceptId": "K.G.4", "role": "introduces" }
+      ],
+      "subModes": [
+        { "id": "find-shape", "isDefault": true, "isDemotionFloor": true, "primaryConcepts": ["K.G.2"] },
+        { "id": "flat-or-solid", "primaryConcepts": ["K.G.3"] },
+        { "id": "sort-by-attribute", "primaryConcepts": ["K.G.4"] },
+        { "id": "two-attribute-hunt", "isChallenge": true, "primaryConcepts": ["K.G.4"] }
+      ],
+      "stylusMechanics": ["tap-pick", "drag-and-drop-snap-to-target"],
+      "mathNotebookRelationship": "optional",
+      "challengeVariant": {
+        "subModeId": "two-attribute-hunt",
+        "entryFrequency": "1-per-day",
+        "rewardChestTier": "small"
+      },
+      "rewards": {
+        "canonicalEvents": ["round.passed", "round.notebook_bonus", "streak.session_3", "streak.session_5", "streak.session_10", "milestone.problems_25", "milestone.problems_100", "mastery.standard_practicing", "mastery.standard_mastered", "challenge.completed"],
+        "activityDefinedEvents": [
+          { "eventName": "shape-garden.collectible_dropped", "rewardType": "collectible", "description": "Plant Cards and Pond Creature Cards drop at ~1 in 4 / 1 in 6 round-pass events." }
+        ],
+        "collectibleSets": [
+          { "setName": "Garden Plant Cards", "itemCount": 16, "unlocksTrophy": "Sanctuary Garden Atlas" },
+          { "setName": "Pond Creature Cards (Shape Garden)", "itemCount": 6, "unlocksTrophy": "Sanctuary Garden Atlas" }
+        ]
+      }
+    },
+    {
+      "id": "build-a-habitat",
+      "displayName": "Build-a-Habitat",
+      "region": "sanctuary",
+      "grade": "K",
+      "status": "ready-to-build",
+      "specRef": "specs/activities/kindergarten/build-a-habitat.md",
+      "lastUpdated": "2026-05-30",
+      "concepts": [
+        { "conceptId": "K.G.5", "role": "introduces", "isInLessonChain": true, "lessonChainPosition": 1 },
+        { "conceptId": "K.G.6", "role": "introduces", "isInLessonChain": true, "lessonChainPosition": 2 }
+      ],
+      "intraRoundLessonChain": {
+        "enabled": true,
+        "concepts": ["K.G.5", "K.G.6"],
+        "rationale": "K.G.5 builds the frame that K.G.6 then composes onto. The two concepts are structurally inseparable within a round. Encountering K.G.6 cold would force scaffolding to do too much work pedagogically. Both lessons fire within the first round (K.G.5 in Phase 1, K.G.6 in Phase 2)."
+      },
+      "subModes": [
+        { "id": "simple-shelter", "isDefault": true, "primaryConcepts": ["K.G.5", "K.G.6"] },
+        { "id": "creature-home", "primaryConcepts": ["K.G.5", "K.G.6"] },
+        { "id": "grand-habitat", "isChallenge": true, "primaryConcepts": ["K.G.5", "K.G.6"] },
+        { "id": "frame-only", "isDemotionFloor": true, "primaryConcepts": ["K.G.5"] }
+      ],
+      "phases": [
+        { "id": "sticks-and-clay", "order": 1, "primaryConcepts": ["K.G.5"], "displayName": "Sticks & Clay" },
+        { "id": "raise-the-habitat", "order": 2, "primaryConcepts": ["K.G.6"], "displayName": "Raise the Habitat" }
+      ],
+      "stylusMechanics": ["drag-and-drop-snap-to-target"],
+      "mathNotebookRelationship": "optional",
+      "challengeVariant": {
+        "subModeId": "grand-habitat",
+        "entryFrequency": "1-per-day",
+        "rewardChestTier": "small"
+      },
+      "rewards": {
+        "canonicalEvents": ["round.passed", "round.notebook_bonus", "streak.session_3", "streak.session_5", "streak.session_10", "milestone.problems_25", "milestone.problems_100", "mastery.standard_practicing", "mastery.standard_mastered", "challenge.completed"],
+        "activityDefinedEvents": [
+          { "eventName": "habitat.permanent_fixture_built", "rewardType": "permanent-fixture", "description": "Built habitat becomes a permanent fixture in the Sanctuary Habitat Map." },
+          { "eventName": "habitat.thank_you_collectible_dropped", "rewardType": "collectible", "description": "Resident creature sends a thank-you collectible (feather, scale, gem) on round-pass." }
+        ],
+        "collectibleSets": [
+          { "setName": "Resident Creature Thank-Yous", "itemCount": 12, "unlocksTrophy": "Sanctuary Keeper's Map" }
+        ],
+        "permanentFixtureType": "habitat"
+      }
+    },
+    {
+      "id": "wheres-buddy",
+      "displayName": "Where's Buddy?",
+      "region": "sanctuary",
+      "grade": "K",
+      "status": "ready-to-build",
+      "specRef": "specs/activities/kindergarten/wheres-buddy.md",
+      "lastUpdated": "2026-05-30",
+      "concepts": [
+        { "conceptId": "K.G.1", "role": "introduces" }
+      ],
+      "subModes": [
+        { "id": "find-mode", "isDefault": true, "isDemotionFloor": true, "primaryConcepts": ["K.G.1"] },
+        { "id": "place-mode", "primaryConcepts": ["K.G.1"] },
+        { "id": "relational-mode", "isChallenge": true, "primaryConcepts": ["K.G.1"] }
+      ],
+      "stylusMechanics": ["tap-pick", "drag-and-drop-snap-to-target"],
+      "mathNotebookRelationship": "optional",
+      "challengeVariant": {
+        "subModeId": "relational-mode",
+        "entryFrequency": "1-per-day",
+        "rewardChestTier": "small"
+      },
+      "rewards": {
+        "canonicalEvents": ["round.passed", "round.notebook_bonus", "streak.session_3", "streak.session_5", "streak.session_10", "milestone.problems_25", "milestone.problems_100", "mastery.standard_practicing", "mastery.standard_mastered", "challenge.completed"],
+        "activityDefinedEvents": [
+          { "eventName": "wheres-buddy.collectible_dropped", "rewardType": "collectible", "description": "Hide-and-Seek Hats and Hideout Decorations drop at ~1 in 4 / 1 in 6 round-pass events." }
+        ],
+        "collectibleSets": [
+          { "setName": "Hide-and-Seek Hats", "itemCount": 8, "unlocksTrophy": "Hide-and-Seek Wardrobe" }
+        ]
+      },
+      "notes": "First K activity with Buddy as primary interactive element (rather than side observer). Vocabulary-first content (no numerals)."
+    },
+    {
+      "id": "scribes-tower",
+      "displayName": "Scribe's Tower",
+      "region": "sanctuary",
+      "grade": "K",
+      "status": "ready-to-build",
+      "specRef": "specs/activities/kindergarten/scribes-tower.md",
+      "lastUpdated": "2026-05-30",
+      "concepts": [
+        { "conceptId": "K.CC.3", "role": "introduces" }
+      ],
+      "subModes": [
+        { "id": "trace-numeral", "isDefault": true, "isDemotionFloor": true, "primaryConcepts": ["K.CC.3"] },
+        { "id": "write-from-cue", "primaryConcepts": ["K.CC.3"] },
+        { "id": "match-numeral", "primaryConcepts": ["K.CC.3"] },
+        { "id": "audio-only-teens", "isChallenge": true, "primaryConcepts": ["K.CC.3"] }
+      ],
+      "stylusMechanics": ["trace", "free-write", "tap-pick"],
+      "numberWritingModes": ["trace", "prompted-free-write"],
+      "mathNotebookRelationship": "primary-surface",
+      "challengeVariant": {
+        "subModeId": "audio-only-teens",
+        "entryFrequency": "1-per-day",
+        "rewardChestTier": "small"
+      },
+      "rewards": {
+        "canonicalEvents": ["round.passed", "round.notebook_bonus", "streak.session_3", "streak.session_5", "streak.session_10", "milestone.problems_25", "milestone.problems_100", "mastery.standard_practicing", "mastery.standard_mastered", "challenge.completed"],
+        "activityDefinedEvents": [
+          { "eventName": "scribe.numeral_mastered", "rewardType": "stamp", "description": "A single numeral reaches per-instance mastery. Stamp added to the Hub poster." },
+          { "eventName": "scribe.tile_fallback_used", "rewardType": "library-entry", "description": "Tile fallback usage flagged for teacher dashboard (no reward; tracking only)." },
+          { "eventName": "scribe.ink_color_changed", "rewardType": "library-entry", "description": "Kid changed ink color (no reward; tracking only)." }
+        ],
+        "collectibleSets": [
+          { "setName": "Numeral Stamps", "itemCount": 21, "unlocksTrophy": "Scribe's Atlas" },
+          { "setName": "Ink Colors", "itemCount": 8 }
+        ]
+      },
+      "notes": "First activity to use per-instance mastery (K.CC.3 with 21 numeral instance keys). The writing desk IS the digit-recognition zone; notebook is primary-surface."
+    },
+    {
+      "id": "storytellers-pond",
+      "displayName": "Storyteller's Pond",
+      "region": "sanctuary",
+      "grade": "K",
+      "status": "ready-to-build",
+      "specRef": "specs/activities/kindergarten/storytellers-pond.md",
+      "lastUpdated": "2026-05-30",
+      "concepts": [
+        { "conceptId": "K.OA.2", "role": "introduces" },
+        { "conceptId": "K.OA.1", "role": "exercises-no-introducer" }
+      ],
+      "subModes": [
+        { "id": "add-to", "isDefault": true, "isDemotionFloor": true, "primaryConcepts": ["K.OA.2"] },
+        { "id": "take-from", "primaryConcepts": ["K.OA.2"] },
+        { "id": "put-together", "primaryConcepts": ["K.OA.2"] },
+        { "id": "take-apart", "primaryConcepts": ["K.OA.2"] },
+        { "id": "two-step", "isChallenge": true, "primaryConcepts": ["K.OA.2"] }
+      ],
+      "stylusMechanics": ["tap-pick", "free-write"],
+      "numberWritingModes": ["prompted-free-write"],
+      "mathNotebookRelationship": "encouraged",
+      "challengeVariant": {
+        "subModeId": "two-step",
+        "entryFrequency": "1-per-day",
+        "rewardChestTier": "small"
+      },
+      "rewards": {
+        "canonicalEvents": ["round.passed", "round.notebook_bonus", "streak.session_3", "streak.session_5", "streak.session_10", "milestone.problems_25", "milestone.problems_100", "mastery.standard_practicing", "mastery.standard_mastered", "challenge.completed"],
+        "activityDefinedEvents": [
+          { "eventName": "pond.representation_used", "rewardType": "library-entry", "description": "Telemetry for K.OA.1 exercises-only mastery (modes: scene-manipulation, notebook-drawing, equation-form)." },
+          { "eventName": "pond.collectible_dropped", "rewardType": "collectible", "description": "Pond Creature Cards and Story Mementos." }
+        ],
+        "collectibleSets": [
+          { "setName": "Pond Creature Cards", "itemCount": 15, "unlocksTrophy": "Pond Census Atlas" },
+          { "setName": "Story Mementos", "itemCount": 30 }
+        ]
+      },
+      "contentTemplates": {
+        "storyTemplateCount": 22,
+        "templatePaths": ["data/templates/stories/"]
+      },
+      "visibleNarratorCharacter": "storyteller-turtle",
+      "notes": "First activity with content-templated story rounds; first with a visible narrator character; introduces the bar model component."
+    }
+  ]
+}

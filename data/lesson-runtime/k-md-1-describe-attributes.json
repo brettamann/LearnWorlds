@@ -1,0 +1,133 @@
+{
+  "$schema": "../../schemas/lesson-runtime.schema.json",
+  "id": "lesson-k-md-1-describe-attributes",
+  "specRef": "specs/lessons/k-md-1-describe-attributes.md",
+  "version": 1,
+  "conceptId": "K.MD.1",
+  "standardCode": "K.MD.1",
+  "region": "sanctuary",
+  "introducingActivity": "caretakers-bench",
+  "subModeTarget": "describe-attributes",
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "totalDurationTargetSec": 65,
+
+  "phases": {
+    "iShow": {
+      "durationSec": 25,
+      "scene": {
+        "background": "caretakers-bench-workbench-lantern-lit",
+        "musicBed": "sanctuary-workshop",
+        "centralObject": { "kind": "feather", "color": "brown-and-cream", "orientation": "laid-flat" },
+        "appliedAttributesZone": { "position": "beneath-object", "type": "stack" },
+        "wordTags": [
+          { "word": "light", "applicable": true },
+          { "word": "smooth", "applicable": true },
+          { "word": "soft", "applicable": true },
+          { "word": "heavy", "applicable": false },
+          { "word": "rough", "applicable": false }
+        ],
+        "buddyPosition": "lower-left-overturned-crate",
+        "hud": { "doneButton": "hidden" }
+      },
+      "animationSteps": [
+        { "at": "0s",  "action": "scene-fade-up" },
+        { "at": "0s",  "action": "music-bed-in" },
+        { "at": "2s",  "action": "narrator-begin" },
+        { "at": "5s",  "action": "camera-nudge", "params": { "to": "feather" } },
+        { "at": "7s",  "action": "pointer-pickup", "params": { "tag": "light" } },
+        { "at": "8s",  "action": "pointer-drop", "params": { "tag": "light", "target": "feather" } },
+        { "at": "8s",  "action": "tag-settle-in-stack-with-chime" },
+        { "at": "11s", "action": "pointer-pickup", "params": { "tag": "heavy" } },
+        { "at": "13s", "action": "pointer-drop", "params": { "tag": "heavy", "target": "feather" } },
+        { "at": "13s", "action": "nope-puff-tag-returns", "params": { "tag": "heavy" } },
+        { "at": "16s", "action": "pointer-drop-tag", "params": { "tag": "soft", "target": "feather" } },
+        { "at": "17s", "action": "ive-got-this-button-show" },
+        { "at": "19s", "action": "pointer-drop-tag", "params": { "tag": "smooth", "target": "feather" } },
+        { "at": "21s", "action": "applied-tags-pulse-together" },
+        { "at": "25s", "action": "phase-end" }
+      ],
+      "narrationScript": [
+        { "at": "2s",  "text": "Look at this feather. What words describe it?" },
+        { "at": "8s",  "text": "Feathers are light." },
+        { "at": "13s", "text": "Heavy? No — feathers are not heavy." },
+        { "at": "16s", "text": "Soft." },
+        { "at": "19s", "text": "Smooth." },
+        { "at": "21s", "text": "Light, soft, smooth. One feather, many words. That's how we describe things." }
+      ],
+      "skipToYouDoAvailableAfterSec": 17
+    },
+
+    "weTry": {
+      "durationSec": 25,
+      "scene": {
+        "background": "caretakers-bench-workbench-lantern-lit",
+        "centralObject": { "kind": "glow-stone", "color": "teal-glowing", "size": "small" },
+        "wordTags": [
+          { "word": "shiny", "applicable": true },
+          { "word": "smooth", "applicable": true },
+          { "word": "light", "applicable": true },
+          { "word": "dull", "applicable": false },
+          { "word": "heavy", "applicable": false }
+        ],
+        "initialGlowTag": "shiny"
+      },
+      "choreography": [
+        { "at": "0s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-start" } },
+        { "at": "0s",            "type": "system-action",       "params": { "action": "halo-tag", "tag": "shiny" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-tag-to-object", "preferredTag": "any-applicable", "wrongTagReturns": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "tag-feedback", "passCueByTag": { "shiny": "we-try-correct-shiny", "smooth": "we-try-correct-smooth", "light": "we-try-correct-light" }, "failCueByTag": { "dull": "we-try-corrective-dull", "heavy": "we-try-corrective-heavy" } } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "halo-next-applicable-tag" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-prompt-2" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-tag-to-object", "preferredTag": "any-remaining-applicable" } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "tag-feedback" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "pointer-auto-drop-remaining-applicable" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "applied-tags-pulse-together" } },
+        { "at": "22s",           "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-closing" } },
+        { "at": "25s",           "type": "system-action",       "params": { "action": "phase-end" } }
+      ],
+      "narrationScript": [
+        { "at": "we-try-start",            "text": "Your turn. This is a glow-stone. Find words that describe it." },
+        { "at": "we-try-correct-shiny",    "text": "Shiny." },
+        { "at": "we-try-correct-smooth",   "text": "Smooth." },
+        { "at": "we-try-correct-light",    "text": "Light." },
+        { "at": "we-try-corrective-dull",  "text": "Glow-stones aren't dull — they shine." },
+        { "at": "we-try-corrective-heavy", "text": "Heavy? This little stone is light." },
+        { "at": "we-try-prompt-2",         "text": "Now another." },
+        { "at": "we-try-closing",          "text": "Three words for one stone. Well described." }
+      ],
+      "hesitationRule": {
+        "thresholdSec": 5,
+        "action": "highlight-target"
+      },
+      "passCondition": "Any kid drag onto the glow-stone (correct or wrong) counts as participation."
+    },
+
+    "youDo": {
+      "activityId": "caretakers-bench",
+      "subMode": "describe-attributes",
+      "isContinuation": false,
+      "roundParameters": {
+        "object": "apple",
+        "availableTagPool": ["smooth", "shiny", "heavy", "light", "rough", "dull"],
+        "applicableTags": ["smooth", "shiny", "light"],
+        "minCorrectTags": 2,
+        "tagIconAndTextAtConcrete": true,
+        "hintThresholds": {
+          "highlightNextSec": 5,
+          "narratorReminderSec": 10
+        }
+      },
+      "maxAttempts": 3,
+      "cpaLayer": "Concrete"
+    }
+  },
+
+  "libraryEntry": {
+    "thumbnail": "assets/lessons/k-md-1/thumbnail.png",
+    "shortLabel": "Words describe things",
+    "regionBadge": "sanctuary-leaf",
+    "replayDurationSec": 65
+  },
+
+  "telemetryExtensions": []
+}

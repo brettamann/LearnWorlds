@@ -1,0 +1,137 @@
+{
+  "$schema": "../../schemas/lesson-runtime.schema.json",
+  "id": "lesson-k-oa-2-word-problems",
+  "specRef": "specs/lessons/k-oa-2-word-problems.md",
+  "version": 1,
+  "conceptId": "K.OA.2",
+  "standardCode": "K.OA.2",
+  "region": "sanctuary",
+  "introducingActivity": "storytellers-pond",
+  "subModeTarget": "add-to",
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "narratorCharacter": "storyteller-turtle",
+  "totalDurationTargetSec": 75,
+  "prerequisites": ["lesson-k-cc-4a-one-to-one", "lesson-k-cc-4b-cardinality"],
+
+  "phases": {
+    "iShow": {
+      "durationSec": 28,
+      "scene": {
+        "background": "storytellers-pond-sunset",
+        "musicBed": "sanctuary-low",
+        "narratorCharacterOnLectern": "storyteller-turtle",
+        "narratorMouthSync": true,
+        "pondInitialState": "empty",
+        "buddyPosition": "lower-left-flat-stone",
+        "hud": { "doneButton": "hidden" }
+      },
+      "animationSteps": [
+        { "at": "0s",  "action": "scene-fade-up" },
+        { "at": "0s",  "action": "music-bed-in" },
+        { "at": "2s",  "action": "storyteller-mouth-open-narrate" },
+        { "at": "4s",  "action": "ducks-swim-in", "params": { "count": 4, "from": "off-screen-right" } },
+        { "at": "10s", "action": "ducks-swim-in", "params": { "count": 2, "from": "off-screen-left" } },
+        { "at": "13s", "action": "storyteller-question-pause" },
+        { "at": "15s", "action": "silent-beat-for-mental-count" },
+        { "at": "17s", "action": "pointer-appear-and-count-each", "params": { "targets": ["duck-1","duck-2","duck-3","duck-4","duck-5","duck-6"], "spacingSec": 0.8 } },
+        { "at": "18s", "action": "ive-got-this-button-show" },
+        { "at": "22s", "action": "count-badge-show", "params": { "value": 6 } },
+        { "at": "23s", "action": "bar-model-appear", "params": { "parts": [{ "value": 4, "color": "blue" }, { "value": 2, "color": "yellow" }], "result": { "value": 6, "color": "purple" } } },
+        { "at": "28s", "action": "phase-end" }
+      ],
+      "narrationScript": [
+        { "at": "2s",  "text": "Listen to this story." },
+        { "at": "4s",  "text": "Four ducks are in the pond." },
+        { "at": "10s", "text": "Two more ducks swim in." },
+        { "at": "13s", "text": "How many ducks altogether?" },
+        { "at": "17s", "text": "Let's count them. One. Two. Three. Four. Five. Six." },
+        { "at": "22s", "text": "Six!" },
+        { "at": "23s", "text": "Look — four ducks and two more makes six. That's the story's answer." },
+        { "at": "26s", "text": "When you hear a story, watch what happens, then count what's left at the end." }
+      ],
+      "skipToYouDoAvailableAfterSec": 18
+    },
+
+    "weTry": {
+      "durationSec": 22,
+      "scene": {
+        "background": "storytellers-pond-sunset",
+        "narratorCharacterOnLectern": "storyteller-turtle",
+        "pondInitialState": "empty",
+        "story": {
+          "shape": "add-to",
+          "startCount": 3,
+          "addCount": 2,
+          "creature": "frog",
+          "setting": "lily-pad"
+        }
+      },
+      "choreography": [
+        { "at": "0s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-story-start" } },
+        { "at": "0s",            "type": "system-action",       "params": { "action": "frogs-appear-on-lily-pad", "count": 3 } },
+        { "at": "4s",            "type": "system-action",       "params": { "action": "frogs-leap-in", "count": 2 } },
+        { "at": "4s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-frogs-arrive" } },
+        { "at": "7s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-question" } },
+        { "at": "7s",            "type": "system-action",       "params": { "action": "bar-model-appear-with-placeholder", "parts": [3, 2], "resultPlaceholder": true } },
+        { "at": "10s",           "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-count-prompt" } },
+        { "at": "10s",           "type": "system-action",       "params": { "action": "halo-pulse", "target": "frog-1" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "tap-frog-to-count", "tolerantOfMiss": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "sparkle-on-frog" } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-tap-1" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "halo-pulse", "target": "frog-2" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "tap-frog-to-count", "tolerantOfMiss": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-tap-2" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "pointer-auto-tap-remaining-frogs" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-auto-complete" } },
+        { "at": "+1.5s",         "type": "system-action",       "params": { "action": "bar-model-fill-result", "value": 5 } },
+        { "at": "+1.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-closing" } },
+        { "at": "22s",           "type": "system-action",       "params": { "action": "phase-end" } }
+      ],
+      "narrationScript": [
+        { "at": "we-try-story-start",   "text": "Listen. Three frogs are on the lily pad." },
+        { "at": "we-try-frogs-arrive",  "text": "Two more hop in." },
+        { "at": "we-try-question",      "text": "How many frogs altogether?" },
+        { "at": "we-try-count-prompt",  "text": "Count the frogs." },
+        { "at": "we-try-tap-1",         "text": "One." },
+        { "at": "we-try-tap-2",         "text": "Two." },
+        { "at": "we-try-auto-complete", "text": "Three. Four. Five." },
+        { "at": "we-try-closing",       "text": "Five frogs." }
+      ],
+      "hesitationRule": {
+        "thresholdSec": 5,
+        "action": "highlight-target"
+      },
+      "passCondition": "Any kid tap on any frog passes. The lesson teaches the procedure, not perfect count execution."
+    },
+
+    "youDo": {
+      "activityId": "storytellers-pond",
+      "subMode": "add-to",
+      "isContinuation": false,
+      "roundParameters": {
+        "storyTemplateId": "add-to-ducks-2",
+        "startCount": 5,
+        "addCount": 1,
+        "expectedAnswer": 6,
+        "barModelVisible": true,
+        "answerInputModes": ["free-write", "tile-select"],
+        "tileChoices": [5, 6, 7],
+        "hintThresholds": {
+          "highlightNextSec": 5,
+          "narratorReminderSec": 10
+        }
+      },
+      "maxAttempts": 3,
+      "cpaLayer": "Concrete"
+    }
+  },
+
+  "libraryEntry": {
+    "thumbnail": "assets/lessons/k-oa-2/thumbnail.png",
+    "shortLabel": "Stories with math inside",
+    "regionBadge": "sanctuary-leaf",
+    "replayDurationSec": 75
+  },
+
+  "telemetryExtensions": []
+}

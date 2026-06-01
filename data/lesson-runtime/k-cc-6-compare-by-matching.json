@@ -1,0 +1,137 @@
+{
+  "$schema": "../../schemas/lesson-runtime.schema.json",
+  "id": "lesson-k-cc-6-compare-by-matching",
+  "specRef": "specs/lessons/k-cc-6-compare-by-matching.md",
+  "version": 1,
+  "conceptId": "K.CC.6",
+  "standardCode": "K.CC.6",
+  "region": "sanctuary",
+  "introducingActivity": "picnic-baskets",
+  "subModeTarget": "match-by-line",
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "totalDurationTargetSec": 65,
+
+  "phases": {
+    "iShow": {
+      "durationSec": 25,
+      "scene": {
+        "background": "sanctuary-glade-picnic-blanket",
+        "lighting": "midday",
+        "musicBed": "sanctuary-picnic",
+        "baskets": [
+          { "id": "basket-A", "icon": "unicorn", "contents": "apple-slice", "count": 4 },
+          { "id": "basket-B", "icon": "hatchling-dragon", "contents": "sparkleberry", "count": 3 }
+        ],
+        "indicatorButtons": { "visibility": "hidden-until-matching-completes" },
+        "buddyPosition": "lower-left-pillow",
+        "hud": {
+          "doneButton": "hidden"
+        }
+      },
+      "animationSteps": [
+        { "at": "0s",  "action": "scene-fade-up" },
+        { "at": "0s",  "action": "music-bed-in" },
+        { "at": "2s",  "action": "narrator-begin" },
+        { "at": "5s",  "action": "camera-nudge-between-baskets" },
+        { "at": "7s",  "action": "pointer-appear", "params": { "position": "between-baskets" } },
+        { "at": "8s",  "action": "draw-line", "params": { "from": "basket-A:apple-1", "to": "basket-B:sparkleberry-1" } },
+        { "at": "11s", "action": "draw-line", "params": { "from": "basket-A:apple-2", "to": "basket-B:sparkleberry-2" } },
+        { "at": "14s", "action": "draw-line", "params": { "from": "basket-A:apple-3", "to": "basket-B:sparkleberry-3" } },
+        { "at": "17s", "action": "pulse-glow", "params": { "target": "basket-A:apple-4", "reason": "unpaired-leftover" } },
+        { "at": "17s", "action": "ive-got-this-button-show" },
+        { "at": "21s", "action": "indicator-buttons-show", "params": { "buttons": ["A has more", "equal", "B has more"] } },
+        { "at": "22s", "action": "pointer-tap", "params": { "target": "indicator-A-has-more" } },
+        { "at": "25s", "action": "phase-end" }
+      ],
+      "narrationScript": [
+        { "at": "2s",  "text": "Two baskets today. Which has more?" },
+        { "at": "7s",  "text": "Watch — we'll match them, one to one." },
+        { "at": "8s",  "text": "One to one." },
+        { "at": "11s", "text": "Two to two." },
+        { "at": "14s", "text": "Three to three." },
+        { "at": "19s", "text": "And one apple has no pair. That basket has more." },
+        { "at": "22s", "text": "Basket A has more." },
+        { "at": "23s", "text": "When something's left over, that side has more." }
+      ],
+      "skipToYouDoAvailableAfterSec": 17
+    },
+
+    "weTry": {
+      "durationSec": 25,
+      "scene": {
+        "background": "sanctuary-glade-picnic-blanket",
+        "musicBed": "sanctuary-picnic",
+        "baskets": [
+          { "id": "basket-A", "icon": "unicorn", "contents": "apple-slice", "count": 3 },
+          { "id": "basket-B", "icon": "hatchling-dragon", "contents": "sparkleberry", "count": 5 }
+        ],
+        "indicatorButtons": { "visibility": "hidden-until-matching-progresses" },
+        "buddyPosition": "lower-left-pillow"
+      },
+      "choreography": [
+        { "at": "0s",            "type": "system-action",       "params": { "action": "halo-pulse-pair", "targets": ["basket-A:apple-1", "basket-B:sparkleberry-1"] } },
+        { "at": "0s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-start" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "draw-line", "fromAnchor": "basket-A:apple-1", "toAnchor": "basket-B:sparkleberry-1", "tolerantOfTargetSwap": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "line-settle-chime" } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-after-line-1" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "halo-pulse-pair", "targets": ["basket-A:apple-2", "basket-B:sparkleberry-2"] } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-prompt-2" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "draw-line", "fromAnchor": "basket-A:apple-2", "toAnchor": "basket-B:sparkleberry-2", "tolerantOfTargetSwap": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-after-line-2" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "pointer-auto-draw-line", "from": "basket-A:apple-3", "to": "basket-B:sparkleberry-3" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-auto-line" } },
+        { "at": "+1s",           "type": "system-action",       "params": { "action": "pulse-glow-multi", "targets": ["basket-B:sparkleberry-4", "basket-B:sparkleberry-5"] } },
+        { "at": "+1s",           "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-leftover" } },
+        { "at": "+1s",           "type": "system-action",       "params": { "action": "indicator-buttons-show" } },
+        { "at": "+1s",           "type": "system-action",       "params": { "action": "halo-button", "target": "indicator-B-has-more" } },
+        { "at": "+1s",           "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-indicator-prompt" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "tile-tap", "expectedTarget": "indicator-B-has-more", "tolerantOfMiss": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "indicator-feedback", "passCue": "we-try-correct", "failCue": "we-try-incorrect" } },
+        { "at": "+2s",           "type": "system-action",       "params": { "action": "phase-end" } }
+      ],
+      "narrationScript": [
+        { "at": "we-try-start",            "text": "Your turn. Draw a line from this apple to that sparkleberry." },
+        { "at": "we-try-after-line-1",     "text": "One to one." },
+        { "at": "we-try-prompt-2",         "text": "Now this one." },
+        { "at": "we-try-after-line-2",     "text": "Two to two." },
+        { "at": "we-try-auto-line",        "text": "Three to three." },
+        { "at": "we-try-leftover",         "text": "And two sparkleberries have no pair." },
+        { "at": "we-try-indicator-prompt", "text": "Which basket has more? Tap the answer." },
+        { "at": "we-try-correct",          "text": "Yes — basket B has more." },
+        { "at": "we-try-incorrect",        "text": "Look — two sparkleberries with no pair. Basket B has more." }
+      ],
+      "hesitationRule": {
+        "thresholdSec": 5,
+        "action": "auto-complete"
+      },
+      "passCondition": "Any kid drag (line) or any kid tap (indicator) counts as participation."
+    },
+
+    "youDo": {
+      "activityId": "picnic-baskets",
+      "subMode": "match-by-line",
+      "isContinuation": false,
+      "roundParameters": {
+        "basketA": { "icon": "unicorn", "contents": "apple", "count": 5 },
+        "basketB": { "icon": "hatchling-dragon", "contents": "sparkleberry", "count": 4 },
+        "expectedResult": "A-has-more",
+        "indicatorLabelsAtConcrete": "numerals-and-labels",
+        "hintThresholds": {
+          "highlightNextSec": 5,
+          "narratorReminderSec": 10
+        }
+      },
+      "maxAttempts": 3,
+      "cpaLayer": "Concrete"
+    }
+  },
+
+  "libraryEntry": {
+    "thumbnail": "assets/lessons/k-cc-6/thumbnail.png",
+    "shortLabel": "Match one to one",
+    "regionBadge": "sanctuary-leaf",
+    "replayDurationSec": 65
+  },
+
+  "telemetryExtensions": []
+}

@@ -1,0 +1,252 @@
+{
+  "$schema": "../../schemas/telemetry-catalog.schema.json",
+  "version": 1,
+  "lastUpdated": "2026-05-30",
+  "_note": "K activity-specific telemetry events. Each entry maps to a Telemetry Events table in an activity spec. Activity-defined events use the activity slug prefix per the namespace convention.",
+
+  "events": [
+    {
+      "eventName": "counting_parade.round_started",
+      "namespace": "activity",
+      "purpose": "A Counting Parade round began.",
+      "firedBy": "counting-parade",
+      "consumedBy": ["session-log", "analytics"],
+      "payloadFields": [
+        { "name": "subMode", "type": "string", "enum": ["count-the-parade", "count-forward-from-n", "count-out-n", "long-parade", "tens-parade"] },
+        { "name": "arrangement", "type": "string", "enum": ["line", "circle", "array", "scattered"] },
+        { "name": "targetCount", "type": "integer" },
+        { "name": "presentationLayer", "type": "string" }
+      ],
+      "rateExpectation": "per-round"
+    },
+    {
+      "eventName": "counting_parade.tap_logged",
+      "namespace": "activity",
+      "purpose": "Kid tapped a creature in Counting Parade.",
+      "firedBy": "counting-parade",
+      "consumedBy": ["analytics"],
+      "payloadFields": [
+        { "name": "creatureId", "type": "string" },
+        { "name": "tapPosition", "type": "object" },
+        { "name": "roundElapsedMs", "type": "duration-ms" },
+        { "name": "isDoubleTap", "type": "boolean" },
+        { "name": "isMissedTap", "type": "boolean" }
+      ],
+      "rateExpectation": "per-interaction"
+    },
+    {
+      "eventName": "counting_parade.round_completed",
+      "namespace": "activity",
+      "purpose": "Counting Parade round finished (pass or fail).",
+      "firedBy": "counting-parade",
+      "consumedBy": ["mastery-engine", "session-log"],
+      "payloadFields": [
+        { "name": "success", "type": "boolean" },
+        { "name": "subMode", "type": "string" },
+        { "name": "attemptsThisRound", "type": "integer" },
+        { "name": "hintsFired", "type": "integer" }
+      ],
+      "rateExpectation": "per-round"
+    },
+
+    {
+      "eventName": "tenframe.round_started",
+      "namespace": "activity",
+      "purpose": "Ten-Frame Pond round began.",
+      "firedBy": "ten-frame-pond",
+      "consumedBy": ["session-log", "analytics"],
+      "payloadFields": [
+        { "name": "subMode", "type": "string", "enum": ["fill-to-target", "two-ways", "make-ten", "ten-plus-n", "three-frames"] },
+        { "name": "target", "type": "integer" },
+        { "name": "prePopulated", "type": "integer" },
+        { "name": "presentationLayer", "type": "string" }
+      ],
+      "rateExpectation": "per-round"
+    },
+    {
+      "eventName": "tenframe.frame_collapsed_to_ten",
+      "namespace": "activity",
+      "purpose": "A ten-frame filled to 10 and collapsed into a ten pearl.",
+      "firedBy": "ten-frame-pond",
+      "consumedBy": ["session-log", "analytics"],
+      "payloadFields": [
+        { "name": "subMode", "type": "string" },
+        { "name": "fillSequence", "type": "array<integer>", "description": "Cell indices in fill order." }
+      ],
+      "rateExpectation": "per-round"
+    },
+    {
+      "eventName": "tenframe.decomposition_demonstrated",
+      "namespace": "activity",
+      "purpose": "Kid demonstrated a decomposition (in two-ways sub-mode).",
+      "firedBy": "ten-frame-pond",
+      "consumedBy": ["mastery-engine", "analytics"],
+      "payloadFields": [
+        { "name": "target", "type": "integer" },
+        { "name": "partA", "type": "integer" },
+        { "name": "partB", "type": "integer" },
+        { "name": "partALocation", "type": "string" }
+      ],
+      "rateExpectation": "per-round"
+    },
+    {
+      "eventName": "tenframe.strategy_variety_bonus_earned",
+      "namespace": "activity",
+      "purpose": "Kid demonstrated three distinct decompositions of the same target within one session.",
+      "firedBy": "ten-frame-pond",
+      "consumedBy": ["reward-engine"],
+      "payloadFields": [
+        { "name": "target", "type": "integer" },
+        { "name": "decompositionsThisSession", "type": "array<string>" }
+      ],
+      "rateExpectation": "rare"
+    },
+
+    {
+      "eventName": "scribe.numeral_traced",
+      "namespace": "activity",
+      "purpose": "Kid traced a numeral in Scribe's Tower.",
+      "firedBy": "scribes-tower",
+      "consumedBy": ["mastery-engine", "analytics"],
+      "payloadFields": [
+        { "name": "numeral", "type": "string" },
+        { "name": "score", "type": "number" },
+        { "name": "attempts", "type": "integer" },
+        { "name": "assistedTraceUsed", "type": "boolean" }
+      ],
+      "rateExpectation": "per-attempt"
+    },
+    {
+      "eventName": "scribe.numeral_mastered",
+      "namespace": "activity",
+      "purpose": "A numeral reached per-instance mastery.",
+      "firedBy": "scribes-tower",
+      "consumedBy": ["mastery-engine", "reward-engine", "dashboard"],
+      "payloadFields": [
+        { "name": "numeral", "type": "string" },
+        { "name": "attemptsToMastery", "type": "integer" },
+        { "name": "daysToMastery", "type": "integer" }
+      ],
+      "rateExpectation": "rare"
+    },
+    {
+      "eventName": "scribe.tile_fallback_used",
+      "namespace": "activity",
+      "purpose": "Kid resorted to tile-selection fallback for a numeral.",
+      "firedBy": "scribes-tower",
+      "consumedBy": ["dashboard", "analytics"],
+      "payloadFields": [
+        { "name": "numeral", "type": "string" },
+        { "name": "attemptsBefore", "type": "integer" }
+      ],
+      "rateExpectation": "rare"
+    },
+
+    {
+      "eventName": "habitat.permanent_fixture_built",
+      "namespace": "activity",
+      "purpose": "A Build-a-Habitat round produced a habitat; permanent fixture added to Sanctuary Habitat Map.",
+      "firedBy": "build-a-habitat",
+      "consumedBy": ["reward-engine", "hub-view", "session-log"],
+      "payloadFields": [
+        { "name": "habitatId", "type": "string" },
+        { "name": "subMode", "type": "string" },
+        { "name": "fixtureMapPosition", "type": "object" }
+      ],
+      "rateExpectation": "per-round"
+    },
+    {
+      "eventName": "habitat.phase1_frame_completed",
+      "namespace": "activity",
+      "purpose": "Build-a-Habitat Phase 1 (Sticks & Clay) completed.",
+      "firedBy": "build-a-habitat",
+      "consumedBy": ["mastery-engine", "session-log"],
+      "payloadFields": [
+        { "name": "targetShape", "type": "string" },
+        { "name": "componentsPlaced", "type": "object" },
+        { "name": "attempts", "type": "integer" }
+      ],
+      "rateExpectation": "per-round"
+    },
+    {
+      "eventName": "habitat.phase2_structure_completed",
+      "namespace": "activity",
+      "purpose": "Build-a-Habitat Phase 2 (Raise the Habitat) completed.",
+      "firedBy": "build-a-habitat",
+      "consumedBy": ["mastery-engine", "session-log"],
+      "payloadFields": [
+        { "name": "pieceTypesUsed", "type": "array<string>" },
+        { "name": "pieceCount", "type": "integer" },
+        { "name": "targetMatched", "type": "boolean" }
+      ],
+      "rateExpectation": "per-round"
+    },
+
+    {
+      "eventName": "pond.representation_used",
+      "namespace": "activity",
+      "purpose": "Storyteller's Pond — kid demonstrated K.OA.1 via a representation mode (scene / notebook / equation).",
+      "firedBy": "storytellers-pond",
+      "consumedBy": ["mastery-engine"],
+      "payloadFields": [
+        { "name": "representationType", "type": "string", "enum": ["scene-manipulation", "notebook-drawing", "equation-form"] }
+      ],
+      "rateExpectation": "per-round"
+    },
+    {
+      "eventName": "pond.word_problem_solved",
+      "namespace": "activity",
+      "purpose": "Storyteller's Pond — kid attempted to solve a word problem.",
+      "firedBy": "storytellers-pond",
+      "consumedBy": ["mastery-engine", "analytics"],
+      "payloadFields": [
+        { "name": "problemType", "type": "string" },
+        { "name": "targetAnswer", "type": "integer" },
+        { "name": "kidAnswer", "type": "integer" },
+        { "name": "correct", "type": "boolean" }
+      ],
+      "rateExpectation": "per-round"
+    },
+
+    {
+      "eventName": "fluency.fact_attempted",
+      "namespace": "activity",
+      "purpose": "Fluency Within 5 — kid attempted a single fact.",
+      "firedBy": "fluency-within-5",
+      "consumedBy": ["mastery-engine", "analytics"],
+      "payloadFields": [
+        { "name": "fact", "type": "string", "description": "e.g., '3+2', '5-1'." },
+        { "name": "kidAnswer", "type": "integer" },
+        { "name": "correct", "type": "boolean" },
+        { "name": "latencyMs", "type": "duration-ms" },
+        { "name": "mode", "type": "string", "enum": ["tile-select", "free-write"] }
+      ],
+      "rateExpectation": "per-attempt"
+    },
+    {
+      "eventName": "fluency.fact_mastered",
+      "namespace": "activity",
+      "purpose": "Fluency Within 5 — a single fact reached per-instance mastery.",
+      "firedBy": "fluency-within-5",
+      "consumedBy": ["mastery-engine", "reward-engine"],
+      "payloadFields": [
+        { "name": "fact", "type": "string" },
+        { "name": "attemptsToMastery", "type": "integer" },
+        { "name": "daysToMastery", "type": "integer" }
+      ],
+      "rateExpectation": "rare"
+    },
+    {
+      "eventName": "fluency.combo_change",
+      "namespace": "activity",
+      "purpose": "Speed-run combo changed (increased or reset).",
+      "firedBy": "fluency-within-5",
+      "consumedBy": ["analytics"],
+      "payloadFields": [
+        { "name": "combo", "type": "integer" },
+        { "name": "multiplier", "type": "number" }
+      ],
+      "rateExpectation": "per-attempt"
+    }
+  ]
+}

@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://critmath/schemas/concept-registry.schema.json",
+  "title": "Concept Registry",
+  "description": "Canonical declaration of all math concepts the product covers. Maps Utah Core Standards to concept entries with mastery rules, lesson references, and granularity declarations. Sourced from the specs in /specs/shared/adaptive-scaffolding.md and /specs/shared/micro-lessons.md.",
+
+  "type": "object",
+  "required": ["version", "concepts"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": {
+      "type": "integer",
+      "description": "Schema/data version. Bump on breaking changes."
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO date the registry was last edited."
+    },
+    "concepts": {
+      "type": "array",
+      "description": "All concept entries in the registry.",
+      "items": { "$ref": "#/$defs/ConceptEntry" }
+    }
+  },
+
+  "$defs": {
+    "ConceptEntry": {
+      "type": "object",
+      "required": ["id", "standardCode", "description", "gradeLevel", "strand", "requiresLesson", "granularity"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[K12]\\.[A-Z]+\\.[0-9]+[a-z]?$",
+          "description": "Unique concept ID. Usually matches the Utah Core standard code (e.g., 'K.CC.4a'). Sub-letters allowed (a, b, c) for split standards."
+        },
+        "standardCode": {
+          "type": "string",
+          "description": "The canonical Utah Core Standard code this concept maps to. Often identical to id, but split concepts share the parent code (e.g., K.CC.4a, K.CC.4b, K.CC.4c all map to standardCode='K.CC.4')."
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of the concept. Often the standard's text or a kid-friendly paraphrase."
+        },
+        "gradeLevel": {
+          "type": "string",
+          "enum": ["K", "1", "2"],
+          "description": "Grade level this concept targets."
+        },
+        "strand": {
+          "type": "string",
+          "enum": ["CC", "OA", "NBT", "MD", "G"],
+          "description": "Utah strand: Counting & Cardinality, Operations & Algebraic Thinking, Number & Operations in Base Ten, Measurement & Data, Geometry."
+        },
+        "requiresLesson": {
+          "type": "boolean",
+          "description": "If true, a MicroLesson plays on first encounter. If false, the concept is exercises-only or is implicitly covered by another concept's lesson."
+        },
+        "lessonId": {
+          "type": ["string", "null"],
+          "description": "The primary lesson's id (matches a lesson file in /specs/lessons/). Must be present iff requiresLesson is true."
+        },
+        "secondaryLessonIds": {
+          "type": "array",
+          "description": "Optional. Additional lesson IDs that fire in later sessions for the same concept (e.g., a follow-up lesson covering vocabulary the primary lesson didn't introduce). Order is firing order across subsequent sessions.",
+          "items": { "type": "string" }
+        },
+        "introducedBy": {
+          "type": ["string", "null"],
+          "description": "The activity slug that is the canonical introducer. Present iff requiresLesson is true. Null for exercises-only concepts."
+        },
+        "granularity": {
+          "type": "string",
+          "enum": ["concept-wide", "per-instance"],
+          "description": "Mastery granularity per adaptive-scaffolding.md. Default is concept-wide; per-instance is opt-in for concepts with many discrete sub-elements (numerals, basic facts, etc.)."
+        },
+        "instanceKeys": {
+          "type": "array",
+          "description": "Enumerated set of instance keys, present iff granularity = per-instance. Each key gets an independent ConceptState.",
+          "items": { "type": "string" }
+        },
+        "exercisesOnlyMastery": {
+          "$ref": "#/$defs/ExercisesOnlyMasteryRule",
+          "description": "Coverage-based mastery rule, present iff this concept is exercises-only (requiresLesson=false AND no introducedBy)."
+        },
+        "exercisedBy": {
+          "type": "array",
+          "description": "Optional. Activity slugs that exercise this concept (regardless of who introduces). Informational; the runtime can also infer this from activity specs.",
+          "items": { "type": "string" }
+        },
+        "notes": {
+          "type": "string",
+          "description": "Free-text designer notes. Not consumed by runtime."
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "requiresLesson": { "const": true } }, "required": ["requiresLesson"] },
+          "then": {
+            "required": ["lessonId", "introducedBy"],
+            "not": { "required": ["exercisesOnlyMastery"] }
+          }
+        },
+        {
+          "if": { "properties": { "requiresLesson": { "const": false } }, "required": ["requiresLesson"] },
+          "then": {
+            "properties": {
+              "lessonId": { "const": null },
+              "introducedBy": { "const": null }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "granularity": { "const": "per-instance" } }, "required": ["granularity"] },
+          "then": {
+            "required": ["instanceKeys"],
+            "properties": {
+              "instanceKeys": { "minItems": 1 }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "granularity": { "const": "concept-wide" } }, "required": ["granularity"] },
+          "then": {
+            "not": { "required": ["instanceKeys"] }
+          }
+        }
+      ]
+    },
+
+    "ExercisesOnlyMasteryRule": {
+      "type": "object",
+      "required": ["demonstrationModes", "minModesDemonstrated", "minSessions", "fallbackPracticeCount"],
+      "additionalProperties": false,
+      "properties": {
+        "demonstrationModes": {
+          "type": "array",
+          "description": "Distinct modes of demonstrating the concept. Activities emit telemetry events naming a mode when the kid uses that mode.",
+          "items": { "type": "string" },
+          "minItems": 2
+        },
+        "minModesDemonstrated": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of distinct modes the kid must demonstrate to satisfy the coverage path."
+        },
+        "minSessions": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Distinct sessions across which the demonstrations must occur."
+        },
+        "fallbackPracticeCount": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "If the kid logs this many successes in concept-exercising activities, mastery fires regardless of mode coverage."
+        },
+        "siblingCreditRules": {
+          "type": "array",
+          "description": "Optional. When another concept reaches a specified mastery state, automatically credit one of this concept's demonstrationModes. Useful for ensuring meta-concepts (e.g., K.OA.1) remain reachable for kids who succeed at sibling concepts via narrow input paths.",
+          "items": {
+            "type": "object",
+            "required": ["siblingConceptId", "siblingMasteryState", "grantedMode", "rationale"],
+            "additionalProperties": false,
+            "properties": {
+              "siblingConceptId": { "type": "string" },
+              "siblingMasteryState": { "type": "string", "enum": ["Introduced", "Practicing", "Mastered"] },
+              "grantedMode": { "type": "string", "description": "Must be one of this concept's demonstrationModes." },
+              "rationale": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

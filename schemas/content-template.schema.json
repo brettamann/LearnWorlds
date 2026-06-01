@@ -1,0 +1,253 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://critmath/schemas/content-template.schema.json",
+  "title": "Content Template",
+  "description": "Schema for activity content templates — story templates, problem templates, and lesson templates. Sourced from /specs/shared/content-templates.md. One template per file in /data/templates/{stories,problems,lessons}/.",
+
+  "oneOf": [
+    { "$ref": "#/$defs/StoryTemplate" },
+    { "$ref": "#/$defs/ProblemTemplate" },
+    { "$ref": "#/$defs/LessonTemplateRef" }
+  ],
+
+  "$defs": {
+    "CommonHeader": {
+      "type": "object",
+      "required": ["id", "kind", "version", "status", "concepts", "primaryConcept", "regionScope", "gradeScope", "telemetryId"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "Unique template id; matches the filename stem."
+        },
+        "kind": {
+          "type": "string",
+          "enum": ["story", "problem", "lesson"]
+        },
+        "version": { "type": "integer", "minimum": 1 },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "reviewed", "live"]
+        },
+        "concepts": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Concept registry IDs this template touches."
+        },
+        "primaryConcept": {
+          "type": "string",
+          "description": "Which concept's mastery this template primarily updates."
+        },
+        "regionScope": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "gradeScope": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["K", "1", "2"] },
+          "minItems": 1
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": ["concrete", "pictorial", "abstract"],
+          "description": "Optional CPA-layer hint. Activities may use this to select templates appropriate to the kid's current layer."
+        },
+        "telemetryId": {
+          "type": "string",
+          "description": "Canonical id for analytics (often equals id with an activity-slug prefix)."
+        },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "StoryTemplate": {
+      "allOf": [
+        { "$ref": "#/$defs/CommonHeader" },
+        {
+          "type": "object",
+          "required": ["kind", "subMode", "creature", "narrationTemplate", "narrationSlots", "expectedAnswer", "answerFormat", "visualSteps", "barModel"],
+          "properties": {
+            "kind": { "const": "story" },
+            "subMode": {
+              "type": "string",
+              "description": "Activity sub-mode this template targets (e.g., 'add-to', 'take-from')."
+            },
+            "creature": {
+              "type": "string",
+              "description": "Creature kind for slot fills and visuals (e.g., 'duck', 'frog', 'dragonling')."
+            },
+            "narrationTemplate": {
+              "type": "string",
+              "description": "Narration string with {slot} placeholders."
+            },
+            "narrationSlots": {
+              "type": "object",
+              "description": "Numeric and string slot values referenced in narrationTemplate.",
+              "additionalProperties": true
+            },
+            "expectedAnswer": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "The math result of the slot values. Validated at load time against the math structure."
+            },
+            "answerFormat": {
+              "type": "string",
+              "enum": ["numeral", "tile-select", "multi-digit-cell"]
+            },
+            "tileOptions": {
+              "type": ["array", "null"],
+              "items": { "type": "integer", "minimum": 0 },
+              "description": "Present iff answerFormat = tile-select. List of numeric options shown."
+            },
+            "visualSteps": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/VisualStep" },
+              "minItems": 1
+            },
+            "barModel": {
+              "$ref": "#/$defs/BarModelSpec"
+            },
+            "narratorVoice": { "type": "string" },
+            "narratorCharacter": {
+              "type": "string",
+              "description": "Optional. References a visible narrator character (e.g., 'storyteller-turtle')."
+            }
+          }
+        }
+      ]
+    },
+
+    "ProblemTemplate": {
+      "allOf": [
+        { "$ref": "#/$defs/CommonHeader" },
+        {
+          "type": "object",
+          "required": ["kind", "subMode", "problemType", "given", "expectedAnswer", "answerFormat", "prompt", "promptSlots"],
+          "properties": {
+            "kind": { "const": "problem" },
+            "subMode": { "type": "string" },
+            "problemType": {
+              "type": "string",
+              "description": "Activity-specific categorization (e.g., 'make-target', 'decompose-to-ten', 'standard-algorithm')."
+            },
+            "given": {
+              "type": "object",
+              "description": "Input values for the problem.",
+              "additionalProperties": true
+            },
+            "expectedAnswer": {
+              "oneOf": [
+                { "type": "integer" },
+                { "type": "string", "description": "For non-numeric answers (e.g., '>', '<', '=')." }
+              ]
+            },
+            "answerFormat": {
+              "type": "string",
+              "enum": ["numeral", "tile-select", "multi-digit-cell", "symbol-tile"]
+            },
+            "tileOptions": {
+              "type": ["array", "null"],
+              "items": {
+                "oneOf": [
+                  { "type": "integer" },
+                  { "type": "string" }
+                ]
+              }
+            },
+            "prompt": { "type": "string" },
+            "promptSlots": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "scaffolding": {
+              "type": "object",
+              "description": "Activity-specific scaffolding hints (e.g., { barModel: null, tenFrameVisualization: true }).",
+              "additionalProperties": true
+            }
+          }
+        }
+      ]
+    },
+
+    "LessonTemplateRef": {
+      "type": "object",
+      "required": ["id", "kind", "specRef"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^lesson-[a-z0-9-]+$" },
+        "kind": { "const": "lesson" },
+        "specRef": {
+          "type": "string",
+          "description": "Path to the lesson's markdown spec in specs/lessons/. The runtime form is generated from the spec via a pipeline (TBD)."
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "VisualStep": {
+      "type": "object",
+      "required": ["at", "action"],
+      "properties": {
+        "at": {
+          "type": "string",
+          "pattern": "^[0-9]+(\\.[0-9]+)?s$",
+          "description": "Timestamp relative to story start (e.g., '0s', '3s', '5.5s')."
+        },
+        "action": {
+          "type": "string",
+          "enum": ["spawn", "spawn-sequence", "move", "despawn", "group-merge", "group-split", "highlight", "pause"]
+        },
+        "count": { "type": "integer", "minimum": 0 },
+        "interval": { "type": "string", "pattern": "^[0-9]+(\\.[0-9]+)?s$" },
+        "from": { "type": "string", "description": "Position name or coordinate spec." },
+        "to": { "type": "string" },
+        "position": { "type": "string" },
+        "sprite": { "type": "string", "description": "Sprite kind override (defaults to story's creature)." },
+        "easing": {
+          "type": "string",
+          "enum": ["linear", "ease-in", "ease-out", "ease-in-out"]
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "BarModelSpec": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["add-to", "take-from", "put-together", "take-apart", "comparison"]
+        },
+        "parts": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 0 },
+          "description": "Part counts (for add-to / put-together / take-apart). Specifics depend on bar type."
+        },
+        "result": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Result count, when applicable."
+        },
+        "start": {
+          "type": "integer",
+          "description": "Starting amount (for take-from)."
+        },
+        "change": {
+          "type": "integer",
+          "description": "Change amount (for take-from / add-to)."
+        },
+        "greater": {
+          "type": "integer",
+          "description": "Greater bar count (for comparison)."
+        },
+        "less": {
+          "type": "integer",
+          "description": "Less bar count (for comparison)."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "$schema": "../../schemas/lesson-runtime.schema.json",
+  "id": "lesson-k-g-6-compose-3d",
+  "specRef": "specs/lessons/k-g-6-compose-3d.md",
+  "version": 1,
+  "conceptId": "K.G.6",
+  "standardCode": "K.G.6",
+  "region": "sanctuary",
+  "introducingActivity": "build-a-habitat",
+  "subModeTarget": "simple-shelter",
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "totalDurationTargetSec": 55,
+  "prerequisites": ["lesson-k-g-5-sticks-and-clay"],
+
+  "phases": {
+    "iShow": {
+      "durationSec": 22,
+      "scene": {
+        "background": "build-a-habitat-grassy-clearing",
+        "musicBed": "sanctuary-low-continuing-from-phase-1",
+        "buildSite": {
+          "completedFrame": "triangle-solid-from-kid-phase-1",
+          "phase2GhostOutline": { "shape": "cube", "position": "on-top-of-frame" }
+        },
+        "sourcePool": {
+          "position": "lower-right",
+          "items": { "cubes": 3, "cones": 2, "cylinders": 2, "spheres": 2 }
+        },
+        "residentCreature": { "kind": "baby-fawn", "position": "edge-of-clearing", "motion": "idle-waiting" },
+        "phaseIndicator": "phase 2: raise the habitat",
+        "buddyPosition": "lower-left-log",
+        "hud": { "doneButton": "hidden" }
+      },
+      "animationSteps": [
+        { "at": "0s",  "action": "scene-fade-up-midround" },
+        { "at": "2s",  "action": "narrator-begin" },
+        { "at": "5s",  "action": "pointer-pickup-from-pool", "params": { "itemType": "cube" } },
+        { "at": "8s",  "action": "pointer-place", "params": { "target": "phase2-ghost-cube" } },
+        { "at": "8s",  "action": "snap-thunk-chime" },
+        { "at": "8s",  "action": "ghost-outline-fade-out" },
+        { "at": "12s", "action": "fawn-walk-toward-habitat" },
+        { "at": "13s", "action": "ive-got-this-button-show" },
+        { "at": "16s", "action": "fawn-enter-habitat" },
+        { "at": "16s", "action": "sanctuary-chime-stinger" },
+        { "at": "22s", "action": "phase-end" }
+      ],
+      "narrationScript": [
+        { "at": "2s",  "text": "Now we raise the habitat. The frame is the base — we add shapes on top." },
+        { "at": "5s",  "text": "A cube. It goes on the triangle frame." },
+        { "at": "10s", "text": "Look — a triangle frame and a cube together. The shelter is ready." },
+        { "at": "12s", "text": "Here comes the fawn." },
+        { "at": "18s", "text": "Simple shapes go together to make bigger structures. A frame and a cube — that's a habitat." }
+      ],
+      "skipToYouDoAvailableAfterSec": 13
+    },
+
+    "weTry": {
+      "durationSec": 18,
+      "scene": {
+        "background": "build-a-habitat-grassy-clearing",
+        "buildSite": {
+          "completedFrame": "triangle-solid",
+          "phase2GhostOutline": { "shape": "cube" }
+        },
+        "sourcePool": { "items": { "cubes": 3, "cones": 2, "cylinders": 2 } },
+        "initialGlowTarget": "phase2-ghost-cube"
+      },
+      "choreography": [
+        { "at": "0s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-start" } },
+        { "at": "3s",            "type": "system-action",       "params": { "action": "halo-pulse", "target": "phase2-ghost-cube" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-3d-piece-to-target", "expectedPiece": "cube", "wrongPieceReturns": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "drop-feedback", "passCue": "we-try-correct", "failCue": "we-try-corrective" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-closing" } },
+        { "at": "+1s",           "type": "system-action",       "params": { "action": "fawn-walk-toward-habitat" } },
+        { "at": "+1s",           "type": "system-action",       "params": { "action": "sanctuary-chime-stinger" } },
+        { "at": "18s",           "type": "system-action",       "params": { "action": "phase-end" } }
+      ],
+      "narrationScript": [
+        { "at": "we-try-start",      "text": "Now you. Put a cube on top." },
+        { "at": "we-try-correct",    "text": "Cube. The shelter." },
+        { "at": "we-try-corrective", "text": "Try a cube — the square one." },
+        { "at": "we-try-closing",    "text": "A habitat — frame and cube together." }
+      ],
+      "hesitationRule": {
+        "thresholdSec": 5,
+        "action": "highlight-target"
+      },
+      "passCondition": "Any kid drag onto the cube target passes — even with a non-cube piece (corrects gently). Even one drag attempt is enough."
+    },
+
+    "youDo": {
+      "activityId": "build-a-habitat",
+      "subMode": "simple-shelter",
+      "isContinuation": true,
+      "roundParameters": {
+        "phaseContext": "phase-2-continuation-of-same-round",
+        "phase1AlreadyComplete": true,
+        "phase2Target": { "cube": 1 },
+        "residentCreature": "baby-fawn",
+        "hintThresholds": {
+          "highlightNextSec": 5,
+          "narratorReminderSec": 10
+        }
+      },
+      "maxAttempts": 3,
+      "cpaLayer": "Concrete"
+    }
+  },
+
+  "libraryEntry": {
+    "thumbnail": "assets/lessons/k-g-6/thumbnail.png",
+    "shortLabel": "Shapes stack into structures",
+    "regionBadge": "sanctuary-leaf",
+    "replayDurationSec": 55
+  },
+
+  "telemetryExtensions": []
+}

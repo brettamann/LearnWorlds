@@ -1,0 +1,41 @@
+{
+  "$schema": "../../../schemas/content-template.schema.json",
+  "id": "pond-put-together-dragonlings-1",
+  "kind": "story",
+  "version": 1,
+  "status": "draft",
+  "concepts": ["K.OA.2", "K.OA.1"],
+  "primaryConcept": "K.OA.2",
+  "regionScope": ["sanctuary"],
+  "gradeScope": ["K"],
+  "difficulty": "concrete",
+  "telemetryId": "pond.put-together-dragonlings-1",
+
+  "subMode": "put-together",
+  "creature": "dragonling",
+  "narrationTemplate": "{partA} dragonlings are on the lily pad. {partB} dragonlings are by the reeds. How many altogether?",
+  "narrationSlots": {
+    "partA": 3,
+    "partB": 4
+  },
+  "expectedAnswer": 7,
+  "answerFormat": "tile-select",
+  "tileOptions": [6, 7, 8],
+
+  "visualSteps": [
+    { "at": "0s", "action": "spawn", "count": 3, "position": "lily-pad-center" },
+    { "at": "2s", "action": "spawn", "count": 4, "position": "reeds-area" },
+    { "at": "4s", "action": "pause" }
+  ],
+
+  "barModel": {
+    "type": "put-together",
+    "parts": [3, 4],
+    "result": 7
+  },
+
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "narratorCharacter": "storyteller-turtle",
+
+  "notes": "Put-together has both parts present from the start. Visually distinguishes the two groups by spatial location (lily pad vs reeds) so the kid sees them as separate before counting the total."
+}

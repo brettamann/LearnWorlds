@@ -1,0 +1,387 @@
+{
+  "$schema": "../../schemas/telemetry-catalog.schema.json",
+  "version": 1,
+  "lastUpdated": "2026-05-30",
+  "_note": "Canonical (shared) telemetry events. Activity-specific events live in /data/telemetry-catalog/<grade>/<activity>.json.",
+
+  "events": [
+    {
+      "eventName": "scaffold.round.success",
+      "namespace": "scaffold",
+      "purpose": "An activity round passed at the current CPA layer. Mastery engine increments layer success/streak.",
+      "firedBy": "adaptive-scaffolding engine (responding to activity round-outcome)",
+      "consumedBy": ["mastery-engine", "reward-engine", "session-log", "analytics"],
+      "payloadFields": [
+        { "name": "conceptIds", "type": "array<string>", "description": "Concepts this round touched." },
+        { "name": "instanceKeys", "type": "object", "required": false, "description": "Map of conceptId → instanceKey for per-instance concepts touched in this round." },
+        { "name": "layer", "type": "string", "enum": ["Concrete", "Pictorial", "Abstract"] },
+        { "name": "hintsUsed", "type": "integer" },
+        { "name": "latencyMs", "type": "duration-ms" }
+      ],
+      "exampleEmit": {
+        "conceptIds": ["K.CC.4a"],
+        "layer": "Concrete",
+        "hintsUsed": 0,
+        "latencyMs": 8200
+      },
+      "rateExpectation": "per-round"
+    },
+    {
+      "eventName": "scaffold.round.failure",
+      "namespace": "scaffold",
+      "purpose": "An activity round failed. Mastery engine resets streak; may trigger demote_struggle if 2 consecutive failures.",
+      "firedBy": "adaptive-scaffolding engine",
+      "consumedBy": ["mastery-engine", "dashboard", "analytics"],
+      "payloadFields": [
+        { "name": "conceptIds", "type": "array<string>" },
+        { "name": "instanceKeys", "type": "object", "required": false },
+        { "name": "layer", "type": "string", "enum": ["Concrete", "Pictorial", "Abstract"] },
+        { "name": "attemptDetails", "type": "object", "description": "Activity-specific details about how the round failed (e.g., miscount, wrong sort)." }
+      ],
+      "rateExpectation": "per-round"
+    },
+    {
+      "eventName": "scaffold.promote",
+      "namespace": "scaffold",
+      "purpose": "A concept's CPA layer was promoted (3 consecutive successes).",
+      "firedBy": "adaptive-scaffolding engine",
+      "consumedBy": ["mastery-engine", "session-log", "dashboard"],
+      "payloadFields": [
+        { "name": "conceptId", "type": "string" },
+        { "name": "instanceKey", "type": "string", "required": false },
+        { "name": "fromLayer", "type": "string" },
+        { "name": "toLayer", "type": "string" },
+        { "name": "streakAtPromote", "type": "integer" }
+      ],
+      "rateExpectation": "rare"
+    },
+    {
+      "eventName": "scaffold.demote",
+      "namespace": "scaffold",
+      "purpose": "A concept demoted per the staggered rule (CPA layer first, then sub-mode).",
+      "firedBy": "adaptive-scaffolding engine",
+      "consumedBy": ["mastery-engine", "dashboard"],
+      "payloadFields": [
+        { "name": "conceptId", "type": "string" },
+        { "name": "instanceKey", "type": "string", "required": false },
+        { "name": "demotionType", "type": "string", "enum": ["layer", "sub-mode"] },
+        { "name": "fromValue", "type": "string" },
+        { "name": "toValue", "type": "string" },
+        { "name": "consecutiveFailures", "type": "integer" }
+      ],
+      "rateExpectation": "rare"
+    },
+    {
+      "eventName": "scaffold.mastery_reached",
+      "namespace": "scaffold",
+      "purpose": "A concept (or per-instance state) reached the Mastered status. Reward engine fires the mastery reward.",
+      "firedBy": "adaptive-scaffolding engine",
+      "consumedBy": ["mastery-engine", "reward-engine", "dashboard"],
+      "payloadFields": [
+        { "name": "conceptId", "type": "string" },
+        { "name": "instanceKey", "type": "string", "required": false },
+        { "name": "totalAttempts", "type": "integer" },
+        { "name": "daysToMastery", "type": "integer" },
+        { "name": "rollupComplete", "type": "boolean", "description": "True if this was the final per-instance mastery that rolled up the concept-wide mastery." }
+      ],
+      "rateExpectation": "rare"
+    },
+    {
+      "eventName": "scaffold.hint_fired",
+      "namespace": "scaffold",
+      "purpose": "A within-round hint was shown (hesitation hint, target glow, etc.).",
+      "firedBy": "adaptive-scaffolding engine + activity",
+      "consumedBy": ["session-log", "analytics"],
+      "payloadFields": [
+        { "name": "conceptId", "type": "string" },
+        { "name": "hintType", "type": "string", "enum": ["hesitation-visual", "hesitation-verbal", "wrong-attempt-correction", "confirmation-prompt"] },
+        { "name": "layer", "type": "string" }
+      ],
+      "rateExpectation": "per-interaction"
+    },
+
+    {
+      "eventName": "lesson.started",
+      "namespace": "lesson",
+      "purpose": "A first-encounter MicroLesson begins.",
+      "firedBy": "lesson runner",
+      "consumedBy": ["session-log", "analytics", "dashboard"],
+      "payloadFields": [
+        { "name": "conceptId", "type": "string" },
+        { "name": "lessonId", "type": "string" },
+        { "name": "activityId", "type": "string" }
+      ],
+      "rateExpectation": "rare"
+    },
+    {
+      "eventName": "lesson.phase_completed",
+      "namespace": "lesson",
+      "purpose": "A lesson phase (I-Show, We-Try, You-Do) finished.",
+      "firedBy": "lesson runner",
+      "consumedBy": ["session-log", "analytics"],
+      "payloadFields": [
+        { "name": "conceptId", "type": "string" },
+        { "name": "phase", "type": "string", "enum": ["iShow", "weTry", "youDo"] },
+        { "name": "durationMs", "type": "duration-ms" }
+      ],
+      "rateExpectation": "rare"
+    },
+    {
+      "eventName": "lesson.skipped_to_youdo",
+      "namespace": "lesson",
+      "purpose": "Kid tapped 'I've got this' to fast-forward to You-Do.",
+      "firedBy": "lesson runner",
+      "consumedBy": ["session-log", "analytics", "dashboard"],
+      "payloadFields": [
+        { "name": "conceptId", "type": "string" },
+        { "name": "atPhase", "type": "string", "enum": ["iShow", "weTry"] },
+        { "name": "secondsElapsed", "type": "duration-ms" }
+      ],
+      "rateExpectation": "rare"
+    },
+    {
+      "eventName": "lesson.youdo_passed",
+      "namespace": "lesson",
+      "purpose": "Lesson You-Do round passed; lesson filed in library; mastery state advances to Practicing.",
+      "firedBy": "lesson runner",
+      "consumedBy": ["mastery-engine", "reward-engine", "session-log"],
+      "payloadFields": [
+        { "name": "conceptId", "type": "string" },
+        { "name": "attempts", "type": "integer" }
+      ],
+      "rateExpectation": "rare"
+    },
+    {
+      "eventName": "lesson.youdo_failed_out",
+      "namespace": "lesson",
+      "purpose": "Lesson You-Do failed all 3 attempts; lesson still filed but flagged for teacher attention.",
+      "firedBy": "lesson runner",
+      "consumedBy": ["dashboard", "session-log"],
+      "payloadFields": [
+        { "name": "conceptId", "type": "string" },
+        { "name": "attempts", "type": "integer" }
+      ],
+      "rateExpectation": "rare"
+    },
+    {
+      "eventName": "lesson.filed_to_library",
+      "namespace": "lesson",
+      "purpose": "Lesson added to the kid's library (Stamp Wall / Spell Book / Casebook).",
+      "firedBy": "lesson runner",
+      "consumedBy": ["reward-engine", "session-log"],
+      "payloadFields": [
+        { "name": "conceptId", "type": "string" },
+        { "name": "lessonId", "type": "string" }
+      ],
+      "rateExpectation": "rare"
+    },
+    {
+      "eventName": "lesson.replayed_from_library",
+      "namespace": "lesson",
+      "purpose": "Kid opened a lesson from the library for replay.",
+      "firedBy": "library UI",
+      "consumedBy": ["session-log", "analytics"],
+      "payloadFields": [
+        { "name": "conceptId", "type": "string" },
+        { "name": "surface", "type": "string", "enum": ["StampWall", "SpellBook", "Casebook"] }
+      ],
+      "rateExpectation": "per-session"
+    },
+    {
+      "eventName": "lesson.session_cap_deferred",
+      "namespace": "lesson",
+      "purpose": "Lesson runner skipped a lesson because the per-session lesson cap was hit (fresh kids only). Lesson defers to next session.",
+      "firedBy": "lesson runner",
+      "consumedBy": ["session-log", "analytics", "dashboard"],
+      "payloadFields": [
+        { "name": "deferredConceptId", "type": "string" },
+        { "name": "deferredLessonId", "type": "string" },
+        { "name": "sessionLessonsAlreadyShown", "type": "integer" },
+        { "name": "lifetimeRoundsAtTimeOfDefer", "type": "integer" }
+      ],
+      "rateExpectation": "rare"
+    },
+
+    {
+      "eventName": "economy.coins_earned",
+      "namespace": "economy",
+      "purpose": "Coins added to kid's balance.",
+      "firedBy": "reward-engine",
+      "consumedBy": ["session-log", "dashboard"],
+      "payloadFields": [
+        { "name": "sourceEvent", "type": "string", "description": "The triggering event (e.g., 'round.passed', 'streak.session_3')." },
+        { "name": "amount", "type": "integer" },
+        { "name": "currentBalance", "type": "integer" }
+      ],
+      "rateExpectation": "per-round"
+    },
+    {
+      "eventName": "economy.coins_spent",
+      "namespace": "economy",
+      "purpose": "Coins deducted from kid's balance (purchase).",
+      "firedBy": "shop UI / Foundry UI",
+      "consumedBy": ["session-log", "dashboard"],
+      "payloadFields": [
+        { "name": "itemId", "type": "string" },
+        { "name": "cost", "type": "integer" },
+        { "name": "balanceAfter", "type": "integer" }
+      ],
+      "rateExpectation": "per-session"
+    },
+    {
+      "eventName": "economy.chest_earned",
+      "namespace": "economy",
+      "purpose": "A chest was awarded (e.g., from daily quest, milestone, challenge).",
+      "firedBy": "reward-engine",
+      "consumedBy": ["dashboard", "session-log"],
+      "payloadFields": [
+        { "name": "chestId", "type": "string" },
+        { "name": "tier", "type": "string", "enum": ["small", "medium", "large", "prestige", "portal-themed", "challenge"] },
+        { "name": "sourceEvent", "type": "string" }
+      ],
+      "rateExpectation": "per-session"
+    },
+    {
+      "eventName": "economy.chest_opened",
+      "namespace": "economy",
+      "purpose": "Kid opened a chest; contents revealed.",
+      "firedBy": "chest UI",
+      "consumedBy": ["session-log", "analytics"],
+      "payloadFields": [
+        { "name": "chestId", "type": "string" },
+        { "name": "tier", "type": "string" },
+        { "name": "contentsRevealed", "type": "array<string>", "description": "Item IDs revealed." }
+      ],
+      "rateExpectation": "per-session"
+    },
+    {
+      "eventName": "economy.collectible_obtained",
+      "namespace": "economy",
+      "purpose": "Kid received a collectible (card, stamp, story memento, etc.).",
+      "firedBy": "reward-engine",
+      "consumedBy": ["session-log", "dashboard"],
+      "payloadFields": [
+        { "name": "itemId", "type": "string" },
+        { "name": "setId", "type": "string", "required": false },
+        { "name": "setProgress", "type": "string", "description": "e.g., '14 of 24'." }
+      ],
+      "rateExpectation": "per-session"
+    },
+    {
+      "eventName": "economy.permanent_fixture_added",
+      "namespace": "economy",
+      "purpose": "A permanent fixture was added to the Hub (e.g., a built habitat).",
+      "firedBy": "reward-engine",
+      "consumedBy": ["hub-view", "session-log"],
+      "payloadFields": [
+        { "name": "fixtureType", "type": "string" },
+        { "name": "fixtureId", "type": "string" },
+        { "name": "wasDuplicate", "type": "boolean", "description": "True if this fixture was already in the kid's collection (deduplicated)." }
+      ],
+      "rateExpectation": "rare"
+    },
+
+    {
+      "eventName": "numwrite.attempt",
+      "namespace": "numwrite",
+      "purpose": "Kid attempted to write a numeral (Mode 1 / Mode 2 / Mode 3).",
+      "firedBy": "number-writing surface",
+      "consumedBy": ["analytics"],
+      "payloadFields": [
+        { "name": "mode", "type": "string", "enum": ["trace", "prompted-free-write", "blind-free-write"] },
+        { "name": "expectedDigit", "type": "string", "required": false, "description": "Null for Mode 3 (blind)." }
+      ],
+      "rateExpectation": "per-attempt"
+    },
+    {
+      "eventName": "numwrite.classified",
+      "namespace": "numwrite",
+      "purpose": "Digit classifier returned a result.",
+      "firedBy": "digit classifier",
+      "consumedBy": ["analytics"],
+      "payloadFields": [
+        { "name": "mode", "type": "string" },
+        { "name": "expectedDigit", "type": "string", "required": false },
+        { "name": "recognizedDigit", "type": "string" },
+        { "name": "confidence", "type": "number" }
+      ],
+      "rateExpectation": "per-attempt"
+    },
+    {
+      "eventName": "numwrite.fallback",
+      "namespace": "numwrite",
+      "purpose": "Number-writing mode was demoted (per the fallback chain).",
+      "firedBy": "number-writing surface",
+      "consumedBy": ["analytics", "dashboard"],
+      "payloadFields": [
+        { "name": "fromMode", "type": "string" },
+        { "name": "toMode", "type": "string" },
+        { "name": "reason", "type": "string" }
+      ],
+      "rateExpectation": "rare"
+    },
+    {
+      "eventName": "numwrite.tile_used",
+      "namespace": "numwrite",
+      "purpose": "Kid used the tile-selection fallback for a digit.",
+      "firedBy": "number-writing surface",
+      "consumedBy": ["dashboard", "analytics"],
+      "payloadFields": [
+        { "name": "expectedDigit", "type": "string" },
+        { "name": "priorAttempts", "type": "integer" }
+      ],
+      "rateExpectation": "per-attempt"
+    },
+
+    {
+      "eventName": "notebook.opened",
+      "namespace": "notebook",
+      "purpose": "Math notebook tab was pulled open.",
+      "firedBy": "notebook UI",
+      "consumedBy": ["session-log"],
+      "payloadFields": [
+        { "name": "how", "type": "string", "enum": ["tap", "drag", "auto-by-activity"] }
+      ],
+      "rateExpectation": "per-session"
+    },
+    {
+      "eventName": "notebook.scratch_used",
+      "namespace": "notebook",
+      "purpose": "Kid wrote ≥3 strokes in the notebook this round (triggers notebook bonus).",
+      "firedBy": "notebook UI",
+      "consumedBy": ["reward-engine", "analytics"],
+      "payloadFields": [
+        { "name": "activityId", "type": "string" },
+        { "name": "roundId", "type": "string" }
+      ],
+      "rateExpectation": "per-round"
+    },
+
+    {
+      "eventName": "session.started",
+      "namespace": "session",
+      "purpose": "A session began (app open or new session within a long-open instance).",
+      "firedBy": "session manager",
+      "consumedBy": ["session-log", "analytics"],
+      "payloadFields": [
+        { "name": "sessionId", "type": "string" },
+        { "name": "kidId", "type": "string" }
+      ],
+      "containsPII": true,
+      "rateExpectation": "per-session"
+    },
+    {
+      "eventName": "session.ended",
+      "namespace": "session",
+      "purpose": "A session ended (app close, profile switch, or idle timeout).",
+      "firedBy": "session manager",
+      "consumedBy": ["session-log", "analytics"],
+      "payloadFields": [
+        { "name": "sessionId", "type": "string" },
+        { "name": "durationMs", "type": "duration-ms" },
+        { "name": "endReason", "type": "string", "enum": ["app-close", "profile-switch", "idle-timeout", "parent-exit"] }
+      ],
+      "rateExpectation": "per-session"
+    }
+  ]
+}

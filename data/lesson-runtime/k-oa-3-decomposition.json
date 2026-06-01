@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schemas/lesson-runtime.schema.json",
+  "id": "lesson-k-oa-3-decomposition",
+  "specRef": "specs/lessons/k-oa-3-decomposition.md",
+  "version": 1,
+  "conceptId": "K.OA.3",
+  "standardCode": "K.OA.3",
+  "region": "sanctuary",
+  "introducingActivity": "ten-frame-pond",
+  "subModeTarget": "fill-to-target",
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "totalDurationTargetSec": 75,
+
+  "phases": {
+    "iShow": {
+      "durationSec": 28,
+      "scene": {
+        "background": "ten-frame-pond-rippling",
+        "musicBed": "sanctuary-low",
+        "tenFrame": { "state": "empty", "layout": "2x5-lily-pads" },
+        "sourcePool": {
+          "items": [
+            { "kind": "blue-koi" },
+            { "kind": "yellow-tetra" }
+          ]
+        },
+        "buddyPosition": "lower-left-mossy-stone",
+        "countBadge": "hidden-until-first-drop",
+        "hud": { "doneButton": "hidden" }
+      },
+      "animationSteps": [
+        { "at": "0s",  "action": "scene-fade-up" },
+        { "at": "0s",  "action": "music-bed-in" },
+        { "at": "2s",  "action": "narrator-begin" },
+        { "at": "4s",  "action": "pointer-sweep-frame", "params": { "padCount": 10, "totalDurationSec": 2, "lightPadsFaintly": true } },
+        { "at": "9s",  "action": "narrator-transition-to-decomposition" },
+        { "at": "11s", "action": "pointer-drag", "params": { "from": "source:blue-koi", "to": "top-row-pad-1" } },
+        { "at": "11s", "action": "count-badge-show", "params": { "value": 1 } },
+        { "at": "13s", "action": "pointer-drag", "params": { "from": "source:blue-koi", "to": "top-row-pad-2" } },
+        { "at": "13s", "action": "count-badge-update", "params": { "value": 2 } },
+        { "at": "15s", "action": "pointer-drag", "params": { "from": "source:blue-koi", "to": "top-row-pad-3" } },
+        { "at": "15s", "action": "count-badge-update", "params": { "value": 3 } },
+        { "at": "18s", "action": "ive-got-this-button-show" },
+        { "at": "18s", "action": "pointer-drag", "params": { "from": "source:yellow-tetra", "to": "bottom-row-pad-1" } },
+        { "at": "18s", "action": "count-badge-update", "params": { "value": 4 } },
+        { "at": "20s", "action": "pointer-drag", "params": { "from": "source:yellow-tetra", "to": "bottom-row-pad-2" } },
+        { "at": "20s", "action": "count-badge-update", "params": { "value": 5 } },
+        { "at": "22s", "action": "count-badge-glow" },
+        { "at": "24s", "action": "frame-clear-wave-animation" },
+        { "at": "26s", "action": "pointer-drag-rapid", "params": { "from": "source:blue-koi", "to": ["top-row-pad-1","top-row-pad-2","top-row-pad-3","top-row-pad-4"], "spacingSec": 0.4 } },
+        { "at": "26s", "action": "count-badge-update", "params": { "value": 4 } },
+        { "at": "28s", "action": "pointer-drag", "params": { "from": "source:yellow-tetra", "to": "bottom-row-pad-1" } },
+        { "at": "28s", "action": "count-badge-update", "params": { "value": 5 } },
+        { "at": "30s", "action": "count-badge-glow" },
+        { "at": "34s", "action": "phase-end" }
+      ],
+      "narrationScript": [
+        { "at": "2s",  "text": "This is the pond. It has ten lily pads." },
+        { "at": "4s",  "text": "Ten spots in all." },
+        { "at": "9s",  "text": "Watch — I'll put five fish on the pond. Three blue koi..." },
+        { "at": "11s", "text": "One." },
+        { "at": "13s", "text": "Two." },
+        { "at": "15s", "text": "Three." },
+        { "at": "18s", "text": "...and two yellow tetras. Four." },
+        { "at": "20s", "text": "Five." },
+        { "at": "22s", "text": "Three and two. That's five." },
+        { "at": "25s", "text": "Here's another way to make five." },
+        { "at": "26s", "text": "Four blue koi... and one yellow tetra. Four and one." },
+        { "at": "30s", "text": "Still five." },
+        { "at": "31s", "text": "Numbers can be split lots of different ways. Three and two. Four and one. They're all five." }
+      ],
+      "skipToYouDoAvailableAfterSec": 18
+    },
+
+    "weTry": {
+      "durationSec": 22,
+      "scene": {
+        "background": "ten-frame-pond-rippling",
+        "tenFrame": { "state": "empty" },
+        "sourcePool": {
+          "items": [
+            { "kind": "blue-koi" },
+            { "kind": "yellow-tetra" }
+          ],
+          "colorsVisuallySeparated": true
+        },
+        "target": 5,
+        "encourageBothColors": true,
+        "countBadge": "hidden-until-first-drop"
+      },
+      "choreography": [
+        { "at": "0s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-start" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-fish-to-pad", "anyColor": true, "tolerantOfMiss": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "count-badge-show", "value": 1 } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-good-keep-going" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-fish-to-pad", "anyColor": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "count-badge-update", "value": 2 } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration-if-monochrome", "cueId": "we-try-try-other-color" } },
+        { "at": "on-kid-input-or-pause", "type": "auto-complete-on-pause", "params": { "pauseThresholdSec": 5, "fillToTarget": 5, "alternateColors": true } },
+        { "at": "on-target-reached", "type": "system-action",       "params": { "action": "count-badge-glow" } },
+        { "at": "on-target-reached", "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-closing" } },
+        { "at": "22s",           "type": "system-action",       "params": { "action": "phase-end" } }
+      ],
+      "narrationScript": [
+        { "at": "we-try-start",            "text": "Your turn. Put five fish on the pond. Use both colors." },
+        { "at": "we-try-good-keep-going",  "text": "Good. Keep going." },
+        { "at": "we-try-try-other-color",  "text": "Now try the other color." },
+        { "at": "we-try-count-3",          "text": "Three." },
+        { "at": "we-try-count-4",          "text": "Four." },
+        { "at": "we-try-count-5",          "text": "Five." },
+        { "at": "we-try-closing",          "text": "Five fish. That's five." }
+      ],
+      "hesitationRule": {
+        "thresholdSec": 5,
+        "action": "auto-complete"
+      },
+      "passCondition": "Any kid drag of any fish onto a pad passes the We-Try. Even one drag is enough."
+    },
+
+    "youDo": {
+      "activityId": "ten-frame-pond",
+      "subMode": "fill-to-target",
+      "isContinuation": false,
+      "roundParameters": {
+        "target": 6,
+        "frame": "empty",
+        "source": "blue-koi-and-yellow-tetra",
+        "decompositionColoringAtConcrete": true,
+        "hintThresholds": {
+          "highlightNextSec": 5,
+          "narratorReminderSec": 10
+        }
+      },
+      "maxAttempts": 3,
+      "cpaLayer": "Concrete"
+    }
+  },
+
+  "libraryEntry": {
+    "thumbnail": "assets/lessons/k-oa-3/thumbnail.png",
+    "shortLabel": "Splitting numbers two ways",
+    "regionBadge": "sanctuary-leaf",
+    "replayDurationSec": 75
+  },
+
+  "telemetryExtensions": []
+}

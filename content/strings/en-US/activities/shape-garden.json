@@ -1,0 +1,103 @@
+{
+  "$schema": "../../../../schemas/activity-narration.schema.json",
+  "activity": "shape-garden",
+  "locale": "en-US",
+  "voiceProfile": "sanctuary-warm-naturalist",
+  "cues": [
+    {
+      "id": "find-shape.round-start",
+      "subMode": "find-shape",
+      "event": "round-start",
+      "text": "Find all the {shape_plural} in the garden.",
+      "slotSource": { "shape_plural": "round.targetShapePlural" }
+    },
+    {
+      "id": "find-shape.mid-hesitation-10s",
+      "subMode": "find-shape",
+      "event": "mid-hesitation-10s",
+      "text": "Look around — there are more {shape_plural}.",
+      "slotSource": { "shape_plural": "round.targetShapePlural" }
+    },
+    {
+      "id": "find-shape.round-pass",
+      "subMode": "find-shape",
+      "event": "round-pass",
+      "text": "{N}! You found all {N} {shape_plural}.",
+      "slotSource": { "N": "round.foundCount", "shape_plural": "round.targetShapePlural" }
+    },
+    {
+      "id": "find-shape.round-fail-missed",
+      "subMode": "find-shape",
+      "event": "round-fail-missed",
+      "text": "I see a few more {shape_plural} hiding. Let me show you.",
+      "slotSource": { "shape_plural": "round.targetShapePlural" }
+    },
+
+    {
+      "id": "flat-or-solid.round-start",
+      "subMode": "flat-or-solid",
+      "event": "round-start",
+      "text": "Some of these are flat. Some are solid. Put them in the right baskets."
+    },
+    {
+      "id": "flat-or-solid.mid-second-wrong-drop",
+      "subMode": "flat-or-solid",
+      "event": "mid-second-wrong-drop",
+      "text": "Try the other basket."
+    },
+    {
+      "id": "flat-or-solid.round-pass",
+      "subMode": "flat-or-solid",
+      "event": "round-pass",
+      "text": "All sorted! Flat ones in the flat basket, solid ones in the solid basket."
+    },
+    {
+      "id": "flat-or-solid.round-fail",
+      "subMode": "flat-or-solid",
+      "event": "round-fail",
+      "text": "Some are in the wrong basket. Watch — I'll show you which is which."
+    },
+
+    {
+      "id": "sort-by-attribute.round-start",
+      "subMode": "sort-by-attribute",
+      "event": "round-start",
+      "text": "Sort these by {attribute}.",
+      "slotSource": { "attribute": "round.attributeName" }
+    },
+    {
+      "id": "sort-by-attribute.round-pass",
+      "subMode": "sort-by-attribute",
+      "event": "round-pass",
+      "text": "Nicely done. {N} sorted by {attribute}.",
+      "slotSource": { "N": "round.sortedCount", "attribute": "round.attributeName" }
+    },
+    {
+      "id": "sort-by-attribute.round-fail",
+      "subMode": "sort-by-attribute",
+      "event": "round-fail",
+      "text": "A few are in the wrong basket. Let me show you."
+    },
+
+    {
+      "id": "two-attribute-hunt.round-start",
+      "subMode": "two-attribute-hunt",
+      "event": "round-start",
+      "text": "Detective hunt! Find shapes that are {attribute1} and {attribute2}.",
+      "slotSource": { "attribute1": "round.attribute1", "attribute2": "round.attribute2" }
+    },
+    {
+      "id": "two-attribute-hunt.round-pass",
+      "subMode": "two-attribute-hunt",
+      "event": "round-pass",
+      "text": "{N}! Every one of them is {attribute1} and {attribute2}.",
+      "slotSource": { "N": "round.foundCount", "attribute1": "round.attribute1", "attribute2": "round.attribute2" }
+    },
+
+    {
+      "id": "hesitation-10s-bin",
+      "event": "hesitation-10s-bin",
+      "text": "Drag a shape to a basket."
+    }
+  ]
+}

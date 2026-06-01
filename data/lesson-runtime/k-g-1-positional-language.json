@@ -1,0 +1,121 @@
+{
+  "$schema": "../../schemas/lesson-runtime.schema.json",
+  "id": "lesson-k-g-1-positional-language",
+  "specRef": "specs/lessons/k-g-1-positional-language.md",
+  "version": 1,
+  "conceptId": "K.G.1",
+  "standardCode": "K.G.1",
+  "region": "sanctuary",
+  "introducingActivity": "wheres-buddy",
+  "subModeTarget": "place-mode",
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "totalDurationTargetSec": 65,
+
+  "phases": {
+    "iShow": {
+      "durationSec": 25,
+      "scene": {
+        "background": "sanctuary-clearing-late-afternoon",
+        "lighting": "late-afternoon",
+        "musicBed": "sanctuary-low",
+        "landmarks": ["well", "tree", "mushroom", "rock-cluster", "cottage"],
+        "buddyPosition": "center-stage-of-clearing",
+        "hud": {
+          "doneButton": "hidden"
+        }
+      },
+      "animationSteps": [
+        { "at": "0s",  "action": "scene-fade-up" },
+        { "at": "0s",  "action": "music-bed-in" },
+        { "at": "2s",  "action": "narrator-begin" },
+        { "at": "5s",  "action": "buddy-turn-toward", "params": { "target": "well" } },
+        { "at": "7s",  "action": "pointer-move-buddy", "params": { "to": "above-well" } },
+        { "at": "7s",  "action": "directional-arrow", "params": { "from": "well", "direction": "up", "to": "buddy" } },
+        { "at": "10s", "action": "buddy-return-to-center" },
+        { "at": "12s", "action": "buddy-turn-toward", "params": { "target": "tree" } },
+        { "at": "13s", "action": "pointer-move-buddy", "params": { "to": "behind-tree" } },
+        { "at": "13s", "action": "directional-arrow", "params": { "from": "tree-front", "direction": "around-back" } },
+        { "at": "16s", "action": "buddy-return-to-center" },
+        { "at": "18s", "action": "buddy-turn-toward", "params": { "target": "mushroom" } },
+        { "at": "18s", "action": "ive-got-this-button-show" },
+        { "at": "19s", "action": "pointer-move-buddy", "params": { "to": "next-to-mushroom" } },
+        { "at": "19s", "action": "directional-arrow", "params": { "between": ["buddy", "mushroom"], "style": "side-by-side" } },
+        { "at": "22s", "action": "buddy-return-to-center" },
+        { "at": "22s", "action": "pointer-fade-out" },
+        { "at": "25s", "action": "phase-end" }
+      ],
+      "narrationScript": [
+        { "at": "2s",  "text": "Watch where the Buddy goes." },
+        { "at": "7s",  "text": "Above the well." },
+        { "at": "13s", "text": "Behind the tree." },
+        { "at": "19s", "text": "Next to the mushroom." },
+        { "at": "23s", "text": "Position words tell us where something is. Above. Behind. Next to. There are more — you'll see them as we play." }
+      ],
+      "skipToYouDoAvailableAfterSec": 18
+    },
+
+    "weTry": {
+      "durationSec": 22,
+      "scene": {
+        "background": "sanctuary-clearing-late-afternoon",
+        "musicBed": "sanctuary-low",
+        "landmarks": ["well", "tree", "mushroom", "rock-cluster", "cottage"],
+        "buddyPosition": "center-of-clearing-draggable",
+        "initialGlowTarget": "well"
+      },
+      "choreography": [
+        { "at": "0s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-prompt-1" } },
+        { "at": "0s",            "type": "system-action",       "params": { "action": "halo-intensify-on-speak-word", "target": "well", "word": "well" } },
+        { "at": "3s",            "type": "system-action",       "params": { "action": "directional-arrow", "at": "well", "direction": "up" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-buddy", "expectedZone": "above-well", "tolerantOfMiss": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "drop-feedback", "passCue": "we-try-correct-1", "failCue": "we-try-corrective-1" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "halo", "target": "tree" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-prompt-2" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-buddy", "expectedZone": "behind-tree", "tolerantOfMiss": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "drop-feedback", "passCue": "we-try-correct-2", "failCue": "we-try-corrective-2" } },
+        { "at": "+1s",           "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-closing" } },
+        { "at": "22s",           "type": "system-action",       "params": { "action": "phase-end" } }
+      ],
+      "narrationScript": [
+        { "at": "we-try-prompt-1",     "text": "Your turn. Put the Buddy above the well." },
+        { "at": "we-try-correct-1",    "text": "Above the well — yes." },
+        { "at": "we-try-corrective-1", "text": "Above the well — try the spot higher than the well." },
+        { "at": "we-try-prompt-2",     "text": "Now put the Buddy behind the tree." },
+        { "at": "we-try-correct-2",    "text": "Behind the tree." },
+        { "at": "we-try-corrective-2", "text": "Behind the tree — try the spot on the far side of the tree." },
+        { "at": "we-try-closing",      "text": "You moved the Buddy two places. Position words help us tell where things go." }
+      ],
+      "hesitationRule": {
+        "thresholdSec": 5,
+        "action": "highlight-target"
+      },
+      "passCondition": "Any kid drag onto any zone passes (correct steers; incorrect corrects)."
+    },
+
+    "youDo": {
+      "activityId": "wheres-buddy",
+      "subMode": "place-mode",
+      "isContinuation": false,
+      "roundParameters": {
+        "positionWord": "next to",
+        "referenceLandmark": "cottage",
+        "directionalCueAtConcrete": true,
+        "hintThresholds": {
+          "highlightNextSec": 5,
+          "narratorReminderSec": 10
+        }
+      },
+      "maxAttempts": 3,
+      "cpaLayer": "Concrete"
+    }
+  },
+
+  "libraryEntry": {
+    "thumbnail": "assets/lessons/k-g-1/thumbnail.png",
+    "shortLabel": "Position words",
+    "regionBadge": "sanctuary-leaf",
+    "replayDurationSec": 65
+  },
+
+  "telemetryExtensions": ["lesson.wetry_drop"]
+}

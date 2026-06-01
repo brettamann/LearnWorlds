@@ -1,0 +1,137 @@
+{
+  "$schema": "../../schemas/lesson-runtime.schema.json",
+  "id": "lesson-k-g-2-shape-recognition",
+  "specRef": "specs/lessons/k-g-2-shape-recognition.md",
+  "version": 1,
+  "conceptId": "K.G.2",
+  "standardCode": "K.G.2",
+  "region": "sanctuary",
+  "introducingActivity": "shape-garden",
+  "subModeTarget": "find-shape",
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "totalDurationTargetSec": 60,
+
+  "phases": {
+    "iShow": {
+      "durationSec": 22,
+      "scene": {
+        "background": "shape-garden-enchanted-path",
+        "musicBed": "sanctuary-low",
+        "shapes": [
+          { "id": "tri-1", "kind": "triangle", "variant": "upright-small" },
+          { "id": "tri-2", "kind": "triangle", "variant": "point-down" },
+          { "id": "tri-3", "kind": "triangle", "variant": "upright-large" },
+          { "id": "tri-4", "kind": "triangle", "variant": "rotated-45" },
+          { "id": "dis-1", "kind": "circle", "role": "distractor" },
+          { "id": "dis-2", "kind": "square", "role": "distractor" },
+          { "id": "dis-3", "kind": "hexagon", "role": "distractor" }
+        ],
+        "buddyPosition": "lower-left-grassy-mound",
+        "hud": { "doneButton": "hidden" }
+      },
+      "animationSteps": [
+        { "at": "0s",  "action": "scene-fade-up" },
+        { "at": "0s",  "action": "music-bed-in" },
+        { "at": "2s",  "action": "narrator-begin" },
+        { "at": "5s",  "action": "pointer-touch", "params": { "target": "tri-1" } },
+        { "at": "5s",  "action": "sparkle", "params": { "target": "tri-1" } },
+        { "at": "8s",  "action": "pointer-touch", "params": { "target": "tri-2" } },
+        { "at": "8s",  "action": "sparkle", "params": { "target": "tri-2" } },
+        { "at": "11s", "action": "pointer-touch", "params": { "target": "tri-3" } },
+        { "at": "11s", "action": "sparkle", "params": { "target": "tri-3" } },
+        { "at": "14s", "action": "pointer-touch", "params": { "target": "tri-4" } },
+        { "at": "14s", "action": "sparkle", "params": { "target": "tri-4" } },
+        { "at": "15s", "action": "ive-got-this-button-show" },
+        { "at": "17s", "action": "pointer-fade-out" },
+        { "at": "22s", "action": "phase-end" }
+      ],
+      "narrationScript": [
+        { "at": "2s",  "text": "Watch the triangles in this garden." },
+        { "at": "5s",  "text": "Triangle." },
+        { "at": "8s",  "text": "Still a triangle." },
+        { "at": "11s", "text": "Still a triangle." },
+        { "at": "14s", "text": "Still a triangle." },
+        { "at": "19s", "text": "Triangles can be big or small, point up or point down. They're all triangles." }
+      ],
+      "skipToYouDoAvailableAfterSec": 15
+    },
+
+    "weTry": {
+      "durationSec": 20,
+      "scene": {
+        "background": "shape-garden-enchanted-path",
+        "musicBed": "sanctuary-low",
+        "shapes": [
+          { "id": "tri-a", "kind": "triangle", "variant": "point-down" },
+          { "id": "tri-b", "kind": "triangle", "variant": "upright-small" },
+          { "id": "tri-c", "kind": "triangle", "variant": "rotated-30" },
+          { "id": "tri-d", "kind": "triangle", "variant": "upright-large" },
+          { "id": "dis-a", "kind": "circle", "role": "distractor" },
+          { "id": "dis-b", "kind": "square", "role": "distractor" },
+          { "id": "dis-c", "kind": "star", "role": "distractor" }
+        ],
+        "hud": { "doneButton": "hidden" },
+        "shapesRearrangedFromIShow": true
+      },
+      "choreography": [
+        { "at": "0s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-start" } },
+        { "at": "3s",            "type": "system-action",       "params": { "action": "halo-pulse", "target": "tri-a" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedTarget": "any-triangle", "tolerantOfMiss": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "sparkle-on-target" } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "progress-badge-update", "value": "1 of 4" } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-tap-1" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-prompt-2" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "halo-pulse-next-triangle" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedTarget": "any-remaining-triangle", "tolerantOfMiss": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "sparkle-on-target" } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "progress-badge-update", "value": "2 of 4" } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-tap-2" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "pointer-auto-tap-remaining-triangles" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-auto-complete" } },
+        { "at": "+1s",           "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-closing" } },
+        { "at": "+2s",           "type": "system-action",       "params": { "action": "phase-end" } }
+      ],
+      "narrationScript": [
+        { "at": "we-try-start",         "text": "Your turn. Find a triangle." },
+        { "at": "we-try-tap-1",         "text": "Triangle." },
+        { "at": "we-try-prompt-2",      "text": "Find another." },
+        { "at": "we-try-tap-2",         "text": "Still a triangle." },
+        { "at": "we-try-auto-complete", "text": "Triangle. Triangle." },
+        { "at": "we-try-closing",       "text": "Four triangles. All different, all triangles." }
+      ],
+      "hesitationRule": {
+        "thresholdSec": 5,
+        "action": "highlight-target"
+      },
+      "passCondition": "Any kid tap on a triangle passes. Tap on a non-triangle is a soft no-op."
+    },
+
+    "youDo": {
+      "activityId": "shape-garden",
+      "subMode": "find-shape",
+      "isContinuation": false,
+      "roundParameters": {
+        "targetShape": "circle",
+        "totalShapeCount": 10,
+        "targetShapeCount": 4,
+        "distractorMix": "mixed-kinds-orientations-sizes",
+        "shapeLabelsAtConcrete": true,
+        "hintThresholds": {
+          "highlightNextSec": 5,
+          "narratorReminderSec": 10
+        }
+      },
+      "maxAttempts": 3,
+      "cpaLayer": "Concrete"
+    }
+  },
+
+  "libraryEntry": {
+    "thumbnail": "assets/lessons/k-g-2/thumbnail.png",
+    "shortLabel": "Same kind, different look",
+    "regionBadge": "sanctuary-leaf",
+    "replayDurationSec": 60
+  },
+
+  "telemetryExtensions": []
+}

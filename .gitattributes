@@ -1,0 +1,23 @@
+# Normalize line endings in the repo to LF; checkout in native form per OS.
+* text=auto eol=lf
+
+# Explicit binary files.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.m4a binary
+*.mp3 binary
+*.wav binary
+*.aac binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.zip binary
+*.pdf binary
+*.riv binary
+*.tflite binary
+*.mlmodel binary

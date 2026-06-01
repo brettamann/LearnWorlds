@@ -1,0 +1,20 @@
+# Auto-installed deps for tooling scripts.
+tools/scripts/node_modules/
+tools/scripts/package*.json
+
+# Tool outputs (regenerated; not source-of-truth).
+tools/tts/harvest-manifest.json
+tools/tts/canonical-manifest.json
+
+# Editor / OS cruft.
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Flutter — see app/.gitignore for the comprehensive list.
+app/.dart_tool/
+app/build/
+
+# Personal scratch notes (excluded by default; remove this line if you want them tracked).
+human-notes*.txt

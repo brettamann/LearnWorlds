@@ -1,0 +1,155 @@
+{
+  "$schema": "../../schemas/lesson-runtime.schema.json",
+  "id": "lesson-k-cc-1-count-by-tens",
+  "specRef": "specs/lessons/k-cc-1-count-by-tens.md",
+  "version": 1,
+  "conceptId": "K.CC.1",
+  "standardCode": "K.CC.1",
+  "region": "sanctuary",
+  "introducingActivity": "counting-parade",
+  "subModeTarget": "tens-parade",
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "totalDurationTargetSec": 70,
+  "prerequisites": ["lesson-k-cc-4a-one-to-one", "lesson-k-cc-4b-cardinality"],
+
+  "phases": {
+    "iShow": {
+      "durationSec": 25,
+      "scene": {
+        "background": "counting-parade-grass-path-wide",
+        "cameraTreatment": "wide-sweeping",
+        "lighting": "soft-midday",
+        "musicBed": "sanctuary-challenge-rising-energy",
+        "creatures": {
+          "species": "baby-gryphon",
+          "clusterCount": 3,
+          "clusterSize": 10,
+          "singleSpecies": true,
+          "clusterCohesionHalo": true,
+          "motion": "idle-standing"
+        },
+        "buddyPosition": "lower-left",
+        "hud": {
+          "countBadge": "hidden",
+          "doneButton": "hidden",
+          "tenLabelAboveClusters": "appear-on-count"
+        }
+      },
+      "animationSteps": [
+        { "at": "0s",  "action": "scene-fade-up" },
+        { "at": "0s",  "action": "music-bed-in", "params": { "variant": "challenge-rising" } },
+        { "at": "2s",  "action": "narrator-begin" },
+        { "at": "5s",  "action": "pointer-appear", "params": { "target": "cluster-1" } },
+        { "at": "5s",  "action": "cluster-reveal-sparkle-sequence", "params": { "cluster": "cluster-1", "sparkleCount": 10, "totalDurationSec": 1.2 } },
+        { "at": "7s",  "action": "cluster-collapse-tight", "params": { "cluster": "cluster-1" } },
+        { "at": "7s",  "action": "ten-label-rise", "params": { "cluster": "cluster-1", "label": "10" } },
+        { "at": "7s",  "action": "count-badge-show", "params": { "value": 10 } },
+        { "at": "12s", "action": "cluster-pulse", "params": { "cluster": "cluster-2" } },
+        { "at": "12s", "action": "ten-label-rise", "params": { "cluster": "cluster-2", "label": "10" } },
+        { "at": "12s", "action": "count-badge-update", "params": { "value": 20 } },
+        { "at": "16s", "action": "cluster-pulse", "params": { "cluster": "cluster-3" } },
+        { "at": "16s", "action": "ten-label-rise", "params": { "cluster": "cluster-3", "label": "10" } },
+        { "at": "16s", "action": "count-badge-update", "params": { "value": 30 } },
+        { "at": "18s", "action": "ive-got-this-button-show" },
+        { "at": "20s", "action": "pointer-fade-out" },
+        { "at": "20s", "action": "count-badge-glow", "params": { "value": 30 } },
+        { "at": "25s", "action": "phase-end" }
+      ],
+      "narrationScript": [
+        { "at": "2s",  "text": "Look at all these baby gryphons. So many to count!" },
+        { "at": "5s",  "text": "One-two-three-four-five-six-seven-eight-nine-ten." },
+        { "at": "8s",  "text": "Ten in this group." },
+        { "at": "12s", "text": "Ten more — twenty." },
+        { "at": "16s", "text": "Ten more — thirty." },
+        { "at": "21s", "text": "Thirty gryphons. Counting by tens is much faster than one at a time." }
+      ],
+      "skipToYouDoAvailableAfterSec": 18
+    },
+
+    "weTry": {
+      "durationSec": 22,
+      "scene": {
+        "background": "counting-parade-grass-path-wide",
+        "musicBed": "sanctuary-challenge-rising-energy",
+        "creatures": {
+          "species": "baby-gryphon",
+          "initialClusterCount": 2,
+          "clusterSize": 10,
+          "thirdClusterArrivesFromTop": true
+        },
+        "buddyPosition": "lower-left",
+        "hud": {
+          "countBadge": "hidden-until-first-tap",
+          "doneButton": "hidden"
+        }
+      },
+      "choreography": [
+        { "at": "0s",           "type": "system-action",       "params": { "action": "third-cluster-walks-in" } },
+        { "at": "0s",           "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-start" } },
+        { "at": "4s",           "type": "system-action",       "params": { "action": "halo-pulse", "target": "cluster-1" } },
+        { "at": "4s",           "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-prompt-1" } },
+        { "at": "on-kid-input", "type": "kid-action-expected", "params": { "expectedTarget": "cluster-1", "tolerantOfMiss": true } },
+        { "at": "on-kid-input", "type": "system-action",       "params": { "action": "cluster-pulse", "cluster": "cluster-1" } },
+        { "at": "on-kid-input", "type": "system-action",       "params": { "action": "ten-label-rise", "cluster": "cluster-1" } },
+        { "at": "on-kid-input", "type": "system-action",       "params": { "action": "count-badge-show", "value": 10 } },
+        { "at": "on-kid-input", "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-after-tap-1" } },
+        { "at": "+0.5s",        "type": "system-action",       "params": { "action": "halo-pulse", "target": "cluster-2" } },
+        { "at": "+0.5s",        "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-prompt-2" } },
+        { "at": "on-kid-input", "type": "kid-action-expected", "params": { "expectedTarget": "cluster-2", "tolerantOfMiss": true } },
+        { "at": "on-kid-input", "type": "system-action",       "params": { "action": "cluster-pulse", "cluster": "cluster-2" } },
+        { "at": "on-kid-input", "type": "system-action",       "params": { "action": "ten-label-rise", "cluster": "cluster-2" } },
+        { "at": "on-kid-input", "type": "system-action",       "params": { "action": "count-badge-update", "value": 20 } },
+        { "at": "on-kid-input", "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-after-tap-2" } },
+        { "at": "+0.5s",        "type": "system-action",       "params": { "action": "pointer-auto-tap", "target": "cluster-3" } },
+        { "at": "+0.5s",        "type": "system-action",       "params": { "action": "ten-label-rise", "cluster": "cluster-3" } },
+        { "at": "+0.5s",        "type": "system-action",       "params": { "action": "count-badge-update", "value": 30 } },
+        { "at": "+0.5s",        "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-auto-complete" } },
+        { "at": "+1s",          "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-closing" } },
+        { "at": "+2s",          "type": "system-action",       "params": { "action": "phase-end" } }
+      ],
+      "narrationScript": [
+        { "at": "we-try-start",         "text": "Your turn. Each group is ten." },
+        { "at": "we-try-prompt-1",      "text": "Touch this group." },
+        { "at": "we-try-after-tap-1",   "text": "Ten." },
+        { "at": "we-try-prompt-2",      "text": "Now this one." },
+        { "at": "we-try-after-tap-2",   "text": "Twenty." },
+        { "at": "we-try-auto-complete", "text": "Thirty." },
+        { "at": "we-try-closing",       "text": "Thirty gryphons in three groups." }
+      ],
+      "hesitationRule": {
+        "thresholdSec": 5,
+        "action": "auto-complete"
+      },
+      "passCondition": "Any tap inside or near a highlighted cluster passes. Even a tap on the wrong cluster passes — the system steers and continues."
+    },
+
+    "youDo": {
+      "activityId": "counting-parade",
+      "subMode": "tens-parade",
+      "isContinuation": false,
+      "roundParameters": {
+        "clusterCount": 3,
+        "clusterSize": 10,
+        "targetFinalCount": 30,
+        "singleSpecies": true,
+        "isChallenge": true,
+        "challengeChestOnSuccess": true,
+        "hintThresholds": {
+          "highlightNextSec": 5,
+          "narratorReminderSec": 10
+        }
+      },
+      "maxAttempts": 3,
+      "cpaLayer": "Concrete"
+    }
+  },
+
+  "libraryEntry": {
+    "thumbnail": "assets/lessons/k-cc-1/thumbnail.png",
+    "shortLabel": "Counting by tens",
+    "regionBadge": "sanctuary-leaf-with-star",
+    "replayDurationSec": 70
+  },
+
+  "telemetryExtensions": []
+}

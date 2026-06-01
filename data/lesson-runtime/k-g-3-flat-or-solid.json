@@ -1,0 +1,132 @@
+{
+  "$schema": "../../schemas/lesson-runtime.schema.json",
+  "id": "lesson-k-g-3-flat-or-solid",
+  "specRef": "specs/lessons/k-g-3-flat-or-solid.md",
+  "version": 1,
+  "conceptId": "K.G.3",
+  "standardCode": "K.G.3",
+  "region": "sanctuary",
+  "introducingActivity": "shape-garden",
+  "subModeTarget": "flat-or-solid",
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "totalDurationTargetSec": 60,
+  "prerequisites": ["lesson-k-g-2-shape-recognition"],
+
+  "phases": {
+    "iShow": {
+      "durationSec": 25,
+      "scene": {
+        "background": "shape-garden-with-pond",
+        "musicBed": "sanctuary-low",
+        "pathShapes": [
+          { "id": "path-circle", "kind": "circle", "dimensionality": "2D" },
+          { "id": "path-square", "kind": "square", "dimensionality": "2D" },
+          { "id": "path-triangle", "kind": "triangle", "dimensionality": "2D" },
+          { "id": "path-cube-misfit", "kind": "cube", "dimensionality": "3D", "note": "temporarily-on-path-will-be-sorted" }
+        ],
+        "pondShapes": [
+          { "id": "pond-sphere", "kind": "sphere", "rotating": true },
+          { "id": "pond-cone", "kind": "cone", "rotating": true }
+        ],
+        "bins": [
+          { "id": "flat-bin", "label": "flat", "icon": "paper" },
+          { "id": "solid-bin", "label": "solid", "icon": "cube" }
+        ],
+        "hud": { "doneButton": "hidden" }
+      },
+      "animationSteps": [
+        { "at": "0s",  "action": "scene-fade-up" },
+        { "at": "0s",  "action": "music-bed-in" },
+        { "at": "2s",  "action": "narrator-begin" },
+        { "at": "4s",  "action": "highlight-wash", "params": { "targets": ["path-circle", "path-square", "path-triangle"] } },
+        { "at": "9s",  "action": "camera-attention-shift", "params": { "to": "pond" } },
+        { "at": "9s",  "action": "glow-soft", "params": { "targets": ["pond-sphere", "pond-cone"] } },
+        { "at": "14s", "action": "pointer-touch-drag", "params": { "from": "path-circle", "to": "flat-bin" } },
+        { "at": "18s", "action": "ive-got-this-button-show" },
+        { "at": "18s", "action": "pointer-touch", "params": { "target": "path-cube-misfit" } },
+        { "at": "18s", "action": "shape-lift-and-rotate-reveal", "params": { "target": "path-cube-misfit" } },
+        { "at": "19s", "action": "pointer-drag-to-bin", "params": { "from": "path-cube-misfit", "to": "solid-bin" } },
+        { "at": "25s", "action": "phase-end" }
+      ],
+      "narrationScript": [
+        { "at": "2s",  "text": "Look at the path. These shapes are flat." },
+        { "at": "6s",  "text": "Flat. You see them from one side — like a drawing on paper." },
+        { "at": "9s",  "text": "Now look at the pond. These shapes are solid." },
+        { "at": "11s", "text": "Solid. You can see them from many sides." },
+        { "at": "14s", "text": "Circle — flat." },
+        { "at": "18s", "text": "Cube — solid." },
+        { "at": "22s", "text": "Flat shapes live on paper. Solid shapes have many sides." }
+      ],
+      "skipToYouDoAvailableAfterSec": 18
+    },
+
+    "weTry": {
+      "durationSec": 20,
+      "scene": {
+        "background": "shape-garden-with-pond",
+        "sourceRow": [
+          { "id": "tri-2d", "kind": "triangle", "dimensionality": "2D" },
+          { "id": "hex-2d", "kind": "hexagon", "dimensionality": "2D" },
+          { "id": "cyl-3d", "kind": "cylinder", "dimensionality": "3D", "rotating": true },
+          { "id": "sph-3d", "kind": "sphere", "dimensionality": "3D", "rotating": true }
+        ],
+        "bins": [
+          { "id": "flat-bin", "label": "flat" },
+          { "id": "solid-bin", "label": "solid" }
+        ]
+      },
+      "choreography": [
+        { "at": "0s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-start" } },
+        { "at": "3s",            "type": "system-action",       "params": { "action": "halo-pulse", "target": "tri-2d" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-to-bin", "shape": "tri-2d", "expectedBin": "flat-bin", "wrongReturns": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "drop-feedback", "passCue": "we-try-correct-1", "failCue": "we-try-corrective-1" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "halo-pulse", "target": "cyl-3d" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-to-bin", "shape": "cyl-3d", "expectedBin": "solid-bin", "wrongReturns": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "drop-feedback", "passCue": "we-try-correct-2", "failCue": "we-try-corrective-2" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "pointer-auto-sort-remaining" } },
+        { "at": "+1s",           "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-closing" } },
+        { "at": "20s",           "type": "system-action",       "params": { "action": "phase-end" } }
+      ],
+      "narrationScript": [
+        { "at": "we-try-start",         "text": "Your turn. Some are flat. Some are solid. Put them in the right baskets." },
+        { "at": "we-try-correct-1",     "text": "Triangle — flat." },
+        { "at": "we-try-corrective-1",  "text": "Triangles are flat. Try the flat basket." },
+        { "at": "we-try-correct-2",     "text": "Cylinder — solid." },
+        { "at": "we-try-corrective-2",  "text": "Cylinders are solid. Try the solid basket." },
+        { "at": "we-try-closing",       "text": "Four shapes. Two flat. Two solid." }
+      ],
+      "hesitationRule": {
+        "thresholdSec": 5,
+        "action": "highlight-target"
+      },
+      "passCondition": "Any kid drag of any shape onto either bin passes. Wrong-bin drops return shape; lesson advances after kid's next successful drop or via auto-complete."
+    },
+
+    "youDo": {
+      "activityId": "shape-garden",
+      "subMode": "flat-or-solid",
+      "isContinuation": false,
+      "roundParameters": {
+        "shapeCount": 6,
+        "mix": "3-flat-3-solid",
+        "bins": ["flat", "solid"],
+        "shapeNameLabelsAtConcrete": true,
+        "hintThresholds": {
+          "highlightNextSec": 5,
+          "narratorReminderSec": 10
+        }
+      },
+      "maxAttempts": 3,
+      "cpaLayer": "Concrete"
+    }
+  },
+
+  "libraryEntry": {
+    "thumbnail": "assets/lessons/k-g-3/thumbnail.png",
+    "shortLabel": "Flat or solid",
+    "regionBadge": "sanctuary-leaf",
+    "replayDurationSec": 60
+  },
+
+  "telemetryExtensions": []
+}

@@ -1,0 +1,3 @@
+# Coordinators per specs/shared/system-architecture.md.
+# Orchestrate engines for a use case: RunActivityCoordinator, RunLessonCoordinator,
+# OnboardingCoordinator, DailyQuestCoordinator, DashboardCoordinator.

@@ -1,0 +1,35 @@
+name: Data validation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/**'
+      - 'content/**'
+      - 'schemas/**'
+      - 'tools/scripts/**'
+      - '.github/workflows/data-validation.yml'
+  pull_request:
+    paths:
+      - 'data/**'
+      - 'content/**'
+      - 'schemas/**'
+      - 'tools/scripts/**'
+      - '.github/workflows/data-validation.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate all data files against their schemas
+        # Walks data/**/*.json and content/**/*.json and validates each against
+        # its declared $schema. Auto-installs ajv into tools/scripts/node_modules/
+        # on first run. See specs/shared/system-architecture.md "Loading & validation".
+        run: node tools/scripts/validate-data.mjs --quiet

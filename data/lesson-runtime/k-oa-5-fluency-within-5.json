@@ -1,0 +1,122 @@
+{
+  "$schema": "../../schemas/lesson-runtime.schema.json",
+  "id": "lesson-k-oa-5-fluency-within-5",
+  "specRef": "specs/lessons/k-oa-5-fluency-within-5.md",
+  "version": 1,
+  "conceptId": "K.OA.5",
+  "standardCode": "K.OA.5",
+  "region": "sanctuary",
+  "introducingActivity": "fluency-within-5",
+  "subModeTarget": "casual",
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "totalDurationTargetSec": 70,
+  "prerequisites": ["lesson-k-oa-2-word-problems"],
+
+  "phases": {
+    "iShow": {
+      "durationSec": 25,
+      "scene": {
+        "background": "fluency-practice-clearing",
+        "lighting": "bright-midmorning",
+        "musicBed": "sanctuary-upbeat-practice",
+        "chalkboard": { "state": "empty" },
+        "tileRow": { "visibility": "empty-until-problem-appears" },
+        "buddyPosition": "lower-left-mat-larger-than-usual",
+        "treatJarShelfVisible": true,
+        "hud": { "doneButton": "hidden" }
+      },
+      "animationSteps": [
+        { "at": "0s",  "action": "scene-fade-up" },
+        { "at": "0s",  "action": "music-bed-in" },
+        { "at": "2s",  "action": "narrator-begin" },
+        { "at": "5s",  "action": "chalkboard-show-problem", "params": { "problem": "2 + 1 = ?", "sfx": "chalk" } },
+        { "at": "7s",  "action": "tiles-fade-in", "params": { "tiles": [2, 3, 4, 5] } },
+        { "at": "9s",  "action": "pointer-appear", "params": { "near": "chalkboard" } },
+        { "at": "11s", "action": "pointer-tap", "params": { "tile": 3 } },
+        { "at": "11s", "action": "selection-ring-bright-chime" },
+        { "at": "11s", "action": "chalkboard-reveal-answer", "params": { "value": 3 } },
+        { "at": "13s", "action": "buddy-wiggle-celebrate" },
+        { "at": "15s", "action": "chalkboard-fade-to-blank" },
+        { "at": "17s", "action": "ive-got-this-button-show" },
+        { "at": "25s", "action": "phase-end" }
+      ],
+      "narrationScript": [
+        { "at": "2s",  "text": "Quick practice. Watch one." },
+        { "at": "5s",  "text": "Two plus one." },
+        { "at": "9s",  "text": "Find the answer." },
+        { "at": "11s", "text": "Three." },
+        { "at": "13s", "text": "Yes — and the Buddy is happy." },
+        { "at": "17s", "text": "Read the problem, pick the answer, next one. That's the rhythm." }
+      ],
+      "skipToYouDoAvailableAfterSec": 17
+    },
+
+    "weTry": {
+      "durationSec": 25,
+      "scene": {
+        "background": "fluency-practice-clearing",
+        "chalkboard": { "state": "ready" },
+        "buddyPosition": "lower-left-mat-larger-than-usual"
+      },
+      "choreography": [
+        { "at": "0s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-start" } },
+        { "at": "0s",            "type": "system-action",       "params": { "action": "chalkboard-show-problem", "problem": "3 - 1 = ?", "sfx": "chalk" } },
+        { "at": "2s",            "type": "system-action",       "params": { "action": "tiles-fade-in", "tiles": [1, 2, 3, 4] } },
+        { "at": "2s",            "type": "system-action",       "params": { "action": "halo-tile", "tile": 2 } },
+        { "at": "3s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-problem-spoken" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "tile-tap", "expectedValue": 2, "tolerantOfMiss": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "tile-feedback", "passCue": "we-try-correct", "failCue": "we-try-incorrect" } },
+        { "at": "on-correct",    "type": "system-action",       "params": { "action": "chalkboard-reveal-answer", "value": 2 } },
+        { "at": "on-correct",    "type": "system-action",       "params": { "action": "buddy-wiggle" } },
+        { "at": "on-incorrect",  "type": "system-action",       "params": { "action": "halo-correct-tile-brighter", "tile": 2 } },
+        { "at": "on-incorrect",  "type": "system-action",       "params": { "action": "auto-tap-correct-tile-after", "delaySec": 1 } },
+        { "at": "+1s",           "type": "system-action",       "params": { "action": "chalkboard-fade-to-blank" } },
+        { "at": "+2s",           "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-closing" } },
+        { "at": "25s",           "type": "system-action",       "params": { "action": "phase-end" } }
+      ],
+      "narrationScript": [
+        { "at": "we-try-start",           "text": "Now you try." },
+        { "at": "we-try-problem-spoken",  "text": "Three take away one." },
+        { "at": "we-try-correct",         "text": "Two." },
+        { "at": "we-try-incorrect",       "text": "Three take away one is two." },
+        { "at": "we-try-closing",         "text": "That's the rhythm. The Buddy is ready for more." }
+      ],
+      "hesitationRule": {
+        "thresholdSec": 5,
+        "action": "highlight-target"
+      },
+      "passCondition": "Any tap (correct or wrong) counts as participation."
+    },
+
+    "youDo": {
+      "activityId": "fluency-within-5",
+      "subMode": "casual",
+      "isContinuation": false,
+      "roundParameters": {
+        "problemCount": 4,
+        "isFirstEncounterShortenedRound": true,
+        "anchorFirstFact": "2+2",
+        "factPoolHint": "easy-starter-subset",
+        "distractorCount": 3,
+        "maxAttemptsPerProblem": 2,
+        "passThreshold": "2-of-4-correct-first-try",
+        "firstSessionTreatJarPourGuaranteed": true,
+        "hintThresholds": {
+          "highlightNextSec": 5,
+          "narratorReminderSec": 10
+        }
+      },
+      "maxAttempts": 3,
+      "cpaLayer": "Concrete"
+    }
+  },
+
+  "libraryEntry": {
+    "thumbnail": "assets/lessons/k-oa-5/thumbnail.png",
+    "shortLabel": "Quick practice with Buddy",
+    "regionBadge": "sanctuary-leaf",
+    "replayDurationSec": 70
+  },
+
+  "telemetryExtensions": []
+}

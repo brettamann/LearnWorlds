@@ -1,0 +1,4 @@
+# Engines layer per specs/shared/system-architecture.md.
+# Pure-logic modules: ScaffoldEngine, MasteryEngine, LessonRunner, ActivityRunner,
+# RewardEngine, DailyQuestCurator, FactScheduler, TelemetryPipe, SaveCoordinator,
+# SlotResolver, LessonQueue. No Flutter imports allowed in this layer.

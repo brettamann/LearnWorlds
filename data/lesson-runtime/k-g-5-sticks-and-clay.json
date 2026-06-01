@@ -1,0 +1,156 @@
+{
+  "$schema": "../../schemas/lesson-runtime.schema.json",
+  "id": "lesson-k-g-5-sticks-and-clay",
+  "specRef": "specs/lessons/k-g-5-sticks-and-clay.md",
+  "version": 1,
+  "conceptId": "K.G.5",
+  "standardCode": "K.G.5",
+  "region": "sanctuary",
+  "introducingActivity": "build-a-habitat",
+  "subModeTarget": "simple-shelter",
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "totalDurationTargetSec": 65,
+
+  "phases": {
+    "iShow": {
+      "durationSec": 25,
+      "scene": {
+        "background": "build-a-habitat-grassy-clearing",
+        "musicBed": "sanctuary-low",
+        "buildSite": {
+          "targetFrame": "triangle",
+          "ghostOutline": "bright-triangle",
+          "vertexIndicators": [
+            { "id": "vertex-1", "position": "top" },
+            { "id": "vertex-2", "position": "lower-left" },
+            { "id": "vertex-3", "position": "lower-right" }
+          ],
+          "edgeIndicators": [
+            { "id": "edge-1", "between": ["vertex-1", "vertex-2"] },
+            { "id": "edge-2", "between": ["vertex-2", "vertex-3"] },
+            { "id": "edge-3", "between": ["vertex-3", "vertex-1"] }
+          ]
+        },
+        "sourcePool": {
+          "position": "lower-right",
+          "items": { "clayBalls": 5, "sticks": 5 }
+        },
+        "residentCreature": { "kind": "baby-fawn", "position": "edge-of-clearing", "motion": "idle-waiting" },
+        "buddyPosition": "lower-left-log",
+        "hud": { "doneButton": "hidden" }
+      },
+      "animationSteps": [
+        { "at": "0s",  "action": "scene-fade-up" },
+        { "at": "0s",  "action": "music-bed-in" },
+        { "at": "2s",  "action": "narrator-begin" },
+        { "at": "5s",  "action": "pointer-pickup-from-pool", "params": { "itemType": "clay-ball" } },
+        { "at": "7s",  "action": "pointer-place", "params": { "target": "vertex-1" } },
+        { "at": "7s",  "action": "snap-thunk" },
+        { "at": "10s", "action": "pointer-place-clay", "params": { "target": "vertex-2" } },
+        { "at": "13s", "action": "pointer-place-clay", "params": { "target": "vertex-3" } },
+        { "at": "18s", "action": "pointer-place-stick", "params": { "target": "edge-1" } },
+        { "at": "18s", "action": "ive-got-this-button-show" },
+        { "at": "21s", "action": "pointer-place-stick", "params": { "target": "edge-2" } },
+        { "at": "24s", "action": "pointer-place-stick", "params": { "target": "edge-3" } },
+        { "at": "25s", "action": "frame-solidify-with-lift-stinger" },
+        { "at": "29s", "action": "phase-end" }
+      ],
+      "narrationScript": [
+        { "at": "2s",  "text": "Let's build the frame for a fawn shelter. A triangle." },
+        { "at": "5s",  "text": "First, the corners. The clay balls go where the lines meet." },
+        { "at": "7s",  "text": "One." },
+        { "at": "10s", "text": "Two." },
+        { "at": "13s", "text": "Three." },
+        { "at": "16s", "text": "Now the sticks. They go along the sides, between the corners." },
+        { "at": "18s", "text": "One." },
+        { "at": "21s", "text": "Two." },
+        { "at": "24s", "text": "Three." },
+        { "at": "26s", "text": "A triangle frame. Corners with clay, lines with sticks. That's how we make shapes." }
+      ],
+      "skipToYouDoAvailableAfterSec": 18
+    },
+
+    "weTry": {
+      "durationSec": 22,
+      "scene": {
+        "background": "build-a-habitat-grassy-clearing",
+        "buildSite": {
+          "targetFrame": "triangle",
+          "ghostOutline": "bright-triangle",
+          "vertexIndicators": [
+            { "id": "vertex-1", "position": "top" },
+            { "id": "vertex-2", "position": "lower-left" },
+            { "id": "vertex-3", "position": "lower-right" }
+          ],
+          "edgeIndicators": [
+            { "id": "edge-1" }, { "id": "edge-2" }, { "id": "edge-3" }
+          ]
+        },
+        "sourcePool": { "items": { "clayBalls": 5, "sticks": 5 } },
+        "initialGlowTarget": "vertex-1"
+      },
+      "choreography": [
+        { "at": "0s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-start" } },
+        { "at": "3s",            "type": "system-action",       "params": { "action": "halo-pulse", "target": "vertex-1" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-clay-to-vertex", "anyVertexAcceptable": true, "stickOnVertexRejects": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "drop-feedback", "passCue": "we-try-corner-tap" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "halo-pulse-next-vertex" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-clay-to-vertex", "anyVertexAcceptable": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "drop-feedback", "passCue": "we-try-corner-tap" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "pointer-auto-place-clay-on-third-vertex" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-third-corner" } },
+        { "at": "+1s",           "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-sticks-prompt" } },
+        { "at": "+1s",           "type": "system-action",       "params": { "action": "halo-pulse", "target": "edge-1" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-stick-to-edge", "anyEdgeAcceptable": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "drop-feedback", "passCue": "we-try-stick-tap" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "pointer-auto-place-remaining-sticks" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-remaining-sticks" } },
+        { "at": "22s",           "type": "system-action",       "params": { "action": "frame-solidify" } },
+        { "at": "22s",           "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-closing" } },
+        { "at": "22s",           "type": "system-action",       "params": { "action": "phase-end" } }
+      ],
+      "narrationScript": [
+        { "at": "we-try-start",            "text": "Your turn. Start with the corners." },
+        { "at": "we-try-corner-tap",       "text": "Corner." },
+        { "at": "we-try-third-corner",     "text": "Three." },
+        { "at": "we-try-sticks-prompt",    "text": "Now the sticks." },
+        { "at": "we-try-stick-tap",        "text": "One." },
+        { "at": "we-try-remaining-sticks", "text": "Two. Three." },
+        { "at": "we-try-corrective-stick", "text": "Corners first." },
+        { "at": "we-try-closing",          "text": "A triangle frame — corners and lines together." }
+      ],
+      "hesitationRule": {
+        "thresholdSec": 5,
+        "action": "highlight-target"
+      },
+      "passCondition": "Any kid drag onto a valid target passes. Even one drag is enough; system completes the rest."
+    },
+
+    "youDo": {
+      "activityId": "build-a-habitat",
+      "subMode": "simple-shelter",
+      "isContinuation": false,
+      "roundParameters": {
+        "targetFrame": "triangle",
+        "phase1Target": { "clayBalls": 3, "sticks": 3 },
+        "phase2Target": { "cube": 1 },
+        "residentCreature": "baby-fawn",
+        "hintThresholds": {
+          "highlightNextSec": 5,
+          "narratorReminderSec": 10
+        }
+      },
+      "maxAttempts": 3,
+      "cpaLayer": "Concrete"
+    }
+  },
+
+  "libraryEntry": {
+    "thumbnail": "assets/lessons/k-g-5/thumbnail.png",
+    "shortLabel": "Corners and lines make shapes",
+    "regionBadge": "sanctuary-leaf",
+    "replayDurationSec": 65
+  },
+
+  "telemetryExtensions": []
+}

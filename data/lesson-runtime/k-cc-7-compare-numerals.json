@@ -1,0 +1,128 @@
+{
+  "$schema": "../../schemas/lesson-runtime.schema.json",
+  "id": "lesson-k-cc-7-compare-numerals",
+  "specRef": "specs/lessons/k-cc-7-compare-numerals.md",
+  "version": 1,
+  "conceptId": "K.CC.7",
+  "standardCode": "K.CC.7",
+  "region": "sanctuary",
+  "introducingActivity": "picnic-baskets",
+  "subModeTarget": "numeral-compare",
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "totalDurationTargetSec": 65,
+  "prerequisites": ["lesson-k-cc-6-compare-by-matching"],
+
+  "phases": {
+    "iShow": {
+      "durationSec": 25,
+      "scene": {
+        "background": "sanctuary-glade-picnic-blanket-cleared",
+        "musicBed": "sanctuary-picnic",
+        "numeralCards": [
+          { "id": "left-numeral", "value": 7, "position": "left", "dotPattern": { "visible": true, "count": 7, "style": "ten-frame-arrangement" } },
+          { "id": "right-numeral", "value": 4, "position": "right", "dotPattern": { "visible": true, "count": 4, "style": "ten-frame-arrangement" } }
+        ],
+        "symbolTileRow": {
+          "tiles": [">", "<", "="],
+          "draggable": true,
+          "position": "bottom"
+        },
+        "gap": { "between": ["left-numeral", "right-numeral"], "snapRadius": 30 },
+        "buddyPosition": "lower-left-pillow",
+        "hud": {
+          "doneButton": "hidden"
+        }
+      },
+      "animationSteps": [
+        { "at": "0s",  "action": "scene-fade-up" },
+        { "at": "0s",  "action": "music-bed-in" },
+        { "at": "2s",  "action": "narrator-begin" },
+        { "at": "5s",  "action": "camera-nudge-between-numerals" },
+        { "at": "7s",  "action": "dot-pattern-pulse", "params": { "target": "left-numeral" } },
+        { "at": "8s",  "action": "dot-pattern-pulse", "params": { "target": "right-numeral" } },
+        { "at": "10s", "action": "pointer-appear", "params": { "position": "symbol-tile-row" } },
+        { "at": "11s", "action": "pointer-pickup", "params": { "tile": ">" } },
+        { "at": "13s", "action": "pointer-place", "params": { "tile": ">", "target": "gap" } },
+        { "at": "13s", "action": "symbol-snap-settle-chime" },
+        { "at": "17s", "action": "wide-side-glow", "params": { "symbol": ">" } },
+        { "at": "17s", "action": "ive-got-this-button-show" },
+        { "at": "17s", "action": "wide-side-arrow", "params": { "from": "symbol-wide-side", "to": "left-numeral" } },
+        { "at": "23s", "action": "phase-end" }
+      ],
+      "narrationScript": [
+        { "at": "2s",  "text": "Seven and four. Which is bigger?" },
+        { "at": "7s",  "text": "Look at the dots — seven is more than four." },
+        { "at": "11s", "text": "We use a special mark to say so." },
+        { "at": "13s", "text": "Seven is greater than four." },
+        { "at": "17s", "text": "The wide side of the mark points to the bigger number." },
+        { "at": "21s", "text": "Greater than. Less than. Equal to. Three marks, one job." }
+      ],
+      "skipToYouDoAvailableAfterSec": 17
+    },
+
+    "weTry": {
+      "durationSec": 25,
+      "scene": {
+        "background": "sanctuary-glade-picnic-blanket-cleared",
+        "musicBed": "sanctuary-picnic",
+        "numeralCards": [
+          { "id": "left-numeral", "value": 3, "dotPattern": { "visible": true, "count": 3 } },
+          { "id": "right-numeral", "value": 5, "dotPattern": { "visible": true, "count": 5 } }
+        ],
+        "symbolTileRow": {
+          "tiles": [">", "<", "="],
+          "draggable": true
+        }
+      },
+      "choreography": [
+        { "at": "0s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-start" } },
+        { "at": "0s",            "type": "system-action",       "params": { "action": "dot-pattern-pulse-both" } },
+        { "at": "3s",            "type": "system-action",       "params": { "action": "halo-tile", "tile": "<" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-symbol-to-gap", "expectedSymbol": "<", "wrongRetryUpTo": 2 } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "symbol-feedback", "passCue": "we-try-correct", "wrongGreaterCue": "we-try-wrong-greater", "wrongEqualsCue": "we-try-wrong-equal" } },
+        { "at": "on-correct",    "type": "system-action",       "params": { "action": "wide-side-glow-and-arrow", "symbol": "<", "pointTo": "right-numeral" } },
+        { "at": "on-correct",    "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-wide-side-confirm" } },
+        { "at": "+2s",           "type": "system-action",       "params": { "action": "phase-end" } }
+      ],
+      "narrationScript": [
+        { "at": "we-try-start",              "text": "Your turn. Three and five — which mark goes between them?" },
+        { "at": "we-try-correct",            "text": "Three is less than five." },
+        { "at": "we-try-wide-side-confirm",  "text": "The wide side points to the bigger number — five." },
+        { "at": "we-try-wrong-greater",      "text": "Look at the dots — three has fewer than five." },
+        { "at": "we-try-wrong-equal",        "text": "They're not the same. Three has fewer." }
+      ],
+      "hesitationRule": {
+        "thresholdSec": 5,
+        "action": "auto-complete"
+      },
+      "passCondition": "Any kid drag onto the gap counts as participation. Wrong choices loop up to 2 times; on a third miss, system auto-completes."
+    },
+
+    "youDo": {
+      "activityId": "picnic-baskets",
+      "subMode": "numeral-compare",
+      "isContinuation": false,
+      "roundParameters": {
+        "leftNumeral": 6,
+        "rightNumeral": 6,
+        "correctSymbol": "=",
+        "dotPatternScaffoldAtConcrete": true,
+        "hintThresholds": {
+          "highlightNextSec": 5,
+          "narratorReminderSec": 10
+        }
+      },
+      "maxAttempts": 3,
+      "cpaLayer": "Concrete"
+    }
+  },
+
+  "libraryEntry": {
+    "thumbnail": "assets/lessons/k-cc-7/thumbnail.png",
+    "shortLabel": "Greater, less, equal",
+    "regionBadge": "sanctuary-leaf",
+    "replayDurationSec": 65
+  },
+
+  "telemetryExtensions": []
+}

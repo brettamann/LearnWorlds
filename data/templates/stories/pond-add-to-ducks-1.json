@@ -1,0 +1,43 @@
+{
+  "$schema": "../../../schemas/content-template.schema.json",
+  "id": "pond-add-to-ducks-1",
+  "kind": "story",
+  "version": 1,
+  "status": "draft",
+  "concepts": ["K.OA.2", "K.OA.1"],
+  "primaryConcept": "K.OA.2",
+  "regionScope": ["sanctuary"],
+  "gradeScope": ["K"],
+  "difficulty": "concrete",
+  "telemetryId": "pond.add-to-ducks-1",
+
+  "subMode": "add-to",
+  "creature": "duck",
+  "narrationTemplate": "{startN} ducks are in the pond. {changeN} more swim in. How many altogether?",
+  "narrationSlots": {
+    "startN": 5,
+    "changeN": 2
+  },
+  "expectedAnswer": 7,
+  "answerFormat": "tile-select",
+  "tileOptions": [6, 7, 8],
+
+  "visualSteps": [
+    { "at": "0s", "action": "spawn", "count": 5, "position": "pond-center" },
+    { "at": "3s", "action": "spawn-sequence", "count": 2, "interval": "1s", "from": "off-screen-left", "to": "pond-edge", "easing": "ease-out" },
+    { "at": "6s", "action": "pause" }
+  ],
+
+  "barModel": {
+    "type": "add-to",
+    "parts": [5, 2],
+    "result": 7,
+    "start": 5,
+    "change": 2
+  },
+
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "narratorCharacter": "storyteller-turtle",
+
+  "notes": "First add-to story template. Matches the K.OA.2 lesson's I-Show structure (4+2). Used as a You-Do round template for K kids fresh from the lesson."
+}

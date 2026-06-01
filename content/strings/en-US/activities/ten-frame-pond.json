@@ -1,0 +1,129 @@
+{
+  "$schema": "../../../../schemas/activity-narration.schema.json",
+  "activity": "ten-frame-pond",
+  "locale": "en-US",
+  "voiceProfile": "sanctuary-warm-naturalist",
+  "cues": [
+    {
+      "id": "fill-to-target.round-start",
+      "subMode": "fill-to-target",
+      "event": "round-start",
+      "text": "Put {N} fish on the pond.",
+      "slotSource": { "N": "round.target" }
+    },
+    {
+      "id": "fill-to-target.mid-hesitation-10s",
+      "subMode": "fill-to-target",
+      "event": "mid-hesitation-10s",
+      "text": "Keep going — drag fish from the school below."
+    },
+    {
+      "id": "fill-to-target.round-pass",
+      "subMode": "fill-to-target",
+      "event": "round-pass",
+      "text": "{N}! You put {N} fish on the pond.",
+      "slotSource": { "N": "round.target" }
+    },
+    {
+      "id": "fill-to-target.round-fail-over",
+      "subMode": "fill-to-target",
+      "event": "round-fail-over",
+      "text": "We have {actual}. We needed {target}. Tap some fish to send them back.",
+      "slotSource": { "actual": "round.kidCount", "target": "round.target" }
+    },
+    {
+      "id": "fill-to-target.round-fail-under",
+      "subMode": "fill-to-target",
+      "event": "round-fail-under",
+      "text": "We have {actual}. We need {delta} more.",
+      "slotSource": { "actual": "round.kidCount", "delta": "round.delta" }
+    },
+
+    {
+      "id": "two-ways.round-start-first",
+      "subMode": "two-ways",
+      "event": "round-start-first",
+      "text": "Make {N} fish on the pond.",
+      "slotSource": { "N": "round.target" }
+    },
+    {
+      "id": "two-ways.round-start-second",
+      "subMode": "two-ways",
+      "event": "round-start-second",
+      "text": "Now make {N} a different way.",
+      "slotSource": { "N": "round.target" }
+    },
+    {
+      "id": "two-ways.round-pass",
+      "subMode": "two-ways",
+      "event": "round-pass",
+      "text": "Two ways to make {N}. Nice.",
+      "slotSource": { "N": "round.target" }
+    },
+    {
+      "id": "two-ways.round-fail-same-split",
+      "subMode": "two-ways",
+      "event": "round-fail-same-split",
+      "text": "Show me a different way to make {N}.",
+      "slotSource": { "N": "round.target" }
+    },
+
+    {
+      "id": "make-ten.round-start",
+      "subMode": "make-ten",
+      "event": "round-start",
+      "text": "We have {start} fish. Make 10.",
+      "slotSource": { "start": "round.startingAmount" }
+    },
+    {
+      "id": "make-ten.round-pass",
+      "subMode": "make-ten",
+      "event": "round-pass",
+      "text": "Ten! That's a full pond."
+    },
+    {
+      "id": "make-ten.round-fail",
+      "subMode": "make-ten",
+      "event": "round-fail",
+      "text": "We have {actual}. We need {delta} more to make ten.",
+      "slotSource": { "actual": "round.kidCount", "delta": "round.delta" }
+    },
+
+    {
+      "id": "ten-plus-n.round-start",
+      "subMode": "ten-plus-n",
+      "event": "round-start",
+      "text": "We have ten fish here. Add {n} more to make {target}.",
+      "slotSource": { "n": "round.extrasNeeded", "target": "round.target" }
+    },
+    {
+      "id": "ten-plus-n.round-pass",
+      "subMode": "ten-plus-n",
+      "event": "round-pass",
+      "text": "{target}! Ten and {n} more.",
+      "slotSource": { "target": "round.target", "n": "round.extrasNeeded" }
+    },
+    {
+      "id": "ten-plus-n.round-fail",
+      "subMode": "ten-plus-n",
+      "event": "round-fail",
+      "text": "We have {actual}. We needed {target}.",
+      "slotSource": { "actual": "round.kidCount", "target": "round.target" }
+    },
+
+    {
+      "id": "three-frames.round-start",
+      "subMode": "three-frames",
+      "event": "round-start",
+      "text": "Two full ponds — that's twenty. Add {n} more to make {target}.",
+      "slotSource": { "n": "round.extrasNeeded", "target": "round.target" }
+    },
+    {
+      "id": "three-frames.round-pass",
+      "subMode": "three-frames",
+      "event": "round-pass",
+      "text": "{target}! Twenty and {n} more.",
+      "slotSource": { "target": "round.target", "n": "round.extrasNeeded" }
+    }
+  ]
+}

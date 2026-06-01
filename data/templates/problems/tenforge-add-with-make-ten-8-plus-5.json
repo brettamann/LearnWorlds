@@ -1,0 +1,41 @@
+{
+  "$schema": "../../../schemas/content-template.schema.json",
+  "id": "tenforge-add-with-make-ten-8-plus-5",
+  "kind": "problem",
+  "version": 1,
+  "status": "draft",
+  "concepts": ["1.OA.6"],
+  "primaryConcept": "1.OA.6",
+  "regionScope": ["wundletown"],
+  "gradeScope": ["1"],
+  "difficulty": "pictorial",
+  "telemetryId": "tenforge.add-with-make-ten-8-plus-5",
+
+  "subMode": "make-a-ten-spell",
+  "problemType": "decompose-to-ten",
+  "given": {
+    "sumA": 8,
+    "sumB": 5
+  },
+  "expectedAnswer": 13,
+  "answerFormat": "numeral",
+
+  "prompt": "{sumA} + {sumB} = ?",
+  "promptSlots": {
+    "sumA": 8,
+    "sumB": 5
+  },
+
+  "scaffolding": {
+    "moteVisualization": true,
+    "tenFrameOverlay": true,
+    "spellAnimation": "make-a-ten",
+    "decompositionHint": {
+      "split": "sumB",
+      "intoParts": [2, 3],
+      "moveToReachTen": 2
+    }
+  },
+
+  "notes": "Make-a-ten strategy applied to 8+5: decompose 5 into 2+3, move 2 onto the 8 (making 10), then 10+3=13. The scaffolding.decompositionHint structure is activity-specific; the Tenforge runner uses it to drive the spell animation."
+}

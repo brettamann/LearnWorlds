@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://critmath/schemas/slot-vocabulary.schema.json",
+  "title": "Slot Vocabulary",
+  "description": "Per-locale slot vocabulary. Defines every {slot} identifier the system uses, with type, value set, and TTS expansion strategy. Consumed by the TTS Canonicalizer (offline) and the runtime SlotResolver (online).",
+
+  "type": "object",
+  "required": ["locale", "vocabularies"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "locale": {
+      "type": "string",
+      "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+      "description": "BCP 47 locale code."
+    },
+    "lastUpdated": { "type": "string", "format": "date" },
+    "aliases": {
+      "type": "object",
+      "description": "Optional. Maps legacy slot names (used in narration JSONs) to canonical slot identifiers in this vocabulary.",
+      "additionalProperties": { "type": "string" }
+    },
+    "vocabularies": {
+      "type": "object",
+      "description": "Map of canonical slot identifier (e.g., 'round.creatureSpecies') to vocabulary entry.",
+      "patternProperties": {
+        "^(kid|round|activity|system)\\.[a-zA-Z][a-zA-Z0-9_]*$": {
+          "$ref": "#/$defs/VocabularyEntry"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+
+  "$defs": {
+    "VocabularyEntry": {
+      "type": "object",
+      "required": ["type", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["string", "integer", "number", "boolean", "enum", "template"],
+          "description": "Data type of the slot's resolved value."
+        },
+        "description": {
+          "type": "string",
+          "description": "Designer-readable explanation of when this slot applies."
+        },
+        "values": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Enumerated value list for enum/string slots."
+            },
+            {
+              "type": "object",
+              "additionalProperties": { "type": "string" },
+              "description": "For derived slots: a map from source value to this slot's value."
+            }
+          ]
+        },
+        "range": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "min": { "type": "integer" },
+            "max": { "type": "integer" }
+          },
+          "description": "For numeric slots: the bounds of expected values. Used for digit-stitched audio generation."
+        },
+        "derivedFrom": {
+          "type": "string",
+          "description": "Another slot identifier this one's value derives from (e.g., plural from singular)."
+        },
+        "spokenAs": {
+          "type": "string",
+          "enum": ["literal", "numeral-as-word", "ordinal-as-word", "time-of-day"],
+          "default": "literal",
+          "description": "How the value is rendered in audio. 'literal' = the value as-is; 'numeral-as-word' = 5 -> 'five'; 'ordinal-as-word' = 3 -> 'third'; 'time-of-day' = locale time formatting."
+        },
+        "valueSet": {
+          "type": "string",
+          "enum": ["enumerated", "user-supplied", "system-derived"],
+          "default": "enumerated",
+          "description": "How values are obtained. 'enumerated' = listed in `values`; 'user-supplied' = entered by kid; 'system-derived' = computed at runtime."
+        },
+        "ttsExpansionStrategy": {
+          "type": "string",
+          "enum": ["expand-per-value", "runtime-only", "digit-stitched", "concatenated"],
+          "default": "expand-per-value",
+          "description": "How the TTS Canonicalizer handles this slot when rendering audio."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "$schema": "../../../../schemas/activity-narration.schema.json",
+  "activity": "storytellers-pond",
+  "locale": "en-US",
+  "voiceProfile": "sanctuary-warm-naturalist",
+  "narratorCharacter": "storyteller-turtle",
+  "cues": [
+    {
+      "id": "add-to.story-opening",
+      "subMode": "add-to",
+      "event": "story-opening",
+      "text": "Listen. {startN} {creature_plural} are in the pond.",
+      "slotSource": { "startN": "round.startN", "creature_plural": "round.creatureSpeciesPlural" }
+    },
+    {
+      "id": "add-to.story-mid",
+      "subMode": "add-to",
+      "event": "story-mid",
+      "text": "{changeN} more {creature_plural} swim in.",
+      "slotSource": { "changeN": "round.changeN", "creature_plural": "round.creatureSpeciesPlural" }
+    },
+    {
+      "id": "add-to.question",
+      "subMode": "add-to",
+      "event": "question",
+      "text": "How many {creature_plural} altogether?",
+      "slotSource": { "creature_plural": "round.creatureSpeciesPlural" }
+    },
+    {
+      "id": "add-to.round-pass",
+      "subMode": "add-to",
+      "event": "round-pass",
+      "text": "{resultN}! Yes — {startN} and {changeN} more makes {resultN}.",
+      "slotSource": { "resultN": "round.resultN", "startN": "round.startN", "changeN": "round.changeN" }
+    },
+    {
+      "id": "add-to.round-fail",
+      "subMode": "add-to",
+      "event": "round-fail",
+      "text": "Let me tell it again — slowly this time."
+    },
+
+    {
+      "id": "take-from.story-opening",
+      "subMode": "take-from",
+      "event": "story-opening",
+      "text": "Listen. {startN} {creature_plural} are in the pond.",
+      "slotSource": { "startN": "round.startN", "creature_plural": "round.creatureSpeciesPlural" }
+    },
+    {
+      "id": "take-from.story-mid",
+      "subMode": "take-from",
+      "event": "story-mid",
+      "text": "{changeN} of them {leave_verb}.",
+      "slotSource": { "changeN": "round.changeN", "leave_verb": "round.leaveVerb" }
+    },
+    {
+      "id": "take-from.question",
+      "subMode": "take-from",
+      "event": "question",
+      "text": "How many are left?"
+    },
+    {
+      "id": "take-from.round-pass",
+      "subMode": "take-from",
+      "event": "round-pass",
+      "text": "{resultN}! {startN} take away {changeN} is {resultN}.",
+      "slotSource": { "resultN": "round.resultN", "startN": "round.startN", "changeN": "round.changeN" }
+    },
+
+    {
+      "id": "put-together.story-opening",
+      "subMode": "put-together",
+      "event": "story-opening",
+      "text": "Look. {A} {creature_plural} on the lily pad. {B} more by the reeds.",
+      "slotSource": { "A": "round.partA", "B": "round.partB", "creature_plural": "round.creatureSpeciesPlural" }
+    },
+    {
+      "id": "put-together.question",
+      "subMode": "put-together",
+      "event": "question",
+      "text": "How many altogether?"
+    },
+    {
+      "id": "put-together.round-pass",
+      "subMode": "put-together",
+      "event": "round-pass",
+      "text": "{total}! {A} and {B} together is {total}.",
+      "slotSource": { "total": "round.resultN", "A": "round.partA", "B": "round.partB" }
+    },
+
+    {
+      "id": "take-apart.story-opening",
+      "subMode": "take-apart",
+      "event": "story-opening",
+      "text": "There are {total} {creature_plural}. {A} on the lily pad. The rest are by the reeds.",
+      "slotSource": { "total": "round.total", "creature_plural": "round.creatureSpeciesPlural", "A": "round.partA" }
+    },
+    {
+      "id": "take-apart.question",
+      "subMode": "take-apart",
+      "event": "question",
+      "text": "How many are by the reeds?"
+    },
+    {
+      "id": "take-apart.round-pass",
+      "subMode": "take-apart",
+      "event": "round-pass",
+      "text": "{remainder}! {total} take away {A} leaves {remainder}.",
+      "slotSource": { "remainder": "round.partB", "total": "round.total", "A": "round.partA" }
+    },
+
+    {
+      "id": "two-step.round-pass",
+      "subMode": "two-step",
+      "event": "round-pass",
+      "text": "{final}! Look at all that math you did.",
+      "slotSource": { "final": "round.finalN" }
+    },
+
+    {
+      "id": "hesitation-10s",
+      "event": "hesitation-10s",
+      "text": "Look at the pond — how many {creature_plural} do you see?",
+      "slotSource": { "creature_plural": "round.creatureSpeciesPlural" }
+    }
+  ]
+}

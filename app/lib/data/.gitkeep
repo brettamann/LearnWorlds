@@ -1,0 +1,5 @@
+# Data layer per specs/shared/system-architecture.md.
+# In-memory caches over bundled JSON. ConceptRegistry, ActivityRegistry,
+# RewardCatalog, FoundryCatalog, TelemetryCatalog, StandardsReference, plus
+# lazy loaders for LessonRuntime, ActivityNarration, StringTable, SlotVocabulary,
+# and the AssetPathResolver. All read-only at runtime.

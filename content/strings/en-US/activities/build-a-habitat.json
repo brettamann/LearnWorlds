@@ -1,0 +1,85 @@
+{
+  "$schema": "../../../../schemas/activity-narration.schema.json",
+  "activity": "build-a-habitat",
+  "locale": "en-US",
+  "voiceProfile": "sanctuary-warm-naturalist",
+  "cues": [
+    {
+      "id": "simple-shelter.round-start",
+      "subMode": "simple-shelter",
+      "event": "round-start",
+      "text": "Time to build a fawn shelter. First, the frame."
+    },
+    {
+      "id": "creature-home.round-start",
+      "subMode": "creature-home",
+      "event": "round-start",
+      "text": "A baby {creature} needs a home. Let's build one. First the frame, then the structure on top.",
+      "slotSource": { "creature": "round.residentCreature" }
+    },
+    {
+      "id": "grand-habitat.round-start",
+      "subMode": "grand-habitat",
+      "event": "round-start",
+      "text": "A grand habitat today — a {frame_shape} frame and a tall structure. Start with the frame.",
+      "slotSource": { "frame_shape": "round.frameShape" }
+    },
+
+    {
+      "id": "phase1-mid-hesitation-10s",
+      "event": "phase1-mid-hesitation-10s",
+      "text": "Drag the clay balls to the corners, then the sticks between them."
+    },
+    {
+      "id": "phase1-complete",
+      "event": "phase1-complete",
+      "text": "Frame done. Now raise the habitat."
+    },
+
+    {
+      "id": "phase2-mid-hesitation-10s",
+      "event": "phase2-mid-hesitation-10s",
+      "text": "Drag the {piece} onto the {position}.",
+      "slotSource": { "piece": "round.nextPieceType", "position": "round.nextSlotName" }
+    },
+    {
+      "id": "phase2-complete",
+      "event": "phase2-complete",
+      "text": "Done! Let's let {creature_name} move in.",
+      "slotSource": { "creature_name": "round.creatureName" }
+    },
+
+    {
+      "id": "round-pass",
+      "event": "round-pass",
+      "text": "{creature_name} loves it. Look at that — you built a home.",
+      "slotSource": { "creature_name": "round.creatureName" }
+    },
+
+    {
+      "id": "phase1-fail",
+      "event": "phase1-fail",
+      "text": "Let me show you how the frame goes."
+    },
+    {
+      "id": "phase2-fail",
+      "event": "phase2-fail",
+      "text": "Let me show you how it stacks."
+    },
+
+    {
+      "id": "frame-only.round-start",
+      "subMode": "frame-only",
+      "event": "round-start",
+      "text": "Let's build a {frame_shape} frame today.",
+      "slotSource": { "frame_shape": "round.frameShape" }
+    },
+    {
+      "id": "frame-only.round-pass",
+      "subMode": "frame-only",
+      "event": "round-pass",
+      "text": "A {frame_shape} frame — nicely done.",
+      "slotSource": { "frame_shape": "round.frameShape" }
+    }
+  ]
+}

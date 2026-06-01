@@ -1,0 +1,130 @@
+{
+  "$schema": "../../schemas/lesson-runtime.schema.json",
+  "id": "lesson-k-md-2-compare-attributes",
+  "specRef": "specs/lessons/k-md-2-compare-attributes.md",
+  "version": 1,
+  "conceptId": "K.MD.2",
+  "standardCode": "K.MD.2",
+  "region": "sanctuary",
+  "introducingActivity": "caretakers-bench",
+  "subModeTarget": "compare-two",
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "totalDurationTargetSec": 75,
+  "prerequisites": ["lesson-k-md-1-describe-attributes"],
+
+  "phases": {
+    "iShow": {
+      "durationSec": 30,
+      "scene": {
+        "background": "caretakers-bench-workbench-lantern-lit",
+        "musicBed": "sanctuary-workshop",
+        "objectsOnBench": [
+          { "id": "feather", "kind": "feather", "length": "long" },
+          { "id": "twig", "kind": "twig", "length": "shorter" }
+        ],
+        "tool": { "id": "measuring-stick", "position": "above-bench", "fixed": true, "zeroMarkVisible": true },
+        "buddyPosition": "lower-left-overturned-crate",
+        "hud": { "doneButton": "hidden" }
+      },
+      "animationSteps": [
+        { "at": "0s",  "action": "scene-fade-up" },
+        { "at": "0s",  "action": "music-bed-in" },
+        { "at": "2s",  "action": "narrator-begin" },
+        { "at": "5s",  "action": "camera-nudge-each", "params": { "targets": ["feather", "twig"] } },
+        { "at": "8s",  "action": "pointer-pickup-drag", "params": { "from": "feather", "to": "measuring-stick", "alignAtZero": true } },
+        { "at": "11s", "action": "pointer-pickup-drag", "params": { "from": "twig", "to": "measuring-stick", "alignAtZero": true } },
+        { "at": "14s", "action": "soft-glow-mark-ends", "params": { "targets": ["feather", "twig"] } },
+        { "at": "18s", "action": "ive-got-this-button-show" },
+        { "at": "19s", "action": "pointer-tap", "params": { "target": "feather" } },
+        { "at": "19s", "action": "sparkle", "params": { "target": "feather" } },
+        { "at": "24s", "action": "pointer-fade-out" },
+        { "at": "30s", "action": "phase-end" }
+      ],
+      "narrationScript": [
+        { "at": "2s",  "text": "Which is longer — this feather, or this twig?" },
+        { "at": "8s",  "text": "Put them side by side on the measuring stick. Line up the ends." },
+        { "at": "14s", "text": "See — the feather reaches farther." },
+        { "at": "19s", "text": "The feather is longer." },
+        { "at": "23s", "text": "Put them side by side. The one that goes farther is longer." },
+        { "at": "24s", "text": "We can compare weight, too — with a scale." }
+      ],
+      "skipToYouDoAvailableAfterSec": 18
+    },
+
+    "weTry": {
+      "durationSec": 30,
+      "scene": {
+        "background": "caretakers-bench-workbench-lantern-lit",
+        "objectsOnBench": [
+          { "id": "rock", "kind": "rock", "weight": "heavier" },
+          { "id": "acorn", "kind": "acorn", "weight": "lighter" }
+        ],
+        "tool": { "id": "balance-scale", "position": "right-of-bench", "fixed": true, "panLeft": "empty", "panRight": "empty" },
+        "previousTool": { "id": "measuring-stick", "transition": "fade-out" },
+        "initialGlowTargets": { "object": "rock", "scalePan": "left-pan" }
+      },
+      "choreography": [
+        { "at": "0s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-start" } },
+        { "at": "0s",            "type": "system-action",       "params": { "action": "halo-pulse-pair", "targets": ["rock", "scale-left-pan"] } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-object-to-pan", "object": "rock", "expectedPan": "left", "wrongReturns": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "thunk-sfx-and-pan-dip-slightly" } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-rock-placed" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "halo-pulse-pair", "targets": ["acorn", "scale-right-pan"] } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-acorn-prompt" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-object-to-pan", "object": "acorn", "expectedPan": "right", "wrongReturns": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "thunk-sfx" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "scale-tip-dramatic", "towardHeavierSide": "left", "durationSec": 1.5, "sfx": "tilt-creak" } },
+        { "at": "+1s",           "type": "system-action",       "params": { "action": "soft-glow", "target": "rock-side-of-scale" } },
+        { "at": "+1s",           "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-after-tip" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "halo", "target": "rock" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-tap-prompt" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "tap-heavier-object", "expected": "rock", "wrongRetries": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "tap-feedback", "passCue": "we-try-correct", "failCue": "we-try-corrective" } },
+        { "at": "30s",           "type": "system-action",       "params": { "action": "phase-end" } }
+      ],
+      "narrationScript": [
+        { "at": "we-try-start",         "text": "Your turn. Which is heavier — the rock, or the acorn? Put them on the scale." },
+        { "at": "we-try-rock-placed",   "text": "Rock on one side." },
+        { "at": "we-try-acorn-prompt",  "text": "Now the acorn." },
+        { "at": "we-try-after-tip",     "text": "Look — the scale tips toward the heavier one." },
+        { "at": "we-try-tap-prompt",    "text": "Tap the heavier one." },
+        { "at": "we-try-correct",       "text": "The rock is heavier." },
+        { "at": "we-try-corrective",    "text": "Look at the scale — it tips down toward the rock." }
+      ],
+      "hesitationRule": {
+        "thresholdSec": 5,
+        "action": "highlight-target"
+      },
+      "passCondition": "Any kid drag onto either pan + any tap on either object counts as participation."
+    },
+
+    "youDo": {
+      "activityId": "caretakers-bench",
+      "subMode": "compare-two",
+      "isContinuation": false,
+      "roundParameters": {
+        "attribute": "length",
+        "objects": ["ribbon", "wooden-spoon"],
+        "expectedLonger": "ribbon",
+        "tool": "measuring-stick",
+        "toolPosition": "fixed",
+        "tickMarksAndLabelsAtConcrete": true,
+        "hintThresholds": {
+          "highlightNextSec": 5,
+          "narratorReminderSec": 10
+        }
+      },
+      "maxAttempts": 3,
+      "cpaLayer": "Concrete"
+    }
+  },
+
+  "libraryEntry": {
+    "thumbnail": "assets/lessons/k-md-2/thumbnail.png",
+    "shortLabel": "Side by side, which is more?",
+    "regionBadge": "sanctuary-leaf",
+    "replayDurationSec": 75
+  },
+
+  "telemetryExtensions": []
+}

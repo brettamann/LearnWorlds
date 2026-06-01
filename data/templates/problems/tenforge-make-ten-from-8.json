@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../schemas/content-template.schema.json",
+  "id": "tenforge-make-ten-from-8",
+  "kind": "problem",
+  "version": 1,
+  "status": "draft",
+  "concepts": ["1.OA.6"],
+  "primaryConcept": "1.OA.6",
+  "regionScope": ["wundletown"],
+  "gradeScope": ["1"],
+  "difficulty": "concrete",
+  "telemetryId": "tenforge.make-ten-from-8",
+
+  "subMode": "make-a-ten-spell",
+  "problemType": "make-target",
+  "given": {
+    "startCount": 8,
+    "target": 10
+  },
+  "expectedAnswer": 2,
+  "answerFormat": "numeral",
+
+  "prompt": "We have {startCount}. Make {target}.",
+  "promptSlots": {
+    "startCount": 8,
+    "target": 10
+  },
+
+  "scaffolding": {
+    "moteVisualization": true,
+    "tenFrameOverlay": true,
+    "barModel": null
+  },
+
+  "notes": "First Tenforge problem template authored — used as a worked example for the K.OA.4 → 1.OA.6 conceptual bridge. The kid drags 2 motes onto the 8 to reach 10. Solves the same shape of problem as K.OA.4 'make-ten' but in the 1st-grade spell metaphor."
+}

@@ -1,0 +1,92 @@
+{
+  "$schema": "../../../../schemas/activity-narration.schema.json",
+  "activity": "wheres-buddy",
+  "locale": "en-US",
+  "voiceProfile": "sanctuary-warm-naturalist",
+  "cues": [
+    {
+      "id": "find-mode.round-start",
+      "subMode": "find-mode",
+      "event": "round-start",
+      "text": "The Buddy is {position_word} the {landmark}.",
+      "slotSource": { "position_word": "round.positionWord", "landmark": "round.referenceLandmark" }
+    },
+    {
+      "id": "find-mode.mid-hesitation-10s",
+      "subMode": "find-mode",
+      "event": "mid-hesitation-10s",
+      "text": "Look {position_word} the {landmark}.",
+      "slotSource": { "position_word": "round.positionWord", "landmark": "round.referenceLandmark" }
+    },
+    {
+      "id": "find-mode.round-pass",
+      "subMode": "find-mode",
+      "event": "round-pass",
+      "text": "Yes! The Buddy was {position_word} the {landmark}.",
+      "slotSource": { "position_word": "round.positionWord", "landmark": "round.referenceLandmark" }
+    },
+    {
+      "id": "find-mode.round-fail-wrong-tap",
+      "subMode": "find-mode",
+      "event": "round-fail-wrong-tap",
+      "text": "Almost. The Buddy is {position_word} the {landmark} — try again.",
+      "slotSource": { "position_word": "round.positionWord", "landmark": "round.referenceLandmark" }
+    },
+    {
+      "id": "find-mode.round-fail-third-miss",
+      "subMode": "find-mode",
+      "event": "round-fail-third-miss",
+      "text": "Watch — the Buddy is right here."
+    },
+
+    {
+      "id": "place-mode.round-start",
+      "subMode": "place-mode",
+      "event": "round-start",
+      "text": "Put the Buddy {position_word} the {landmark}.",
+      "slotSource": { "position_word": "round.positionWord", "landmark": "round.referenceLandmark" }
+    },
+    {
+      "id": "place-mode.mid-hesitation-10s",
+      "subMode": "place-mode",
+      "event": "mid-hesitation-10s",
+      "text": "Drag the Buddy {position_word} the {landmark}.",
+      "slotSource": { "position_word": "round.positionWord", "landmark": "round.referenceLandmark" }
+    },
+    {
+      "id": "place-mode.round-pass",
+      "subMode": "place-mode",
+      "event": "round-pass",
+      "text": "Perfect — the Buddy is {position_word} the {landmark}.",
+      "slotSource": { "position_word": "round.positionWord", "landmark": "round.referenceLandmark" }
+    },
+    {
+      "id": "place-mode.round-fail-wrong-drop",
+      "subMode": "place-mode",
+      "event": "round-fail-wrong-drop",
+      "text": "The Buddy is {actual_position}. We needed {target_position} the {landmark}. Try again.",
+      "slotSource": { "actual_position": "round.kidDropZone", "target_position": "round.positionWord", "landmark": "round.referenceLandmark" }
+    },
+    {
+      "id": "place-mode.round-fail-third-miss",
+      "subMode": "place-mode",
+      "event": "round-fail-third-miss",
+      "text": "Watch — like this."
+    },
+
+    {
+      "id": "relational-mode.round-start",
+      "subMode": "relational-mode",
+      "event": "round-start",
+      "text": "Put the Buddy {position_word} the {landmark1} and the {landmark2}.",
+      "slotSource": { "position_word": "round.positionWord", "landmark1": "round.landmark1", "landmark2": "round.landmark2" }
+    },
+    {
+      "id": "relational-mode.round-pass",
+      "subMode": "relational-mode",
+      "event": "round-pass",
+      "text": "Yes — the Buddy is {position_word} the {landmark1} and the {landmark2}.",
+      "slotSource": { "position_word": "round.positionWord", "landmark1": "round.landmark1", "landmark2": "round.landmark2" }
+    }
+  ]
+}

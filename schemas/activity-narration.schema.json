@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://critmath/schemas/activity-narration.schema.json",
+  "title": "Activity Narration",
+  "description": "Authoritative narration script for an activity (one file per activity per locale). Maps event triggers (round-start, round-pass, hesitation prompts, etc.) to narrator lines. Consumed by the runtime and by the TTS harvester. The activity-spec markdown remains the design-time prose; this JSON is the runtime form.",
+
+  "type": "object",
+  "required": ["activity", "locale", "voiceProfile", "cues"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "activity": {
+      "type": "string",
+      "description": "Activity slug (matches the activity-registry entry)."
+    },
+    "locale": {
+      "type": "string",
+      "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+      "description": "BCP 47 locale code."
+    },
+    "voiceProfile": {
+      "type": "string",
+      "description": "Default voice profile for all cues in this file. Can be overridden per cue."
+    },
+    "narratorCharacter": {
+      "type": "string",
+      "description": "Optional visible narrator character (e.g., 'storyteller-turtle')."
+    },
+    "cues": {
+      "type": "array",
+      "description": "All narration lines for this activity.",
+      "items": { "$ref": "#/$defs/Cue" }
+    }
+  },
+
+  "$defs": {
+    "Cue": {
+      "type": "object",
+      "required": ["id", "event", "text"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)*$",
+          "description": "Stable identifier within this activity. Conventionally `subMode.event` (e.g., `count-the-parade.round-start`) or just `event` for sub-mode-agnostic cues."
+        },
+        "subMode": {
+          "type": "string",
+          "description": "Optional. Which activity sub-mode this cue fires in. Omit for cues that apply across all sub-modes."
+        },
+        "event": {
+          "type": "string",
+          "description": "Trigger identifier (e.g., 'round-start', 'round-pass', 'mid-hesitation-10s', 'round-fail-miscount'). Free-form; the activity spec lists which events it emits."
+        },
+        "rotation": {
+          "type": "string",
+          "enum": ["primary", "alt", "celebratory"],
+          "default": "primary",
+          "description": "When multiple cues share the same subMode+event, the runtime rotates among them to keep narration feeling alive. 'primary' is the default; 'alt' is an alternate; 'celebratory' is reserved for round-pass moments."
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Narration text. May contain {slot} placeholders."
+        },
+        "voiceProfile": {
+          "type": "string",
+          "description": "Optional per-cue override of the file-level default voice."
+        },
+        "slotSource": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Maps slot names to where their values come from (e.g., { creature_plural: 'round.creatureSpeciesPlural' })."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Designer notes. Not consumed by runtime."
+        }
+      }
+    }
+  }
+}

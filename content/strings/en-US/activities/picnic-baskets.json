@@ -1,0 +1,93 @@
+{
+  "$schema": "../../../../schemas/activity-narration.schema.json",
+  "activity": "picnic-baskets",
+  "locale": "en-US",
+  "voiceProfile": "sanctuary-warm-naturalist",
+  "cues": [
+    {
+      "id": "match-by-line.round-start",
+      "subMode": "match-by-line",
+      "event": "round-start",
+      "text": "Match the {treat_A} to the {treat_B} — one to one.",
+      "slotSource": { "treat_A": "round.basketAContent", "treat_B": "round.basketBContent" }
+    },
+    {
+      "id": "match-by-line.mid-hesitation-10s",
+      "subMode": "match-by-line",
+      "event": "mid-hesitation-10s",
+      "text": "Draw a line from a {treat_A} to a {treat_B}.",
+      "slotSource": { "treat_A": "round.basketAContent", "treat_B": "round.basketBContent" }
+    },
+    {
+      "id": "match-by-line.all-lines-drawn",
+      "subMode": "match-by-line",
+      "event": "all-lines-drawn",
+      "text": "Which basket has more? Tap the answer."
+    },
+    {
+      "id": "match-by-line.round-pass",
+      "subMode": "match-by-line",
+      "event": "round-pass",
+      "text": "Yes — basket {larger_basket} has more. {countA} {treat_A_plural} and {countB} {treat_B_plural}.",
+      "slotSource": { "larger_basket": "round.largerBasketLabel", "countA": "round.basketACount", "treat_A_plural": "round.basketAContentPlural", "countB": "round.basketBCount", "treat_B_plural": "round.basketBContentPlural" }
+    },
+    {
+      "id": "match-by-line.round-fail",
+      "subMode": "match-by-line",
+      "event": "round-fail",
+      "text": "Look — basket {actual} has more. Let me show you.",
+      "slotSource": { "actual": "round.largerBasketLabel" }
+    },
+
+    {
+      "id": "count-and-compare.round-start",
+      "subMode": "count-and-compare",
+      "event": "round-start",
+      "text": "Count the {treat_A} in basket A, then the {treat_B} in basket B.",
+      "slotSource": { "treat_A": "round.basketAContent", "treat_B": "round.basketBContent" }
+    },
+    {
+      "id": "count-and-compare.round-pass",
+      "subMode": "count-and-compare",
+      "event": "round-pass",
+      "text": "Yes — {countA} is {comparison} {countB}.",
+      "slotSource": { "countA": "round.basketACount", "comparison": "round.comparisonWord", "countB": "round.basketBCount" }
+    },
+
+    {
+      "id": "numeral-compare.round-start",
+      "subMode": "numeral-compare",
+      "event": "round-start",
+      "text": "Put the right symbol between {leftN} and {rightN}.",
+      "slotSource": { "leftN": "round.leftNumeral", "rightN": "round.rightNumeral" }
+    },
+    {
+      "id": "numeral-compare.round-pass",
+      "subMode": "numeral-compare",
+      "event": "round-pass",
+      "text": "Yes — {leftN} is {comparison} {rightN}.",
+      "slotSource": { "leftN": "round.leftNumeral", "comparison": "round.comparisonWord", "rightN": "round.rightNumeral" }
+    },
+    {
+      "id": "numeral-compare.round-fail",
+      "subMode": "numeral-compare",
+      "event": "round-fail",
+      "text": "Look — {leftN} is {comparison} {rightN}. The wide side of the symbol points to the bigger number.",
+      "slotSource": { "leftN": "round.leftNumeral", "comparison": "round.comparisonWord", "rightN": "round.rightNumeral" }
+    },
+
+    {
+      "id": "three-way-compare.round-start",
+      "subMode": "three-way-compare",
+      "event": "round-start",
+      "text": "Three baskets today. Put them in order from least to most."
+    },
+    {
+      "id": "three-way-compare.round-pass",
+      "subMode": "three-way-compare",
+      "event": "round-pass",
+      "text": "Right — {least_basket} has the fewest, {most_basket} has the most.",
+      "slotSource": { "least_basket": "round.leastBasketLabel", "most_basket": "round.mostBasketLabel" }
+    }
+  ]
+}

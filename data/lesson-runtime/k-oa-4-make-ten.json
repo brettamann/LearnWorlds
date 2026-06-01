@@ -1,0 +1,135 @@
+{
+  "$schema": "../../schemas/lesson-runtime.schema.json",
+  "id": "lesson-k-oa-4-make-ten",
+  "specRef": "specs/lessons/k-oa-4-make-ten.md",
+  "version": 1,
+  "conceptId": "K.OA.4",
+  "standardCode": "K.OA.4",
+  "region": "sanctuary",
+  "introducingActivity": "ten-frame-pond",
+  "subModeTarget": "make-ten",
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "totalDurationTargetSec": 60,
+  "prerequisites": ["lesson-k-oa-3-decomposition"],
+
+  "phases": {
+    "iShow": {
+      "durationSec": 22,
+      "scene": {
+        "background": "ten-frame-pond-rippling",
+        "musicBed": "sanctuary-low",
+        "tenFrame": {
+          "state": "partially-full",
+          "prePlacedCount": 7,
+          "prePlacedHalo": "soft-pearl-white",
+          "prePlacedNonInteractive": true,
+          "emptyCellOutline": "soft-cyan"
+        },
+        "sourcePool": "standard-drifting-fish",
+        "countBadge": { "visible": true, "initialValue": 7 },
+        "buddyPosition": "lower-left-mossy-stone",
+        "hud": { "doneButton": "hidden" }
+      },
+      "animationSteps": [
+        { "at": "0s",  "action": "scene-fade-up" },
+        { "at": "0s",  "action": "music-bed-in" },
+        { "at": "2s",  "action": "narrator-begin" },
+        { "at": "5s",  "action": "count-badge-pulse" },
+        { "at": "7s",  "action": "empty-cells-pulse", "params": { "count": 3 } },
+        { "at": "9s",  "action": "pointer-drag-fish-to-empty", "params": { "padIndex": "empty-1" } },
+        { "at": "9s",  "action": "count-badge-update", "params": { "value": 8 } },
+        { "at": "12s", "action": "pointer-drag-fish-to-empty", "params": { "padIndex": "empty-2" } },
+        { "at": "12s", "action": "count-badge-update", "params": { "value": 9 } },
+        { "at": "15s", "action": "pointer-drag-fish-to-empty", "params": { "padIndex": "empty-3" } },
+        { "at": "15s", "action": "count-badge-update", "params": { "value": 10 } },
+        { "at": "16s", "action": "frame-collapse-to-ten-pearl" },
+        { "at": "17s", "action": "ive-got-this-button-show" },
+        { "at": "22s", "action": "phase-end" }
+      ],
+      "narrationScript": [
+        { "at": "2s",  "text": "Look — the pond already has fish on it." },
+        { "at": "5s",  "text": "We have seven." },
+        { "at": "7s",  "text": "Watch the empty spots." },
+        { "at": "9s",  "text": "Eight." },
+        { "at": "12s", "text": "Nine." },
+        { "at": "15s", "text": "Ten." },
+        { "at": "18s", "text": "Ten! We had seven. We needed three more." },
+        { "at": "21s", "text": "When the pond is full, that's ten. Count what's empty — that's how many more to add." }
+      ],
+      "skipToYouDoAvailableAfterSec": 17
+    },
+
+    "weTry": {
+      "durationSec": 20,
+      "scene": {
+        "background": "ten-frame-pond-rippling",
+        "tenFrame": {
+          "state": "partially-full",
+          "prePlacedCount": 6,
+          "prePlacedHalo": "soft-pearl-white",
+          "emptyCellCount": 4,
+          "emptyCellOutline": "soft-cyan"
+        },
+        "sourcePool": "standard-drifting-fish",
+        "countBadge": { "visible": true, "initialValue": 6 }
+      },
+      "choreography": [
+        { "at": "0s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-start" } },
+        { "at": "3s",            "type": "system-action",       "params": { "action": "halo-pulse", "target": "empty-cell-closest-to-kid" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-fish-to-empty-cell", "tolerantOfMiss": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "count-badge-update", "value": 7 } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-7" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "halo-pulse", "target": "next-empty-cell" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-keep-going" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-fish-to-empty-cell", "tolerantOfMiss": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "count-badge-update", "value": 8 } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-8" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "pointer-auto-drag-remaining", "count": 2 } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "count-badge-update", "value": 10 } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-auto-complete" } },
+        { "at": "18s",           "type": "system-action",       "params": { "action": "frame-collapse-to-ten-pearl" } },
+        { "at": "18s",           "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-closing" } },
+        { "at": "20s",           "type": "system-action",       "params": { "action": "phase-end" } }
+      ],
+      "narrationScript": [
+        { "at": "we-try-start",         "text": "Now you. We have six. Make ten." },
+        { "at": "we-try-7",             "text": "Seven." },
+        { "at": "we-try-keep-going",    "text": "Keep going." },
+        { "at": "we-try-8",             "text": "Eight." },
+        { "at": "we-try-auto-complete", "text": "Nine. Ten." },
+        { "at": "we-try-closing",       "text": "Ten! We had six. We needed four more." }
+      ],
+      "hesitationRule": {
+        "thresholdSec": 5,
+        "action": "highlight-target"
+      },
+      "passCondition": "Any kid drag of any fish onto an empty cell passes. Even one drag is enough."
+    },
+
+    "youDo": {
+      "activityId": "ten-frame-pond",
+      "subMode": "make-ten",
+      "isContinuation": false,
+      "roundParameters": {
+        "startingAmount": 8,
+        "emptyCellCount": 2,
+        "target": 10,
+        "hintThresholds": {
+          "highlightNextSec": 5,
+          "narratorReminderSec": 10
+        }
+      },
+      "maxAttempts": 3,
+      "cpaLayer": "Concrete"
+    }
+  },
+
+  "libraryEntry": {
+    "thumbnail": "assets/lessons/k-oa-4/thumbnail.png",
+    "shortLabel": "Filling up to ten",
+    "regionBadge": "sanctuary-leaf",
+    "replayDurationSec": 60
+  },
+
+  "telemetryExtensions": []
+}

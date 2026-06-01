@@ -1,0 +1,6 @@
+# Riverpod provider definitions per specs/shared/system-architecture.md "State scoping".
+# Organized by scope:
+#   app_providers.dart      - app scope (registries, platform adapters, settings)
+#   device_providers.dart   - device scope (kid profile index, last-active kid)
+#   kid_providers.dart      - kid scope (mastery, inventory, library, counters)
+#   session_providers.dart  - session scope (activity runner, lesson runner, round state)

@@ -1,0 +1,136 @@
+{
+  "$schema": "../../schemas/lesson-runtime.schema.json",
+  "id": "lesson-k-g-4-sort-by-attribute",
+  "specRef": "specs/lessons/k-g-4-sort-by-attribute.md",
+  "version": 1,
+  "conceptId": "K.G.4",
+  "standardCode": "K.G.4",
+  "region": "sanctuary",
+  "introducingActivity": "shape-garden",
+  "subModeTarget": "sort-by-attribute",
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "totalDurationTargetSec": 65,
+  "prerequisites": ["lesson-k-g-2-shape-recognition"],
+
+  "phases": {
+    "iShow": {
+      "durationSec": 25,
+      "scene": {
+        "background": "shape-garden-enchanted-path",
+        "musicBed": "sanctuary-low",
+        "shapeColor": "deep-garden-green",
+        "sourceRow": [
+          { "id": "tri-small", "kind": "triangle", "sides": 3, "variant": "upright-small" },
+          { "id": "tri-large", "kind": "triangle", "sides": 3, "variant": "upright-large" },
+          { "id": "sq-1", "kind": "square", "sides": 4 },
+          { "id": "sq-rot", "kind": "square", "sides": 4, "variant": "rotated-45-diamond" },
+          { "id": "pent-1", "kind": "pentagon", "sides": 5 },
+          { "id": "pent-2", "kind": "pentagon", "sides": 5 }
+        ],
+        "bins": [
+          { "id": "bin-3-sides", "label": "3 sides", "icon": "triangle-mini" },
+          { "id": "bin-4-sides", "label": "4 sides", "icon": "square-mini" },
+          { "id": "bin-5plus-sides", "label": "5+ sides", "icon": "pentagon-mini" }
+        ],
+        "hud": { "doneButton": "hidden" }
+      },
+      "animationSteps": [
+        { "at": "0s",  "action": "scene-fade-up" },
+        { "at": "0s",  "action": "music-bed-in" },
+        { "at": "2s",  "action": "narrator-begin" },
+        { "at": "5s",  "action": "pointer-touch-drag", "params": { "from": "tri-small", "to": "bin-3-sides" } },
+        { "at": "9s",  "action": "pointer-touch-drag", "params": { "from": "sq-1", "to": "bin-4-sides" } },
+        { "at": "13s", "action": "pointer-touch-drag", "params": { "from": "pent-1", "to": "bin-5plus-sides" } },
+        { "at": "17s", "action": "pointer-touch-drag", "params": { "from": "tri-large", "to": "bin-3-sides" } },
+        { "at": "18s", "action": "ive-got-this-button-show" },
+        { "at": "21s", "action": "pointer-fade-out" },
+        { "at": "25s", "action": "phase-end" }
+      ],
+      "narrationScript": [
+        { "at": "2s",  "text": "Let's group these shapes by how many sides they have." },
+        { "at": "5s",  "text": "Three sides." },
+        { "at": "9s",  "text": "Four sides." },
+        { "at": "13s", "text": "Five sides." },
+        { "at": "17s", "text": "Three sides — same as before." },
+        { "at": "22s", "text": "Shapes with the same number of sides go together, no matter their size." }
+      ],
+      "skipToYouDoAvailableAfterSec": 18
+    },
+
+    "weTry": {
+      "durationSec": 22,
+      "scene": {
+        "background": "shape-garden-enchanted-path",
+        "shapeColor": "deep-garden-green",
+        "sourceRow": [
+          { "id": "wt-tri-a", "kind": "triangle", "sides": 3 },
+          { "id": "wt-tri-b", "kind": "triangle", "sides": 3, "variant": "point-down" },
+          { "id": "wt-sq-a", "kind": "square", "sides": 4 },
+          { "id": "wt-sq-b", "kind": "square", "sides": 4, "variant": "rotated" },
+          { "id": "wt-pent-a", "kind": "pentagon", "sides": 5 },
+          { "id": "wt-pent-b", "kind": "pentagon", "sides": 5 }
+        ],
+        "bins": [
+          { "id": "bin-3-sides", "label": "3 sides" },
+          { "id": "bin-4-sides", "label": "4 sides" },
+          { "id": "bin-5plus-sides", "label": "5+ sides" }
+        ]
+      },
+      "choreography": [
+        { "at": "0s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-start" } },
+        { "at": "3s",            "type": "system-action",       "params": { "action": "halo-pulse", "target": "wt-tri-a" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-to-bin", "shape": "wt-tri-a", "expectedBin": "bin-3-sides", "wrongReturns": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "drop-feedback", "passCue": "we-try-correct-3", "failCue": "we-try-corrective-3" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "halo-pulse", "target": "wt-sq-a" } },
+        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-to-bin", "shape": "wt-sq-a", "expectedBin": "bin-4-sides", "wrongReturns": true } },
+        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "drop-feedback", "passCue": "we-try-correct-4", "failCue": "we-try-corrective-4" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "pointer-auto-sort-remaining" } },
+        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-auto-complete" } },
+        { "at": "+1.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-closing" } },
+        { "at": "22s",           "type": "system-action",       "params": { "action": "phase-end" } }
+      ],
+      "narrationScript": [
+        { "at": "we-try-start",         "text": "Your turn. Sort by how many sides." },
+        { "at": "we-try-correct-3",     "text": "Three sides." },
+        { "at": "we-try-corrective-3",  "text": "Triangles have three sides. Try the 3-sides basket." },
+        { "at": "we-try-correct-4",     "text": "Four sides." },
+        { "at": "we-try-corrective-4",  "text": "Squares have four sides. Try the 4-sides basket." },
+        { "at": "we-try-auto-complete", "text": "Three sides. Four sides. Five sides. Five sides." },
+        { "at": "we-try-closing",       "text": "Six shapes sorted. Two in each basket." }
+      ],
+      "hesitationRule": {
+        "thresholdSec": 5,
+        "action": "highlight-target"
+      },
+      "passCondition": "Any kid drag onto any bin passes (correct steers; incorrect corrects)."
+    },
+
+    "youDo": {
+      "activityId": "shape-garden",
+      "subMode": "sort-by-attribute",
+      "isContinuation": false,
+      "roundParameters": {
+        "attribute": "number-of-sides",
+        "bins": ["3 sides", "4 sides", "5+ sides"],
+        "shapeCount": 6,
+        "mix": "2-of-each-side-count",
+        "binIconAndTextAtConcrete": true,
+        "hintThresholds": {
+          "highlightNextSec": 5,
+          "narratorReminderSec": 10
+        }
+      },
+      "maxAttempts": 3,
+      "cpaLayer": "Concrete"
+    }
+  },
+
+  "libraryEntry": {
+    "thumbnail": "assets/lessons/k-g-4/thumbnail.png",
+    "shortLabel": "Sorting by sides",
+    "regionBadge": "sanctuary-leaf",
+    "replayDurationSec": 65
+  },
+
+  "telemetryExtensions": []
+}

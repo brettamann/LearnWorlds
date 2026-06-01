@@ -1,0 +1,1185 @@
+{
+  "$schema": "../../schemas/reward-catalog.schema.json",
+  "version": 1,
+  "lastUpdated": "2026-05-31",
+
+  "items": [
+    {
+      "id": "buddy-hat-leaf-cap",
+      "displayName": "Leaf Cap",
+      "category": "buddy-outfit",
+      "rarity": "common",
+      "coinPrice": 60,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "sanctuary",
+      "description": "A tiny cap made from a folded oak leaf."
+    },
+    {
+      "id": "buddy-hat-chef",
+      "displayName": "Chef's Hat",
+      "category": "buddy-outfit",
+      "rarity": "common",
+      "coinPrice": 80,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "buddy-hat-wizard",
+      "displayName": "Wizard Hat",
+      "category": "buddy-outfit",
+      "rarity": "uncommon",
+      "coinPrice": 120,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "wundletown"
+    },
+    {
+      "id": "buddy-hat-pirate-tricorn",
+      "displayName": "Pirate Tricorn",
+      "category": "buddy-outfit",
+      "rarity": "uncommon",
+      "coinPrice": 100,
+      "sources": [{ "type": "shop", "shop": "foundry" }, { "type": "portal-chapter", "portalId": "pirate-planet", "chapterIndex": 1 }],
+      "regionTheme": "portal-pirate-planet"
+    },
+    {
+      "id": "buddy-hat-astronaut",
+      "displayName": "Astronaut Helmet",
+      "category": "buddy-outfit",
+      "rarity": "rare",
+      "coinPrice": 200,
+      "sources": [{ "type": "shop", "shop": "foundry" }, { "type": "portal-chapter", "portalId": "gooblon", "chapterIndex": 2 }],
+      "regionTheme": "portal-gooblon"
+    },
+    {
+      "id": "buddy-hat-party",
+      "displayName": "Party Hat",
+      "category": "buddy-outfit",
+      "rarity": "common",
+      "coinPrice": 40,
+      "sources": [{ "type": "shop", "shop": "foundry" }, { "type": "birthday-event" }],
+      "regionTheme": "universal",
+      "description": "Saved for the kid's birthday party — also buyable any time."
+    },
+    {
+      "id": "buddy-hat-garden",
+      "displayName": "Garden Sun-Hat",
+      "category": "buddy-outfit",
+      "rarity": "common",
+      "coinPrice": 70,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "buddy-hat-detective",
+      "displayName": "Detective Deerstalker",
+      "category": "buddy-outfit",
+      "rarity": "uncommon",
+      "coinPrice": 140,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "mathopolis"
+    },
+
+    {
+      "id": "buddy-costume-cape",
+      "displayName": "Superhero Cape",
+      "category": "buddy-outfit",
+      "rarity": "uncommon",
+      "coinPrice": 180,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "mathopolis"
+    },
+    {
+      "id": "buddy-costume-scientist",
+      "displayName": "Scientist Coat",
+      "category": "buddy-outfit",
+      "rarity": "common",
+      "coinPrice": 150,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "buddy-costume-wizard-robe",
+      "displayName": "Wizard Robe",
+      "category": "buddy-outfit",
+      "rarity": "uncommon",
+      "coinPrice": 250,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "wundletown"
+    },
+    {
+      "id": "buddy-costume-knight-tabard",
+      "displayName": "Knight Tabard",
+      "category": "buddy-outfit",
+      "rarity": "uncommon",
+      "coinPrice": 200,
+      "sources": [{ "type": "shop", "shop": "foundry" }, { "type": "portal-chapter", "portalId": "corona-castle", "chapterIndex": 1 }],
+      "regionTheme": "portal-corona-castle"
+    },
+    {
+      "id": "buddy-costume-sailor",
+      "displayName": "Sailor Outfit",
+      "category": "buddy-outfit",
+      "rarity": "common",
+      "coinPrice": 130,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "portal-port"
+    },
+    {
+      "id": "buddy-costume-baker",
+      "displayName": "Baker Apron",
+      "category": "buddy-outfit",
+      "rarity": "common",
+      "coinPrice": 90,
+      "sources": [{ "type": "shop", "shop": "foundry" }, { "type": "portal-chapter", "portalId": "bakery", "chapterIndex": 1 }],
+      "regionTheme": "portal-bakery"
+    },
+
+    {
+      "id": "buddy-toy-chew-rope",
+      "displayName": "Chew Rope",
+      "category": "buddy-toy",
+      "rarity": "common",
+      "coinPrice": 50,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "buddy-toy-squeaky-ball",
+      "displayName": "Squeaky Ball",
+      "category": "buddy-toy",
+      "rarity": "common",
+      "coinPrice": 60,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "buddy-toy-puzzle-cube",
+      "displayName": "Puzzle Cube",
+      "category": "buddy-toy",
+      "rarity": "uncommon",
+      "coinPrice": 120,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "buddy-toy-plush-starfish",
+      "displayName": "Plush Starfish",
+      "category": "buddy-toy",
+      "rarity": "common",
+      "coinPrice": 80,
+      "sources": [{ "type": "shop", "shop": "foundry" }, { "type": "portal-chapter", "portalId": "atlantis", "chapterIndex": 1 }],
+      "regionTheme": "portal-atlantis"
+    },
+    {
+      "id": "buddy-prop-little-book",
+      "displayName": "Little Book",
+      "category": "buddy-prop",
+      "rarity": "common",
+      "coinPrice": 70,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal",
+      "description": "Buddy carries it under one arm and occasionally pretends to read."
+    },
+    {
+      "id": "buddy-prop-tiny-telescope",
+      "displayName": "Tiny Telescope",
+      "category": "buddy-prop",
+      "rarity": "uncommon",
+      "coinPrice": 150,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "portal-pirate-planet"
+    },
+    {
+      "id": "buddy-prop-mini-paintbrush",
+      "displayName": "Mini Paintbrush",
+      "category": "buddy-prop",
+      "rarity": "common",
+      "coinPrice": 60,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "buddy-prop-tiny-wand",
+      "displayName": "Tiny Wand",
+      "category": "buddy-prop",
+      "rarity": "uncommon",
+      "coinPrice": 130,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "wundletown"
+    },
+
+    {
+      "id": "avatar-outfit-explorer",
+      "displayName": "Explorer Kit",
+      "category": "avatar-clothing",
+      "rarity": "uncommon",
+      "coinPrice": 350,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal",
+      "description": "Khaki vest, sturdy boots, wide-brim hat."
+    },
+    {
+      "id": "avatar-outfit-lab-coat",
+      "displayName": "Lab Coat",
+      "category": "avatar-clothing",
+      "rarity": "uncommon",
+      "coinPrice": 300,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "avatar-outfit-knight",
+      "displayName": "Knight Armor (kid-sized)",
+      "category": "avatar-clothing",
+      "rarity": "rare",
+      "coinPrice": 600,
+      "sources": [{ "type": "shop", "shop": "foundry" }, { "type": "portal-chapter", "portalId": "corona-castle", "chapterIndex": 3 }],
+      "regionTheme": "portal-corona-castle"
+    },
+    {
+      "id": "avatar-outfit-pirate-captain",
+      "displayName": "Pirate Captain",
+      "category": "avatar-clothing",
+      "rarity": "rare",
+      "coinPrice": 550,
+      "sources": [{ "type": "shop", "shop": "foundry" }, { "type": "portal-chapter", "portalId": "pirate-planet", "chapterIndex": 3 }],
+      "regionTheme": "portal-pirate-planet"
+    },
+    {
+      "id": "avatar-outfit-astronaut",
+      "displayName": "Astronaut Suit",
+      "category": "avatar-clothing",
+      "rarity": "rare",
+      "coinPrice": 600,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "portal-gooblon"
+    },
+    {
+      "id": "avatar-outfit-gardener",
+      "displayName": "Gardener Apron",
+      "category": "avatar-clothing",
+      "rarity": "common",
+      "coinPrice": 200,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "avatar-outfit-chef-whites",
+      "displayName": "Chef Whites",
+      "category": "avatar-clothing",
+      "rarity": "uncommon",
+      "coinPrice": 280,
+      "sources": [{ "type": "shop", "shop": "foundry" }, { "type": "portal-chapter", "portalId": "bakery", "chapterIndex": 2 }],
+      "regionTheme": "portal-bakery"
+    },
+    {
+      "id": "avatar-outfit-wizard-robe",
+      "displayName": "Wizard Robe (kid-sized)",
+      "category": "avatar-clothing",
+      "rarity": "rare",
+      "coinPrice": 500,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "wundletown"
+    },
+    {
+      "id": "avatar-outfit-hero-costume",
+      "displayName": "Hero Costume",
+      "category": "avatar-clothing",
+      "rarity": "rare",
+      "coinPrice": 550,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "mathopolis"
+    },
+    {
+      "id": "avatar-outfit-ranger",
+      "displayName": "Ranger Outfit",
+      "category": "avatar-clothing",
+      "rarity": "uncommon",
+      "coinPrice": 320,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "sanctuary"
+    },
+
+    {
+      "id": "avatar-accessory-backpack",
+      "displayName": "Adventurer's Backpack",
+      "category": "avatar-accessory",
+      "rarity": "common",
+      "coinPrice": 150,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "avatar-accessory-satchel",
+      "displayName": "Leather Satchel",
+      "category": "avatar-accessory",
+      "rarity": "common",
+      "coinPrice": 120,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "avatar-accessory-sash",
+      "displayName": "Pirate Sash",
+      "category": "avatar-accessory",
+      "rarity": "uncommon",
+      "coinPrice": 100,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "portal-pirate-planet"
+    },
+    {
+      "id": "avatar-accessory-goggles",
+      "displayName": "Brass Goggles",
+      "category": "avatar-accessory",
+      "rarity": "uncommon",
+      "coinPrice": 180,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "foundry"
+    },
+    {
+      "id": "avatar-accessory-belt-pouches",
+      "displayName": "Tool Belt with Pouches",
+      "category": "avatar-accessory",
+      "rarity": "uncommon",
+      "coinPrice": 200,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "foundry"
+    },
+
+    {
+      "id": "avatar-prop-magnifying-glass",
+      "displayName": "Magnifying Glass",
+      "category": "avatar-prop",
+      "rarity": "common",
+      "coinPrice": 90,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "mathopolis"
+    },
+    {
+      "id": "avatar-prop-telescope",
+      "displayName": "Brass Telescope",
+      "category": "avatar-prop",
+      "rarity": "uncommon",
+      "coinPrice": 200,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "portal-pirate-planet"
+    },
+    {
+      "id": "avatar-prop-sketchbook",
+      "displayName": "Sketchbook",
+      "category": "avatar-prop",
+      "rarity": "common",
+      "coinPrice": 70,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "avatar-prop-butterfly-net",
+      "displayName": "Butterfly Net",
+      "category": "avatar-prop",
+      "rarity": "common",
+      "coinPrice": 80,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "avatar-prop-wand",
+      "displayName": "Apprentice Wand",
+      "category": "avatar-prop",
+      "rarity": "uncommon",
+      "coinPrice": 180,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "wundletown"
+    },
+
+    {
+      "id": "home-furniture-armchair",
+      "displayName": "Cozy Armchair",
+      "category": "home-furniture",
+      "rarity": "common",
+      "coinPrice": 250,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "home-furniture-beanbag",
+      "displayName": "Bean Bag",
+      "category": "home-furniture",
+      "rarity": "common",
+      "coinPrice": 180,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "home-furniture-hammock",
+      "displayName": "Hammock",
+      "category": "home-furniture",
+      "rarity": "uncommon",
+      "coinPrice": 280,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "home-furniture-bookshelf-small",
+      "displayName": "Small Bookshelf",
+      "category": "home-bookshelf",
+      "rarity": "common",
+      "coinPrice": 200,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "home-furniture-bookshelf-tall",
+      "displayName": "Tall Bookshelf",
+      "category": "home-bookshelf",
+      "rarity": "uncommon",
+      "coinPrice": 400,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "home-furniture-dresser",
+      "displayName": "Dresser",
+      "category": "home-furniture",
+      "rarity": "common",
+      "coinPrice": 300,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "home-furniture-work-table",
+      "displayName": "Work Table",
+      "category": "home-furniture",
+      "rarity": "common",
+      "coinPrice": 220,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "foundry"
+    },
+
+    {
+      "id": "home-poster-creature",
+      "displayName": "Creature Poster",
+      "category": "home-poster",
+      "rarity": "common",
+      "coinPrice": 60,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "home-poster-math-hero",
+      "displayName": "Math Hero Poster",
+      "category": "home-poster",
+      "rarity": "common",
+      "coinPrice": 70,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "mathopolis"
+    },
+    {
+      "id": "home-poster-space",
+      "displayName": "Starmap Poster",
+      "category": "home-poster",
+      "rarity": "uncommon",
+      "coinPrice": 120,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "portal-gooblon"
+    },
+    {
+      "id": "home-poster-world-map",
+      "displayName": "Mystical Island Map",
+      "category": "home-poster",
+      "rarity": "uncommon",
+      "coinPrice": 150,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+
+    {
+      "id": "home-storage-chest",
+      "displayName": "Treasure Chest",
+      "category": "home-decor",
+      "rarity": "uncommon",
+      "coinPrice": 200,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "portal-pirate-planet"
+    },
+    {
+      "id": "home-storage-basket",
+      "displayName": "Woven Basket",
+      "category": "home-decor",
+      "rarity": "common",
+      "coinPrice": 80,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "home-plant-fern",
+      "displayName": "Potted Fern",
+      "category": "home-decor",
+      "rarity": "common",
+      "coinPrice": 60,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "home-plant-glowing-crystal-flower",
+      "displayName": "Glowing Crystal-Flower",
+      "category": "home-decor",
+      "rarity": "rare",
+      "coinPrice": 350,
+      "sources": [{ "type": "shop", "shop": "foundry" }, { "type": "activity-drop", "activityId": "ten-frame-pond", "dropRate": 0.005 }],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "home-lighting-table-lamp",
+      "displayName": "Table Lamp",
+      "category": "home-decor",
+      "rarity": "common",
+      "coinPrice": 100,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "home-lighting-fairy-lights",
+      "displayName": "Fairy Lights",
+      "category": "home-decor",
+      "rarity": "uncommon",
+      "coinPrice": 180,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "home-decor-wall-clock",
+      "displayName": "Wall Clock",
+      "category": "home-decor",
+      "rarity": "common",
+      "coinPrice": 90,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "wundletown"
+    },
+    {
+      "id": "home-decor-model-ship",
+      "displayName": "Model Ship",
+      "category": "home-decor",
+      "rarity": "uncommon",
+      "coinPrice": 220,
+      "sources": [{ "type": "shop", "shop": "foundry" }, { "type": "portal-chapter", "portalId": "port", "chapterIndex": 1 }],
+      "regionTheme": "portal-port"
+    },
+    {
+      "id": "home-decor-snow-globe",
+      "displayName": "Snow Globe",
+      "category": "home-decor",
+      "rarity": "uncommon",
+      "coinPrice": 160,
+      "sources": [{ "type": "shop", "shop": "foundry" }, { "type": "seasonal-event" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "home-themed-set-pirate",
+      "displayName": "Pirate Themed Set",
+      "category": "home-themed-set",
+      "rarity": "rare",
+      "coinPrice": 700,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "portal-pirate-planet",
+      "description": "Bundles treasure chest, ship-in-bottle, hanging maps, and rope rug at a 15% discount vs separate purchases."
+    },
+    {
+      "id": "home-themed-set-wizard",
+      "displayName": "Wizard Themed Set",
+      "category": "home-themed-set",
+      "rarity": "rare",
+      "coinPrice": 800,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "wundletown",
+      "description": "Bundles cauldron, spellbook stand, crystal ball, and star chart at a 15% discount."
+    },
+    {
+      "id": "home-themed-set-naturalist",
+      "displayName": "Naturalist Themed Set",
+      "category": "home-themed-set",
+      "rarity": "rare",
+      "coinPrice": 750,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "sanctuary",
+      "description": "Bundles butterfly display case, fern collection, leaf-pressed wall art, and journal stand."
+    },
+
+    {
+      "id": "home-exterior-path-cobblestone",
+      "displayName": "Cobblestone Path",
+      "category": "home-exterior-decor",
+      "rarity": "common",
+      "coinPrice": 100,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "home-exterior-path-glow-stone",
+      "displayName": "Glow-Stone Path",
+      "category": "home-exterior-decor",
+      "rarity": "uncommon",
+      "coinPrice": 250,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "wundletown"
+    },
+    {
+      "id": "home-exterior-plant-hedge",
+      "displayName": "Hedge Row",
+      "category": "home-exterior-decor",
+      "rarity": "common",
+      "coinPrice": 80,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "home-exterior-plant-small-tree",
+      "displayName": "Small Tree",
+      "category": "home-exterior-decor",
+      "rarity": "common",
+      "coinPrice": 150,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "home-exterior-plant-mushroom-patch",
+      "displayName": "Mushroom Patch",
+      "category": "home-exterior-decor",
+      "rarity": "uncommon",
+      "coinPrice": 180,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "wundletown"
+    },
+    {
+      "id": "home-exterior-fountain-small",
+      "displayName": "Small Fountain",
+      "category": "home-exterior-decor",
+      "rarity": "uncommon",
+      "coinPrice": 350,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "home-exterior-fountain-koi",
+      "displayName": "Koi Pond Miniature",
+      "category": "home-exterior-decor",
+      "rarity": "rare",
+      "coinPrice": 700,
+      "sources": [{ "type": "shop", "shop": "foundry" }, { "type": "activity-drop", "activityId": "ten-frame-pond", "dropRate": 0.001 }],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "home-exterior-signage-name-post",
+      "displayName": "Name Post",
+      "category": "home-exterior-decor",
+      "rarity": "common",
+      "coinPrice": 60,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal",
+      "description": "Engraves the kid's home name (e.g., 'Lantern Cottage') for display at the front path."
+    },
+    {
+      "id": "home-exterior-signage-weathervane",
+      "displayName": "Weathervane",
+      "category": "home-exterior-decor",
+      "rarity": "uncommon",
+      "coinPrice": 220,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal",
+      "description": "Animates with the in-game weather setting (if enabled by parent dashboard)."
+    },
+    {
+      "id": "home-exterior-signage-mailbox",
+      "displayName": "Mailbox",
+      "category": "home-exterior-decor",
+      "rarity": "common",
+      "coinPrice": 90,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal",
+      "description": "Family Wins cards drop into it visually when a parent sends one."
+    },
+    {
+      "id": "home-exterior-lamp-post",
+      "displayName": "Lamp Post",
+      "category": "home-exterior-decor",
+      "rarity": "common",
+      "coinPrice": 140,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal",
+      "description": "Lights up when day/night cycle is enabled."
+    },
+    {
+      "id": "home-exterior-firefly-cluster",
+      "displayName": "Glow-Firefly Cluster",
+      "category": "home-exterior-decor",
+      "rarity": "uncommon",
+      "coinPrice": 200,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "home-exterior-garden-bench",
+      "displayName": "Garden Bench",
+      "category": "home-exterior-decor",
+      "rarity": "common",
+      "coinPrice": 180,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "home-exterior-gnome",
+      "displayName": "Garden Gnome",
+      "category": "home-exterior-decor",
+      "rarity": "uncommon",
+      "coinPrice": 130,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "wundletown"
+    },
+    {
+      "id": "home-exterior-sundial",
+      "displayName": "Sundial",
+      "category": "home-exterior-decor",
+      "rarity": "rare",
+      "coinPrice": 400,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal",
+      "description": "Shadow moves with the in-game time of day. Subtle math tie-in (kid can read elapsed-time)."
+    },
+    {
+      "id": "home-exterior-archway",
+      "displayName": "Garden Archway",
+      "category": "home-exterior-decor",
+      "rarity": "uncommon",
+      "coinPrice": 300,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal"
+    },
+    {
+      "id": "home-exterior-picnic-table",
+      "displayName": "Picnic Table",
+      "category": "home-exterior-decor",
+      "rarity": "common",
+      "coinPrice": 160,
+      "sources": [{ "type": "shop", "shop": "foundry" }, { "type": "activity-drop", "activityId": "picnic-baskets", "dropRate": 0.02 }],
+      "regionTheme": "sanctuary"
+    },
+
+    {
+      "id": "vehicle-wagon",
+      "displayName": "Wagon",
+      "category": "foundry-vehicle",
+      "rarity": "common",
+      "coinPrice": 200,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "universal",
+      "description": "Entry-level vehicle. A small wooden wagon. Parks beside the home; useful for hauling decor in v1.1 cutscenes."
+    },
+    {
+      "id": "vehicle-hover-bike",
+      "displayName": "Hover-Bike",
+      "category": "foundry-vehicle",
+      "rarity": "uncommon",
+      "coinPrice": null,
+      "sources": [{ "type": "foundry-build" }],
+      "regionTheme": "mathopolis",
+      "description": "Built from 3 parts (frame + repulsor pads + handlebars). Total ~600 coins."
+    },
+    {
+      "id": "vehicle-hot-air-balloon",
+      "displayName": "Hot-Air Balloon",
+      "category": "foundry-vehicle",
+      "rarity": "rare",
+      "coinPrice": null,
+      "sources": [{ "type": "foundry-build" }],
+      "regionTheme": "wundletown",
+      "description": "Built from 4 parts (basket + envelope + burner + ropes). Total ~1200 coins + 2 special parts."
+    },
+    {
+      "id": "vehicle-sky-skiff",
+      "displayName": "Sky-Skiff",
+      "category": "foundry-vehicle",
+      "rarity": "rare",
+      "coinPrice": null,
+      "sources": [{ "type": "foundry-build" }],
+      "regionTheme": "foundry",
+      "description": "Built from 3 parts (frame + wings/balloon + yoke). Total ~1500 coins + blueprint + 2 parts."
+    },
+    {
+      "id": "vehicle-dragon-cart",
+      "displayName": "Dragon-Cart",
+      "category": "foundry-vehicle",
+      "rarity": "rare",
+      "coinPrice": null,
+      "sources": [{ "type": "foundry-build" }],
+      "regionTheme": "sanctuary",
+      "description": "Built from 4 parts. Requires a baby dragon companion (creature collectible from Sanctuary). Total ~1800 coins + blueprint + 2 parts + 1 baby dragon."
+    },
+    {
+      "id": "vehicle-patrol-mech",
+      "displayName": "Patrol Mech",
+      "category": "foundry-vehicle",
+      "rarity": "prestige",
+      "coinPrice": null,
+      "sources": [{ "type": "foundry-build" }],
+      "regionTheme": "mathopolis",
+      "description": "Built from 5 parts (legs + chassis + arms + tools + head). Total ~2500 coins + blueprint + 3 parts."
+    },
+    {
+      "id": "vehicle-cloud-galleon",
+      "displayName": "Cloud-Galleon",
+      "category": "foundry-vehicle",
+      "rarity": "prestige",
+      "coinPrice": null,
+      "sources": [{ "type": "foundry-build" }],
+      "regionTheme": "portal-pirate-planet",
+      "description": "The flagship — an 18th-century sailing ship rigged for the stars. Built from 6 parts (hull + mast + sails + rigging + cannons + astrolabe). Total ~3500 coins + 2 blueprints + 4 parts."
+    },
+    {
+      "id": "vehicle-astrolabe-glider",
+      "displayName": "Astrolabe Glider",
+      "category": "foundry-vehicle",
+      "rarity": "prestige",
+      "coinPrice": null,
+      "sources": [{ "type": "foundry-build" }],
+      "regionTheme": "foundry",
+      "description": "Ultimate prestige showpiece. Built from 8 parts. Total ~5000 coins + 3 blueprints + 6 special parts. Months-long target."
+    },
+
+    {
+      "id": "part-cloud-galleon-hull",
+      "displayName": "Cloud-Galleon Hull",
+      "category": "foundry-frame",
+      "rarity": "rare",
+      "coinPrice": 800,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "portal-pirate-planet"
+    },
+    {
+      "id": "part-cloud-galleon-mast",
+      "displayName": "Cloud-Galleon Mast + Spars",
+      "category": "foundry-part",
+      "rarity": "rare",
+      "coinPrice": 500,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "portal-pirate-planet"
+    },
+    {
+      "id": "part-cloud-galleon-sails-canvas",
+      "displayName": "Canvas Sails",
+      "category": "foundry-part",
+      "rarity": "uncommon",
+      "coinPrice": 400,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "portal-pirate-planet"
+    },
+    {
+      "id": "part-cloud-galleon-sails-dragon-hide",
+      "displayName": "Dragon-Hide Sails",
+      "category": "foundry-part",
+      "rarity": "prestige",
+      "coinPrice": null,
+      "sources": [{ "type": "portal-chapter", "portalId": "pirate-planet", "chapterIndex": 5 }],
+      "regionTheme": "portal-pirate-planet",
+      "description": "Earned from the Pirate Planet final-chapter chest. Marks the Galleon as prestige-built."
+    },
+    {
+      "id": "part-cloud-galleon-rigging",
+      "displayName": "Rigging Set",
+      "category": "foundry-part",
+      "rarity": "uncommon",
+      "coinPrice": 350,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "portal-pirate-planet"
+    },
+    {
+      "id": "part-cloud-galleon-cannons",
+      "displayName": "Decorative Cannons (×4)",
+      "category": "foundry-part",
+      "rarity": "rare",
+      "coinPrice": 600,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "portal-pirate-planet"
+    },
+    {
+      "id": "part-cloud-galleon-astrolabe",
+      "displayName": "Astrolabe",
+      "category": "foundry-part",
+      "rarity": "rare",
+      "coinPrice": 850,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "foundry"
+    },
+
+    {
+      "id": "part-mech-legs-bipedal-heavy",
+      "displayName": "Mech Legs — Bipedal Heavy",
+      "category": "foundry-frame",
+      "rarity": "rare",
+      "coinPrice": 700,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "mathopolis"
+    },
+    {
+      "id": "part-mech-legs-bipedal-nimble",
+      "displayName": "Mech Legs — Bipedal Nimble",
+      "category": "foundry-frame",
+      "rarity": "rare",
+      "coinPrice": 700,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "mathopolis"
+    },
+    {
+      "id": "part-mech-legs-quad",
+      "displayName": "Mech Legs — Quadruped",
+      "category": "foundry-frame",
+      "rarity": "rare",
+      "coinPrice": 800,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "mathopolis"
+    },
+    {
+      "id": "part-mech-chassis",
+      "displayName": "Mech Chassis (Torso)",
+      "category": "foundry-part",
+      "rarity": "rare",
+      "coinPrice": 600,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "mathopolis"
+    },
+    {
+      "id": "part-mech-arm-gripper",
+      "displayName": "Mech Arm — Gripper",
+      "category": "foundry-part",
+      "rarity": "uncommon",
+      "coinPrice": 350,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "mathopolis"
+    },
+    {
+      "id": "part-mech-arm-hammer",
+      "displayName": "Mech Arm — Hammer",
+      "category": "foundry-part",
+      "rarity": "uncommon",
+      "coinPrice": 350,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "mathopolis"
+    },
+    {
+      "id": "part-mech-arm-paintbrush",
+      "displayName": "Mech Arm — Paintbrush",
+      "category": "foundry-part",
+      "rarity": "rare",
+      "coinPrice": 450,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "mathopolis",
+      "description": "Comedic non-combat option — your mech paints things. Tie-in to Lord Layerton's cake-bomb antics."
+    },
+    {
+      "id": "part-mech-head",
+      "displayName": "Mech Head + Antenna",
+      "category": "foundry-part",
+      "rarity": "uncommon",
+      "coinPrice": 250,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "mathopolis"
+    },
+
+    {
+      "id": "part-balloon-basket",
+      "displayName": "Balloon Basket",
+      "category": "foundry-frame",
+      "rarity": "uncommon",
+      "coinPrice": 400,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "wundletown"
+    },
+    {
+      "id": "part-balloon-envelope-striped",
+      "displayName": "Striped Envelope",
+      "category": "foundry-part",
+      "rarity": "uncommon",
+      "coinPrice": 350,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "wundletown"
+    },
+    {
+      "id": "part-balloon-envelope-dragon-scale",
+      "displayName": "Dragon-Scale Envelope",
+      "category": "foundry-part",
+      "rarity": "rare",
+      "coinPrice": 500,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "part-balloon-burner",
+      "displayName": "Balloon Burner",
+      "category": "foundry-part",
+      "rarity": "uncommon",
+      "coinPrice": 300,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "foundry"
+    },
+
+    {
+      "id": "part-foundry-yard-anvil",
+      "displayName": "Forge Anvil",
+      "category": "foundry-part",
+      "rarity": "uncommon",
+      "coinPrice": 250,
+      "sources": [{ "type": "shop", "shop": "foundry" }, { "type": "activity-drop", "activityId": "caretakers-bench", "dropRate": 0.01 }],
+      "regionTheme": "foundry"
+    },
+    {
+      "id": "part-foundry-yard-bellows",
+      "displayName": "Bellows",
+      "category": "foundry-part",
+      "rarity": "uncommon",
+      "coinPrice": 200,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "foundry"
+    },
+    {
+      "id": "part-foundry-yard-tool-rack",
+      "displayName": "Tool Rack",
+      "category": "foundry-part",
+      "rarity": "uncommon",
+      "coinPrice": 350,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "foundry"
+    },
+
+    {
+      "id": "part-greenhouse-glass-panels",
+      "displayName": "Greenhouse Glass Panels",
+      "category": "foundry-part",
+      "rarity": "rare",
+      "coinPrice": 500,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "part-greenhouse-frame",
+      "displayName": "Greenhouse Frame",
+      "category": "foundry-frame",
+      "rarity": "rare",
+      "coinPrice": 600,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "part-observatory-telescope",
+      "displayName": "Observatory Telescope",
+      "category": "foundry-part",
+      "rarity": "rare",
+      "coinPrice": 800,
+      "sources": [{ "type": "shop", "shop": "foundry" }],
+      "regionTheme": "portal-gooblon"
+    }
+  ],
+
+  "blueprints": [
+    {
+      "id": "blueprint-cloud-galleon",
+      "displayName": "Cloud-Galleon Blueprint",
+      "buildsItemId": "vehicle-cloud-galleon",
+      "requiredParts": [
+        { "partId": "part-cloud-galleon-hull", "count": 1 },
+        { "partId": "part-cloud-galleon-mast", "count": 1 },
+        { "partId": "part-cloud-galleon-sails-canvas", "count": 1 },
+        { "partId": "part-cloud-galleon-rigging", "count": 1 },
+        { "partId": "part-cloud-galleon-cannons", "count": 1 },
+        { "partId": "part-cloud-galleon-astrolabe", "count": 1 }
+      ],
+      "coinCost": 200,
+      "sources": [{ "type": "portal-chapter", "portalId": "pirate-planet", "chapterIndex": 2 }]
+    },
+    {
+      "id": "blueprint-patrol-mech",
+      "displayName": "Patrol Mech Blueprint",
+      "buildsItemId": "vehicle-patrol-mech",
+      "requiredParts": [
+        { "partId": "part-mech-legs-bipedal-heavy", "count": 1 },
+        { "partId": "part-mech-chassis", "count": 1 },
+        { "partId": "part-mech-arm-gripper", "count": 2 },
+        { "partId": "part-mech-head", "count": 1 }
+      ],
+      "coinCost": 150,
+      "sources": [{ "type": "activity-drop", "activityId": "build-a-habitat", "dropRate": 0.01 }]
+    },
+    {
+      "id": "blueprint-sky-skiff",
+      "displayName": "Sky-Skiff Blueprint",
+      "buildsItemId": "vehicle-sky-skiff",
+      "requiredParts": [
+        { "partId": "part-balloon-basket", "count": 1 },
+        { "partId": "part-balloon-envelope-striped", "count": 1 }
+      ],
+      "coinCost": 100,
+      "sources": [{ "type": "activity-drop", "activityId": "build-a-habitat", "dropRate": 0.02 }]
+    },
+    {
+      "id": "blueprint-dragon-cart",
+      "displayName": "Dragon-Cart Blueprint",
+      "buildsItemId": "vehicle-dragon-cart",
+      "requiredParts": [],
+      "coinCost": 100,
+      "sources": [{ "type": "challenge", "challengeActivityId": "shape-garden" }]
+    },
+    {
+      "id": "blueprint-observatory",
+      "displayName": "Observatory Blueprint",
+      "buildsItemId": "part-observatory-telescope",
+      "requiredParts": [],
+      "coinCost": 150,
+      "sources": [{ "type": "portal-chapter", "portalId": "gooblon", "chapterIndex": 3 }]
+    },
+    {
+      "id": "blueprint-astrolabe-glider-frame",
+      "displayName": "Astrolabe Glider — Frame Blueprint",
+      "buildsItemId": "vehicle-astrolabe-glider",
+      "requiredParts": [],
+      "coinCost": 500,
+      "sources": [{ "type": "portal-arc", "portalId": "pirate-planet" }]
+    }
+  ],
+
+  "specialParts": [
+    {
+      "id": "specialpart-dragon-hide-strip",
+      "displayName": "Dragon-Hide Strip",
+      "rarity": "prestige",
+      "sources": [{ "type": "portal-chapter", "portalId": "pirate-planet", "chapterIndex": 5 }]
+    },
+    {
+      "id": "specialpart-astrolabe-lens",
+      "displayName": "Astrolabe Lens",
+      "rarity": "rare",
+      "sources": [{ "type": "portal-chapter", "portalId": "gooblon", "chapterIndex": 4 }]
+    },
+    {
+      "id": "specialpart-baby-dragon-companion",
+      "displayName": "Baby Dragon Companion",
+      "rarity": "rare",
+      "sources": [{ "type": "challenge", "challengeActivityId": "build-a-habitat" }]
+    },
+    {
+      "id": "specialpart-pearl-bearing",
+      "displayName": "Pearl Bearing",
+      "rarity": "uncommon",
+      "sources": [{ "type": "activity-drop", "activityId": "ten-frame-pond", "dropRate": 0.005 }]
+    },
+    {
+      "id": "specialpart-singing-rope",
+      "displayName": "Singing Rope (Magical)",
+      "rarity": "rare",
+      "sources": [{ "type": "challenge", "challengeActivityId": "wheres-buddy" }]
+    },
+    {
+      "id": "specialpart-forge-ember",
+      "displayName": "Eternal Forge Ember",
+      "rarity": "prestige",
+      "sources": [{ "type": "mastery" }]
+    }
+  ]
+}

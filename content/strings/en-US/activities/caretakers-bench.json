@@ -1,0 +1,119 @@
+{
+  "$schema": "../../../../schemas/activity-narration.schema.json",
+  "activity": "caretakers-bench",
+  "locale": "en-US",
+  "voiceProfile": "sanctuary-warm-naturalist",
+  "cues": [
+    {
+      "id": "describe-attributes.round-start",
+      "subMode": "describe-attributes",
+      "event": "round-start",
+      "text": "Look at the {object}. Find the words that describe it.",
+      "slotSource": { "object": "round.objectName" }
+    },
+    {
+      "id": "describe-attributes.mid-hesitation-10s",
+      "subMode": "describe-attributes",
+      "event": "mid-hesitation-10s",
+      "text": "Pick a word and drag it to the {object}.",
+      "slotSource": { "object": "round.objectName" }
+    },
+    {
+      "id": "describe-attributes.correct-drop",
+      "subMode": "describe-attributes",
+      "event": "correct-drop",
+      "text": "Yes — {object_plural} are {attribute}.",
+      "slotSource": { "object_plural": "round.objectNamePlural", "attribute": "round.tagWord" }
+    },
+    {
+      "id": "describe-attributes.wrong-drop",
+      "subMode": "describe-attributes",
+      "event": "wrong-drop",
+      "text": "Not quite — {object_plural} aren't {attribute}.",
+      "slotSource": { "object_plural": "round.objectNamePlural", "attribute": "round.tagWord" }
+    },
+    {
+      "id": "describe-attributes.round-pass",
+      "subMode": "describe-attributes",
+      "event": "round-pass",
+      "text": "{N} attributes for the {object}. Well described.",
+      "slotSource": { "N": "round.attributesPlaced", "object": "round.objectName" }
+    },
+
+    {
+      "id": "compare-two-weight.round-start",
+      "subMode": "compare-two",
+      "event": "round-start-weight-variant",
+      "text": "Which is heavier — the {objectA} or the {objectB}? Put them on the scale.",
+      "slotSource": { "objectA": "round.objectAName", "objectB": "round.objectBName" }
+    },
+    {
+      "id": "compare-two-weight.after-both-on-scale",
+      "subMode": "compare-two",
+      "event": "after-both-on-scale-weight",
+      "text": "Look — the scale tips toward the heavier one."
+    },
+    {
+      "id": "compare-two-weight.round-pass",
+      "subMode": "compare-two",
+      "event": "round-pass-weight-variant",
+      "text": "Yes — the {actual_heavier} is heavier.",
+      "slotSource": { "actual_heavier": "round.heavierObjectName" }
+    },
+    {
+      "id": "compare-two-weight.round-fail",
+      "subMode": "compare-two",
+      "event": "round-fail-weight-variant",
+      "text": "Look at the scale — it tips toward the {actual_heavier}.",
+      "slotSource": { "actual_heavier": "round.heavierObjectName" }
+    },
+
+    {
+      "id": "compare-two-length.round-start",
+      "subMode": "compare-two",
+      "event": "round-start-length-variant",
+      "text": "Which is longer — the {objectA} or the {objectB}? Line them up on the measuring stick.",
+      "slotSource": { "objectA": "round.objectAName", "objectB": "round.objectBName" }
+    },
+    {
+      "id": "compare-two-length.after-both-on-stick",
+      "subMode": "compare-two",
+      "event": "after-both-on-stick",
+      "text": "See how one reaches farther? That one is longer."
+    },
+    {
+      "id": "compare-two-length.round-pass",
+      "subMode": "compare-two",
+      "event": "round-pass-length-variant",
+      "text": "Yes — the {actual_longer} is longer.",
+      "slotSource": { "actual_longer": "round.longerObjectName" }
+    },
+
+    {
+      "id": "describe-three-attributes.round-start",
+      "subMode": "describe-three-attributes",
+      "event": "round-start",
+      "text": "This {object} has many features. Find at least three.",
+      "slotSource": { "object": "round.objectName" }
+    },
+    {
+      "id": "describe-three-attributes.round-pass",
+      "subMode": "describe-three-attributes",
+      "event": "round-pass",
+      "text": "Three or more — that's a thorough description."
+    },
+
+    {
+      "id": "order-three-by-length.round-start",
+      "subMode": "order-three-by-length",
+      "event": "round-start",
+      "text": "Three things, three different lengths. Order them shortest to longest."
+    },
+    {
+      "id": "order-three-by-length.round-pass",
+      "subMode": "order-three-by-length",
+      "event": "round-pass",
+      "text": "Shortest to longest — done."
+    }
+  ]
+}

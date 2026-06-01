@@ -1,0 +1,42 @@
+{
+  "$schema": "../../../schemas/content-template.schema.json",
+  "id": "pond-take-from-frogs-1",
+  "kind": "story",
+  "version": 1,
+  "status": "draft",
+  "concepts": ["K.OA.2", "K.OA.1"],
+  "primaryConcept": "K.OA.2",
+  "regionScope": ["sanctuary"],
+  "gradeScope": ["K"],
+  "difficulty": "concrete",
+  "telemetryId": "pond.take-from-frogs-1",
+
+  "subMode": "take-from",
+  "creature": "frog",
+  "narrationTemplate": "{startN} frogs are on the lily pad. {changeN} of them hop away. How many are left?",
+  "narrationSlots": {
+    "startN": 6,
+    "changeN": 2
+  },
+  "expectedAnswer": 4,
+  "answerFormat": "tile-select",
+  "tileOptions": [3, 4, 5],
+
+  "visualSteps": [
+    { "at": "0s", "action": "spawn", "count": 6, "position": "lily-pad-center" },
+    { "at": "3s", "action": "despawn", "count": 2, "to": "off-screen-right" },
+    { "at": "5s", "action": "pause" }
+  ],
+
+  "barModel": {
+    "type": "take-from",
+    "start": 6,
+    "change": 2,
+    "result": 4
+  },
+
+  "narratorVoice": "sanctuary-warm-naturalist",
+  "narratorCharacter": "storyteller-turtle",
+
+  "notes": "First take-from template. The two frogs hop away animation (despawn to off-screen-right) is the visual hook for 'take from'."
+}

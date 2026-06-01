@@ -1,0 +1,75 @@
+{
+  "$schema": "../../../../schemas/activity-narration.schema.json",
+  "activity": "care-pantry",
+  "locale": "en-US",
+  "voiceProfile": "sanctuary-warm-naturalist",
+  "cues": [
+    {
+      "id": "simple-pantry.round-start",
+      "subMode": "simple-pantry",
+      "event": "round-start",
+      "text": "Look at this mess. Let's tidy the supply hut. Sort the things into baskets, then put the baskets in order from least to most."
+    },
+    {
+      "id": "full-pantry.round-start",
+      "subMode": "full-pantry",
+      "event": "round-start",
+      "text": "Quite a mess today. Four kinds of supplies — sort them all."
+    },
+    {
+      "id": "unfamiliar-rules.round-start",
+      "subMode": "unfamiliar-rules",
+      "event": "round-start",
+      "text": "Today we sort by {rule} instead of what they are. Look at the basket labels.",
+      "slotSource": { "rule": "round.sortRule" }
+    },
+
+    {
+      "id": "phase1-mid-hesitation-10s",
+      "event": "phase1-mid-hesitation-10s",
+      "text": "Drag the {item} to the {category} basket.",
+      "slotSource": { "item": "round.nextItemName", "category": "round.nextCategoryName" }
+    },
+    {
+      "id": "phase1-complete",
+      "event": "phase1-complete",
+      "text": "All sorted. Now let's see which basket has the most."
+    },
+
+    {
+      "id": "phase2-mid-hesitation-10s",
+      "event": "phase2-mid-hesitation-10s",
+      "text": "Count the baskets — which has the fewest? Drag it to 'least'."
+    },
+    {
+      "id": "phase2-complete",
+      "event": "phase2-complete",
+      "text": "Tidy and sorted! The Caretaker will be happy."
+    },
+
+    {
+      "id": "round-pass",
+      "event": "round-pass",
+      "text": "{biggest_count} {biggest_category}, {next_count} {next_category}, {least_count} {least_category}. Nicely done.",
+      "slotSource": { "biggest_count": "round.biggestCount", "biggest_category": "round.biggestCategoryName", "next_count": "round.middleCount", "next_category": "round.middleCategoryName", "least_count": "round.leastCount", "least_category": "round.leastCategoryName" }
+    },
+
+    {
+      "id": "phase1-fail",
+      "event": "phase1-fail",
+      "text": "A few in the wrong baskets. Let me show you."
+    },
+    {
+      "id": "phase2-fail",
+      "event": "phase2-fail",
+      "text": "Let's look at the numbers — the basket with {least_count} goes in 'least'.",
+      "slotSource": { "least_count": "round.leastCount" }
+    },
+
+    {
+      "id": "round-fail",
+      "event": "round-fail",
+      "text": "Let me show you."
+    }
+  ]
+}
