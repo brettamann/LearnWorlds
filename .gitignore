@@ -5,6 +5,8 @@ tools/scripts/package*.json
 # Tool outputs (regenerated; not source-of-truth).
 tools/tts/harvest-manifest.json
 tools/tts/canonical-manifest.json
+tools/tts/render-plan.json
+tools/tts/voice-samples/
 
 # Editor / OS cruft.
 .DS_Store

@@ -1,0 +1,67 @@
+{
+  "_note": "Voice profiles per `specs/shared/voice-pipeline.md`. Lock voice IDs after picking them via the voice-sampler workflow.",
+  "locked": false,
+  "lastLockedAt": null,
+  "profiles": {
+    "sanctuary-warm-naturalist": {
+      "provider": "elevenlabs",
+      "voiceId": "REPLACE_WITH_REAL_VOICE_ID",
+      "model": "eleven_multilingual_v2",
+      "settings": {
+        "stability": 0.55,
+        "similarityBoost": 0.85,
+        "style": 0.2,
+        "useSpeakerBoost": true
+      },
+      "_note": "Warm, mid-pitch, unhurried; older-sibling tone. Used in all K narration."
+    },
+    "wundletown-frazzled-wizard": {
+      "provider": "elevenlabs",
+      "voiceId": "REPLACE_WITH_REAL_VOICE_ID",
+      "model": "eleven_multilingual_v2",
+      "settings": {
+        "stability": 0.4,
+        "similarityBoost": 0.8,
+        "style": 0.45,
+        "useSpeakerBoost": true
+      },
+      "_note": "1st-grade narrator. Comedic, slightly higher pitch, exasperated affection."
+    },
+    "mathopolis-radio-announcer": {
+      "provider": "elevenlabs",
+      "voiceId": "REPLACE_WITH_REAL_VOICE_ID",
+      "model": "eleven_multilingual_v2",
+      "settings": {
+        "stability": 0.6,
+        "similarityBoost": 0.85,
+        "style": 0.3,
+        "useSpeakerBoost": true
+      },
+      "_note": "2nd-grade narrator. Bright newsreel/hero-narrator energy."
+    },
+    "buddy": {
+      "provider": "elevenlabs",
+      "voiceId": "REPLACE_WITH_REAL_VOICE_ID",
+      "model": "eleven_multilingual_v2",
+      "settings": {
+        "stability": 0.5,
+        "similarityBoost": 0.85,
+        "style": 0.25,
+        "useSpeakerBoost": true
+      },
+      "_note": "The Buddy. Small, charming, no fixed gender. Cross-region."
+    },
+    "lord-layerton": {
+      "provider": "elevenlabs",
+      "voiceId": "REPLACE_WITH_REAL_VOICE_ID",
+      "model": "eleven_multilingual_v2",
+      "settings": {
+        "stability": 0.35,
+        "similarityBoost": 0.85,
+        "style": 0.6,
+        "useSpeakerBoost": true
+      },
+      "_note": "2nd-grade recurring villain. Hammy, theatrical, cake-obsessed. Consider human voice actor if TTS feels flat."
+    }
+  }
+}
