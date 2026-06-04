@@ -2,7 +2,7 @@
 
 Tooling for generating all kid-facing voice narration via TTS. See `specs/shared/voice-pipeline.md` for the design.
 
-**Stages 1–4 are implemented:**
+**All 6 stages are implemented:**
 
 | Stage | Script | Purpose |
 |---|---|---|
@@ -10,6 +10,8 @@ Tooling for generating all kid-facing voice narration via TTS. See `specs/shared
 | 2 Canonicalizer | `canonicalize.mjs` | Expands slot placeholders per vocabulary; produces `canonical-manifest.json` |
 | 3 CacheChecker | `check-cache.mjs` | Compares against `.hash` sidecars; produces `render-plan.json` |
 | 4 TTSGenerator | `generate.mjs` | Calls ElevenLabs API; writes `.mp3` (or `.m4a` with `--aac` + ffmpeg) + `.hash` sidecars |
+| 5 ManifestUpdater | `build-manifests.mjs` | Walks rendered audio; writes per-folder `manifest.json`s + global `assets/narration-manifest.json` |
+| 6 PreviewBundle | `build-preview.mjs` | Generates `preview-bundle/index.html` — browseable QA review with filters + audio players |
 | Voice picker (helper) | `sample-voices.mjs` | Renders representative lines through multiple candidate voice IDs into a side-by-side HTML preview |
 
 ## Prerequisites
@@ -135,6 +137,11 @@ node canonicalize.mjs
 node check-cache.mjs
 node generate.mjs --live --max 10  # render 10 entries to validate
 node generate.mjs --live           # render everything else
+
+# 4. Build manifests + preview bundle for QA:
+node build-manifests.mjs           # writes assets/narration-manifest.json
+node build-preview.mjs             # writes preview-bundle/index.html
+# → open preview-bundle/index.html in a browser, click through every cue
 ```
 
 ## Output format: MP3 by default
@@ -153,14 +160,14 @@ These guards prevent burning ElevenLabs credits on a misconfigured run.
 
 ## What's not yet here
 
-**Future stages** of the pipeline per `voice-pipeline.md`:
+All 6 pipeline stages are implemented:
 
 1. ✅ **Harvester** (Stage 1)
 2. ✅ **Canonicalizer** (Stage 2)
 3. ✅ **CacheChecker** (Stage 3)
 4. ✅ **TTSGenerator** (Stage 4)
-5. ⏳ **ManifestUpdater** — asset folder manifests + checksums
-6. ⏳ **PreviewBundle** — HTML page for QA review of all rendered cues
+5. ✅ **ManifestUpdater** (Stage 5)
+6. ✅ **PreviewBundle** (Stage 6)
 
 **Other sources** the harvester will eventually walk:
 
