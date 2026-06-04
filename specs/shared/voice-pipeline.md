@@ -1,8 +1,10 @@
 # Voice Pipeline
 
+> ⏸ **DEFERRED as of 2026-06-04.** The pipeline is fully built and tested in dry-run end-to-end, but voice production is paused until the game is in a playable state. The runtime renders narration as on-screen text + optional system TTS during the deferral. **See `text-and-tts-deferral.md` for the deferral spec + come-back checklist.** The content below is preserved so the come-back is a checklist exercise, not a re-design.
+
 > Programmatic text-to-speech generation for all kid-facing narration. Authoring writes scripts; a pipeline turns them into audio. No human voice actors at launch; ElevenLabs (or equivalent) generates everything, regenerates on script changes, and ships pre-rendered `.m4a` files in the app bundle.
 
-References: `specs/shared/localization.md`, `specs/shared/asset-paths.md`, `specs/shared/k-activity-patterns.md` (region narrator convention), all lesson runtime JSONs (narration scripts).
+References: `specs/shared/text-and-tts-deferral.md`, `specs/shared/localization.md`, `specs/shared/asset-paths.md`, `specs/shared/k-activity-patterns.md` (region narrator convention), all lesson runtime JSONs (narration scripts).
 
 ---
 

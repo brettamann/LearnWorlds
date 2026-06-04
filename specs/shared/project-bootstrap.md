@@ -20,7 +20,8 @@ Per `platform-architecture.md` we're on Flutter for Phase 1, with a clean platfo
 | **Formatter** | `dart format` defaults (80-char line) | Universal Dart convention. CI fails on unformatted. |
 | **Logger** | **`logger` package** | Simple structured logging. Production logging gates on a release-mode flag. |
 | **Stylus capture (Phase 1)** | **Flutter `Listener` widget + `PointerEvent`** | Native PencilKit comes in Phase 2 per `platform-architecture.md`. |
-| **Audio (Phase 1)** | **`just_audio`** | Gapless music beds, low latency, cross-platform. |
+| **Audio (Phase 1)** | **`just_audio`** | Gapless music beds, low latency, cross-platform. Plays pre-rendered narration once it exists. |
+| **System TTS (deferral fallback)** | **`flutter_tts`** | Per `text-and-tts-deferral.md`. Wraps device-built-in TTS (iOS AVSpeechSynthesizer / Android TextToSpeech). Free, robotic, dev-friendly. Used as fallback when no pre-rendered audio file exists for a cueId. Becomes a safety-net post-launch. |
 | **File I/O (Phase 1)** | **`path_provider`** + `dart:io` | Standard. |
 | **Handwriting CNN (Phase 1)** | **`tflite_flutter`** | Same `.tflite` model later converts to Core ML for Phase 2. |
 | **Share sheet** | **`share_plus`** | Wraps `UIActivityViewController`. |
@@ -186,6 +187,7 @@ dependencies:
   json_annotation: ^4.9.0
   json_schema: ^5.0.0
   just_audio: ^0.9.36
+  flutter_tts: ^4.0.2          # per text-and-tts-deferral.md — fallback for un-rendered cueIds
   path_provider: ^2.1.2
   path: ^1.9.0
   tflite_flutter: ^0.10.4

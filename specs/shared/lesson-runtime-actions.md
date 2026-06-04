@@ -229,7 +229,7 @@ For each action: name, params, description, expected duration.
 
 | Action | Params | Description |
 |---|---|---|
-| `narration` | `cueId: string` | Speak the script cue with this ID (defined in `narrationScript`). |
+| `narration` | `cueId: string` | Dispatch the script cue to `NarrationPlayer`. Default behavior: show text caption + play pre-rendered audio if available + fall back to system TTS if parent enabled. During the TTS deferral (per `text-and-tts-deferral.md`) only the caption path runs (plus system TTS if enabled). The animation timeline still advances on the cue's `at` mark regardless of whether audio plays. |
 | `narration-cue` | (alias for `narration`) | |
 | `narration-if-monochrome` | `cueId: string` | Speak only if condition met (We-Try color-distribution check). |
 | `narration-transition-to-decomposition` | `(none)` | Specific transition cue in K.OA.3. |

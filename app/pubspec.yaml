@@ -24,8 +24,13 @@ dependencies:
   # Boot-time schema validation (debug only)
   json_schema: ^5.1.1
 
-  # Audio
+  # Audio (plays pre-rendered narration files when they exist)
   just_audio: ^0.9.39
+
+  # System TTS — fallback for un-rendered narration cues (text-and-tts-deferral.md).
+  # During the deferral period, this is the only audio path (caption + system TTS).
+  # Once ElevenLabs renders happen, this becomes the safety net for cueIds without files.
+  flutter_tts: ^4.0.2
 
   # Storage
   path_provider: ^2.1.3

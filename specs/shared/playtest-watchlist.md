@@ -140,6 +140,22 @@ See `reward-economy.md`'s "Coin balance audit pending" section. The watchlist en
 
 **Trigger to act:** any of the targets missed by ≥ 50% suggests rebalancing.
 
+### 10. Text-only narration + system TTS during the deferral period
+
+**Concern:** Voice production deferred (see `text-and-tts-deferral.md`). During the deferral, kid-facing narration is rendered as on-screen text + (optional) the device's robotic system TTS. K kids can't read; parents either read aloud or enable system TTS. The robotic voice might erode engagement enough to flag voice production as an early come-back priority.
+
+**Watch for:**
+- Parent feedback in the first cohort: "the robotic voice is grating" vs. "fine for now."
+- Kid drop-off rate in activities where caption text is dense (Storyteller's Pond especially).
+- Time-to-first-tap after a caption appears — if kids freeze (can't read), they're waiting for narration that isn't coming.
+
+**Trigger to act:**
+- ≥ 30% of cohort 1 parents say the system TTS is "too robotic" → accelerate voice production come-back.
+- ≥ 25% kid-tap latency increase in activities heavy in narration → same trigger.
+- Otherwise: defer voice through cohort 2; re-evaluate quarterly.
+
+**Owner:** project lead (decides come-back timing); UX (caption design); audio direction (voice picking).
+
 ---
 
 ## How to use this file

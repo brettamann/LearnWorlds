@@ -141,6 +141,7 @@ The principle: every piece of mutable runtime state has **one owner**. Other mod
 | `SaveCoordinator` | Per `save-recovery.md`. Throttled writes for round state; flush triggers (activity exit, app background, etc.). |
 | `SlotResolver` | Reads slot-vocabulary + active round state + kid profile + system context. Returns the resolved value for a `{slot}` template variable. |
 | `LessonQueue` | Decides which lesson fires next for the kid (per `micro-lessons.md` queue rules + session cap). |
+| `NarrationPlayer` | Per `text-and-tts-deferral.md`. Takes a cue (cueId + text + slot bindings), resolves slots via SlotResolver, dispatches to CaptionLayer (always) + AudioProvider (if pre-rendered exists) + SystemTtsProvider (fallback if parent enabled). |
 
 ### Data layer (in-memory caches over bundled JSON)
 
@@ -165,13 +166,26 @@ All registries are **read-only at runtime**. Updates require an app rebuild. Sch
 | Adapter | Phase 1 (Flutter) | Phase 2 (native iPadOS) |
 |---|---|---|
 | `StylusInputProvider` | `Listener` widget + `PointerEvent` stream | `PKCanvasView` + `PKStrokePoint` |
-| `AudioProvider` | `just_audio` package | `AVAudioEngine` / `AVPlayer` |
+| `AudioProvider` | `just_audio` package — plays pre-rendered narration files | `AVAudioEngine` / `AVPlayer` |
+| `SystemTtsProvider` | `flutter_tts` package — fallback when no rendered audio exists | `AVSpeechSynthesizer` |
 | `StorageProvider` | `path_provider` + `dart:io` File | `FileManager` |
 | `HandwritingRecognizer` | `tflite_flutter` package + bundled `.tflite` | Core ML + converted model |
 | `LocaleResolver` | Flutter `Localizations` + per-kid override | `Locale.current` + per-kid override |
 | `SystemSharePort` | `share_plus` package | `UIActivityViewController` |
 | `AssetLoader` | Flutter asset bundle | `Bundle.main` |
 | `PencilDoubleTapPort` *(stub in Phase 1)* | not available | `UIPencilInteraction` (Phase 2 only) |
+
+### Narration playback chain
+
+During the TTS deferral period (per `text-and-tts-deferral.md`), no pre-rendered audio exists. The runtime's `NarrationPlayer` dispatches to three channels in priority order:
+
+1. **CaptionLayer** — always shows the text on screen at the time audio would have started. Auto-dismisses based on text length; tap-to-dismiss for skip-ahead.
+2. **AudioProvider** — plays the pre-rendered `.mp3` file if `assets/narration-manifest.json` includes the cueId. During deferral the manifest is empty so this is always a miss.
+3. **SystemTtsProvider** — fires only when (1) `AudioProvider` had no file AND (2) the parent dashboard's "system read-aloud" toggle is on. Robotic but functional.
+
+Post-deferral the chain shifts: caption becomes opt-in for accessibility, `AudioProvider` is the primary, `SystemTtsProvider` is the safety net for any cueIds without rendered audio.
+
+`NarrationPlayer` lives in the engines layer (with `SlotResolver`); the three channels are platform adapters or UI widgets.
 
 ---
 
