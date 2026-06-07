@@ -1,15 +1,16 @@
-// Smoke test — the skeleton renders without crashing.
-// Real test coverage starts in sprint 0 per
-// specs/shared/project-bootstrap.md "Build sequencing".
-
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+// Smoke test — verifies the home map renders and the Sanctuary region is
+// reachable from it.
 
 import 'package:critmath/app.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('skeleton app renders', (tester) async {
+  testWidgets('home map renders and Sanctuary region is tappable',
+      (tester) async {
     await tester.pumpWidget(const ProviderScope(child: CritMathApp()));
-    expect(find.text('CritMath skeleton — routing not yet wired'), findsOneWidget);
+    await tester.pumpAndSettle();
+    expect(find.text('Mystical Island'), findsOneWidget);
+    expect(find.bySemanticsLabel('Mystic Sanctuary'), findsOneWidget);
   });
 }

@@ -33,3 +33,8 @@ coverage/
 
 # Misc
 *.log
+
+# Bundled mirrors of repo-root data/ and content/. Synced via
+# scripts/sync-assets.ps1 — see specs/shared/project-bootstrap.md.
+assets/data/
+assets/content/

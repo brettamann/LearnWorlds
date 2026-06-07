@@ -35,6 +35,9 @@ dependencies:
   # Storage
   path_provider: ^2.1.3
   path: ^1.9.0
+  # Cross-platform key-value store for SaveCoordinator. Web uses localStorage,
+  # mobile uses platform-native prefs. Sprint 1 vertical slice persistence.
+  shared_preferences: ^2.3.0
 
   # Handwriting classifier
   tflite_flutter: ^0.10.4
@@ -68,16 +71,27 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # Bundled data (read at boot)
+  # Bundled data (read at boot). Mirrored from repo-root data/ + content/
+  # via scripts/sync-assets.ps1 (re-run after editing those source trees).
+  # `..` paths break Flutter web's URL normalization at runtime, so we mirror
+  # the trees under assets/ and reference them locally.
   assets:
-    - ../data/concept-registry/
-    - ../data/activity-registry/
-    - ../data/reward-catalog/
-    - ../data/telemetry-catalog/
-    - ../data/standards-reference/
-    - ../data/lesson-runtime/
-    - ../data/slot-vocabulary/
-    - ../content/strings/en-US/activities/
+    - assets/data/concept-registry/
+    - assets/data/activity-registry/
+    - assets/data/reward-catalog/
+    - assets/data/telemetry-catalog/
+    - assets/data/standards-reference/
+    - assets/data/lesson-runtime/
+    - assets/data/slot-vocabulary/
+    - assets/content/strings/en-US/activities/
+    # Placeholder art (will be replaced with official assets per
+    # specs/shared/art-direction.md; structure per specs/shared/asset-paths.md).
+    - assets/activities/counting-parade/sprites/
+    - assets/activities/counting-parade/backgrounds/
+    - assets/activities/ten-frame-pond/sprites/
+    - assets/shared/region-characters/sanctuary/
+    - assets/shared/ui/
+    - assets/maps/
     # Art + audio assets will be added as Phase 0 style lock completes:
     # - ../assets/
 
