@@ -25,12 +25,29 @@ import '../../coordinators/round_coordinator.dart';
 import '../../data/asset_paths.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
+import '../../providers/wallet_provider.dart';
 import 'animated_fawn.dart';
+import 'counting_challenge_layer.dart';
+import 'keeper_choice_overlay.dart';
 import 'keeper_intro_overlay.dart';
 import 'next_arrow_button.dart';
 import 'progress_bar_to_reward.dart';
 
-enum _Phase { intro, counting, celebrating, interstitial }
+enum _Phase {
+  intro,
+  counting,
+  celebrating,
+  interstitial,
+  challengeOffer,
+  challenge,
+  challengeReward,
+}
+
+/// Tap-target for the count-to-N challenge that follows the practice.
+const int _challengeTarget = 20;
+
+/// Challenge reward multiplier on top of the practice's total coins.
+const double _challengeRewardMultiplier = 1.5;
 
 /// Holds the bouncing coin on screen this long after the final round before
 /// the keeper interstitial appears with the reward message.
@@ -166,7 +183,41 @@ class _CountingParadeRunnerState extends ConsumerState<CountingParadeRunner> {
     'Eight',
     'Nine',
     'Ten',
+    'Eleven',
+    'Twelve',
+    'Thirteen',
+    'Fourteen',
+    'Fifteen',
+    'Sixteen',
+    'Seventeen',
+    'Eighteen',
+    'Nineteen',
+    'Twenty',
   ];
+
+  // Live count during the challenge phase (0..[_challengeTarget]).
+  int _challengeCount = 0;
+
+  /// Coins awarded for one successful challenge run — 150 % of the full
+  /// practice payout, rounded up so the kid never feels short-changed by
+  /// floor truncation.
+  int get _challengeRewardCoins {
+    final practiceTotal = _paradeSequence.length * _coinsPerRound;
+    return (practiceTotal * _challengeRewardMultiplier).ceil();
+  }
+
+  String get _challengeOfferLine {
+    final bonus = _challengeRewardCoins;
+    return "That was great! I'll give you $bonus more coins if you "
+        'try the challenge and count to $_challengeTarget. Or press '
+        'continue to move on!';
+  }
+
+  String get _challengeRewardLine {
+    final bonus = _challengeRewardCoins;
+    return 'Amazing! All $_challengeTarget counted. Here are $bonus '
+        'bonus coins!';
+  }
 
   _ParadeCreature get _currentCreature => _paradeSequence[_roundIndex];
   int get _currentCount {
@@ -177,8 +228,19 @@ class _CountingParadeRunnerState extends ConsumerState<CountingParadeRunner> {
   bool get _isLastRound => _roundIndex == _paradeSequence.length - 1;
   bool get _allTapped => _tapped.length == _currentCount;
 
-  /// 0.0 → 1.0 over the full sequence. Drives the persistent progress bar.
-  double get _sequenceProgress => _completedRounds / _paradeSequence.length;
+  /// 0.0 → 1.0 over whatever phase the kid is currently working through.
+  /// In the practice phases this is `completedRounds / sequenceLength`; in
+  /// the challenge phases it switches to `challengeCount / challengeTarget`
+  /// so the kid always sees the bar fill as they progress.
+  double get _sequenceProgress {
+    switch (_phase) {
+      case _Phase.challenge:
+      case _Phase.challengeReward:
+        return _challengeCount / _challengeTarget;
+      default:
+        return _completedRounds / _paradeSequence.length;
+    }
+  }
 
   /// Reward line spoken by the keeper after the final celebration. Reports
   /// the total coins earned this visit so the kid hears the concrete result.
@@ -292,7 +354,16 @@ class _CountingParadeRunnerState extends ConsumerState<CountingParadeRunner> {
 
   void _advanceFromInterstitial() {
     if (_isLastRound) {
-      widget.onSequenceComplete();
+      // After the reward interstitial, offer the challenge mode instead of
+      // wrapping the activity. The kid chooses whether to opt in.
+      setState(() => _phase = _Phase.challengeOffer);
+      ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
+            NarrationLine(
+              text: _challengeOfferLine,
+              cueId: 'parade:challenge-offer',
+              speaker: 'sanctuary-keeper-mystic',
+            ),
+          );
       return;
     }
     setState(() {
@@ -301,6 +372,47 @@ class _CountingParadeRunnerState extends ConsumerState<CountingParadeRunner> {
       _phase = _Phase.counting;
     });
     _speakCountingPrompt();
+  }
+
+  void _acceptChallenge() {
+    setState(() {
+      _challengeCount = 0;
+      _phase = _Phase.challenge;
+    });
+  }
+
+  void _declineChallenge() {
+    widget.onSequenceComplete();
+  }
+
+  void _onChallengeCountChanged(int count) {
+    setState(() => _challengeCount = count);
+  }
+
+  void _onChallengeTargetReached() {
+    // Award bonus coins directly to the wallet — challenge isn't a "round"
+    // in the mastery sense, so we skip RoundCoordinator and just credit the
+    // bonus the keeper just promised.
+    ref.read(walletProvider.notifier).award(_challengeRewardCoins);
+    setState(() => _phase = _Phase.challengeReward);
+    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
+          NarrationLine(
+            text: _challengeRewardLine,
+            cueId: 'parade:challenge-reward',
+            speaker: 'sanctuary-keeper-mystic',
+          ),
+        );
+  }
+
+  void _repeatChallenge() {
+    setState(() {
+      _challengeCount = 0;
+      _phase = _Phase.challenge;
+    });
+  }
+
+  void _finishAfterChallenge() {
+    widget.onSequenceComplete();
   }
 
   @override
@@ -340,9 +452,36 @@ class _CountingParadeRunnerState extends ConsumerState<CountingParadeRunner> {
           dialog: _isLastRound
               ? _finalKeeperLine
               : _currentCreature.keeperLine,
-          startLabel: _isLastRound ? 'Finish' : "Let's go!",
+          startLabel: _isLastRound ? 'Continue' : "Let's go!",
           startButtonKey: const ValueKey('parade-interstitial-next'),
           onStart: _advanceFromInterstitial,
+        ),
+      _Phase.challengeOffer => KeeperChoiceOverlay(
+          dialog: _challengeOfferLine,
+          secondaryLabel: 'Continue',
+          primaryLabel: 'Challenge!',
+          onSecondary: _declineChallenge,
+          onPrimary: _acceptChallenge,
+          secondaryButtonKey: const ValueKey('parade-challenge-decline'),
+          primaryButtonKey: const ValueKey('parade-challenge-accept'),
+        ),
+      _Phase.challenge => _ChallengeStage(
+          target: _challengeTarget,
+          count: _challengeCount,
+          spriteAssets: [
+            for (final c in _paradeSequence) c.spriteAsset,
+          ],
+          onCountChanged: _onChallengeCountChanged,
+          onTargetReached: _onChallengeTargetReached,
+        ),
+      _Phase.challengeReward => KeeperChoiceOverlay(
+          dialog: _challengeRewardLine,
+          secondaryLabel: 'Continue',
+          primaryLabel: 'Again!',
+          onSecondary: _finishAfterChallenge,
+          onPrimary: _repeatChallenge,
+          secondaryButtonKey: const ValueKey('parade-challenge-finish'),
+          primaryButtonKey: const ValueKey('parade-challenge-repeat'),
         ),
     };
 
@@ -497,6 +636,51 @@ class _Creature extends StatelessWidget {
         active: tapped,
         spriteAsset: spriteAsset,
       ),
+    );
+  }
+}
+
+/// Challenge phase layout: count badge centred at the top, the flying-
+/// creatures layer filling the rest of the stage. The badge is suppressed
+/// inside `CountingChallengeLayer` to keep the layer free of UI clutter;
+/// we own it from here so it matches the count badge style used in the
+/// normal practice rounds.
+class _ChallengeStage extends StatelessWidget {
+  const _ChallengeStage({
+    required this.target,
+    required this.count,
+    required this.spriteAssets,
+    required this.onCountChanged,
+    required this.onTargetReached,
+  });
+
+  final int target;
+  final int count;
+  final List<String> spriteAssets;
+  final ValueChanged<int> onCountChanged;
+  final VoidCallback onTargetReached;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: CountingChallengeLayer(
+            target: target,
+            spriteAssets: spriteAssets,
+            onCountChanged: onCountChanged,
+            onTargetReached: onTargetReached,
+          ),
+        ),
+        Positioned(
+          top: 16,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: _CountBadge(value: count, target: target),
+          ),
+        ),
+      ],
     );
   }
 }
