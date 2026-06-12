@@ -60,7 +60,11 @@ class KeeperChoiceOverlay extends StatelessWidget {
                   _SpeechBubble(text: dialog),
                   const SizedBox(height: 24),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    // Right-aligned so the arrow shelf stays in the same
+                    // place across every surface; the secondary option
+                    // sits to the left of the primary one inside the
+                    // shelf area.
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       NextArrowButton(
                         key: secondaryButtonKey,

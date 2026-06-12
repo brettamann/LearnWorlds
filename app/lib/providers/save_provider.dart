@@ -13,6 +13,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../engines/mastery/concept_state.dart';
 import 'exploration_provider.dart';
 import 'progress_provider.dart';
+import 'read_aloud_settings_provider.dart';
+import 'reward_progress_provider.dart';
+import 'sub_mode_progress_provider.dart';
 import 'tts_settings_provider.dart';
 import 'wallet_provider.dart';
 
@@ -24,6 +27,9 @@ class _SaveBlob {
     required this.coins,
     required this.ttsEnabled,
     required this.exploration,
+    required this.readAloudGateEnabled,
+    required this.rewards,
+    required this.subModes,
   });
 
   factory _SaveBlob.fromJson(Map<String, dynamic> json) {
@@ -32,6 +38,19 @@ class _SaveBlob {
     progressJson.forEach((key, value) {
       progress[key] = _conceptStateFromJson(value as Map<String, dynamic>);
     });
+    final rewardsJson = json['rewards'] as Map<String, dynamic>? ?? const {};
+    final rewards = <String, RewardTrackState>{};
+    rewardsJson.forEach((key, value) {
+      rewards[key] = _rewardStateFromJson(value as Map<String, dynamic>);
+    });
+    final subModesJson =
+        json['subModes'] as Map<String, dynamic>? ?? const {};
+    final subModes = <String, Set<String>>{};
+    subModesJson.forEach((activityId, value) {
+      subModes[activityId] = ((value as List<dynamic>?) ?? const [])
+          .map((e) => e as String)
+          .toSet();
+    });
     return _SaveBlob(
       progress: progress,
       coins: (json['coins'] as num?)?.toInt() ?? 0,
@@ -39,6 +58,9 @@ class _SaveBlob {
       exploration: ((json['exploration'] as List<dynamic>?) ?? const [])
           .map((e) => (e as num).toInt())
           .toSet(),
+      readAloudGateEnabled: json['readAloudGateEnabled'] as bool? ?? true,
+      rewards: rewards,
+      subModes: subModes,
     );
   }
 
@@ -46,20 +68,49 @@ class _SaveBlob {
   final int coins;
   final bool ttsEnabled;
   final Set<int> exploration;
+  final bool readAloudGateEnabled;
+  final Map<String, RewardTrackState> rewards;
+  final Map<String, Set<String>> subModes;
 
   Map<String, dynamic> toJson() {
     final progressJson = <String, dynamic>{};
     progress.forEach((key, value) {
       progressJson[key] = _conceptStateToJson(value);
     });
+    final rewardsJson = <String, dynamic>{};
+    rewards.forEach((key, value) {
+      rewardsJson[key] = _rewardStateToJson(value);
+    });
+    final subModesJson = <String, dynamic>{};
+    subModes.forEach((activityId, ids) {
+      subModesJson[activityId] = ids.toList()..sort();
+    });
     return {
       'progress': progressJson,
       'coins': coins,
       'ttsEnabled': ttsEnabled,
       'exploration': exploration.toList()..sort(),
+      'readAloudGateEnabled': readAloudGateEnabled,
+      'rewards': rewardsJson,
+      'subModes': subModesJson,
     };
   }
 }
+
+Map<String, dynamic> _rewardStateToJson(RewardTrackState s) => {
+      'completed': s.completedActivities.toList()..sort(),
+      'lastSeenStage': s.lastSeenStage,
+      'graduated': s.graduated,
+    };
+
+RewardTrackState _rewardStateFromJson(Map<String, dynamic> json) =>
+    RewardTrackState(
+      completedActivities: ((json['completed'] as List<dynamic>?) ?? const [])
+          .map((e) => e as String)
+          .toSet(),
+      lastSeenStage: (json['lastSeenStage'] as num?)?.toInt() ?? 0,
+      graduated: json['graduated'] as bool? ?? false,
+    );
 
 Map<String, dynamic> _conceptStateToJson(ConceptState s) => {
       'conceptId': s.conceptId,
@@ -114,6 +165,11 @@ class SaveCoordinator {
       _ref.read(walletProvider.notifier).set(blob.coins);
       _ref.read(ttsEnabledProvider.notifier).set(blob.ttsEnabled);
       _ref.read(explorationProvider.notifier).replaceAll(blob.exploration);
+      _ref
+          .read(readAloudGateEnabledProvider.notifier)
+          .set(blob.readAloudGateEnabled);
+      _ref.read(rewardProgressProvider.notifier).replaceAll(blob.rewards);
+      _ref.read(subModeProgressProvider.notifier).replaceAll(blob.subModes);
     } catch (_) {
       // Corrupt save: start fresh rather than crash the kid's session.
     }
@@ -132,11 +188,17 @@ class SaveCoordinator {
       final coins = _ref.read(walletProvider);
       final ttsEnabled = _ref.read(ttsEnabledProvider);
       final exploration = _ref.read(explorationProvider);
+      final readAloudGateEnabled = _ref.read(readAloudGateEnabledProvider);
+      final rewards = _ref.read(rewardProgressProvider);
+      final subModes = _ref.read(subModeProgressProvider);
       final blob = _SaveBlob(
         progress: progress,
         coins: coins,
         ttsEnabled: ttsEnabled,
         exploration: exploration,
+        readAloudGateEnabled: readAloudGateEnabled,
+        rewards: rewards,
+        subModes: subModes,
       );
       await prefs.setString(_saveKey, jsonEncode(blob.toJson()));
       completer.complete();

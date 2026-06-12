@@ -89,9 +89,11 @@ flutter:
     - assets/activities/counting-parade/sprites/
     - assets/activities/counting-parade/backgrounds/
     - assets/activities/ten-frame-pond/sprites/
+    - assets/activities/shape-garden/
     - assets/shared/region-characters/sanctuary/
     - assets/shared/ui/
     - assets/maps/
+    - assets/rewards/k-mystery-egg/
     # Art + audio assets will be added as Phase 0 style lock completes:
     # - ../assets/
 

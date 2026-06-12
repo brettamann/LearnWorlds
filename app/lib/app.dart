@@ -9,8 +9,10 @@ import 'package:go_router/go_router.dart';
 import 'ui/screens/activity_screen.dart';
 import 'ui/screens/home_map_screen.dart';
 import 'ui/screens/lesson_screen.dart';
+import 'ui/screens/reward_gift_screen.dart';
 import 'ui/screens/sanctuary_cutscene_screen.dart';
 import 'ui/screens/sanctuary_map_screen.dart';
+import 'ui/screens/settings_screen.dart';
 
 class CritMathApp extends ConsumerWidget {
   const CritMathApp({super.key});
@@ -53,9 +55,23 @@ final _appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/lesson/:id',
-        builder: (context, state) => LessonScreen(
-          lessonId: state.pathParameters['id']!,
-        ),
+        builder: (context, state) {
+          final extra = state.extra is Map<String, dynamic>
+              ? state.extra as Map<String, dynamic>
+              : null;
+          return LessonScreen(
+            lessonId: state.pathParameters['id']!,
+            subModeOverride: extra?['subMode'] as String?,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/reward/k-mystery-egg-gift',
+        builder: (context, state) => const RewardGiftScreen(),
       ),
     ],
   );

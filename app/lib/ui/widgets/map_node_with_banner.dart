@@ -15,6 +15,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../data/asset_paths.dart';
+import 'read_aloud_gate.dart';
 
 /// Which side of the node the banner sits on.
 enum BannerSide { right, left, above, below }
@@ -41,6 +42,7 @@ class MapNodeWithBanner extends StatelessWidget {
     required this.onTap,
     this.bannerSide = BannerSide.right,
     this.numberInside,
+    this.isCutscene = false,
   });
 
   /// Position of the node's centre in the parent stack's pixel coordinates.
@@ -57,9 +59,15 @@ class MapNodeWithBanner extends StatelessWidget {
 
   final BannerSide bannerSide;
 
-  /// Optional numeric label drawn inside the node (e.g. lesson "3"). When
-  /// null the node renders without a number — used for the cutscene anchor.
+  /// Optional numeric label drawn inside the node (e.g. lesson "3").
+  /// Mutually exclusive with `isCutscene`.
   final int? numberInside;
+
+  /// Render a play-arrow glyph inside the node instead of a number. Use
+  /// this for nodes that open a cutscene rather than a lesson — kids
+  /// recognise the glyph from video players and learn that the node is
+  /// "watch me, no math here."
+  final bool isCutscene;
 
   // Banner display height scales with node diameter so the pair feels like
   // one composed sprite at any zoom level.
@@ -142,6 +150,88 @@ class MapNodeWithBanner extends StatelessWidget {
     final textHeightPx = _BannerArt.textHeight * vScale;
     final textWidthPx = _BannerArt.textWidth * hScale;
 
+    // Banner content (parchment + label text), no gesture handling.
+    final bannerVisual = Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Positioned.fill(
+          child: Image.asset(
+            AssetPaths.mapBannerParchment,
+            fit: BoxFit.fill,
+          ),
+        ),
+        Positioned(
+          left: textLeftPx,
+          top: textTopPx,
+          width: textWidthPx,
+          height: textHeightPx,
+          child: Center(
+            child: Text(
+              label,
+              maxLines: 1,
+              style: TextStyle(
+                fontSize: _fontSize,
+                fontWeight: FontWeight.w700,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+
+    // Node content (yellow circle + number OR play glyph), no gesture handling.
+    final nodeVisual = Stack(
+      alignment: Alignment.center,
+      children: [
+        Image.asset(
+          AssetPaths.mapNodeYellow,
+          fit: BoxFit.contain,
+        ),
+        if (numberInside != null)
+          // Number occupies most of the node interior — bounded by
+          // ~60% of the diameter so descenders don't kiss the rim.
+          FractionallySizedBox(
+            widthFactor: 0.62,
+            heightFactor: 0.62,
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: Text(
+                '$numberInside',
+                style: const TextStyle(
+                  fontWeight: FontWeight.w900,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+          )
+        else if (isCutscene)
+          FractionallySizedBox(
+            widthFactor: 0.55,
+            heightFactor: 0.55,
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: Icon(
+                Icons.play_arrow_rounded,
+                color: Colors.black87,
+                size: nodeDiameter,
+              ),
+            ),
+          ),
+      ],
+    );
+
+    // Split the two hit regions on purpose:
+    //   - The **banner** is text and stays wrapped in ReadAloudGate, so a
+    //     kid who can't read the lesson name still hears it spoken.
+    //   - The **node** is *not* gated. Live testing showed that the
+    //     node's tap-narration ("Welcome" / "Counting Parade" / …) was
+    //     racing the destination screen's own opening narration on
+    //     Chrome and the first line of dialog often got dropped. The
+    //     node is visually self-explanatory (yellow disc + number or
+    //     play glyph), so silencing it costs the kid nothing — the
+    //     banner directly next to it still narrates if they want to
+    //     hear the name.
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -151,37 +241,13 @@ class MapNodeWithBanner extends StatelessWidget {
           top: bannerTL.dy,
           width: bannerW,
           height: bannerH,
-          child: GestureDetector(
-            behavior: HitTestBehavior.opaque,
+          child: ReadAloudGate(
+            label: label,
             onTap: onTap,
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                // The parchment image, stretched to bannerW × bannerH.
-                Positioned.fill(
-                  child: Image.asset(
-                    AssetPaths.mapBannerParchment,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                Positioned(
-                  left: textLeftPx,
-                  top: textTopPx,
-                  width: textWidthPx,
-                  height: textHeightPx,
-                  child: Center(
-                    child: Text(
-                      label,
-                      maxLines: 1,
-                      style: TextStyle(
-                        fontSize: _fontSize,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: onTap,
+              child: bannerVisual,
             ),
           ),
         ),
@@ -193,32 +259,7 @@ class MapNodeWithBanner extends StatelessWidget {
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: onTap,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Image.asset(
-                  AssetPaths.mapNodeYellow,
-                  fit: BoxFit.contain,
-                ),
-                if (numberInside != null)
-                  // Number occupies most of the node interior — bounded by
-                  // ~60% of the diameter so descenders don't kiss the rim.
-                  FractionallySizedBox(
-                    widthFactor: 0.62,
-                    heightFactor: 0.62,
-                    child: FittedBox(
-                      fit: BoxFit.contain,
-                      child: Text(
-                        '$numberInside',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w900,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+            child: nodeVisual,
           ),
         ),
       ],

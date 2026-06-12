@@ -123,7 +123,8 @@ class _SanctuaryCutsceneScreenState
                       children: [
                         _SpeechBubble(text: _pages[_page]),
                         const SizedBox(height: 24),
-                        Center(
+                        Align(
+                          alignment: Alignment.centerRight,
                           child: NextArrowButton(
                             key: const ValueKey('cutscene-next'),
                             onPressed: _advance,

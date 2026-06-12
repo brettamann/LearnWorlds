@@ -42,15 +42,57 @@ class AnimationStep {
   final Map<String, dynamic> params;
 }
 
+/// One scene entry from `phases.iShow.scene.shapes` (K.G.2-style lessons).
+/// We don't try to model every field every lesson family will use — just
+/// the ones the renderer reads to draw a sprite and animate it. Unknown
+/// extra keys ride along in `raw` for later sprints.
+class SceneShape {
+  const SceneShape({
+    required this.id,
+    required this.kind,
+    this.variant,
+    this.role,
+    this.raw = const <String, dynamic>{},
+  });
+
+  factory SceneShape.fromJson(Map<String, dynamic> json) {
+    return SceneShape(
+      id: json['id'] as String,
+      kind: json['kind'] as String,
+      variant: json['variant'] as String?,
+      role: json['role'] as String?,
+      raw: json,
+    );
+  }
+
+  /// Stable id used in animationSteps targets (e.g. `tri-1`, `dis-2`).
+  final String id;
+
+  /// Shape family (`triangle`, `circle`, `square`, `hexagon`, etc.).
+  final String kind;
+
+  /// Author-supplied pose / variant (`upright-small`, `point-down`,
+  /// `rotated-45`). The renderer translates these to rotation + scale.
+  final String? variant;
+
+  /// `distractor` for non-target shapes; null for targets.
+  final String? role;
+
+  final Map<String, dynamic> raw;
+}
+
 class IShowPhase {
   const IShowPhase({
     required this.durationSec,
     required this.narrationScript,
     required this.animationSteps,
     required this.skipAvailableAfterSec,
+    required this.shapes,
+    this.background,
   });
 
   factory IShowPhase.fromJson(Map<String, dynamic> json) {
+    final scene = json['scene'] as Map<String, dynamic>? ?? const {};
     return IShowPhase(
       durationSec: (json['durationSec'] as num).toInt(),
       narrationScript: (json['narrationScript'] as List<dynamic>)
@@ -62,6 +104,10 @@ class IShowPhase {
               .toList(growable: false),
       skipAvailableAfterSec:
           (json['skipToYouDoAvailableAfterSec'] as num?)?.toInt() ?? 0,
+      shapes: (scene['shapes'] as List<dynamic>? ?? const <dynamic>[])
+          .map((e) => SceneShape.fromJson(e as Map<String, dynamic>))
+          .toList(growable: false),
+      background: scene['background'] as String?,
     );
   }
 
@@ -69,6 +115,15 @@ class IShowPhase {
   final List<NarrationCue> narrationScript;
   final List<AnimationStep> animationSteps;
   final int skipAvailableAfterSec;
+
+  /// Shapes the renderer should draw in the scene. Empty for fawn-style
+  /// lessons (K.CC.4a) — those use `scene.creatures` which we don't model
+  /// yet because the existing renderer hard-codes "3 fawns."
+  final List<SceneShape> shapes;
+
+  /// Logical background key from the JSON (e.g. `shape-garden-enchanted-path`).
+  /// Renderer maps this to an actual asset.
+  final String? background;
 }
 
 class WeTryPhase {

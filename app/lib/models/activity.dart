@@ -29,6 +29,7 @@ class SubMode {
     this.isDefault = false,
     this.isChallenge = false,
     this.isDemotionFloor = false,
+    this.ownsIntro = false,
   });
 
   factory SubMode.fromJson(Map<String, dynamic> json) {
@@ -40,6 +41,7 @@ class SubMode {
       isDefault: json['isDefault'] as bool? ?? false,
       isChallenge: json['isChallenge'] as bool? ?? false,
       isDemotionFloor: json['isDemotionFloor'] as bool? ?? false,
+      ownsIntro: json['ownsIntro'] as bool? ?? false,
     );
   }
 
@@ -48,6 +50,15 @@ class SubMode {
   final bool isDefault;
   final bool isChallenge;
   final bool isDemotionFloor;
+
+  /// When true, the sub-mode's runner plays its own animated demo/lesson
+  /// at intro time. The Sanctuary picker and the activity-screen
+  /// auto-advance both skip ScaffoldEngine for these sub-modes — they
+  /// route straight into the activity so the runner's intro is the only
+  /// thing the kid sees. Challenge sub-modes get the same routing
+  /// treatment but for a different reason (they're optional final
+  /// checks), which is why this flag is separate from `isChallenge`.
+  final bool ownsIntro;
 }
 
 class Activity {

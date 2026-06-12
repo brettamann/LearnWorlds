@@ -73,4 +73,74 @@ class AssetPaths {
   // Ten-Frame Pond placeholder sprite (Sprint 2+ activity).
   static const String tenFramePondFrog =
       'assets/activities/ten-frame-pond/sprites/frog.png';
+
+  // ------- Shape Garden (K.G.2-4) -------
+  // Background that fills the body of both the K.G.2 lesson scene and the
+  // Shape Garden activity rounds.
+  static const String shapeGardenBackground =
+      'assets/activities/shape-garden/shape_garden_background.png';
+
+  /// 2D shape sprite. `shape` is the canonical key (`triangle`,
+  /// `triangle-right`, `circle`, `square`, `rectangle`, `pentagon`, `hexagon`,
+  /// `semicircle_half`, `semicircle_quarter`); `variant` is whatever the
+  /// artist named the material/colour suffix (e.g. `leaf`, `petal`, `stone`,
+  /// `honeycomb`). File names mix `-` and `_` separators per artist
+  /// convention — semicircle_half/quarter use underscores throughout;
+  /// everything else uses hyphens. The presence of `_` in the shape key
+  /// flips the separator.
+  static String shapeGarden2dSprite(String shape, String variant) {
+    final compound = shape.contains('_'); // semicircle_half / quarter
+    final separator = compound ? '_' : '-';
+    return 'assets/activities/shape-garden/shape_2d_$shape$separator$variant.png';
+  }
+
+  /// The `*-example` variant for a 2D shape — same file family as
+  /// `shapeGarden2dSprite`, but the sprite carries magenta side-locator dots
+  /// (#FF00F0) that the ExampleDotScanner reads at lesson load to position
+  /// the hand pointer on each side's midpoint.
+  static String shapeGarden2dExample(String shape) =>
+      shapeGarden2dSprite(shape, 'example');
+
+  /// 3D shape sprite — each shape has a themed creature (`gnome`, `turtle`,
+  /// `golem`, `fish`, `jellyfish`) and a matching 2D outline used in the
+  /// K.G.3 "flat vs solid" lesson to show what the cross-section looks like.
+  static String shapeGarden3dCreature(String shape, String creatureName) =>
+      'assets/activities/shape-garden/shape_3d_${shape}_$creatureName.png';
+
+  static String shapeGarden3dOutline(String shape) =>
+      'assets/activities/shape-garden/shape_3d_${shape}_outline.png';
+
+  /// Decor sprites — butterflies and frogs in multiple colours, plus the
+  /// watering can. Used as in-round wrong-tap targets that teach the kid
+  /// "this is alive but it's not a shape — find the shapes."
+  static String shapeGardenButterfly(String colour) =>
+      'assets/activities/shape-garden/butterfly-decor-$colour.png';
+
+  static String shapeGardenFrog(String colour) =>
+      'assets/activities/shape-garden/frog-decor-$colour.png';
+
+  static const String shapeGardenWateringCan =
+      'assets/activities/shape-garden/watering-can-decor.png';
+
+  /// Bins used by the K.G.3 "Flat or Solid" sub-mode — left bin (`bin_2d`)
+  /// holds the painted-flat shapes, right bin (`bin_3d`) holds the solid
+  /// creature sprites.
+  static const String shapeGardenBin2d =
+      'assets/activities/shape-garden/bin_2d.png';
+  static const String shapeGardenBin3d =
+      'assets/activities/shape-garden/bin_3d.png';
+
+  // Reward track sprites — see specs/shared/reward-tracks.md.
+  // K mystery egg, 8 progressive stages + 1 "hatched" complete state.
+  static String kMysteryEggStage(int stage) {
+    if (stage < 1 || stage > 8) {
+      throw ArgumentError(
+        'K mystery egg has stages 1..8; got $stage',
+      );
+    }
+    return 'assets/rewards/k-mystery-egg/egg-reward-stage-$stage.png';
+  }
+
+  static const String kMysteryEggComplete =
+      'assets/rewards/k-mystery-egg/egg-reward-stage-complete.png';
 }

@@ -9,6 +9,7 @@ import 'package:critmath/engines/mastery/concept_state.dart';
 import 'package:critmath/providers/exploration_provider.dart';
 import 'package:critmath/providers/map_anchors_provider.dart';
 import 'package:critmath/providers/progress_provider.dart';
+import 'package:critmath/providers/read_aloud_settings_provider.dart';
 import 'package:critmath/providers/wallet_provider.dart';
 import 'package:critmath/ui/widgets/progress_bar_to_reward.dart';
 import 'package:flutter/material.dart';
@@ -63,6 +64,9 @@ void main() {
     );
     addTearDown(container.dispose);
     container.read(explorationProvider.notifier).markCompleted(0xF0);
+    // Test the wired action paths, not the read-aloud gate. (The gate has
+    // its own dedicated tests / manual QA; the slice walks first-tap-acts.)
+    container.read(readAloudGateEnabledProvider.notifier).set(false);
 
     await tester.pumpWidget(
       UncontrolledProviderScope(

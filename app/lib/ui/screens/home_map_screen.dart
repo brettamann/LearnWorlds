@@ -13,8 +13,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../data/asset_paths.dart';
-import '../../providers/save_provider.dart';
-import '../../providers/tts_settings_provider.dart';
 import '../widgets/map_screen.dart';
 
 class HomeMapScreen extends ConsumerWidget {
@@ -22,7 +20,6 @@ class HomeMapScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ttsOn = ref.watch(ttsEnabledProvider);
     return MapScreen(
       imageAsset: AssetPaths.homeScreenMap,
       // PNG is 860x699.
@@ -31,14 +28,9 @@ class HomeMapScreen extends ConsumerWidget {
         title: const Text('Mystical Island'),
         actions: [
           IconButton(
-            tooltip: ttsOn
-                ? 'Narration voice on (tap to silence)'
-                : 'Narration voice off (tap to enable)',
-            icon: Icon(ttsOn ? Icons.volume_up : Icons.volume_off),
-            onPressed: () {
-              ref.read(ttsEnabledProvider.notifier).toggle();
-              ref.read(saveCoordinatorProvider).persist();
-            },
+            tooltip: 'Settings',
+            icon: const Icon(Icons.settings),
+            onPressed: () => context.go('/settings'),
           ),
         ],
       ),

@@ -11,6 +11,8 @@
 
 import 'package:flutter/material.dart';
 
+import 'read_aloud_gate.dart';
+
 class MapRegion {
   const MapRegion({
     required this.id,
@@ -127,28 +129,35 @@ class _RegionHit extends StatelessWidget {
             width: 2,
           )
         : null;
+    final visual = MouseRegion(
+      cursor: region.enabled
+          ? SystemMouseCursors.click
+          : SystemMouseCursors.basic,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: region.enabled ? region.onTap : null,
+        child: Container(
+          decoration: BoxDecoration(
+            border: outline,
+            borderRadius: BorderRadius.circular(12),
+            color: region.enabled
+                ? Colors.transparent
+                : Colors.black.withValues(alpha: 0.18),
+          ),
+          child: const SizedBox.expand(),
+        ),
+      ),
+    );
     return Semantics(
       button: region.enabled,
       label: region.label,
-      child: MouseRegion(
-        cursor: region.enabled
-            ? SystemMouseCursors.click
-            : SystemMouseCursors.basic,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: region.enabled ? region.onTap : null,
-          child: Container(
-            decoration: BoxDecoration(
-              border: outline,
-              borderRadius: BorderRadius.circular(12),
-              color: region.enabled
-                  ? Colors.transparent
-                  : Colors.black.withValues(alpha: 0.18),
-            ),
-            child: const SizedBox.expand(),
-          ),
-        ),
-      ),
+      child: region.enabled
+          ? ReadAloudGate(
+              label: region.label,
+              onTap: region.onTap,
+              child: visual,
+            )
+          : visual,
     );
   }
 }

@@ -56,8 +56,12 @@ class KeeperIntroOverlay extends StatelessWidget {
                   const SizedBox(height: 24),
                   // Standard advance affordance — same wiggling amber arrow
                   // as every other "you're done, go next" moment in the game.
+                  // Pinned to the right of the speech-bubble column so the
+                  // arrow stays on the right edge of the screen across all
+                  // surfaces (matches the practice rounds + lesson Continue).
                   // See specs/shared/ui-affordances.md.
-                  Center(
+                  Align(
+                    alignment: Alignment.centerRight,
                     child: NextArrowButton(
                       key: startButtonKey,
                       onPressed: onStart,
