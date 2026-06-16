@@ -35,7 +35,9 @@ import 'flat_or_solid_round.dart';
 import 'glitter_burst.dart';
 import 'keeper_intro_overlay.dart';
 import 'progress_bar_to_reward.dart';
+import 'shape_garden_sort_by_attribute_runner.dart';
 import 'shape_intro_layer.dart' show kShapeDisplayName, kShapeDisplayPlural;
+import 'two_attribute_hunt_runner.dart';
 
 enum _Phase { intro, finding, celebrating, interstitial }
 
@@ -115,11 +117,15 @@ const List<_GardenRound> _kRoundSequence = <_GardenRound>[
 /// line so the kid hears the total coins they earned.
 const int _coinsPerRound = 5;
 
-/// Sub-modes the Shape Garden activity supports. `find-shape` ships first
-/// (K.G.2 invariance practice); `flat-or-solid` ships next (K.G.3 sort by
-/// dimensionality). Any unknown sub-mode falls back to find-shape.
+/// Sub-modes the Shape Garden activity supports.
+/// `find-shape` (K.G.2), `flat-or-solid` (K.G.3), `sort-by-attribute`
+/// (K.G.4), and `two-attribute-hunt` (K.G.4 challenge). Any unknown
+/// sub-mode falls back to find-shape so a registry-only sub-mode that
+/// hasn't shipped a runner yet stays playable.
 const String kShapeGardenSubModeFindShape = 'find-shape';
 const String kShapeGardenSubModeFlatOrSolid = 'flat-or-solid';
+const String kShapeGardenSubModeSortByAttribute = 'sort-by-attribute';
+const String kShapeGardenSubModeTwoAttributeHunt = 'two-attribute-hunt';
 
 /// Top-level Shape Garden runner. Dispatches on `subMode` so the activity
 /// screen doesn't need to know which K.G.* concept is being practiced —
@@ -141,6 +147,18 @@ class ShapeGardenRunner extends StatelessWidget {
   Widget build(BuildContext context) {
     if (subMode == kShapeGardenSubModeFlatOrSolid) {
       return ShapeGardenSortingRunner(
+        onSequenceComplete: onSequenceComplete,
+        skipIntro: skipIntro,
+      );
+    }
+    if (subMode == kShapeGardenSubModeSortByAttribute) {
+      return ShapeGardenSortByAttributeRunner(
+        onSequenceComplete: onSequenceComplete,
+        skipIntro: skipIntro,
+      );
+    }
+    if (subMode == kShapeGardenSubModeTwoAttributeHunt) {
+      return TwoAttributeHuntRunner(
         onSequenceComplete: onSequenceComplete,
         skipIntro: skipIntro,
       );

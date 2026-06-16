@@ -18,10 +18,12 @@ import '../../providers/progress_provider.dart';
 import '../../providers/reward_progress_provider.dart';
 import '../../providers/save_provider.dart';
 import '../../providers/sub_mode_progress_provider.dart';
+import '../widgets/build_a_habitat_runner.dart';
 import '../widgets/caption_overlay.dart';
 import '../widgets/counting_parade_runner.dart';
 import '../widgets/next_arrow_button.dart';
 import '../widgets/shape_garden_runner.dart';
+import '../widgets/wheres_buddy_runner.dart';
 
 class ActivityScreen extends ConsumerWidget {
   const ActivityScreen({
@@ -79,6 +81,34 @@ class ActivityScreen extends ConsumerWidget {
                 final subMode =
                     (launchExtra?['subMode'] as String?) ?? 'find-shape';
                 return ShapeGardenRunner(
+                  skipIntro: launchExtra?['fromLesson'] != null,
+                  subMode: subMode,
+                  onSequenceComplete: () => _onSuccess(context, ref),
+                );
+              }
+              if (activityId == 'wheres-buddy') {
+                // K.G.1 has two playable sub-modes: place-mode (drag the
+                // Buddy to a relative position) and find-mode (tap where
+                // the Buddy is hiding). Default to the registry's
+                // declared default (`find-mode`) on a direct tap.
+                final subMode = (launchExtra?['subMode'] as String?) ??
+                    kWheresBuddySubModeFindMode;
+                return WheresBuddyRunner(
+                  skipIntro: launchExtra?['fromLesson'] != null,
+                  subMode: subMode,
+                  onSequenceComplete: () => _onSuccess(context, ref),
+                );
+              }
+              if (activityId == 'build-a-habitat') {
+                // K.G.5 (sticks + clay) runs as Phase 1 inside the
+                // round; K.G.6 (compose) runs as Phase 2 of the same
+                // round. The sub-mode picks how rich the build is —
+                // simple-shelter (triangle + 1 piece), creature-home
+                // (all three blueprints), grand-habitat (pentagon
+                // challenge), or frame-only (skip Phase 2).
+                final subMode = (launchExtra?['subMode'] as String?) ??
+                    kBuildAHabitatSubModeSimpleShelter;
+                return BuildAHabitatRunner(
                   skipIntro: launchExtra?['fromLesson'] != null,
                   subMode: subMode,
                   onSequenceComplete: () => _onSuccess(context, ref),
@@ -252,6 +282,10 @@ class ActivityScreen extends ConsumerWidget {
         return 'count-the-parade';
       case 'shape-garden':
         return 'find-shape';
+      case 'wheres-buddy':
+        return 'find-mode';
+      case 'build-a-habitat':
+        return 'simple-shelter';
       default:
         return 'default';
     }

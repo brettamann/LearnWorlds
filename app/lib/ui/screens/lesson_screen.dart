@@ -32,6 +32,7 @@ import '../widgets/caption_overlay.dart';
 import '../widgets/glitter_burst.dart';
 import '../widgets/keeper_intro_overlay.dart';
 import '../widgets/kg3_flat_or_solid_lesson_layer.dart';
+import '../widgets/kg4_sort_by_attribute_lesson_layer.dart';
 import '../widgets/lesson_hand_pointer.dart';
 import '../widgets/next_arrow_button.dart';
 import '../widgets/shape_find_demo.dart';
@@ -83,6 +84,7 @@ enum _LessonPhase {
   shapeFindRound,
   shapesDone,
   flatOrSolidLesson,
+  sortByAttributeLesson,
   iShow,
 }
 
@@ -121,6 +123,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
         return 'Some shapes are flat — like drawings on a page. Others are '
             'solid — you can hold them in your hand. Help me sort them into '
             'the right baskets!';
+      case 'K.G.4':
+        return "Shapes can group by how many sides they have. Let's put "
+            'the three-sided ones together, the four-sided ones together, '
+            'and the ones with five or more sides together.';
       case 'K.CC.1':
         return "Today the parade is HUGE. Don't worry — we can count by "
             'tens! Watch how a big group of ten becomes one easy count.';
@@ -139,6 +145,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
       case 'K.G.2':
         return "Let's look!";
       case 'K.G.3':
+        return "Let's sort!";
+      case 'K.G.4':
         return "Let's sort!";
       case 'K.CC.1':
       case 'K.CC.2':
@@ -184,6 +192,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
       setState(() => _phase = _LessonPhase.flatOrSolidLesson);
       return;
     }
+    if (runtime.conceptId == 'K.G.4') {
+      setState(() => _phase = _LessonPhase.sortByAttributeLesson);
+      return;
+    }
     if (_isShapeLesson(runtime)) {
       setState(() {
         _currentShapeIdx = 0;
@@ -196,6 +208,11 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   }
 
   void _onFlatOrSolidLessonComplete() {
+    if (!mounted) return;
+    _goToYouDo();
+  }
+
+  void _onSortByAttributeLessonComplete() {
     if (!mounted) return;
     _goToYouDo();
   }
@@ -386,6 +403,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   String _backgroundAsset(LessonRuntime? runtime) {
     switch (runtime?.conceptId) {
       case 'K.G.2':
+      case 'K.G.3':
+      case 'K.G.4':
         return AssetPaths.shapeGardenBackground;
       default:
         return AssetPaths.countingParadeMeadow;
@@ -475,6 +494,13 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
                 return Kg3FlatOrSolidLessonLayer(
                   key: const ValueKey('kg3-flat-or-solid-layer'),
                   onComplete: _onFlatOrSolidLessonComplete,
+                );
+              }
+
+              if (_phase == _LessonPhase.sortByAttributeLesson) {
+                return Kg4SortByAttributeLessonLayer(
+                  key: const ValueKey('kg4-sort-by-attribute-layer'),
+                  onComplete: _onSortByAttributeLessonComplete,
                 );
               }
 

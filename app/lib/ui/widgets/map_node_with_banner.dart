@@ -20,6 +20,12 @@ import 'read_aloud_gate.dart';
 /// Which side of the node the banner sits on.
 enum BannerSide { right, left, above, below }
 
+/// Which part of the node/banner pair this widget should draw. The
+/// Sanctuary map composites in two passes (nodes below the fog,
+/// banners above it), so it asks for `node` and `banner` separately
+/// rather than the default `both` single-widget render.
+enum MapNodeRenderMode { both, nodeOnly, bannerOnly }
+
 /// Original-pixel dimensions of `banner_parchment.png`. The text-area inside
 /// is at (35, 28) and 143x63; outside that the decorative border has 35 left
 /// / 24 right / 28 top / 25 bottom. We keep those margins proportional when
@@ -43,6 +49,7 @@ class MapNodeWithBanner extends StatelessWidget {
     this.bannerSide = BannerSide.right,
     this.numberInside,
     this.isCutscene = false,
+    this.renderMode = MapNodeRenderMode.both,
   });
 
   /// Position of the node's centre in the parent stack's pixel coordinates.
@@ -68,6 +75,13 @@ class MapNodeWithBanner extends StatelessWidget {
   /// recognise the glyph from video players and learn that the node is
   /// "watch me, no math here."
   final bool isCutscene;
+
+  /// Which part of the node/banner pair to draw. The Sanctuary map
+  /// uses `nodeOnly` for a pass below the fog layer and `bannerOnly`
+  /// for a pass above it, so the banner text floats over the clouds
+  /// while the node disc tucks behind them. Default (`both`) is the
+  /// single-widget render used by every other caller.
+  final MapNodeRenderMode renderMode;
 
   // Banner display height scales with node diameter so the pair feels like
   // one composed sprite at any zoom level.
@@ -232,37 +246,55 @@ class MapNodeWithBanner extends StatelessWidget {
     //     play glyph), so silencing it costs the kid nothing — the
     //     banner directly next to it still narrates if they want to
     //     hear the name.
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        // Banner first so the node visually overlaps the banner edge slightly.
-        Positioned(
-          left: bannerTL.dx,
-          top: bannerTL.dy,
-          width: bannerW,
-          height: bannerH,
-          child: ReadAloudGate(
-            label: label,
-            onTap: onTap,
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: onTap,
-              child: bannerVisual,
-            ),
-          ),
+    //
+    // `renderMode` lets the Sanctuary map composite this widget in two
+    // passes — node below the fog, banner above it — by asking for one
+    // half at a time. The default `both` keeps the original behaviour
+    // for any caller that wants the pair drawn in a single layer.
+    final bannerPositioned = Positioned(
+      left: bannerTL.dx,
+      top: bannerTL.dy,
+      width: bannerW,
+      height: bannerH,
+      child: ReadAloudGate(
+        label: label,
+        onTap: onTap,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: onTap,
+          child: bannerVisual,
         ),
-        Positioned(
-          left: center.dx - nodeDiameter / 2,
-          top: center.dy - nodeDiameter / 2,
-          width: nodeDiameter,
-          height: nodeDiameter,
-          child: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: onTap,
-            child: nodeVisual,
-          ),
-        ),
-      ],
+      ),
     );
+    final nodePositioned = Positioned(
+      left: center.dx - nodeDiameter / 2,
+      top: center.dy - nodeDiameter / 2,
+      width: nodeDiameter,
+      height: nodeDiameter,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: nodeVisual,
+      ),
+    );
+    switch (renderMode) {
+      case MapNodeRenderMode.nodeOnly:
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [nodePositioned],
+        );
+      case MapNodeRenderMode.bannerOnly:
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [bannerPositioned],
+        );
+      case MapNodeRenderMode.both:
+        return Stack(
+          clipBehavior: Clip.none,
+          // Banner first so the node visually overlaps the banner
+          // edge slightly when drawn together.
+          children: [bannerPositioned, nodePositioned],
+        );
+    }
   }
 }

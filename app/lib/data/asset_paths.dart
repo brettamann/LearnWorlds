@@ -124,11 +124,37 @@ class AssetPaths {
 
   /// Bins used by the K.G.3 "Flat or Solid" sub-mode — left bin (`bin_2d`)
   /// holds the painted-flat shapes, right bin (`bin_3d`) holds the solid
-  /// creature sprites.
+  /// creature sprites. Reused by the K.G.4 sort-by-attribute sub-mode
+  /// with an attribute-icon overlay rendered on top in code.
   static const String shapeGardenBin2d =
       'assets/activities/shape-garden/bin_2d.png';
   static const String shapeGardenBin3d =
       'assets/activities/shape-garden/bin_3d.png';
+
+  // ------- Build-a-Habitat (K.G.5 + K.G.6) -------
+  // Background is shared with Shape Garden — same Sanctuary clearing
+  // aesthetic, no separate illustration needed yet.
+  static const String buildAHabitatBackground = shapeGardenBackground;
+
+  /// Stick sprite — horizontal wooden stick used at the edges of a
+  /// K.G.5 frame. Rotated in code to line up with each edge.
+  static const String buildAHabitatStick =
+      'assets/activities/shape-garden/shape_2d_stick.png';
+
+  /// Clay ball — placed at each corner of a K.G.5 frame.
+  static const String buildAHabitatClayBall =
+      'assets/activities/shape-garden/shape_3d_sphere-clay.png';
+
+  // ------- Where's Buddy? (K.G.1) -------
+  // Background reuses the Shape Garden illustration until a dedicated
+  // Sanctuary-clearing scene ships.
+  static const String wheresBuddyBackground = shapeGardenBackground;
+
+  // ------- General reward icons -------
+  static const String rewardFeather =
+      'assets/rewards/general/reward-feather.png';
+  static const String rewardGem =
+      'assets/rewards/general/reward-gem.png';
 
   // Reward track sprites — see specs/shared/reward-tracks.md.
   // K mystery egg, 8 progressive stages + 1 "hatched" complete state.

@@ -346,7 +346,9 @@ class _MapStack extends StatelessWidget {
                 ),
               ),
             ),
-            // Nodes + banners — only those that are visible.
+            // Pass 1 — node discs *below* the fog. Clouds drift over
+            // un-revealed nodes naturally; revealed discs still get a
+            // halo punched by the fog painter so they stay visible.
             for (final code in kSanctuarySequence)
               if (_isVisible(code) && centres[code] != null)
                 _buildNode(
@@ -354,9 +356,9 @@ class _MapStack extends StatelessWidget {
                   code: code,
                   centre: centres[code]!,
                   nodeDiameter: nodeDiameter,
+                  renderMode: MapNodeRenderMode.nodeOnly,
                 ),
-            // Fog layer on top of nodes/path; punches holes around revealed
-            // nodes + segments.
+            // Fog layer between the node discs and the banner labels.
             MapFogLayer(
               size: Size(w, h),
               revealedNodes: revealedNodeCentres,
@@ -365,6 +367,19 @@ class _MapStack extends StatelessWidget {
               cloudWidth: shortest * 0.18,
               cloudHeight: shortest * 0.18 * (559 / 830),
             ),
+            // Pass 2 — parchment banners *above* the fog so a cloud
+            // can never park on top of a label and hide the lesson
+            // name. Tap targets remain consistent because the banner
+            // half is the tappable one in both passes.
+            for (final code in kSanctuarySequence)
+              if (_isVisible(code) && centres[code] != null)
+                _buildNode(
+                  context,
+                  code: code,
+                  centre: centres[code]!,
+                  nodeDiameter: nodeDiameter,
+                  renderMode: MapNodeRenderMode.bannerOnly,
+                ),
             // Reward overlay sits above everything else so the advancement
             // animation can take over the whole map area when it plays.
             // See specs/shared/reward-tracks.md.
@@ -382,11 +397,20 @@ class _MapStack extends StatelessWidget {
     required int code,
     required Offset centre,
     required double nodeDiameter,
+    MapNodeRenderMode renderMode = MapNodeRenderMode.both,
   }) {
     final sequenceIdx = kSanctuarySequence.indexOf(code);
+    // The banner pass keeps the canonical `node-<id>` key because the
+    // banner is the primary tap target (wrapped in ReadAloudGate, used
+    // by tests + external integration). The node-disc pass gets a
+    // suffix so Flutter doesn't reparent the same widget across the
+    // fog layer.
+    final isBannerPass = renderMode != MapNodeRenderMode.nodeOnly;
     if (code == kSanctuarySequence.first) {
       return MapNodeWithBanner(
-        key: const ValueKey('node-cutscene'),
+        key: ValueKey(
+          isBannerPass ? 'node-cutscene' : 'node-cutscene-disc',
+        ),
         center: centre,
         nodeDiameter: nodeDiameter,
         label: 'Welcome',
@@ -396,6 +420,7 @@ class _MapStack extends StatelessWidget {
         // the same flag.
         isCutscene: true,
         bannerSide: _bannerSideByCode[code] ?? BannerSide.below,
+        renderMode: renderMode,
         onTap: onCutsceneTap,
       );
     }
@@ -406,12 +431,15 @@ class _MapStack extends StatelessWidget {
     final hasContent =
         activity != null && conceptRegistry.valueOrNull != null;
     return MapNodeWithBanner(
-      key: ValueKey('node-$activityId'),
+      key: ValueKey(
+        isBannerPass ? 'node-$activityId' : 'node-$activityId-disc',
+      ),
       center: centre,
       nodeDiameter: nodeDiameter,
       label: label,
       numberInside: sequenceIdx, // F1 → idx 1, F2 → idx 2, ...
       bannerSide: _bannerSideByCode[code] ?? BannerSide.right,
+      renderMode: renderMode,
       onTap: hasContent ? () => onLessonTap(activity) : () {},
     );
   }

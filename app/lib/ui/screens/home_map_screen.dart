@@ -39,8 +39,10 @@ class HomeMapScreen extends ConsumerWidget {
           id: 'home',
           label: 'Home',
           rect: const Rect.fromLTWH(0.18, 0.38, 0.22, 0.30),
-          enabled: false,
-          onTap: () {},
+          // Home hosts the Buddy character creator — picked here as the
+          // first usable inhabitant of the Hub before furniture / avatar
+          // work lands.
+          onTap: () => context.go('/home/character-creator'),
         ),
         MapRegion(
           id: 'foundry',

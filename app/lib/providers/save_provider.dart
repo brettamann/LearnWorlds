@@ -11,6 +11,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../engines/mastery/concept_state.dart';
+import '../models/buddy_appearance.dart';
+import 'buddy_appearance_provider.dart';
 import 'exploration_provider.dart';
 import 'progress_provider.dart';
 import 'read_aloud_settings_provider.dart';
@@ -30,6 +32,7 @@ class _SaveBlob {
     required this.readAloudGateEnabled,
     required this.rewards,
     required this.subModes,
+    required this.buddy,
   });
 
   factory _SaveBlob.fromJson(Map<String, dynamic> json) {
@@ -51,6 +54,10 @@ class _SaveBlob {
           .map((e) => e as String)
           .toSet();
     });
+    final buddyJson = json['buddy'] as Map<String, dynamic>?;
+    final buddy = buddyJson != null
+        ? BuddyAppearance.fromJson(buddyJson)
+        : BuddyAppearance.defaults();
     return _SaveBlob(
       progress: progress,
       coins: (json['coins'] as num?)?.toInt() ?? 0,
@@ -61,6 +68,7 @@ class _SaveBlob {
       readAloudGateEnabled: json['readAloudGateEnabled'] as bool? ?? true,
       rewards: rewards,
       subModes: subModes,
+      buddy: buddy,
     );
   }
 
@@ -71,6 +79,7 @@ class _SaveBlob {
   final bool readAloudGateEnabled;
   final Map<String, RewardTrackState> rewards;
   final Map<String, Set<String>> subModes;
+  final BuddyAppearance buddy;
 
   Map<String, dynamic> toJson() {
     final progressJson = <String, dynamic>{};
@@ -93,6 +102,7 @@ class _SaveBlob {
       'readAloudGateEnabled': readAloudGateEnabled,
       'rewards': rewardsJson,
       'subModes': subModesJson,
+      'buddy': buddy.toJson(),
     };
   }
 }
@@ -170,6 +180,7 @@ class SaveCoordinator {
           .set(blob.readAloudGateEnabled);
       _ref.read(rewardProgressProvider.notifier).replaceAll(blob.rewards);
       _ref.read(subModeProgressProvider.notifier).replaceAll(blob.subModes);
+      _ref.read(buddyAppearanceProvider.notifier).hydrate(blob.buddy);
     } catch (_) {
       // Corrupt save: start fresh rather than crash the kid's session.
     }
@@ -191,6 +202,7 @@ class SaveCoordinator {
       final readAloudGateEnabled = _ref.read(readAloudGateEnabledProvider);
       final rewards = _ref.read(rewardProgressProvider);
       final subModes = _ref.read(subModeProgressProvider);
+      final buddy = _ref.read(buddyAppearanceProvider);
       final blob = _SaveBlob(
         progress: progress,
         coins: coins,
@@ -199,6 +211,7 @@ class SaveCoordinator {
         readAloudGateEnabled: readAloudGateEnabled,
         rewards: rewards,
         subModes: subModes,
+        buddy: buddy,
       );
       await prefs.setString(_saveKey, jsonEncode(blob.toJson()));
       completer.complete();

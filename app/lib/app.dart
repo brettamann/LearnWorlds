@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'ui/screens/activity_screen.dart';
+import 'ui/screens/character_creator_screen.dart';
 import 'ui/screens/home_map_screen.dart';
 import 'ui/screens/lesson_screen.dart';
 import 'ui/screens/reward_gift_screen.dart';
@@ -68,6 +69,10 @@ final _appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/home/character-creator',
+        builder: (context, state) => const CharacterCreatorScreen(),
       ),
       GoRoute(
         path: '/reward/k-mystery-egg-gift',

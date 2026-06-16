@@ -94,6 +94,15 @@ flutter:
     - assets/shared/ui/
     - assets/maps/
     - assets/rewards/k-mystery-egg/
+    - assets/rewards/general/
+    # Buddy parts — composed at render time by BuddyWidget. Each folder
+    # holds one category of swatches the character creator picks from.
+    - assets/buddy/body/
+    - assets/buddy/eyes/
+    - assets/buddy/mouths/
+    - assets/buddy/arms/
+    - assets/buddy/legs/
+    - assets/buddy/hats/
     # Art + audio assets will be added as Phase 0 style lock completes:
     # - ../assets/
 

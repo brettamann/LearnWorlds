@@ -45,6 +45,11 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
       symbolAsset:
           AssetPaths.shapeGarden2dSprite('hexagon', 'honeycomb'),
     ),
+    'two-attribute-hunt': SubModePickerOption(
+      label: 'Two-attribute hunt',
+      symbolAsset:
+          AssetPaths.shapeGarden2dSprite('pentagon', 'starfruit'),
+    ),
   },
   'counting-parade': <String, SubModePickerOption>{
     'count-the-parade': const SubModePickerOption(
@@ -70,6 +75,40 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
     'tens-parade': const SubModePickerOption(
       label: 'Count to 100',
       symbolAsset: AssetPaths.countingParadeBabyDragon,
+    ),
+  },
+  'wheres-buddy': <String, SubModePickerOption>{
+    // K.G.1 — find the hiding Buddy / place the Buddy at a relative
+    // position. Icons reuse the parade-Toucan + parade-Phoenix sprites
+    // as a stop-gap until a dedicated Buddy silhouette ships.
+    'find-mode': const SubModePickerOption(
+      label: 'Hide and seek',
+      symbolAsset: AssetPaths.countingParadeBabyToucan,
+    ),
+    'place-mode': const SubModePickerOption(
+      label: 'Put Buddy there',
+      symbolAsset: AssetPaths.countingParadeBabyPhoenix,
+    ),
+    'relational-mode': const SubModePickerOption(
+      label: 'Two friends',
+      symbolAsset: AssetPaths.countingParadeBabyUnicorn,
+    ),
+  },
+  'build-a-habitat': <String, SubModePickerOption>{
+    // K.G.5 + K.G.6 — build a frame with clay and sticks, then raise
+    // the habitat with 3D pieces. Icons reuse the existing 3D outline
+    // sprites to telegraph "this is about making shapes."
+    'simple-shelter': SubModePickerOption(
+      label: 'Simple shelter',
+      symbolAsset: AssetPaths.shapeGarden3dOutline('cube'),
+    ),
+    'creature-home': SubModePickerOption(
+      label: 'Creature home',
+      symbolAsset: AssetPaths.shapeGarden3dOutline('cylinder'),
+    ),
+    'grand-habitat': SubModePickerOption(
+      label: 'Grand habitat',
+      symbolAsset: AssetPaths.shapeGarden3dOutline('sphere'),
     ),
   },
 };
