@@ -2,18 +2,24 @@
 // one kept, and the bugs the hand-copied lifecycles had.
 
 import 'package:critmath/data/count_forward_from_n_rounds.dart';
+import 'package:critmath/data/creature_card_catalog.dart';
 import 'package:critmath/data/parade_species.dart';
+import 'package:critmath/data/tens_parade_words.dart';
 import 'package:critmath/engines/narration/narration_cue_log.dart';
 import 'package:critmath/engines/narration/narration_player.dart';
 import 'package:critmath/platform/narration_clip_key.dart';
+import 'package:critmath/providers/collection_provider.dart';
 import 'package:critmath/providers/session_provider.dart';
 import 'package:critmath/providers/wallet_provider.dart';
+import 'package:critmath/ui/widgets/caption_overlay.dart';
 import 'package:critmath/ui/widgets/count_forward_from_n_runner.dart';
 import 'package:critmath/ui/widgets/count_on_by_ones_runner.dart';
 import 'package:critmath/ui/widgets/count_out_n_runner.dart';
+import 'package:critmath/ui/widgets/counting_challenge_layer.dart';
 import 'package:critmath/ui/widgets/counting_parade_runner.dart';
 import 'package:critmath/ui/widgets/keeper_aside.dart';
 import 'package:critmath/ui/widgets/keeper_intro_overlay.dart';
+import 'package:critmath/ui/widgets/tens_parade_runner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -179,6 +185,118 @@ void main() {
       final said = c.read(narrationCueLogProvider).keys;
       expect(said, contains(narrationTextNormalize(kParadeRewardLine)));
       expect(said.where(RegExp(r'Here are \d+ coins').hasMatch), isEmpty);
+      await unmountAndDrain(tester);
+    });
+  });
+
+  group('tens parade', () {
+    /// Taps every creature on screen until the challenge has its hundred.
+    Future<void> countToAHundred(WidgetTester tester) async {
+      for (var i = 0; i < 600; i++) {
+        if (find
+            .byKey(const ValueKey('tens-parade-repeat'))
+            .evaluate()
+            .isNotEmpty) {
+          return;
+        }
+        final creatures = find.byWidgetPredicate((w) {
+          final k = w.key;
+          return k is ValueKey<String> &&
+              k.value.startsWith('challenge-creature-');
+        });
+        for (final e in creatures.evaluate().toList()) {
+          final box = e.renderObject;
+          if (box is! RenderBox || !box.attached || !box.hasSize) continue;
+          final at = box.localToGlobal(box.size.center(Offset.zero));
+          if (at.dx < 0 || at.dx > kTabletSize.width) continue;
+          await tester.tapAt(at);
+        }
+        await tester.pump(const Duration(milliseconds: 400));
+      }
+      fail('the challenge never reached its finale');
+    }
+
+    testWidgets('pays its bonus and card once per visit, not again on Again',
+        (tester) async {
+      final c = await _pump(
+        tester,
+        TensParadeRunner(skipIntro: true, onSequenceComplete: () {}),
+      );
+      await countToAHundred(tester);
+      expect(c.read(walletProvider), kTensParadeRewardCoins);
+      expect(
+        c.read(cardCollectionProvider),
+        contains(kTensParadeChallengeCardId),
+      );
+      // The reward line waits for "One hundred." to finish.
+      await tester.pump(const Duration(seconds: 3));
+      expect(
+        c.read(narrationCueLogProvider).keys,
+        contains(
+          narrationTextNormalize(tensParadeRewardLine(earnedCard: true)),
+        ),
+      );
+
+      await _tapKey(tester, 'tens-parade-repeat');
+      await countToAHundred(tester);
+      // The reward line waits for "One hundred." to finish.
+      await tester.pump(const Duration(seconds: 3));
+      expect(
+        c.read(walletProvider),
+        kTensParadeRewardCoins,
+        reason: 'a second run in the same visit pays nothing more',
+      );
+      expect(
+        c.read(narrationCueLogProvider).keys,
+        contains(narrationTextNormalize(kTensParadeRepeatLine)),
+        reason: 'and so promises nothing',
+      );
+      await unmountAndDrain(tester);
+    });
+
+    testWidgets('the challenge stays clear of the caption band',
+        (tester) async {
+      // It used to hand-roll its frame and fill to the bottom of the window,
+      // so creatures drifted through the strip under the subtitles.
+      await _pump(
+        tester,
+        Stack(
+          children: [
+            Positioned.fill(
+              child: TensParadeRunner(
+                skipIntro: true,
+                onSequenceComplete: () {},
+              ),
+            ),
+            const CaptionOverlay(),
+          ],
+        ),
+      );
+      final layer = tester.getRect(find.byType(CountingChallengeLayer));
+      expect(
+        layer.bottom,
+        lessThanOrEqualTo(kTabletSize.height - kCaptionBandClearance),
+      );
+      await unmountAndDrain(tester);
+    });
+
+    testWidgets('the demo creature drifts every frame', (tester) async {
+      // Its position used to be read outside the AnimatedBuilder, so it sat
+      // off-stage until something else rebuilt the layout.
+      await _pump(
+        tester,
+        TensParadeRunner(onSequenceComplete: () {}),
+      );
+      final sprite = find.byWidgetPredicate(
+        (w) =>
+            w is Image &&
+            w.image is AssetImage &&
+            (w.image as AssetImage).assetName == kParadeFawn.spriteAsset,
+      );
+      await tester.pump(const Duration(milliseconds: 500));
+      final early = tester.getTopLeft(sprite);
+      await tester.pump(const Duration(milliseconds: 1000));
+      expect(tester.getTopLeft(sprite).dx, greaterThan(early.dx));
       await unmountAndDrain(tester);
     });
   });

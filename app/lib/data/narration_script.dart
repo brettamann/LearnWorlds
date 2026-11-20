@@ -491,7 +491,7 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
             'the synth voice.',
         lines: <String>[
           for (var target = 10; target <= 100; target += 10)
-            'Tap the creatures as they go by — count all the way to $target!',
+            countingChallengePrompt(target),
         ],
       ),
 
@@ -545,12 +545,17 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
         title: 'Tens Parade — the hundredth tap',
         note: 'The payoff for a hundred taps, and the loudest single moment '
             'in the game. Two wordings: the run that earns the Cloud Unicorn, '
-            'and every replay after it. Built by calling the same function '
-            'the runner calls, so a reworded line cannot leave a stale clip '
-            'behind.',
+            'and a later visit, when she has it and is paid coins instead. '
+            'Then the line for an "Again!" run in the same visit, which pays '
+            'nothing, and the demo with its Start-arrow nudge. Built by '
+            'calling the same functions the runner calls, so a reworded line '
+            'cannot leave a stale clip behind.',
         lines: <String>[
           for (final earned in <bool>[true, false])
             tensParadeRewardLine(earnedCard: earned),
+          kTensParadeRepeatLine,
+          kTensParadeDemoLine,
+          kTensParadeDemoStartHint,
         ],
       ),
 

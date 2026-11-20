@@ -12,6 +12,7 @@
 // The coin count is spelled from the same const the wallet is paid from, so
 // the number she hears cannot drift from the number she is given.
 
+import 'count_on_by_ones_rounds.dart';
 import 'number_words.dart';
 
 /// Coins awarded for one successful run to a hundred.
@@ -20,11 +21,15 @@ import 'number_words.dart';
 /// dwarfing the long-running rewards from the rest of the curriculum.
 const int kTensParadeRewardCoins = 50;
 
+/// How many taps the challenge runs to.
+const int kTensParadeTarget = 100;
+
 /// Spoken by the keeper when the hundredth creature is tapped.
 ///
 /// Two wordings, because the Cloud Unicorn is granted exactly once and she can
-/// replay — the reward overlay offers "Again!" as its primary button. A repeat
-/// run must not promise a card she already owns.
+/// come back to the challenge on a later visit. A run that finds the card
+/// already hers must not promise it again. (An "Again!" run in the same visit
+/// pays nothing, and says [kTensParadeRepeatLine] instead.)
 ///
 /// The card wording deliberately says nothing about coins even though coins are
 /// still paid. It is one idea per line for a five-year-old, the card is the
@@ -43,3 +48,19 @@ String tensParadeRewardLine({required bool earnedCard}) {
   return 'One hundred! You counted every single one. '
       "Here are $coins bonus coins — you've earned them.";
 }
+
+/// The last beat of an "Again!" run in the same visit. The bonus and the card
+/// are paid once per visit, so a repeat run must not promise either; this is
+/// Count On By Ones' own last line, which says exactly what she just did.
+const String kTensParadeRepeatLine = kCountOnByOnesFinal;
+
+/// Spoken once as the demo creature drifts across, before the challenge.
+const String kTensParadeDemoLine =
+    'Count the animals with me out loud as they do their parade!';
+
+/// What the demo's Start arrow says when she leaves it waiting.
+const String kTensParadeDemoStartHint = 'Tap the arrow to start the challenge!';
+
+/// The challenge's opening call, and what the "?" button replays.
+String countingChallengePrompt(int target) =>
+    'Tap the creatures as they go by — count all the way to $target!';

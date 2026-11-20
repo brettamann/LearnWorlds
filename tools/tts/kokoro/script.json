@@ -5198,8 +5198,8 @@
     {
       "id": "tens-parade-reward",
       "title": "Tens Parade — the hundredth tap",
-      "note": "The payoff for a hundred taps, and the loudest single moment in the game. Two wordings: the run that earns the Cloud Unicorn, and every replay after it. Built by calling the same function the runner calls, so a reworded line cannot leave a stale clip behind.",
-      "variants": 2,
+      "note": "The payoff for a hundred taps, and the loudest single moment in the game. Two wordings: the run that earns the Cloud Unicorn, and a later visit, when she has it and is paid coins instead. Then the line for an \"Again!\" run in the same visit, which pays nothing, and the demo with its Start-arrow nudge. Built by calling the same functions the runner calls, so a reworded line cannot leave a stale clip behind.",
+      "variants": 5,
       "complete": true,
       "lines": [
         {
@@ -5209,6 +5209,18 @@
         {
           "text": "One hundred! You counted every single one. Here are fifty bonus coins — you've earned them.",
           "clipKey": "one-hundred-you-counted-every-single-one-here-ar__eff96edb"
+        },
+        {
+          "text": "One hundred! Counting by ones got you all the way there. Amazing work.",
+          "clipKey": "one-hundred-counting-by-ones-got-you-all-the-way__4c65e8c3"
+        },
+        {
+          "text": "Count the animals with me out loud as they do their parade!",
+          "clipKey": "count-the-animals-with-me-out-loud-as-they-do-th__3f39e42b"
+        },
+        {
+          "text": "Tap the arrow to start the challenge!",
+          "clipKey": "tap-the-arrow-to-start-the-challenge__fe0a2cd2"
         }
       ]
     },
@@ -6862,7 +6874,7 @@
       "id": "dart-literals",
       "title": "Lines written directly in Dart",
       "note": "Swept out of lib/ by tool/narration_sources.dart: the sanctuary prologue, const round keeperLines, reward dialog. Interpolated templates are excluded - their variants have to come from the catalog that fills the slot.",
-      "variants": 93,
+      "variants": 91,
       "complete": true,
       "lines": [
         {
@@ -6924,10 +6936,6 @@
         {
           "text": "Clay corner.",
           "clipKey": "clay-corner__a035ce31"
-        },
-        {
-          "text": "Count the animals with me out loud as they do their parade!",
-          "clipKey": "count-the-animals-with-me-out-loud-as-they-do-th__3f39e42b"
         },
         {
           "text": "Every habitat is built! The Sanctuary feels cosy and safe.",
@@ -7124,10 +7132,6 @@
         {
           "text": "Tap the arrow to keep going!",
           "clipKey": "tap-the-arrow-to-keep-going__5aac5613"
-        },
-        {
-          "text": "Tap the arrow to start the challenge!",
-          "clipKey": "tap-the-arrow-to-start-the-challenge__fe0a2cd2"
         },
         {
           "text": "That basket is for shapes with five or more sides. Try another!",

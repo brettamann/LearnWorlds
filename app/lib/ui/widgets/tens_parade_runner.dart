@@ -7,43 +7,37 @@
 // Lives at the end of the sub-mode chain and is marked `isChallenge`
 // in the activity registry — the Sanctuary picker only surfaces it
 // after every regular sub-mode is complete, and it remains optional.
-// Successful completion awards a one-time bonus to the wallet.
+// It is not graded round by round; a successful run pays a one-time bonus
+// and grants the Cloud Unicorn, once per visit, and offers "Again!".
 //
-// Demo phase: a single creature drifts across the meadow while the
-// hand pointer floats with it and taps it once. Replaces what used to
-// be the K.CC.1 by-tens lesson hand-off, which didn't match the
-// challenge's count-by-ones mechanic. ScaffoldEngine skips lessons for
-// `isChallenge` sub-modes (see sanctuary_map_screen `_routeForSubMode`)
-// so this self-contained demo is the only intro the kid sees.
+// Demo: a single creature drifts across the meadow while the hand pointer
+// floats with it and taps it once, as the shell's intro. ScaffoldEngine
+// skips lessons for `isChallenge` sub-modes (see sanctuary_map_screen
+// `_routeForSubMode`), so this self-contained demo is the only intro the kid
+// sees.
 
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../activities/activity_ids.dart';
 import '../../data/asset_paths.dart';
 import '../../data/button_labels.dart';
 import '../../data/creature_card_catalog.dart';
+import '../../data/parade_species.dart';
 import '../../data/sfx_catalog.dart';
 import '../../data/tens_parade_words.dart';
-import '../../engines/feedback/feedback_engine.dart';
-import '../../engines/narration/narration_line.dart';
+import '../../engines/mastery/round_outcome.dart';
 import '../../engines/narration/narration_player.dart';
-import '../../platform/sfx_engine.dart';
 import '../../providers/collection_provider.dart';
 import '../../providers/wallet_provider.dart';
 import '../../ui/common/count_badge.dart';
-import 'buddy_companion.dart';
 import 'counting_challenge_layer.dart';
 import 'keeper_choice_overlay.dart';
 import 'lesson_hand_pointer.dart';
 import 'next_arrow_button.dart';
-import 'progress_bar_to_reward.dart';
-
-enum _Phase { demo, challenge, reward }
-
-/// How many taps the kid needs to land the bonus.
-const int _kTarget = 100;
+import 'sanctuary_round_shell.dart';
 
 // The card this challenge exists to award is `kTensParadeChallengeCardId`.
 // It is granted outright rather than rolled for: the reward catalog gives it
@@ -51,19 +45,6 @@ const int _kTarget = 100;
 // counting-parade }`, and `challenge-counting-parade-chest` guarantees one
 // card from a pool containing only this one. A rare that a hundred taps might
 // still fail to produce would be a worse reward than no card at all.
-
-/// Sprites the flying creatures are picked from. Mirrors the canonical
-/// parade sequence so the kid sees a familiar species mix.
-const List<String> _kChallengeSprites = <String>[
-  AssetPaths.countingParadeFawn,
-  AssetPaths.countingParadeBabyGryphon,
-  AssetPaths.countingParadeBabyDragon,
-  AssetPaths.countingParadeBabyUnicorn,
-  AssetPaths.countingParadeBabyPhoenix,
-  AssetPaths.countingParadeBabyCentaur,
-  AssetPaths.countingParadeBabyToucan,
-  AssetPaths.countingParadeGoldenEgg,
-];
 
 class TensParadeRunner extends ConsumerStatefulWidget {
   const TensParadeRunner({
@@ -80,61 +61,30 @@ class TensParadeRunner extends ConsumerStatefulWidget {
 }
 
 class _TensParadeRunnerState extends ConsumerState<TensParadeRunner> {
-  late _Phase _phase = widget.skipIntro ? _Phase.challenge : _Phase.demo;
-  int _count = 0;
+  /// Bumped by "Again!", which re-keys the shell for a fresh run.
+  int _run = 0;
 
-  /// Read eagerly — `ref.read` is illegal once dispose() has begun.
-  SfxEngine? _sfxForDispose;
+  /// The bonus and the card are paid once per visit, not once per run.
+  bool _paid = false;
 
-  /// True when this run is the one that earned the Cloud Unicorn, so a replay
-  /// does not promise her a card she already has.
-  bool _earnedCard = false;
+  /// Whether this visit's payout granted the card. Latched when it is paid,
+  /// so the line she hears cannot change under her once the card is hers.
+  bool? _earnedCard;
 
-  String get _rewardDialog => tensParadeRewardLine(earnedCard: _earnedCard);
+  /// The run's last line. The first run of a visit names what it pays - the
+  /// card if she does not have it yet, the coins if she does - and a repeat
+  /// run, which pays nothing, promises nothing.
+  String _finalLine(bool owned) => _run == 0
+      ? tensParadeRewardLine(earnedCard: _earnedCard ?? !owned)
+      : kTensParadeRepeatLine;
 
-  @override
-  void initState() {
-    super.initState();
-    _sfxForDispose = ref.read(sfxEngineProvider);
-    // Claimed here, not in the post-frame callback below: the release in
-    // dispose() is unconditional, so the claim has to be too, or a teardown
-    // before the first frame gives back a claim it never took. See
-    // SfxEngine.releaseMusicBed for what that costs.
-    // The challenge gets the higher-energy bed the lesson JSON already
-    // names for it, rather than the calm meadow loop.
-    unawaited(_sfxForDispose!.startMusicBed(kChallengeMusicBed));
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      ref.read(feedbackEngineProvider).resetRound();
-    });
-  }
-
-  @override
-  void dispose() {
-    final sfx = _sfxForDispose;
-    if (sfx != null) sfx.releaseMusicBed();
-    super.dispose();
-  }
-
-  void _onDemoComplete() {
-    if (!mounted) return;
-    setState(() {
-      _count = 0;
-      _phase = _Phase.challenge;
-    });
-    ref.read(feedbackEngineProvider).resetRound();
-  }
-
-  void _onCountChanged(int value) {
-    setState(() => _count = value);
-  }
-
-  void _onTargetReached() {
+  /// Fired by the shell as the finale appears.
+  void _payOnce() {
+    if (_paid) return;
+    _paid = true;
     ref.read(walletProvider.notifier).award(kTensParadeRewardCoins);
-    ref.read(feedbackEngineProvider).celebrate();
-    // Grant before the dialog is built, because the dialog reads _earnedCard.
-    // `grant` returns false on a replay, which is what keeps the wording
-    // honest the second time through.
+    // `grant` returns false when she already owns it, which is what keeps
+    // the wording honest.
     final earned = ref
         .read(cardCollectionProvider.notifier)
         .grant(kTensParadeChallengeCardId);
@@ -143,97 +93,99 @@ class _TensParadeRunnerState extends ConsumerState<TensParadeRunner> {
           .read(pendingCardRevealProvider.notifier)
           .show(kTensParadeChallengeCardId);
     }
-    setState(() {
-      _earnedCard = earned;
-      _phase = _Phase.reward;
-    });
-    ref.narration.say(
-      _rewardDialog,
-      cueId: 'tens-parade:reward',
-      speaker: kKeeperSpeaker,
-      caption: false,
-    );
+    setState(() => _earnedCard = earned);
   }
 
-  void _repeat() {
-    setState(() {
-      _count = 0;
-      _phase = _Phase.challenge;
-    });
-    ref.read(feedbackEngineProvider).resetRound();
-  }
-
-  void _finish() {
-    widget.onSequenceComplete();
-  }
+  void _again() => setState(() => _run += 1);
 
   @override
   Widget build(BuildContext context) {
-    final phaseContent = switch (_phase) {
-      _Phase.demo => _DemoLayer(
-          spriteAsset: AssetPaths.countingParadeFawn,
-          onComplete: _onDemoComplete,
-        ),
-      _Phase.challenge => Stack(
-          children: [
-            Positioned.fill(
-              child: CountingChallengeLayer(
-                target: _kTarget,
-                spriteAssets: _kChallengeSprites,
-                onCountChanged: _onCountChanged,
-                onTargetReached: _onTargetReached,
-              ),
-            ),
-            Positioned(
-              top: 16,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: CountBadge(
-                  value: _count,
-                  target: _kTarget,
-                  size: CountBadgeSize.medium,
-                ),
-              ),
-            ),
-          ],
-        ),
-      _Phase.reward => KeeperChoiceOverlay(
-          dialog: _rewardDialog,
-          secondaryLabel: 'Continue',
-          primaryLabel: 'Again!',
-          onSecondary: _finish,
-          onPrimary: _repeat,
-          secondaryButtonKey: const ValueKey('tens-parade-finish'),
-          primaryButtonKey: const ValueKey('tens-parade-repeat'),
-        ),
-    };
+    final owned =
+        ref.watch(cardCollectionProvider).contains(kTensParadeChallengeCardId);
+    final finalLine = _finalLine(owned);
+    return SanctuaryRoundShell(
+      key: ValueKey('tens-parade-run-$_run'),
+      activityId: ActivityIds.countingParade,
+      roundCount: 1,
+      conceptIdFor: (_) => 'K.CC.1',
+      // Not graded and not paid per round: one bonus, in _payOnce.
+      gradeRounds: false,
+      // Never spoken by the shell: the demo is the opening and says it.
+      introLine: kTensParadeDemoLine,
+      introBuilder: (context, start) => _DemoLayer(
+        spriteAsset: kParadeFawn.spriteAsset,
+        onComplete: start,
+      ),
+      // A repeat run goes straight back to the meadow.
+      skipIntro: widget.skipIntro || _run > 0,
+      // One round, so there is no between-round aside.
+      keeperLineFor: (_) => finalLine,
+      finalLine: finalLine,
+      // The challenge gets the higher-energy bed the lesson JSON already
+      // names for it, rather than the calm meadow loop.
+      musicBed: kChallengeMusicBed,
+      celebrationHold: const Duration(seconds: 1),
+      onFinale: _payOnce,
+      finaleBuilder: (context, done) => KeeperChoiceOverlay(
+        dialog: finalLine,
+        secondaryLabel: kLabelContinue,
+        primaryLabel: 'Again!',
+        onSecondary: done,
+        onPrimary: _again,
+        secondaryButtonKey: const ValueKey('tens-parade-finish'),
+        primaryButtonKey: const ValueKey('tens-parade-repeat'),
+      ),
+      onSequenceComplete: widget.onSequenceComplete,
+      background: Image.asset(
+        AssetPaths.countingParadeMeadow,
+        fit: BoxFit.cover,
+      ),
+      roundBuilder: (context, c) => _ChallengeBody(c: c),
+    );
+  }
+}
 
+/// The hundred taps: creatures drift by, she taps each, the badge counts.
+class _ChallengeBody extends StatefulWidget {
+  const _ChallengeBody({required this.c});
+
+  final RoundContext c;
+
+  @override
+  State<_ChallengeBody> createState() => _ChallengeBodyState();
+}
+
+class _ChallengeBodyState extends State<_ChallengeBody> {
+  int _count = 0;
+
+  @override
+  Widget build(BuildContext context) {
     return Stack(
-      fit: StackFit.expand,
       children: [
-        Image.asset(
-          AssetPaths.countingParadeMeadow,
-          fit: BoxFit.cover,
-        ),
-        SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
-                child: ProgressBarToReward(
-                  progress:
-                      _phase == _Phase.challenge || _phase == _Phase.reward
-                          ? (_count / _kTarget).clamp(0.0, 1.0)
-                          : 0.0,
-                  celebrate: _phase == _Phase.reward,
-                ),
-              ),
-              Expanded(child: phaseContent),
+        Positioned.fill(
+          child: CountingChallengeLayer(
+            target: kTensParadeTarget,
+            // The whole parade cast, so she sees a familiar species mix.
+            spriteAssets: <String>[
+              for (final s in kParadeSpecies) s.spriteAsset,
             ],
+            say: widget.c.say,
+            onCountChanged: (value) => setState(() => _count = value),
+            onTargetReached: () => widget.c.finish(RoundResult.success),
           ),
         ),
-        if (_phase == _Phase.challenge) const BuddyCompanionCorner(),
+        Positioned(
+          top: 16,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: CountBadge(
+              value: _count,
+              target: kTensParadeTarget,
+              size: CountBadgeSize.medium,
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -242,8 +194,8 @@ class _TensParadeRunnerState extends ConsumerState<TensParadeRunner> {
 /// Brief lead-in: one creature drifts left-to-right across the meadow
 /// while the hand pointer floats with it and pokes it once mid-screen,
 /// matching the tap interaction the kid is about to do for real. The
-/// narrator says "Count the animals with me out loud as they do their
-/// parade!" once, then the kid taps the Start arrow to begin.
+/// narrator says [kTensParadeDemoLine] once, then the kid taps the Start
+/// arrow to begin.
 class _DemoLayer extends ConsumerStatefulWidget {
   const _DemoLayer({
     required this.spriteAsset,
@@ -284,10 +236,7 @@ class _DemoLayerState extends ConsumerState<_DemoLayer>
       });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      ref.narration.say(
-        'Count the animals with me out loud as they do their parade!',
-        cueId: 'tens-parade:demo',
-      );
+      ref.narration.say(kTensParadeDemoLine, cueId: 'tens-parade:demo');
       _drift.forward();
       // Fire the hand-poke roughly mid-screen so the kid sees a tap on
       // the creature as it passes — same beat we ask of them.
@@ -317,19 +266,22 @@ class _DemoLayerState extends ConsumerState<_DemoLayer>
         // Vertical band the creature drifts through — keep it well
         // above the bottom button area.
         final spriteY = h * 0.42;
-        final spriteX = (-_spriteSize) + _drift.value * (w + _spriteSize * 2);
-        // The hand floats just above the creature and pokes once at
-        // mid-screen; before the poke fires it sits off-stage right.
-        final handTarget = _pokeFired
-            ? Offset(
-                spriteX + _spriteSize * 0.55,
-                spriteY - _handSize * 0.65,
-              )
-            : Offset(w + _handSize, spriteY - _handSize * 0.65);
-
         return AnimatedBuilder(
           animation: _drift,
           builder: (context, _) {
+            // Read here, inside the builder, so it moves every frame. It
+            // used to be read once per layout, outside, and the creature
+            // sat off-stage until something else happened to rebuild it.
+            final spriteX =
+                (-_spriteSize) + _drift.value * (w + _spriteSize * 2);
+            // The hand floats just above the creature and pokes once at
+            // mid-screen; before the poke fires it sits off-stage right.
+            final handTarget = _pokeFired
+                ? Offset(
+                    spriteX + _spriteSize * 0.55,
+                    spriteY - _handSize * 0.65,
+                  )
+                : Offset(w + _handSize, spriteY - _handSize * 0.65);
             return Stack(
               children: [
                 Positioned(
@@ -357,7 +309,7 @@ class _DemoLayerState extends ConsumerState<_DemoLayer>
                       child: NextArrowButton(
                         key: const ValueKey('tens-parade-demo-start'),
                         idleHintEnabled: true,
-                        idleHintText: 'Tap the arrow to start the challenge!',
+                        idleHintText: kTensParadeDemoStartHint,
                         onPressed: widget.onComplete,
                         label: kLabelStart,
                       ),

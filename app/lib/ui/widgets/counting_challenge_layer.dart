@@ -16,15 +16,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../data/number_words.dart';
+import '../../data/tens_parade_words.dart';
 import '../../engines/feedback/feedback_engine.dart';
-import '../../engines/narration/narration_player.dart';
+import 'parade_pieces.dart';
 
 class CountingChallengeLayer extends ConsumerStatefulWidget {
   const CountingChallengeLayer({
     super.key,
     required this.target,
     required this.spriteAssets,
+    required this.say,
     required this.onCountChanged,
     required this.onTargetReached,
   });
@@ -34,6 +35,10 @@ class CountingChallengeLayer extends ConsumerStatefulWidget {
 
   /// Sprites to randomly pull from when spawning a new creature.
   final List<String> spriteAssets;
+
+  /// How the layer speaks - a round body's `c.say`, so the opening call is
+  /// what the "?" button replays.
+  final SayLine say;
 
   /// Fires each time a creature is successfully tapped.
   final ValueChanged<int> onCountChanged;
@@ -64,10 +69,7 @@ class _CountingChallengeLayerState extends ConsumerState<CountingChallengeLayer>
     _ticker = createTicker(_onTick)..start();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      ref.narration.say(
-        'Tap the creatures as they go by — count all the way to ${widget.target}!',
-        cueId: 'challenge:start',
-      );
+      widget.say(countingChallengePrompt(widget.target));
     });
   }
 
@@ -125,7 +127,9 @@ class _CountingChallengeLayerState extends ConsumerState<CountingChallengeLayer>
   }
 
   void _onCreatureTap(_FlyingCreature c) {
-    if (c.tapped) return;
+    // Stopped at the target: the board stays up under the celebration, and a
+    // hundred-and-first tap would count past it and talk over the reward.
+    if (c.tapped || _stopped) return;
     setState(() {
       c.tapped = true;
       c.speed *= 2;
@@ -138,11 +142,12 @@ class _CountingChallengeLayerState extends ConsumerState<CountingChallengeLayer>
     // sounding identical. Restarting the run every ten turns the rollover
     // into something audible: each new decade starts the climb again, which
     // is exactly the structure of the number names she is reciting.
-    ref.read(feedbackEngineProvider).countStep((_count - 1) % 10 + 1);
-    final word = _count < kSpelledCounts.length
-        ? kSpelledCounts[_count]
-        : _count.toString();
-    ref.narration.say('$word.', cueId: 'challenge:tap-$_count');
+    countAloud(
+      widget.say,
+      ref.read(feedbackEngineProvider),
+      step: (_count - 1) % 10 + 1,
+      value: _count,
+    );
     if (_count >= widget.target) {
       _stopped = true;
       widget.onTargetReached();
@@ -164,6 +169,7 @@ class _CountingChallengeLayerState extends ConsumerState<CountingChallengeLayer>
                 width: c.size,
                 height: c.size,
                 child: GestureDetector(
+                  key: ValueKey('challenge-creature-${c.id}'),
                   behavior: HitTestBehavior.opaque,
                   onTap: () => _onCreatureTap(c),
                   child: AnimatedOpacity(
