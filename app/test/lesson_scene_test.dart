@@ -58,13 +58,13 @@ const Set<String> _playableActivities = <String>{
 const Set<String> _stillOnTheFallback = <String>{};
 
 Map<String, dynamic> _lesson(String file) =>
-    jsonDecode(File('../data/lesson-runtime/$file').readAsStringSync())
+    jsonDecode(File('assets/data/lesson-runtime/$file').readAsStringSync())
         as Map<String, dynamic>;
 
 /// Every reachable lesson, as (conceptId, lessonId, scene).
 List<(String, String, Map<String, dynamic>)> _reachableLessons() {
   final out = <(String, String, Map<String, dynamic>)>[];
-  for (final entity in Directory('../data/lesson-runtime').listSync()) {
+  for (final entity in Directory('assets/data/lesson-runtime').listSync()) {
     if (entity is! File || !entity.path.endsWith('.json')) continue;
     final json = _lesson(entity.uri.pathSegments.last);
     if (!_playableActivities.contains(json['introducingActivity'])) continue;

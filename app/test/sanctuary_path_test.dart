@@ -151,7 +151,8 @@ void main() {
 
     test('every playable id is a real registered activity', () {
       final json = jsonDecode(
-        File('../data/activity-registry/kindergarten.json').readAsStringSync(),
+        File('assets/data/activity-registry/kindergarten.json')
+            .readAsStringSync(),
       ) as Map<String, dynamic>;
       final registered = <String>{
         for (final a in json['activities'] as List<dynamic>)

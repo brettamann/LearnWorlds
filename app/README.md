@@ -188,8 +188,8 @@ one should too:
 - **Numbers come with their quantity** - `NumberCard` / `NumberChoiceRow`
   draw a mini ten-frame of dots under the numeral. Turn the dots off only
   where reading the numeral is the point.
-- **Wire it in five places**: the registry (then `sync-assets.sh` -
-  `asset_mirror_test.dart` fails otherwise), `kPlayableActivities`, the
+- **Wire it in five places**: the registry
+  (`assets/data/activity-registry/`), `kPlayableActivities`, the
   dispatch and default in `activity_screen.dart`, `sub_mode_picker_data.dart`
   (a distinct picture per option), and `playfields()` in
   `playfield_caption_band_test.dart`, which enrols it in the caption-band,
@@ -447,11 +447,12 @@ new entry is a measurement rather than a guess.
 
 ## Content pipeline
 
-`data/` and `content/` at the repo root are the sources; `app/assets/` holds the
-mirror the app actually loads. After editing any registry or lesson JSON:
+`app/assets/data/` and `app/assets/content/` are the single source of truth for
+registries, lessons and strings — edit them in place, there is no sync step.
+Schemas live in the repo-root `schemas/`; check your edits with:
 
 ```bash
-app/scripts/sync-assets.sh
+node tools/scripts/validate-data.mjs
 ```
 
 ## Folder structure

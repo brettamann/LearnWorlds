@@ -55,7 +55,7 @@ Map<String, dynamic> _read(File f) =>
     jsonDecode(f.readAsStringSync()) as Map<String, dynamic>;
 
 List<Map<String, dynamic>> _allLessons() => [
-      for (final e in Directory('../data/lesson-runtime').listSync())
+      for (final e in Directory('assets/data/lesson-runtime').listSync())
         if (e is File && e.path.endsWith('.json')) _read(e),
     ];
 
@@ -163,10 +163,10 @@ void main() {
       // whatever the I-Show left standing asks K.G.5 for a corner on a
       // completed triangle.
       final kg5 = LessonRuntime.fromJson(
-        _read(File('../data/lesson-runtime/k-g-5-sticks-and-clay.json')),
+        _read(File('assets/data/lesson-runtime/k-g-5-sticks-and-clay.json')),
       );
       final kg6 = LessonRuntime.fromJson(
-        _read(File('../data/lesson-runtime/k-g-6-compose-3d.json')),
+        _read(File('assets/data/lesson-runtime/k-g-6-compose-3d.json')),
       );
       expect(kg5.weTry.framePrebuilt, isFalse);
       expect(kg6.weTry.framePrebuilt, isTrue);
@@ -179,7 +179,7 @@ void main() {
       // that keeps its own count draws three while the narrator says "Four."
       for (final file in const ['k-cc-4a-one-to-one', 'k-cc-4b-cardinality']) {
         final runtime = LessonRuntime.fromJson(
-          _read(File('../data/lesson-runtime/$file.json')),
+          _read(File('assets/data/lesson-runtime/$file.json')),
         );
         expect(
           runtime.weTry.creatureCount,
@@ -396,7 +396,9 @@ void main() {
       await tester.pump(const Duration(milliseconds: 300));
 
       final runtime = LessonRuntime.fromJson(
-        _read(File('../data/lesson-runtime/k-g-1b-more-position-words.json')),
+        _read(
+          File('assets/data/lesson-runtime/k-g-1b-more-position-words.json'),
+        ),
       );
       final corrective = runtime.weTry.line('we-try-corrective-1');
       final correct = runtime.weTry.line('we-try-correct-1');

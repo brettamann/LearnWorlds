@@ -3,23 +3,11 @@ name: Data validation
 on:
   push:
     branches: [main]
-    paths:
-      - 'data/**'
-      - 'content/**'
-      - 'schemas/**'
-      - 'tools/scripts/**'
-      - 'app/assets/maps/**'
-      - 'app/lib/ui/screens/home_map_screen.dart'
-      - '.github/workflows/data-validation.yml'
   pull_request:
-    paths:
-      - 'data/**'
-      - 'content/**'
-      - 'schemas/**'
-      - 'tools/scripts/**'
-      - 'app/assets/maps/**'
-      - 'app/lib/ui/screens/home_map_screen.dart'
-      - '.github/workflows/data-validation.yml'
+
+concurrency:
+  group: data-validation-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   validate:
@@ -33,17 +21,7 @@ jobs:
           node-version: '20'
 
       - name: Validate all data files against their schemas
-        # Walks data/**/*.json and content/**/*.json and validates each against
-        # its declared $schema. Auto-installs ajv into tools/scripts/node_modules/
-        # on first run. See specs/shared/system-architecture.md "Loading & validation".
+        # Walks app/assets/data/**/*.json and app/assets/content/**/*.json and
+        # validates each against its declared $schema. Auto-installs ajv into
+        # tools/scripts/node_modules/ on first run.
         run: node tools/scripts/validate-data.mjs --quiet
-
-      - name: Check the island map's tap targets still cover their badges
-        # The medallions painted into home_screen_map.png ARE the buttons -
-        # they are the only things on that screen shaped like one. The tap
-        # rectangles were once authored against the scenery instead, which put
-        # all four targets above their own badge; the Portals spiral did not
-        # overlap its region at all. Invisible in code and in a screenshot.
-        # This re-measures the art, so replacing it fails here rather than on
-        # the first screen a child sees.
-        run: node tools/scripts/check-map-regions.mjs

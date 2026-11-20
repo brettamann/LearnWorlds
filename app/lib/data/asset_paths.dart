@@ -1,7 +1,5 @@
-// Asset path constants. The repo-root data/ and content/ trees are mirrored
-// under app/assets/ via scripts/sync-assets.ps1, so rootBundle keys live
-// under assets/. (Direct `../` paths bundle fine but break Flutter web's URL
-// normalization at runtime.)
+// Asset path constants. All bundled data (registries, lessons, strings) lives
+// under app/assets/, so every rootBundle key starts with assets/.
 
 class AssetPaths {
   AssetPaths._();

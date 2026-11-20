@@ -17,7 +17,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 Map<String, Activity> _registry() {
   final json = jsonDecode(
-    File('../data/activity-registry/kindergarten.json').readAsStringSync(),
+    File('assets/data/activity-registry/kindergarten.json').readAsStringSync(),
   ) as Map<String, dynamic>;
   return <String, Activity>{
     for (final raw in json['activities'] as List<dynamic>)

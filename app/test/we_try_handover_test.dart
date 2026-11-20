@@ -46,7 +46,7 @@ typedef _WeTry = ({String id, List<dynamic> choreography});
 
 List<_WeTry> _weTrys() {
   final out = <_WeTry>[];
-  for (final e in Directory('../data/lesson-runtime').listSync()) {
+  for (final e in Directory('assets/data/lesson-runtime').listSync()) {
     if (e is! File || !e.path.endsWith('.json')) continue;
     final doc = jsonDecode(e.readAsStringSync()) as Map<String, dynamic>;
     final phases = doc['phases'] as Map<String, dynamic>?;

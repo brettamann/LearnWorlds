@@ -47,7 +47,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Activities a child can actually reach, parsed the way the app parses them.
 List<Activity> _playableActivities() {
   final json = jsonDecode(
-    File('../data/activity-registry/kindergarten.json').readAsStringSync(),
+    File('assets/data/activity-registry/kindergarten.json').readAsStringSync(),
   ) as Map<String, dynamic>;
   return <Activity>[
     for (final raw in json['activities'] as List<dynamic>)

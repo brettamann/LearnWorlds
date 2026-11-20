@@ -29,7 +29,7 @@ import 'package:flutter_test/flutter_test.dart';
 /// Sub-modes of playable activities, split by whether a child has to play them.
 ({List<String> required, List<String> optional}) _subModes() {
   final json = jsonDecode(
-    File('../data/activity-registry/kindergarten.json').readAsStringSync(),
+    File('assets/data/activity-registry/kindergarten.json').readAsStringSync(),
   ) as Map<String, dynamic>;
   final required = <String>[];
   final optional = <String>[];
@@ -144,7 +144,8 @@ void main() {
     // sub-modes a stage that was Care Pantry - place five of eleven - which
     // left six places with no long-cycle reward at all.
     final json = jsonDecode(
-      File('../data/activity-registry/kindergarten.json').readAsStringSync(),
+      File('assets/data/activity-registry/kindergarten.json')
+          .readAsStringSync(),
     ) as Map<String, dynamic>;
     final byId = <String, Map<String, dynamic>>{
       for (final raw in json['activities'] as List<dynamic>)

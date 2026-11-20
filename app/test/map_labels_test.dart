@@ -20,7 +20,7 @@ import 'package:critmath/data/narration_script.dart';
 import 'package:critmath/platform/narration_clip_key.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Display names off the registry mirror, the same way
+/// Display names off the activity registry, the same way
 /// `tool/dump_narration_script.dart` reads them. Duplicated rather than
 /// imported because that file is a script with a `main`, and a test that
 /// imports it would run its argument handling.
@@ -81,7 +81,7 @@ void main() {
     // These come from the registry JSON rather than Dart, so nothing about
     // renaming an activity would otherwise tell you its banner went silent.
     final names = _activityDisplayNames();
-    expect(names, isNotEmpty, reason: 'the registry mirror looks empty');
+    expect(names, isNotEmpty, reason: 'the activity registry looks empty');
     for (final name in names) {
       expect(_clipFor(name), isNotNull, reason: 'no clip for "$name"');
     }

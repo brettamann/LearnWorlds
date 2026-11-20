@@ -2,8 +2,8 @@
 // Validate every JSON data file in the repo against its declared $schema.
 //
 // Walks:
-//   data/**/*.json
-//   content/**/*.json
+//   app/assets/data/**/*.json
+//   app/assets/content/**/*.json
 //
 // For each file:
 //   1. Parse JSON
@@ -184,17 +184,17 @@ async function main() {
 
   // Walk data/ and content/.
   const dataFiles = [
-    ...(await walkJsonFiles(path.join(args.repoRoot, 'data'))),
-    ...(await walkJsonFiles(path.join(args.repoRoot, 'content'))),
+    ...(await walkJsonFiles(path.join(args.repoRoot, 'app', 'assets', 'data'))),
+    ...(await walkJsonFiles(path.join(args.repoRoot, 'app', 'assets', 'content'))),
   ];
 
   if (dataFiles.length === 0) {
-    console.error('No JSON files found under data/ or content/.');
+    console.error('No JSON files found under app/assets/data/ or app/assets/content/.');
     process.exit(2);
   }
 
   if (!args.quiet) {
-    console.log(`Validating ${dataFiles.length} JSON file(s) under data/ and content/...`);
+    console.log(`Validating ${dataFiles.length} JSON file(s) under app/assets/data/ and app/assets/content/...`);
     console.log('');
   }
 

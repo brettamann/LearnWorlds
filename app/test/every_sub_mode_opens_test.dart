@@ -42,7 +42,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// wired up is exactly what this is looking for.
 List<(String, String)> _everySubMode() {
   final json = jsonDecode(
-    File('../data/activity-registry/kindergarten.json').readAsStringSync(),
+    File('assets/data/activity-registry/kindergarten.json').readAsStringSync(),
   ) as Map<String, dynamic>;
   return <(String, String)>[
     for (final activity in json['activities'] as List<dynamic>)

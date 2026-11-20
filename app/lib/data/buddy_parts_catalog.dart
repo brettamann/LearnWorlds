@@ -4,7 +4,7 @@
 // the selected pieces at render time.
 //
 // Adding a new variant: drop the sprite under
-// `app/assets/buddy/<category>/<id>.png` (run sync-assets afterward)
+// `app/assets/buddy/<category>/<id>.png`
 // and append an entry below. Mirror arms / legs L+R pairs share a
 // single catalog id and the loader picks both sides at render time.
 //

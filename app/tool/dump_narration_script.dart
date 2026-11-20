@@ -27,13 +27,9 @@ import 'narration_sources.dart';
 /// `narration_script.dart` enumerates what the Dart runners compose, which is
 /// the counting words, the warm miss/hint lines and Counting Parade's keeper
 /// script - 253 lines. It cannot see the I-Show and We-Try narration, because
-/// that is authored in `data/lesson-runtime/*.json` and only reaches the app
+/// that is authored in `assets/data/lesson-runtime/*.json` and only reaches the app
 /// through `LessonRuntime`. Leaving it out meant every lesson still opened in
 /// the browser synth voice, which is the first thing anyone hears.
-///
-/// Read from `assets/data/lesson-runtime/` rather than the repo-root `data/`
-/// on purpose: the mirror is what the app actually loads, so if the two have
-/// drifted this renders what will really be spoken.
 ///
 /// Every `text` field in those files sits under a `narrationScript` array -
 /// checked across all 22 lessons, 301 occurrences, no exceptions - so the walk
@@ -92,10 +88,6 @@ List<String> lessonNarrationLines() {
 /// Only top-level activities. Sub-modes and challenge variants have display
 /// names too, but nothing speaks them - the picker sheet is silent - and
 /// rendering a clip nothing can play is pure download weight.
-///
-/// Read from the `assets/` mirror for the same reason the lesson lines are:
-/// it is what the app actually loads, so a stale mirror renders what will
-/// really be spoken rather than what was meant to be.
 List<String> activityDisplayNames() {
   final dir = Directory('assets/data/activity-registry');
   if (!dir.existsSync()) return const <String>[];

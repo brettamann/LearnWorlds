@@ -137,7 +137,7 @@ void main() {
       // A card added here but not there would drop something the reward
       // system has never heard of.
       final json = jsonDecode(
-        File('../data/reward-catalog/kindergarten.json').readAsStringSync(),
+        File('assets/data/reward-catalog/kindergarten.json').readAsStringSync(),
       ) as Map<String, dynamic>;
       final authored = <String>{
         for (final item in json['items'] as List<dynamic>)

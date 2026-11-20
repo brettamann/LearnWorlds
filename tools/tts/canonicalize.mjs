@@ -24,7 +24,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 function parseArgs(argv) {
   const args = {
     input: path.resolve(__dirname, 'harvest-manifest.json'),
-    vocab: path.resolve(__dirname, '..', '..', 'data', 'slot-vocabulary'),
+    vocab: path.resolve(__dirname, '..', '..', 'app', 'assets', 'data', 'slot-vocabulary'),
     out: path.resolve(__dirname, 'canonical-manifest.json'),
     locale: 'en-US',
     maxExpansionsPerCue: 200,
