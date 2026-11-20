@@ -16,7 +16,6 @@ import 'package:critmath/data/playable_activities.dart';
 import 'package:critmath/data/sanctuary_sequence.dart';
 import 'package:critmath/engines/narration/narration_player.dart';
 import 'package:critmath/platform/sfx_engine.dart';
-import 'package:critmath/providers/app_providers.dart';
 import 'package:critmath/providers/exploration_provider.dart';
 import 'package:critmath/providers/map_anchors_provider.dart';
 import 'package:critmath/ui/screens/sanctuary_map_screen.dart';
@@ -26,6 +25,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/harness.dart';
 
 /// The twelve anchors, on a widely spaced grid.
 ///
@@ -77,10 +77,7 @@ void main() {
     WidgetTester tester,
     Set<int> explored,
   ) async {
-    tester.view.physicalSize = const Size(1400, 1000);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+    useViewSize(tester, const Size(1400, 1000));
 
     final container = ProviderContainer(
       overrides: [
@@ -100,10 +97,7 @@ void main() {
     // both registries still loading, drew Build-a-Habitat as a sleeping node
     // called "Build A Habitat", and a tap on it did nothing: a perfect
     // imitation of the bug these tests exist to catch.
-    await tester.runAsync(() async {
-      await container.read(activityRegistryProvider.future);
-      await container.read(conceptRegistryProvider.future);
-    });
+    await preloadRegistries(tester, container);
 
     final router = GoRouter(
       routes: [

@@ -18,19 +18,15 @@
 // activities land, it will still pass at a slower cadence, and that is the
 // moment to slow it down.
 
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:critmath/data/playable_activities.dart';
 import 'package:critmath/data/sanctuary_sequence.dart';
 import 'package:critmath/models/reward_track.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'support/fixtures.dart';
 
 /// Sub-modes of playable activities, split by whether a child has to play them.
 ({List<String> required, List<String> optional}) _subModes() {
-  final json = jsonDecode(
-    File('assets/data/activity-registry/kindergarten.json').readAsStringSync(),
-  ) as Map<String, dynamic>;
+  final json = activityRegistryJson();
   final required = <String>[];
   final optional = <String>[];
   for (final raw in json['activities'] as List<dynamic>) {
@@ -143,10 +139,7 @@ void main() {
     // place, and record where the egg first reaches its last stage. At two
     // sub-modes a stage that was Care Pantry - place five of eleven - which
     // left six places with no long-cycle reward at all.
-    final json = jsonDecode(
-      File('assets/data/activity-registry/kindergarten.json')
-          .readAsStringSync(),
-    ) as Map<String, dynamic>;
+    final json = activityRegistryJson();
     final byId = <String, Map<String, dynamic>>{
       for (final raw in json['activities'] as List<dynamic>)
         (raw as Map<String, dynamic>)['id'] as String: raw,

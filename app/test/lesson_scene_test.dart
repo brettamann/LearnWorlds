@@ -37,6 +37,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/harness.dart';
 
 /// Lessons a child can currently reach — the ones introducing the four
 /// activities that have a runner.
@@ -85,10 +86,7 @@ void main() {
 
   /// Mounts a lesson and taps past the keeper intro into the iShow scene.
   Future<void> openLesson(WidgetTester tester, String lessonId) async {
-    tester.view.physicalSize = const Size(1200, 820);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+    useViewSize(tester, const Size(1200, 820));
 
     await tester.pumpWidget(
       ProviderScope(

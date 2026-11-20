@@ -26,7 +26,6 @@
 // have broken far more than it fixed — see `the entry point is a step even
 // when it is also the floor` below.
 
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:critmath/data/asset_paths.dart';
@@ -44,27 +43,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'support/fixtures.dart';
+import 'support/harness.dart';
+
 /// Activities a child can actually reach, parsed the way the app parses them.
 List<Activity> _playableActivities() {
-  final json = jsonDecode(
-    File('assets/data/activity-registry/kindergarten.json').readAsStringSync(),
-  ) as Map<String, dynamic>;
+  final json = activityRegistryJson();
   return <Activity>[
     for (final raw in json['activities'] as List<dynamic>)
       if (isActivityPlayable((raw as Map<String, dynamic>)['id'] as String))
         Activity.fromJson(raw),
   ];
-}
-
-/// The clip the app would look for, or null if nothing is rendered.
-File? _clipFor(String text) {
-  final dir = Directory('assets/audio/narration');
-  if (!dir.existsSync()) return null;
-  final key = narrationClipKey(text);
-  for (final file in dir.listSync().whereType<File>()) {
-    if (file.uri.pathSegments.last.startsWith('$key.')) return file;
-  }
-  return null;
 }
 
 /// Runs the sheet's read-through to the end.
@@ -199,7 +188,7 @@ void main() {
     test('every spoken string has a rendered clip', () {
       for (final line in spokenSubModeLabels()) {
         expect(
-          _clipFor(line),
+          narrationClipFor(line),
           isNotNull,
           reason: 'no clip for "$line". Re-render:\n'
               '  cd app && dart run tool/dump_narration_script.dart '
@@ -234,10 +223,7 @@ void main() {
       List<SubModePickerEntry> entries, {
       List<Override> overrides = const <Override>[],
     }) async {
-      tester.view.physicalSize = const Size(1400, 900);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
+      useViewSize(tester, const Size(1400, 900));
 
       container = ProviderContainer(overrides: overrides);
       addTearDown(container.dispose);
@@ -316,10 +302,7 @@ void main() {
       // wrapper that narrated and swallowed the tap would leave a sheet that
       // reads its options aloud and opens none of them.
       String? picked;
-      tester.view.physicalSize = const Size(1400, 900);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
+      useViewSize(tester, const Size(1400, 900));
       container = ProviderContainer();
       addTearDown(container.dispose);
 
@@ -448,10 +431,7 @@ void main() {
       // cannot touch. Indistinguishable, from where she is sitting, from the
       // app being broken - which this project treats as worse than getting
       // the answer wrong.
-      tester.view.physicalSize = const Size(560, 520);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
+      useViewSize(tester, const Size(560, 520));
 
       container = ProviderContainer();
       addTearDown(container.dispose);

@@ -19,6 +19,7 @@ import 'package:critmath/ui/widgets/scribes_tower_runner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'support/harness.dart';
 
 const Size _box = Size(560, 520);
 
@@ -28,10 +29,7 @@ Future<void> _mount(
   required VoidCallback onDone,
   VoidCallback? onStroke,
 }) async {
-  tester.view.physicalSize = const Size(800, 700);
-  tester.view.devicePixelRatio = 1.0;
-  addTearDown(tester.view.resetPhysicalSize);
-  addTearDown(tester.view.resetDevicePixelRatio);
+  useViewSize(tester, const Size(800, 700));
   await tester.pumpWidget(
     MaterialApp(
       home: Scaffold(
@@ -175,10 +173,7 @@ void main() {
     // was built; every count gets laid out here instead of waiting for it.
     for (var n = 1; n <= 10; n++) {
       testWidgets('$n fireflies fit on the screen', (tester) async {
-        tester.view.physicalSize = const Size(1180, 820);
-        tester.view.devicePixelRatio = 1.0;
-        addTearDown(tester.view.resetPhysicalSize);
-        addTearDown(tester.view.resetDevicePixelRatio);
+        useViewSize(tester);
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(

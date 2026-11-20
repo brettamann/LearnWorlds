@@ -21,15 +21,14 @@ import 'package:critmath/data/narration_script.dart';
 import 'package:critmath/data/sort_attribute_words.dart';
 import 'package:critmath/engines/narration/narration_cue_log.dart';
 import 'package:critmath/platform/narration_clip_key.dart';
-import 'package:critmath/providers/app_providers.dart';
 import 'package:critmath/providers/session_provider.dart';
 import 'package:critmath/ui/screens/activity_screen.dart';
 import 'package:critmath/ui/widgets/next_arrow_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/harness.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -140,41 +139,21 @@ void main() {
     });
 
     testWidgets('and tapping one plays it', (tester) async {
-      tester.view.physicalSize = const Size(1400, 900);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
+      useViewSize(tester, const Size(1400, 900));
 
       final container = ProviderContainer(
         overrides: [sessionIdProvider.overrideWithValue('sort-bin')],
       );
-      await tester.runAsync(() async {
-        await container.read(activityRegistryProvider.future);
-        await container.read(conceptRegistryProvider.future);
-      });
+      await preloadRegistries(tester, container);
 
-      await tester.pumpWidget(
-        UncontrolledProviderScope(
-          container: container,
-          child: MaterialApp.router(
-            routerConfig: GoRouter(
-              routes: [
-                GoRoute(
-                  path: '/',
-                  builder: (_, __) => const ActivityScreen(
-                    activityId: 'shape-garden',
-                    launchExtra: <String, dynamic>{
-                      'subMode': 'sort-by-attribute',
-                    },
-                  ),
-                ),
-                GoRoute(
-                  path: '/sanctuary',
-                  builder: (_, __) => const Scaffold(body: Text('map')),
-                ),
-              ],
-            ),
-          ),
+      await pumpRouted(
+        tester,
+        container,
+        const ActivityScreen(
+          activityId: 'shape-garden',
+          launchExtra: <String, dynamic>{
+            'subMode': 'sort-by-attribute',
+          },
         ),
       );
       Future<void> settle() async {
@@ -212,41 +191,21 @@ void main() {
       // gesture arena, so a tap handler above it should not intercept - but
       // "should" is how the last hard bug in this repo got shipped, and
       // nothing else in the suite drops a shape into a basket at all.
-      tester.view.physicalSize = const Size(1400, 900);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
+      useViewSize(tester, const Size(1400, 900));
 
       final container = ProviderContainer(
         overrides: [sessionIdProvider.overrideWithValue('sort-drop')],
       );
-      await tester.runAsync(() async {
-        await container.read(activityRegistryProvider.future);
-        await container.read(conceptRegistryProvider.future);
-      });
+      await preloadRegistries(tester, container);
 
-      await tester.pumpWidget(
-        UncontrolledProviderScope(
-          container: container,
-          child: MaterialApp.router(
-            routerConfig: GoRouter(
-              routes: [
-                GoRoute(
-                  path: '/',
-                  builder: (_, __) => const ActivityScreen(
-                    activityId: 'shape-garden',
-                    launchExtra: <String, dynamic>{
-                      'subMode': 'sort-by-attribute',
-                    },
-                  ),
-                ),
-                GoRoute(
-                  path: '/sanctuary',
-                  builder: (_, __) => const Scaffold(body: Text('map')),
-                ),
-              ],
-            ),
-          ),
+      await pumpRouted(
+        tester,
+        container,
+        const ActivityScreen(
+          activityId: 'shape-garden',
+          launchExtra: <String, dynamic>{
+            'subMode': 'sort-by-attribute',
+          },
         ),
       );
       Future<void> settle() async {

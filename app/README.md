@@ -47,6 +47,15 @@ cd app && dart run tool/dump_narration_script.dart > ../tools/tts/kokoro/script.
 cd .. && node tools/tts/kokoro/render.mjs render
 ```
 
+### Shared test helpers
+
+Don't copy setup between test files. `test/support/harness.dart` has
+`useViewSize`, `testContainer`, `preloadRegistries`, `pumpRouted`,
+`pumpFrames` and `unmountAndDrain`; `test/support/fixtures.dart` is the one
+place that knows where data lives on disk (`activityRegistryJson()`,
+`lessonRuntimeJson()`, `narrationClipFor()`). They already handle the first two
+traps below.
+
 ### Five traps in widget tests
 
 - **`pumpAndSettle` never returns on several screens.** Anything with a

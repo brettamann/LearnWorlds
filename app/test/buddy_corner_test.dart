@@ -19,6 +19,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'playfield_caption_band_test.dart' show playfields;
+import 'support/harness.dart';
 
 const Size _size = Size(1180, 820);
 
@@ -28,10 +29,7 @@ void main() {
 
   for (final key in playfields().keys) {
     testWidgets('$key keeps its targets out from under Buddy', (tester) async {
-      tester.view.physicalSize = _size;
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
+      useViewSize(tester, _size);
       await tester.pumpWidget(
         ProviderScope(
           overrides: [sessionIdProvider.overrideWithValue('buddy-guard')],

@@ -17,8 +17,8 @@ import 'dart:io';
 
 import 'package:critmath/data/map_labels.dart';
 import 'package:critmath/data/narration_script.dart';
-import 'package:critmath/platform/narration_clip_key.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'support/fixtures.dart';
 
 /// Display names off the activity registry, the same way
 /// `tool/dump_narration_script.dart` reads them. Duplicated rather than
@@ -39,18 +39,6 @@ List<String> _activityDisplayNames() {
   return out.toList()..sort();
 }
 
-/// The clip the app would look for, or null if nothing is rendered for [text].
-File? _clipFor(String text) {
-  final dir = Directory('assets/audio/narration');
-  if (!dir.existsSync()) return null;
-  final key = narrationClipKey(text);
-  for (final file in dir.listSync().whereType<File>()) {
-    final name = file.uri.pathSegments.last;
-    if (name.startsWith('$key.')) return file;
-  }
-  return null;
-}
-
 void main() {
   test('every map label is in the recording script', () {
     final script = narrationScriptTexts();
@@ -67,7 +55,7 @@ void main() {
   test('every map label has a rendered clip', () {
     for (final label in kSpokenMapLabels) {
       expect(
-        _clipFor(label),
+        narrationClipFor(label),
         isNotNull,
         reason: 'no clip for "$label". Re-render:\n'
             '  cd app && dart run tool/dump_narration_script.dart '
@@ -83,7 +71,7 @@ void main() {
     final names = _activityDisplayNames();
     expect(names, isNotEmpty, reason: 'the activity registry looks empty');
     for (final name in names) {
-      expect(_clipFor(name), isNotNull, reason: 'no clip for "$name"');
+      expect(narrationClipFor(name), isNotNull, reason: 'no clip for "$name"');
     }
   });
 

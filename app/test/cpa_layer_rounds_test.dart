@@ -26,6 +26,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/harness.dart';
 
 const String _session = 'cpa-layers';
 
@@ -35,10 +36,7 @@ Future<ProviderContainer> _mount(
   required String concept,
   required CpaLayer layer,
 }) async {
-  tester.view.physicalSize = const Size(1180, 820);
-  tester.view.devicePixelRatio = 1.0;
-  addTearDown(tester.view.resetPhysicalSize);
-  addTearDown(tester.view.resetDevicePixelRatio);
+  useViewSize(tester);
   final container = ProviderContainer(
     overrides: [sessionIdProvider.overrideWithValue(_session)],
   );

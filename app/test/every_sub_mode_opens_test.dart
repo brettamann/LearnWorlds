@@ -23,27 +23,23 @@
 // non-zero flex but incoming height constraints are unbounded` on every frame
 // it was on screen since it was written, and this file was green throughout.
 
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:critmath/data/playable_activities.dart';
-import 'package:critmath/providers/app_providers.dart';
 import 'package:critmath/providers/session_provider.dart';
 import 'package:critmath/ui/screens/activity_screen.dart';
 import 'package:critmath/ui/widgets/next_arrow_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'support/fixtures.dart';
+import 'support/harness.dart';
 
 /// (activityId, subModeId) for everything a child can be handed, read from the
 /// registry rather than listed here — a sub-mode added to the JSON and never
 /// wired up is exactly what this is looking for.
 List<(String, String)> _everySubMode() {
-  final json = jsonDecode(
-    File('assets/data/activity-registry/kindergarten.json').readAsStringSync(),
-  ) as Map<String, dynamic>;
+  final json = activityRegistryJson();
   return <(String, String)>[
     for (final activity in json['activities'] as List<dynamic>)
       if (isActivityPlayable(
@@ -67,10 +63,7 @@ void main() {
     String activityId,
     String subModeId,
   ) async {
-    tester.view.physicalSize = const Size(1400, 900);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+    useViewSize(tester, const Size(1400, 900));
 
     final container = ProviderContainer(
       overrides: [
@@ -84,31 +77,14 @@ void main() {
     // bundle, whose cache the test binding clears between tests, so from the
     // second case onward this is file I/O that fake-async pumping can never
     // finish. See the note in app/README.md.
-    await tester.runAsync(() async {
-      await container.read(activityRegistryProvider.future);
-      await container.read(conceptRegistryProvider.future);
-    });
+    await preloadRegistries(tester, container);
 
-    await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: MaterialApp.router(
-          routerConfig: GoRouter(
-            routes: [
-              GoRoute(
-                path: '/',
-                builder: (_, __) => ActivityScreen(
-                  activityId: activityId,
-                  launchExtra: <String, dynamic>{'subMode': subModeId},
-                ),
-              ),
-              GoRoute(
-                path: '/sanctuary',
-                builder: (_, __) => const Scaffold(body: Text('map')),
-              ),
-            ],
-          ),
-        ),
+    await pumpRouted(
+      tester,
+      container,
+      ActivityScreen(
+        activityId: activityId,
+        launchExtra: <String, dynamic>{'subMode': subModeId},
       ),
     );
     // Explicit frames rather than pumpAndSettle: every playfield carries a

@@ -40,6 +40,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'playfield_caption_band_test.dart' show playfields;
+import 'support/harness.dart';
 
 /// The reference window, as `README.md` and the rest of the suite use.
 const Size _size = Size(1180, 820);
@@ -65,10 +66,7 @@ void main() {
   /// Mounts [key]'s playfield, lets it settle, then leaves it strictly alone
   /// for [_kPatience] and returns everything it said in that time.
   Future<List<_Said>> idleFor(WidgetTester tester, String key) async {
-    tester.view.physicalSize = _size;
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+    useViewSize(tester, _size);
 
     final container = ProviderContainer(
       // Pinned so the seeded scatter is the same every run.

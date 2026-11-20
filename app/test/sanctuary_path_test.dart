@@ -15,12 +15,12 @@
 // still drawn — specs/shared/map-screens.md is explicit that unbuilt content
 // stays on the map so the region has a shape — they are simply not a wall.
 
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:critmath/data/playable_activities.dart';
 import 'package:critmath/data/sanctuary_sequence.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'support/fixtures.dart';
 
 /// Everything up to and including [activityId], as the save would look after
 /// playing straight down the path.
@@ -150,10 +150,7 @@ void main() {
     });
 
     test('every playable id is a real registered activity', () {
-      final json = jsonDecode(
-        File('assets/data/activity-registry/kindergarten.json')
-            .readAsStringSync(),
-      ) as Map<String, dynamic>;
+      final json = activityRegistryJson();
       final registered = <String>{
         for (final a in json['activities'] as List<dynamic>)
           (a as Map<String, dynamic>)['id'] as String,

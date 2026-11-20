@@ -24,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/harness.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -36,10 +37,7 @@ void main() {
     required String line,
     required bool celebrate,
   }) async {
-    tester.view.physicalSize = const Size(900, 900);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+    useViewSize(tester, const Size(900, 900));
 
     await tester.pumpWidget(
       ProviderScope(
@@ -116,10 +114,7 @@ void main() {
   testWidgets('and the way onward is the arrow, as everywhere else',
       (tester) async {
     var tapped = false;
-    tester.view.physicalSize = const Size(900, 900);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+    useViewSize(tester, const Size(900, 900));
 
     await tester.pumpWidget(
       ProviderScope(

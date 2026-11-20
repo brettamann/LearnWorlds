@@ -31,17 +31,7 @@ import 'package:critmath/data/warm_lines.dart';
 import 'package:critmath/models/reward_track.dart';
 import 'package:critmath/platform/narration_clip_key.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-/// The clip the app would look for, or null if nothing is rendered.
-File? _clipFor(String text) {
-  final dir = Directory('assets/audio/narration');
-  if (!dir.existsSync()) return null;
-  final key = narrationClipKey(text);
-  for (final file in dir.listSync().whereType<File>()) {
-    if (file.uri.pathSegments.last.startsWith('$key.')) return file;
-  }
-  return null;
-}
+import 'support/fixtures.dart';
 
 /// Files that are allowed to hold a `label:` string literal, because holding
 /// them is their job.
@@ -69,7 +59,7 @@ void main() {
     test('has a rendered clip', () {
       for (final label in spokenButtonLabels()) {
         expect(
-          _clipFor(label),
+          narrationClipFor(label),
           isNotNull,
           reason: 'no clip for "$label". Re-render:\n'
               '  cd app && dart run tool/dump_narration_script.dart '
@@ -126,7 +116,7 @@ void main() {
       expect(decadeLabel(0), '10');
       expect(decadeLabel(9), '100');
       for (var i = 0; i < 10; i++) {
-        final clip = _clipFor(decadeLabel(i));
+        final clip = narrationClipFor(decadeLabel(i));
         expect(clip, isNotNull, reason: 'no clip for ${decadeLabel(i)}');
         // A render that failed on a numeral would leave a near-empty file
         // rather than an error, and it would be silent in the game.
@@ -148,7 +138,7 @@ void main() {
           contains(narrationTextNormalize(stage.message)),
           reason: 'stage message not in the script: "${stage.message}"',
         );
-        expect(_clipFor(stage.message), isNotNull);
+        expect(narrationClipFor(stage.message), isNotNull);
       }
     });
 
@@ -157,7 +147,7 @@ void main() {
       // completeStage is not in `stages`.
       final done = kMysteryEggTrack.completeStage.message;
       expect(narrationScriptTexts(), contains(narrationTextNormalize(done)));
-      expect(_clipFor(done), isNotNull);
+      expect(narrationClipFor(done), isNotNull);
     });
 
     test('and the sheet has something to say without one', () {
@@ -167,7 +157,7 @@ void main() {
         narrationScriptTexts(),
         contains(narrationTextNormalize(kRoundCompleteFallbackLine)),
       );
-      expect(_clipFor(kRoundCompleteFallbackLine), isNotNull);
+      expect(narrationClipFor(kRoundCompleteFallbackLine), isNotNull);
     });
 
     test('and every stage has a sprite on disk to say it over', () {

@@ -53,6 +53,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/harness.dart';
 
 /// Every playfield a child can reach, built the way the activity screen
 /// builds it.
@@ -248,10 +249,7 @@ void main() {
     testWidgets('${entry.key} keeps everything touchable above the band',
         (tester) async {
       for (final size in _sizes) {
-        tester.view.physicalSize = size;
-        tester.view.devicePixelRatio = 1.0;
-        addTearDown(tester.view.resetPhysicalSize);
-        addTearDown(tester.view.resetDevicePixelRatio);
+        useViewSize(tester, size);
 
         await tester.pumpWidget(
           ProviderScope(

@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/harness.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -31,10 +32,7 @@ void main() {
       (tester) async {
     // iPad-ish surface so the keeper + speech bubble + "Let's count!" button
     // all lay out on-screen and remain hit-testable.
-    tester.view.physicalSize = const Size(1180, 820);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+    useViewSize(tester);
 
     // Avoid the heavy PNG decode + 4M-pixel scan in the test sandbox by
     // overriding the anchor provider with fixed positions, and seed F0 as

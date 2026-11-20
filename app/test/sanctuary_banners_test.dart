@@ -22,6 +22,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/harness.dart';
 
 class _Quiet extends SfxEngine {
   @override
@@ -40,10 +41,7 @@ void main() {
     testWidgets(
         'with every place explored, no two banners overlap at '
         '${window.width.toInt()}x${window.height.toInt()}', (tester) async {
-      tester.view.physicalSize = window;
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
+      useViewSize(tester, window);
       final container = ProviderContainer(
         overrides: [sfxEngineProvider.overrideWithValue(_Quiet())],
       );

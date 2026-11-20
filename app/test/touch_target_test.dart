@@ -34,7 +34,6 @@ import 'package:critmath/app.dart';
 import 'package:critmath/data/map_anchor_scanner.dart';
 import 'package:critmath/data/sanctuary_sequence.dart';
 import 'package:critmath/platform/sfx_engine.dart';
-import 'package:critmath/providers/app_providers.dart';
 import 'package:critmath/providers/exploration_provider.dart';
 import 'package:critmath/providers/map_anchors_provider.dart';
 import 'package:critmath/providers/session_provider.dart';
@@ -49,6 +48,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'playfield_caption_band_test.dart' show playfields;
+import 'support/harness.dart';
 
 /// The reference window, as `README.md` and the rest of the suite use.
 const Size _size = Size(1180, 820);
@@ -110,10 +110,7 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   void sizeTheWindow(WidgetTester tester) {
-    tester.view.physicalSize = _size;
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+    useViewSize(tester, _size);
   }
 
   group('playfields', () {
@@ -166,10 +163,7 @@ void main() {
       addTearDown(container.dispose);
       container.read(explorationProvider.notifier).replaceAll({0, 1, 2, 3});
       // Real asset I/O; see the note in `sanctuary_asleep_node_test.dart`.
-      await tester.runAsync(() async {
-        await container.read(activityRegistryProvider.future);
-        await container.read(conceptRegistryProvider.future);
-      });
+      await preloadRegistries(tester, container);
       final router = GoRouter(
         routes: [
           GoRoute(path: '/', builder: (_, __) => screen),

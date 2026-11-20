@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/harness.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -31,10 +32,7 @@ void main() {
   }
 
   Future<ProviderContainer> pumpGarden(WidgetTester tester) async {
-    tester.view.physicalSize = const Size(1180, 820);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+    useViewSize(tester);
 
     final container = ProviderContainer(
       overrides: [sessionIdProvider.overrideWithValue('test-session')],

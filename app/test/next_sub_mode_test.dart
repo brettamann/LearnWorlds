@@ -7,18 +7,14 @@
 // written for a struggling child. These run against the real registry, so a
 // sub-mode reordered or re-flagged there is checked the day it happens.
 
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:critmath/engines/mastery/concept_state.dart';
 import 'package:critmath/engines/scaffolding/next_sub_mode.dart';
 import 'package:critmath/models/activity.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'support/fixtures.dart';
 
 Map<String, Activity> _registry() {
-  final json = jsonDecode(
-    File('assets/data/activity-registry/kindergarten.json').readAsStringSync(),
-  ) as Map<String, dynamic>;
+  final json = activityRegistryJson();
   return <String, Activity>{
     for (final raw in json['activities'] as List<dynamic>)
       (raw as Map<String, dynamic>)['id'] as String: Activity.fromJson(raw),

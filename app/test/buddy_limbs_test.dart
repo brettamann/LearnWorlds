@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/harness.dart';
 
 /// Every (id, left, right) the game can equip.
 List<(String, String, String)> _pairs() => <(String, String, String)>[
@@ -123,10 +124,7 @@ void main() {
       // one it replaces does not fail — it swings from the wrong end. This
       // cannot see that. What it catches is a catalog entry pointing at
       // nothing, which throws at paint.
-      tester.view.physicalSize = const Size(600, 600);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
+      useViewSize(tester, const Size(600, 600));
 
       for (var i = 0; i < kBuddyArms.length; i++) {
         await tester.pumpWidget(

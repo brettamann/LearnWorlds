@@ -28,6 +28,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/harness.dart';
 
 /// One sub-mode's staged opening, described in the terms the assertions need.
 class _Opening {
@@ -119,10 +120,7 @@ void main() {
   const opening = Duration(milliseconds: 2000);
 
   Future<ProviderContainer> pump(WidgetTester tester, _Opening c) async {
-    tester.view.physicalSize = const Size(1180, 820);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+    useViewSize(tester);
 
     final container = ProviderContainer(
       overrides: [sessionIdProvider.overrideWithValue('test-session')],
