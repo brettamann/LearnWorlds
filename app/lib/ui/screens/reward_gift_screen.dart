@@ -76,17 +76,16 @@ class _RewardGiftScreenState extends ConsumerState<RewardGiftScreen> {
     _narrated = true;
     // Speech bubble already shows the line on screen — use the no-caption
     // variant so the bottom caption bar doesn't double up.
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          const NarrationLine(
-            text: RewardGiftScreen.kMysteryEggDialog,
-            cueId: 'reward:k-mystery-egg:gift',
-            speaker: kKeeperSpeaker,
-          ),
-        );
+    ref.narration.say(
+      RewardGiftScreen.kMysteryEggDialog,
+      cueId: 'reward:k-mystery-egg:gift',
+      speaker: kKeeperSpeaker,
+      caption: false,
+    );
   }
 
   void _onContinue() {
-    ref.read(narrationPlayerProvider.notifier).clear();
+    ref.narration.clear();
     context.go('/sanctuary');
   }
 

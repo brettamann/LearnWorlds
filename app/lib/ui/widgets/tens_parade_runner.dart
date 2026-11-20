@@ -146,13 +146,12 @@ class _TensParadeRunnerState extends ConsumerState<TensParadeRunner> {
       _earnedCard = earned;
       _phase = _Phase.reward;
     });
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          NarrationLine(
-            text: _rewardDialog,
-            cueId: 'tens-parade:reward',
-            speaker: kKeeperSpeaker,
-          ),
-        );
+    ref.narration.say(
+      _rewardDialog,
+      cueId: 'tens-parade:reward',
+      speaker: kKeeperSpeaker,
+      caption: false,
+    );
   }
 
   void _repeat() {
@@ -280,13 +279,10 @@ class _DemoLayerState extends ConsumerState<_DemoLayer>
       });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      ref.read(narrationPlayerProvider.notifier).speak(
-            const NarrationLine(
-              text:
-                  'Count the animals with me out loud as they do their parade!',
-              cueId: 'tens-parade:demo',
-            ),
-          );
+      ref.narration.say(
+        'Count the animals with me out loud as they do their parade!',
+        cueId: 'tens-parade:demo',
+      );
       _drift.forward();
       // Fire the hand-poke roughly mid-screen so the kid sees a tap on
       // the creature as it passes — same beat we ask of them.

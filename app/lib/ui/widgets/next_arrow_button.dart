@@ -33,7 +33,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/button_labels.dart';
-import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 
 /// How many idle nudges before the button assumes nobody is listening.
@@ -125,12 +124,10 @@ class _NextArrowButtonState extends ConsumerState<NextArrowButton>
     _hint
       ..reset()
       ..forward();
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: widget.idleHintText,
-            cueId: '${widget.idleHintCueIdPrefix}:$_hintFireCount',
-          ),
-        );
+    ref.narration.say(
+      widget.idleHintText,
+      cueId: '${widget.idleHintCueIdPrefix}:$_hintFireCount',
+    );
     _scheduleNextHint();
   }
 

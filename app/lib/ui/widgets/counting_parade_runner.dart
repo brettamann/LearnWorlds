@@ -389,12 +389,8 @@ class _CountingParadeRunnerState extends ConsumerState<CountTheParadeRunner> {
           _buddyVisit = _buddyStopFor(next);
         });
         feedback.hint();
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: warmHintLine(2),
-                cueId: 'parade:hint-point-r$_roundIndex',
-              ),
-            );
+        ref.narration
+            .say(warmHintLine(2), cueId: 'parade:hint-point-r$_roundIndex');
       case HintLevel.demonstrate:
         // Do one for her. "Prefer demoting to skipping" — a kid learns nothing
         // from being stuck, and there is deliberately no skip button. Buddy is
@@ -407,12 +403,8 @@ class _CountingParadeRunnerState extends ConsumerState<CountTheParadeRunner> {
           if (!mounted) return;
           _sendBuddyHome();
         });
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: warmHintLine(3),
-                cueId: 'parade:hint-demo-r$_roundIndex',
-              ),
-            );
+        ref.narration
+            .say(warmHintLine(3), cueId: 'parade:hint-demo-r$_roundIndex');
         _tap(next, fromHint: true);
     }
   }
@@ -478,48 +470,42 @@ class _CountingParadeRunnerState extends ConsumerState<CountTheParadeRunner> {
     });
     _hints?.poke();
     ref.read(feedbackEngineProvider).wrong();
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: warmMissLine(_missRotation++),
-            cueId: 'parade:miss-r$_roundIndex-$slot',
-          ),
-        );
+    ref.narration.say(
+      warmMissLine(_missRotation++),
+      cueId: 'parade:miss-r$_roundIndex-$slot',
+    );
   }
 
   void _speakKeeperIntro() {
     // Keeper line is shown in the speech bubble — skip the bottom caption
     // overlay so the same text doesn't render twice.
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          NarrationLine(
-            text: _introDialog,
-            cueId: 'parade:intro',
-            speaker: kKeeperSpeaker,
-          ),
-        );
+    ref.narration.say(
+      _introDialog,
+      cueId: 'parade:intro',
+      speaker: kKeeperSpeaker,
+      caption: false,
+    );
   }
 
   String get _countingPromptText => paradeCountingPrompt(_currentCreature);
 
   void _speakCountingPrompt() {
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: _countingPromptText,
-            cueId: 'parade:counting-prompt-r$_roundIndex',
-          ),
-        );
+    ref.narration.say(
+      _countingPromptText,
+      cueId: 'parade:counting-prompt-r$_roundIndex',
+    );
   }
 
   /// Opens a round with the card that names its creature, then counts.
   void _beginRound() {
     _speciesIntroTimer?.cancel();
     setState(() => _phase = _Phase.speciesIntro);
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          NarrationLine(
-            text: paradeSpeciesIntroLine(_currentCreature),
-            cueId: 'parade:species-intro-r$_roundIndex',
-            speaker: kKeeperSpeaker,
-          ),
-        );
+    ref.narration.say(
+      paradeSpeciesIntroLine(_currentCreature),
+      cueId: 'parade:species-intro-r$_roundIndex',
+      speaker: kKeeperSpeaker,
+      caption: false,
+    );
     // Held long enough to outlast the spoken line rather than the read — the
     // same rule KeeperAside uses, and for the same reason: for a pre-reader
     // the voice is the whole message.
@@ -566,7 +552,7 @@ class _CountingParadeRunnerState extends ConsumerState<CountTheParadeRunner> {
     // whatever is in flight, and what is in flight at that moment is the
     // demonstration's own explanation - the one line in the round that
     // says why. See HintLadder.
-    final say = ref.read(narrationPlayerProvider.notifier);
+    final say = ref.narration;
     final line = NarrationLine(
       text: '$spoken.',
       cueId: 'parade:tap-r$_roundIndex-${_tapped.length}',
@@ -624,13 +610,12 @@ class _CountingParadeRunnerState extends ConsumerState<CountTheParadeRunner> {
       _celebrationTimer = Timer(_kFinalCelebrationHold, () {
         if (!mounted) return;
         setState(() => _phase = _Phase.interstitial);
-        ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-              NarrationLine(
-                text: _finalKeeperLine,
-                cueId: 'parade:reward',
-                speaker: kKeeperSpeaker,
-              ),
-            );
+        ref.narration.say(
+          _finalKeeperLine,
+          cueId: 'parade:reward',
+          speaker: kKeeperSpeaker,
+          caption: false,
+        );
       });
       return;
     }
@@ -650,13 +635,12 @@ class _CountingParadeRunnerState extends ConsumerState<CountTheParadeRunner> {
       _phase = _Phase.transition;
       _asideToken++;
     });
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          NarrationLine(
-            text: _transitionLine,
-            cueId: 'parade:interstitial-r$_roundIndex',
-            speaker: kKeeperSpeaker,
-          ),
-        );
+    ref.narration.say(
+      _transitionLine,
+      cueId: 'parade:interstitial-r$_roundIndex',
+      speaker: kKeeperSpeaker,
+      caption: false,
+    );
   }
 
   /// Fired by the keeper aside retiring itself, not by a button. Guards on

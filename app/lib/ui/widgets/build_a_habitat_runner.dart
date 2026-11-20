@@ -195,21 +195,13 @@ class _BuildAHabitatRunnerState extends ConsumerState<BuildAHabitatRunner> {
   }
 
   void _speakPhase1Prompt() {
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: _phase1Prompt,
-            cueId: 'habitat:r$_roundIndex:phase1-prompt',
-          ),
-        );
+    ref.narration
+        .say(_phase1Prompt, cueId: 'habitat:r$_roundIndex:phase1-prompt');
   }
 
   void _speakPhase2Prompt() {
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: _phase2Prompt,
-            cueId: 'habitat:r$_roundIndex:phase2-prompt',
-          ),
-        );
+    ref.narration
+        .say(_phase2Prompt, cueId: 'habitat:r$_roundIndex:phase2-prompt');
   }
 
   void _onStartFromIntro() {
@@ -250,20 +242,12 @@ class _BuildAHabitatRunnerState extends ConsumerState<BuildAHabitatRunner> {
       case HintLevel.point:
         setState(() => _hinted = next);
         feedback.hint();
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: warmHintLine(2),
-                cueId: 'habitat:r$_roundIndex:hint-point',
-              ),
-            );
+        ref.narration
+            .say(warmHintLine(2), cueId: 'habitat:r$_roundIndex:hint-point');
       case HintLevel.demonstrate:
         feedback.hint();
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: warmHintLine(3),
-                cueId: 'habitat:r$_roundIndex:hint-demo',
-              ),
-            );
+        ref.narration
+            .say(warmHintLine(3), cueId: 'habitat:r$_roundIndex:hint-demo');
         final (kind, index) = next;
         switch (kind) {
           case 'corner':
@@ -430,13 +414,12 @@ class _BuildAHabitatRunnerState extends ConsumerState<BuildAHabitatRunner> {
         if (!_isLastRound) _asideToken += 1;
       });
       final line = _isLastRound ? _finalKeeperLine : _currentRound.keeperLine;
-      ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-            NarrationLine(
-              text: line,
-              cueId: 'habitat:r$_roundIndex:interstitial',
-              speaker: kKeeperSpeaker,
-            ),
-          );
+      ref.narration.say(
+        line,
+        cueId: 'habitat:r$_roundIndex:interstitial',
+        speaker: kKeeperSpeaker,
+        caption: false,
+      );
     });
   }
 
@@ -460,7 +443,7 @@ class _BuildAHabitatRunnerState extends ConsumerState<BuildAHabitatRunner> {
 
   void _speak(String text, String cueId, {bool fromHint = false}) {
     // Queued, not spoken, when the ladder placed this piece. See HintLadder.
-    final say = ref.read(narrationPlayerProvider.notifier);
+    final say = ref.narration;
     final line = NarrationLine(text: text, cueId: cueId);
     if (fromHint) {
       say.enqueue(line);

@@ -325,20 +325,16 @@ class _ShapeGardenRunnerState extends ConsumerState<ShapeGardenFindingRunner> {
       case HintLevel.point:
         setState(() => _hintedId = next.id);
         feedback.hint();
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: warmHintLine(2),
-                cueId: 'shape-garden:r$_roundIndex:hint-point',
-              ),
-            );
+        ref.narration.say(
+          warmHintLine(2),
+          cueId: 'shape-garden:r$_roundIndex:hint-point',
+        );
       case HintLevel.demonstrate:
         feedback.hint();
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: 'This one is a $_targetDisplay.',
-                cueId: 'shape-garden:r$_roundIndex:hint-demo',
-              ),
-            );
+        ref.narration.say(
+          'This one is a $_targetDisplay.',
+          cueId: 'shape-garden:r$_roundIndex:hint-demo',
+        );
         _onTap(next, fromHint: true);
     }
   }
@@ -366,24 +362,21 @@ class _ShapeGardenRunnerState extends ConsumerState<ShapeGardenFindingRunner> {
   }
 
   void _speakIntroOnce() {
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          NarrationLine(
-            text: _introDialog,
-            cueId: 'shape-garden:intro',
-            speaker: kKeeperSpeaker,
-          ),
-        );
+    ref.narration.say(
+      _introDialog,
+      cueId: 'shape-garden:intro',
+      speaker: kKeeperSpeaker,
+      caption: false,
+    );
   }
 
   void _speakRoundPromptOnce() {
     if (_promptSpoken) return;
     _promptSpoken = true;
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: 'Tap all the $_targetPlural.',
-            cueId: 'shape-garden:r$_roundIndex:prompt',
-          ),
-        );
+    ref.narration.say(
+      'Tap all the $_targetPlural.',
+      cueId: 'shape-garden:r$_roundIndex:prompt',
+    );
   }
 
   void _onStartFromIntro() {
@@ -416,7 +409,7 @@ class _ShapeGardenRunnerState extends ConsumerState<ShapeGardenFindingRunner> {
         // whatever is in flight, and what is in flight at that moment is the
         // demonstration's own explanation - the one line in the round that
         // says why. See HintLadder.
-        final say = ref.read(narrationPlayerProvider.notifier);
+        final say = ref.narration;
         final line = NarrationLine(
           text: "There's one!",
           cueId: 'shape-garden:r$_roundIndex:hit-${p.id}',
@@ -444,13 +437,11 @@ class _ShapeGardenRunnerState extends ConsumerState<ShapeGardenFindingRunner> {
       // under her finger, and k-activity-patterns.md never asks the game to
       // name a child's mistake back to her. The family is now 36.
       _missRotation += 1;
-      ref.read(narrationPlayerProvider.notifier).speak(
-            NarrationLine(
-              text: '${warmMissLine(_missRotation)} '
-                  'Find the $_targetPlural.',
-              cueId: 'shape-garden:r$_roundIndex:miss-${p.id}-$_wrongTaps',
-            ),
-          );
+      ref.narration.say(
+        '${warmMissLine(_missRotation)} '
+        'Find the $_targetPlural.',
+        cueId: 'shape-garden:r$_roundIndex:miss-${p.id}-$_wrongTaps',
+      );
     }
   }
 
@@ -478,13 +469,12 @@ class _ShapeGardenRunnerState extends ConsumerState<ShapeGardenFindingRunner> {
       _celebrationTimer = Timer(_kCelebrationHold, () {
         if (!mounted) return;
         setState(() => _phase = _Phase.interstitial);
-        ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-              NarrationLine(
-                text: _finalKeeperLine,
-                cueId: 'shape-garden:r$_roundIndex:interstitial',
-                speaker: kKeeperSpeaker,
-              ),
-            );
+        ref.narration.say(
+          _finalKeeperLine,
+          cueId: 'shape-garden:r$_roundIndex:interstitial',
+          speaker: kKeeperSpeaker,
+          caption: false,
+        );
       });
       return;
     }
@@ -496,13 +486,12 @@ class _ShapeGardenRunnerState extends ConsumerState<ShapeGardenFindingRunner> {
         _phase = _Phase.transition;
         _asideToken += 1;
       });
-      ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-            NarrationLine(
-              text: _currentRound.keeperLine,
-              cueId: 'shape-garden:r$_roundIndex:interstitial',
-              speaker: kKeeperSpeaker,
-            ),
-          );
+      ref.narration.say(
+        _currentRound.keeperLine,
+        cueId: 'shape-garden:r$_roundIndex:interstitial',
+        speaker: kKeeperSpeaker,
+        caption: false,
+      );
     });
   }
 
@@ -914,13 +903,12 @@ class _ShapeGardenSortingRunnerState
   }
 
   void _speakIntro() {
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          NarrationLine(
-            text: _introDialog,
-            cueId: 'shape-garden-sort:intro',
-            speaker: kKeeperSpeaker,
-          ),
-        );
+    ref.narration.say(
+      _introDialog,
+      cueId: 'shape-garden-sort:intro',
+      speaker: kKeeperSpeaker,
+      caption: false,
+    );
   }
 
   void _onStartFromIntro() {
@@ -947,13 +935,12 @@ class _ShapeGardenSortingRunnerState
       _celebrationTimer = Timer(_kCelebrationHold, () {
         if (!mounted) return;
         setState(() => _phase = _Phase.interstitial);
-        ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-              NarrationLine(
-                text: _finalKeeperLine,
-                cueId: 'shape-garden-sort:r$_roundIndex:interstitial',
-                speaker: kKeeperSpeaker,
-              ),
-            );
+        ref.narration.say(
+          _finalKeeperLine,
+          cueId: 'shape-garden-sort:r$_roundIndex:interstitial',
+          speaker: kKeeperSpeaker,
+          caption: false,
+        );
       });
       return;
     }
@@ -965,13 +952,12 @@ class _ShapeGardenSortingRunnerState
         _phase = _Phase.transition;
         _asideToken += 1;
       });
-      ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-            NarrationLine(
-              text: _currentRound.keeperLine,
-              cueId: 'shape-garden-sort:r$_roundIndex:interstitial',
-              speaker: kKeeperSpeaker,
-            ),
-          );
+      ref.narration.say(
+        _currentRound.keeperLine,
+        cueId: 'shape-garden-sort:r$_roundIndex:interstitial',
+        speaker: kKeeperSpeaker,
+        caption: false,
+      );
     });
   }
 

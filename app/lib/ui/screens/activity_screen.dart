@@ -11,7 +11,6 @@ import '../../data/button_labels.dart';
 import '../../data/sanctuary_sequence.dart';
 import '../../data/warm_lines.dart';
 import '../../engines/feedback/feedback_engine.dart';
-import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../engines/scaffolding/next_sub_mode.dart';
 import '../../engines/scaffolding/scaffold_decision.dart';
@@ -489,10 +488,12 @@ class ActivityScreen extends ConsumerWidget {
     // Enqueued, not spoken. The runner's own closing keeper line is very
     // likely still in flight — she taps Continue on the interstitial and this
     // sheet is what the tap opens — and `speak` would cut it off mid-word.
-    ref.read(narrationPlayerProvider.notifier).enqueue(
-          NarrationLine(text: line, cueId: 'round-complete:egg-$eggStage'),
-          caption: false,
-        );
+    ref.narration.say(
+      line,
+      cueId: 'round-complete:egg-$eggStage',
+      caption: false,
+      queue: true,
+    );
 
     showModalBottomSheet<void>(
       context: context,

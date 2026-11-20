@@ -228,24 +228,23 @@ class _SanctuaryRoundShellState extends ConsumerState<SanctuaryRoundShell> {
   }
 
   void _speakIntro() {
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          NarrationLine(
-            text: widget.introLine,
-            cueId: '${widget.activityId}:intro',
-            speaker: kKeeperSpeaker,
-          ),
-        );
+    ref.narration.say(
+      widget.introLine,
+      cueId: '${widget.activityId}:intro',
+      speaker: kKeeperSpeaker,
+      caption: false,
+    );
   }
 
   void _start() {
-    ref.read(narrationPlayerProvider.notifier).clear();
+    ref.narration.clear();
     setState(() => _phase = _ShellPhase.playing);
   }
 
   void _say(String line, {bool replay = true, bool queue = false}) {
     if (!mounted) return;
     if (replay && line != _prompt) setState(() => _prompt = line);
-    final narration = ref.read(narrationPlayerProvider.notifier);
+    final narration = ref.narration;
     final l = NarrationLine(
       text: line,
       cueId: '${widget.activityId}:r$_round:${line.hashCode}',
@@ -283,28 +282,26 @@ class _SanctuaryRoundShellState extends ConsumerState<SanctuaryRoundShell> {
       if (!mounted) return;
       if (_isLastRound) {
         setState(() => _phase = _ShellPhase.finale);
-        ref.read(narrationPlayerProvider.notifier).enqueue(
-              NarrationLine(
-                text: widget.finalLine,
-                cueId: '${widget.activityId}:finale',
-                speaker: kKeeperSpeaker,
-              ),
-              caption: false,
-            );
+        ref.narration.say(
+          widget.finalLine,
+          cueId: '${widget.activityId}:finale',
+          speaker: kKeeperSpeaker,
+          caption: false,
+          queue: true,
+        );
         return;
       }
       setState(() {
         _phase = _ShellPhase.transition;
         _asideToken += 1;
       });
-      ref.read(narrationPlayerProvider.notifier).enqueue(
-            NarrationLine(
-              text: widget.keeperLineFor(_round),
-              cueId: '${widget.activityId}:r$_round:aside',
-              speaker: kKeeperSpeaker,
-            ),
-            caption: false,
-          );
+      ref.narration.say(
+        widget.keeperLineFor(_round),
+        cueId: '${widget.activityId}:r$_round:aside',
+        speaker: kKeeperSpeaker,
+        caption: false,
+        queue: true,
+      );
     });
   }
 

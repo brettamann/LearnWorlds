@@ -21,7 +21,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/asset_paths.dart';
 import '../../data/sort_attribute_words.dart';
-import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../common/timer_scope.dart';
 import 'glitter_burst.dart';
@@ -172,12 +171,6 @@ class _Kg4SortByAttributeLessonLayerState
     });
   }
 
-  void _speak(String text, String cueId) {
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(text: text, cueId: cueId),
-        );
-  }
-
   /// Auto-sort one shape into its target bin with a hand-pointer
   /// glide + poke. Returns the duration it spans so the caller can
   /// chain the next step.
@@ -203,7 +196,7 @@ class _Kg4SortByAttributeLessonLayerState
         _handTarget = bin.position;
         _pokeKey += 1;
       });
-      _speak(narrationText, narrationCue);
+      ref.narration.say(narrationText, cueId: narrationCue);
     });
     after(Duration(milliseconds: startMs + 1300), () {
       setState(() {
@@ -214,9 +207,9 @@ class _Kg4SortByAttributeLessonLayerState
   }
 
   void _scheduleIShow() {
-    _speak(
+    ref.narration.say(
       "Let's group these shapes by how many sides they have.",
-      'k-g-4-lesson:ishow-intro',
+      cueId: 'k-g-4-lesson:ishow-intro',
     );
     _scheduleAutoSort(
       startMs: 2200,
@@ -240,10 +233,10 @@ class _Kg4SortByAttributeLessonLayerState
       narrationCue: 'k-g-4-lesson:ishow-5',
     );
     after(const Duration(milliseconds: 11200), () {
-      _speak(
+      ref.narration.say(
         'Shapes with the same number of sides go together, no matter '
-            'their size.',
-        'k-g-4-lesson:ishow-closer',
+        'their size.',
+        cueId: 'k-g-4-lesson:ishow-closer',
       );
     });
     after(const Duration(milliseconds: 15200), () {
@@ -251,9 +244,9 @@ class _Kg4SortByAttributeLessonLayerState
         _handVisible = false;
         _beat = _Beat.weTry;
       });
-      _speak(
+      ref.narration.say(
         'Your turn. Sort by how many sides.',
-        'k-g-4-lesson:we-try-start',
+        cueId: 'k-g-4-lesson:we-try-start',
       );
     });
   }
@@ -302,14 +295,14 @@ class _Kg4SortByAttributeLessonLayerState
             : bin.id == 'bin-4'
                 ? 'Four sides.'
                 : 'Five sides.';
-        _speak(sides, 'k-g-4-lesson:auto-${s.id}');
+        ref.narration.say(sides, cueId: 'k-g-4-lesson:auto-${s.id}');
       });
       t += 700;
     }
     after(Duration(milliseconds: t + 200), () {
-      _speak(
+      ref.narration.say(
         'Six shapes sorted. Two in each basket.',
-        'k-g-4-lesson:we-try-closer',
+        cueId: 'k-g-4-lesson:we-try-closer',
       );
     });
     after(Duration(milliseconds: t + 2200), () {
@@ -333,13 +326,13 @@ class _Kg4SortByAttributeLessonLayerState
       // Wrong basket — bounce back to the start position + speak the
       // corrective line.
       setState(() => _positions[shape.id] = shape.startPos);
-      _speak(
+      ref.narration.say(
         bin.id == 'bin-3'
             ? 'That basket is for shapes with three sides. Try another!'
             : bin.id == 'bin-4'
                 ? 'That basket is for shapes with four sides. Try another!'
                 : 'That basket is for shapes with five or more sides. Try another!',
-        'k-g-4-lesson:we-try-corrective-${shape.id}-${bin.id}',
+        cueId: 'k-g-4-lesson:we-try-corrective-${shape.id}-${bin.id}',
       );
       return;
     }
@@ -354,12 +347,12 @@ class _Kg4SortByAttributeLessonLayerState
         : bin.id == 'bin-4'
             ? 'Four sides.'
             : 'Five sides.';
-    _speak(sides, 'k-g-4-lesson:we-try-right-${shape.id}');
+    ref.narration.say(sides, cueId: 'k-g-4-lesson:we-try-right-${shape.id}');
     if (_kLessonShapes.every((s) => _placed.contains(s.id))) {
       after(const Duration(milliseconds: 900), () {
-        _speak(
+        ref.narration.say(
           'Six shapes sorted. Two in each basket.',
-          'k-g-4-lesson:we-try-closer',
+          cueId: 'k-g-4-lesson:we-try-closer',
         );
       });
       after(const Duration(milliseconds: 2800), _finishLesson);

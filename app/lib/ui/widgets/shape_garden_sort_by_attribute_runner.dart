@@ -362,12 +362,7 @@ class _ShapeGardenSortByAttributeRunnerState
   }
 
   void _speakPrompt() {
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: _prompt,
-            cueId: 'sort-attr:r$_roundIndex:prompt',
-          ),
-        );
+    ref.narration.say(_prompt, cueId: 'sort-attr:r$_roundIndex:prompt');
   }
 
   void _onStartFromIntro() {
@@ -408,22 +403,14 @@ class _ShapeGardenSortByAttributeRunnerState
           _hintedBinId = item.targetBinId;
         });
         feedback.hint();
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: warmHintLine(2),
-                cueId: 'sort-attr:r$_roundIndex:hint-point',
-              ),
-            );
+        ref.narration
+            .say(warmHintLine(2), cueId: 'sort-attr:r$_roundIndex:hint-point');
       case HintLevel.demonstrate:
         final bin = _binFor(item);
         if (bin == null) return;
         feedback.hint();
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: warmHintLine(3),
-                cueId: 'sort-attr:r$_roundIndex:hint-demo',
-              ),
-            );
+        ref.narration
+            .say(warmHintLine(3), cueId: 'sort-attr:r$_roundIndex:hint-demo');
         // The drop speaks the basket's name behind that line, which is the
         // reason as well as the confirmation - "three sides" is why it went
         // there.
@@ -457,12 +444,7 @@ class _ShapeGardenSortByAttributeRunnerState
   /// is already printed under the basket, and it is safe to fire on a bare tap
   /// because a tap is not an answer here: the answer is a drop.
   void _onBinTapped(_Bin bin) {
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          NarrationLine(
-            text: bin.label,
-            cueId: 'sort:bin:${bin.id}',
-          ),
-        );
+    ref.narration.say(bin.label, cueId: 'sort:bin:${bin.id}', caption: false);
   }
 
   void _onDropped({
@@ -482,13 +464,11 @@ class _ShapeGardenSortByAttributeRunnerState
         };
       });
       ref.read(feedbackEngineProvider).wrong();
-      ref.read(narrationPlayerProvider.notifier).speak(
-            NarrationLine(
-              text: '${warmMissLine(_missRotation++)} '
-                  'Sort by ${_currentRound.attributeWord}.',
-              cueId: 'sort-attr:r$_roundIndex:wrong-${item.id}-$_wrongDrops',
-            ),
-          );
+      ref.narration.say(
+        '${warmMissLine(_missRotation++)} '
+        'Sort by ${_currentRound.attributeWord}.',
+        cueId: 'sort-attr:r$_roundIndex:wrong-${item.id}-$_wrongDrops',
+      );
       return;
     }
     setState(() {
@@ -504,7 +484,7 @@ class _ShapeGardenSortByAttributeRunnerState
       ..drop()
       ..correct();
     // Queued, not spoken, when the ladder did this drop. See HintLadder.
-    final say = ref.read(narrationPlayerProvider.notifier);
+    final say = ref.narration;
     final line = NarrationLine(
       text: bin.label,
       cueId: 'sort-attr:r$_roundIndex:right-${item.id}',
@@ -541,13 +521,12 @@ class _ShapeGardenSortByAttributeRunnerState
       _celebrationTimer = Timer(const Duration(seconds: 1), () {
         if (!mounted) return;
         setState(() => _phase = _Phase.interstitial);
-        ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-              NarrationLine(
-                text: _finalKeeperLine,
-                cueId: 'sort-attr:r$_roundIndex:interstitial',
-                speaker: kKeeperSpeaker,
-              ),
-            );
+        ref.narration.say(
+          _finalKeeperLine,
+          cueId: 'sort-attr:r$_roundIndex:interstitial',
+          speaker: kKeeperSpeaker,
+          caption: false,
+        );
       });
       return;
     }
@@ -559,13 +538,12 @@ class _ShapeGardenSortByAttributeRunnerState
         _phase = _Phase.transition;
         _asideToken += 1;
       });
-      ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-            NarrationLine(
-              text: _currentRound.keeperLine,
-              cueId: 'sort-attr:r$_roundIndex:interstitial',
-              speaker: kKeeperSpeaker,
-            ),
-          );
+      ref.narration.say(
+        _currentRound.keeperLine,
+        cueId: 'sort-attr:r$_roundIndex:interstitial',
+        speaker: kKeeperSpeaker,
+        caption: false,
+      );
     });
   }
 

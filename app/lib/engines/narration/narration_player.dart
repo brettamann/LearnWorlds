@@ -15,6 +15,7 @@
 // same slot that pipeline would have filled.
 //
 // API is intentionally tiny:
+//   .say(text, ...) — the one door UI code uses; picks one of the three below
 //   .speak(line)    — replace the current caption (+ speak via TTS if enabled)
 //   .enqueue(line)  — say this AFTER the current line finishes
 //   .clear()        — remove the caption and stop any in-flight TTS
@@ -134,6 +135,28 @@ class NarrationPlayer extends Notifier<NarrationLine?> {
   bool get isSpeaking => _speaking;
 
   int get queuedCount => _queue.length;
+
+  /// Says [text]. The one call UI code needs.
+  ///
+  /// [caption] false keeps it out of the caption bar, for lines already on
+  /// screen in a speech bubble (keeper intros, asides, reward beats). [queue]
+  /// true waits for the line in flight instead of cutting it off.
+  void say(
+    String text, {
+    String? cueId,
+    String speaker = kNarratorSpeaker,
+    bool caption = true,
+    bool queue = false,
+  }) {
+    final line = NarrationLine(text: text, cueId: cueId, speaker: speaker);
+    if (queue) {
+      enqueue(line, caption: caption);
+    } else if (caption) {
+      speak(line);
+    } else {
+      speakWithoutCaption(line);
+    }
+  }
 
   void speak(NarrationLine line) {
     _queue.clear();
@@ -270,3 +293,8 @@ class NarrationPlayer extends Notifier<NarrationLine?> {
 
 final narrationPlayerProvider =
     NotifierProvider<NarrationPlayer, NarrationLine?>(NarrationPlayer.new);
+
+/// `ref.narration.say(...)` from any widget.
+extension NarrationRef on WidgetRef {
+  NarrationPlayer get narration => read(narrationPlayerProvider.notifier);
+}

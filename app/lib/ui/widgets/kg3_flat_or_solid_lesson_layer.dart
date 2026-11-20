@@ -22,7 +22,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/asset_paths.dart';
 import '../../data/button_labels.dart';
 import '../../data/flat_or_solid_shapes.dart';
-import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../common/timer_scope.dart';
 import 'flat_or_solid_round.dart';
@@ -204,19 +203,13 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody>
     });
   }
 
-  void _speak(String text, String cueId) {
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(text: text, cueId: cueId),
-        );
-  }
-
   void _scheduleTimeline() {
     // Beat 0 — intro.
     afterMs(300, () {
-      _speak(
+      ref.narration.say(
         "Watch — I'll show you how to sort. The flat shapes go in the "
-            'flat basket, the solid shapes in the solid basket.',
-        'kg3-demo:intro',
+        'flat basket, the solid shapes in the solid basket.',
+        cueId: 'kg3-demo:intro',
       );
     });
     // Beat 1 — hand glides to the flat triangle, picks it up.
@@ -229,7 +222,7 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody>
       _pokeCounter += 1;
     });
     afterMs(2900, () {
-      _speak('Triangle.', 'kg3-demo:flat-name');
+      ref.narration.say('Triangle.', cueId: 'kg3-demo:flat-name');
     });
     // Beat 2 — carry to flat bin.
     afterMs(3800, () {
@@ -245,7 +238,7 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody>
         _flatBinBurst += 1;
         _pokeCounter += 1;
       });
-      _speak('One flat shape!', 'kg3-demo:flat-drop');
+      ref.narration.say('One flat shape!', cueId: 'kg3-demo:flat-drop');
     });
     // Beat 3 — hand glides to the solid sphere.
     afterMs(6400, () {
@@ -256,7 +249,7 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody>
       _pokeCounter += 1;
     });
     afterMs(6900, () {
-      _speak('Sphere.', 'kg3-demo:solid-name');
+      ref.narration.say('Sphere.', cueId: 'kg3-demo:solid-name');
     });
     // Beat 4 — carry to solid bin.
     afterMs(7800, () {
@@ -272,7 +265,7 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody>
         _solidBinBurst += 1;
         _pokeCounter += 1;
       });
-      _speak('One solid shape!', 'kg3-demo:solid-drop');
+      ref.narration.say('One solid shape!', cueId: 'kg3-demo:solid-drop');
     });
     // Beat 5 — wrap up + hand off.
     afterMs(10400, () {
@@ -280,7 +273,7 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody>
         _step = _DemoStep.wrapUp;
         _pointerVisible = false;
       });
-      _speak('Now you try!', 'kg3-demo:wrapup');
+      ref.narration.say('Now you try!', cueId: 'kg3-demo:wrapup');
     });
     afterMs(12000, widget.onComplete);
   }

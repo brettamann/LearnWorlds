@@ -193,20 +193,16 @@ class _CountForwardFromNRunnerState
       case HintLevel.point:
         setState(() => _hintedArrival = next);
         feedback.hint();
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: warmHintLine(2),
-                cueId: 'count-forward:r$_roundIndex:hint-point',
-              ),
-            );
+        ref.narration.say(
+          warmHintLine(2),
+          cueId: 'count-forward:r$_roundIndex:hint-point',
+        );
       case HintLevel.demonstrate:
         feedback.hint();
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: warmHintLine(3),
-                cueId: 'count-forward:r$_roundIndex:hint-demo',
-              ),
-            );
+        ref.narration.say(
+          warmHintLine(3),
+          cueId: 'count-forward:r$_roundIndex:hint-demo',
+        );
         _tapArrival(next, fromHint: true);
     }
   }
@@ -219,13 +215,12 @@ class _CountForwardFromNRunnerState
   }
 
   void _speakIntro() {
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          NarrationLine(
-            text: _introDialog,
-            cueId: 'count-forward:intro',
-            speaker: kKeeperSpeaker,
-          ),
-        );
+    ref.narration.say(
+      _introDialog,
+      cueId: 'count-forward:intro',
+      speaker: kKeeperSpeaker,
+      caption: false,
+    );
   }
 
   /// Open a round: name what is counted, walk the newcomers on, hand over.
@@ -243,7 +238,7 @@ class _CountForwardFromNRunnerState
       _arrivalsLanded = false;
     });
 
-    final narration = ref.read(narrationPlayerProvider.notifier);
+    final narration = ref.narration;
     narration.speak(
       NarrationLine(
         text: _alreadyCountedLine,
@@ -292,7 +287,7 @@ class _CountForwardFromNRunnerState
     // whatever is in flight, and what is in flight at that moment is the
     // demonstration's own explanation - the one line in the round that
     // says why. See HintLadder.
-    final say = ref.read(narrationPlayerProvider.notifier);
+    final say = ref.narration;
     final line = NarrationLine(
       text: '$spoken.',
       cueId: 'count-forward:r$_roundIndex:tap-${_tappedArrivals.length}',
@@ -331,13 +326,12 @@ class _CountForwardFromNRunnerState
       _celebrationTimer = Timer(const Duration(seconds: 1), () {
         if (!mounted) return;
         setState(() => _phase = _Phase.interstitial);
-        ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-              NarrationLine(
-                text: _finalKeeperLine,
-                cueId: 'count-forward:r$_roundIndex:interstitial',
-                speaker: kKeeperSpeaker,
-              ),
-            );
+        ref.narration.say(
+          _finalKeeperLine,
+          cueId: 'count-forward:r$_roundIndex:interstitial',
+          speaker: kKeeperSpeaker,
+          caption: false,
+        );
       });
       return;
     }
@@ -349,13 +343,12 @@ class _CountForwardFromNRunnerState
         _phase = _Phase.transition;
         _asideToken += 1;
       });
-      ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-            NarrationLine(
-              text: _currentRound.keeperLine,
-              cueId: 'count-forward:r$_roundIndex:interstitial',
-              speaker: kKeeperSpeaker,
-            ),
-          );
+      ref.narration.say(
+        _currentRound.keeperLine,
+        cueId: 'count-forward:r$_roundIndex:interstitial',
+        speaker: kKeeperSpeaker,
+        caption: false,
+      );
     });
   }
 

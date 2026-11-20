@@ -24,7 +24,6 @@ import '../../data/shape_find_placements.dart';
 import '../../data/shape_words.dart';
 import '../../data/warm_lines.dart';
 import '../../engines/feedback/feedback_engine.dart';
-import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import 'animated_shape.dart';
 import 'answer_feedback.dart';
@@ -106,12 +105,6 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
     super.dispose();
   }
 
-  void _speak(String text, String cueId) {
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(text: text, cueId: cueId),
-        );
-  }
-
   /// Seed mixes (targetKind, roundIndex) so round 2 of a shape lays out
   /// differently from round 1 but each (kind, round) pair is reproducible.
   List<ShapeFindPlacement> _generatePlacements(int roundIndex) {
@@ -136,7 +129,8 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
       default:
         text = 'One more time! Find every $_targetDisplay.';
     }
-    _speak(text, 'find:${widget.targetKind}:r$_currentRound:prompt');
+    ref.narration
+        .say(text, cueId: 'find:${widget.targetKind}:r$_currentRound:prompt');
   }
 
   void _advanceToNextRound() {
@@ -168,9 +162,9 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
         final isLastRound = _currentRound + 1 >= widget.roundsPerShape;
         if (isLastRound) {
           ref.read(feedbackEngineProvider).celebrate();
-          _speak(
+          ref.narration.say(
             'Nicely done! You found all the $_targetPlural.',
-            'find:${widget.targetKind}:done',
+            cueId: 'find:${widget.targetKind}:done',
           );
           _completed = true;
           _roundTimer = Timer(const Duration(milliseconds: 1800), () {
@@ -179,9 +173,9 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
           });
         } else {
           ref.read(feedbackEngineProvider).roundPass(payout: false);
-          _speak(
+          ref.narration.say(
             'Nice work!',
-            'find:${widget.targetKind}:r$_currentRound:done',
+            cueId: 'find:${widget.targetKind}:r$_currentRound:done',
           );
           _roundTimer = Timer(
             const Duration(milliseconds: 1600),
@@ -189,9 +183,9 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
           );
         }
       } else {
-        _speak(
+        ref.narration.say(
           "There's one!",
-          'find:${widget.targetKind}:r$_currentRound:hit-${p.id}',
+          cueId: 'find:${widget.targetKind}:r$_currentRound:hit-${p.id}',
         );
       }
     } else {
@@ -209,10 +203,11 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
           ? _decorName(p.assetPath)
           : (kShapeDisplayName[p.kind] ?? p.kind);
       _missRotation += 1;
-      _speak(
+      ref.narration.say(
         "That's a $wrongName. ${warmMissLine(_missRotation)} "
-            'Find the $_targetPlural.',
-        'find:${widget.targetKind}:r$_currentRound:miss-${p.id}-$_missRotation',
+        'Find the $_targetPlural.',
+        cueId:
+            'find:${widget.targetKind}:r$_currentRound:miss-${p.id}-$_missRotation',
       );
     }
   }

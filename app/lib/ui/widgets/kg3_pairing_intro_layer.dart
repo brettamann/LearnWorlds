@@ -24,7 +24,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/flat_or_solid_shapes.dart';
-import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../common/timer_scope.dart';
 
@@ -58,12 +57,6 @@ class _Kg3PairingIntroLayerState extends ConsumerState<Kg3PairingIntroLayer>
     });
   }
 
-  void _speak(String text, String cueId) {
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(text: text, cueId: cueId),
-        );
-  }
-
   void _scheduleTimeline() {
     final p = widget.pairing;
     final cuePrefix = 'kg3-intro:${p.id}';
@@ -72,10 +65,10 @@ class _Kg3PairingIntroLayerState extends ConsumerState<Kg3PairingIntroLayer>
     afterMs(150, () => setState(() => _stage = _Stage.flat));
     afterMs(
       700,
-      () => _speak(
+      () => ref.narration.say(
         'This is a flat ${p.flatName}. But every shape has a solid '
-            'version you could hold in your hand!',
-        '$cuePrefix:flat',
+        'version you could hold in your hand!',
+        cueId: '$cuePrefix:flat',
       ),
     );
 
@@ -83,11 +76,11 @@ class _Kg3PairingIntroLayerState extends ConsumerState<Kg3PairingIntroLayer>
     afterMs(5000, () => setState(() => _stage = _Stage.outline));
     afterMs(
       5400,
-      () => _speak(
+      () => ref.narration.say(
         'When a ${p.flatName} is solid, instead of flat, we call it a '
-            '${p.solidName} or a ${p.solidAltName}! '
-            "It's something you could hold in your hand.",
-        '$cuePrefix:outline',
+        '${p.solidName} or a ${p.solidAltName}! '
+        "It's something you could hold in your hand.",
+        cueId: '$cuePrefix:outline',
       ),
     );
 
@@ -95,10 +88,10 @@ class _Kg3PairingIntroLayerState extends ConsumerState<Kg3PairingIntroLayer>
     afterMs(10500, () => setState(() => _stage = _Stage.themed));
     afterMs(
       10900,
-      () => _speak(
+      () => ref.narration.say(
         'These shapes can take many forms. See how this ${p.creatureName} '
-            'looks like a ${p.solidName} or ${p.solidAltName}?',
-        '$cuePrefix:themed',
+        'looks like a ${p.solidName} or ${p.solidAltName}?',
+        cueId: '$cuePrefix:themed',
       ),
     );
 

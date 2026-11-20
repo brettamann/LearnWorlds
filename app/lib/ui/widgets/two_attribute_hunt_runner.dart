@@ -403,20 +403,12 @@ class _TwoAttributeHuntRunnerState
       case HintLevel.point:
         setState(() => _hintedId = next.id);
         feedback.hint();
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: warmHintLine(2),
-                cueId: '2attr:r$_roundIndex:hint-point',
-              ),
-            );
+        ref.narration
+            .say(warmHintLine(2), cueId: '2attr:r$_roundIndex:hint-point');
       case HintLevel.demonstrate:
         feedback.hint();
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: warmHintLine(3),
-                cueId: '2attr:r$_roundIndex:hint-demo',
-              ),
-            );
+        ref.narration
+            .say(warmHintLine(3), cueId: '2attr:r$_roundIndex:hint-demo');
         _onShapeTap(next, fromHint: true);
     }
   }
@@ -431,18 +423,12 @@ class _TwoAttributeHuntRunnerState
   }
 
   void _speakPrompt() {
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: _currentRound.prompt,
-            cueId: '2attr:r$_roundIndex:prompt',
-          ),
-        );
+    ref.narration
+        .say(_currentRound.prompt, cueId: '2attr:r$_roundIndex:prompt');
   }
 
   void _speakDemo(String text, String cueId) {
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(text: text, cueId: cueId),
-        );
+    ref.narration.say(text, cueId: cueId);
   }
 
   /// Tap → start the animated demo. Plays out on the actual round-1
@@ -563,12 +549,10 @@ class _TwoAttributeHuntRunnerState
         };
       });
       ref.read(feedbackEngineProvider).wrong();
-      ref.read(narrationPlayerProvider.notifier).speak(
-            NarrationLine(
-              text: "That's not both. ${warmMissLine(_missRotation++)}",
-              cueId: '2attr:r$_roundIndex:miss-${shape.id}-$_missRotation',
-            ),
-          );
+      ref.narration.say(
+        "That's not both. ${warmMissLine(_missRotation++)}",
+        cueId: '2attr:r$_roundIndex:miss-${shape.id}-$_missRotation',
+      );
       return;
     }
     setState(() {
@@ -580,7 +564,7 @@ class _TwoAttributeHuntRunnerState
     // sounds like progress rather than like the first one again.
     ref.read(feedbackEngineProvider).countStep(_foundIds.length);
     // Queued, not spoken, when the ladder did this tap. See HintLadder.
-    final say = ref.read(narrationPlayerProvider.notifier);
+    final say = ref.narration;
     final line = NarrationLine(
       text: 'Yes! Both.',
       cueId: '2attr:r$_roundIndex:hit-${shape.id}',
@@ -606,13 +590,12 @@ class _TwoAttributeHuntRunnerState
       _celebrationTimer = Timer(const Duration(seconds: 1), () {
         if (!mounted) return;
         setState(() => _phase = _Phase.interstitial);
-        ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-              NarrationLine(
-                text: _currentRound.keeperLine,
-                cueId: '2attr:r$_roundIndex:interstitial',
-                speaker: kKeeperSpeaker,
-              ),
-            );
+        ref.narration.say(
+          _currentRound.keeperLine,
+          cueId: '2attr:r$_roundIndex:interstitial',
+          speaker: kKeeperSpeaker,
+          caption: false,
+        );
       });
       return;
     }
@@ -625,13 +608,12 @@ class _TwoAttributeHuntRunnerState
         _phase = _Phase.transition;
         _asideToken += 1;
       });
-      ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-            NarrationLine(
-              text: _currentRound.keeperLine,
-              cueId: '2attr:r$_roundIndex:interstitial',
-              speaker: kKeeperSpeaker,
-            ),
-          );
+      ref.narration.say(
+        _currentRound.keeperLine,
+        cueId: '2attr:r$_roundIndex:interstitial',
+        speaker: kKeeperSpeaker,
+        caption: false,
+      );
     });
   }
 
@@ -639,13 +621,12 @@ class _TwoAttributeHuntRunnerState
   void _claimReward() {
     ref.read(walletProvider.notifier).award(_kRewardCoins);
     setState(() => _phase = _Phase.reward);
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          NarrationLine(
-            text: _rewardDialog,
-            cueId: '2attr:reward',
-            speaker: kKeeperSpeaker,
-          ),
-        );
+    ref.narration.say(
+      _rewardDialog,
+      cueId: '2attr:reward',
+      speaker: kKeeperSpeaker,
+      caption: false,
+    );
   }
 
   /// Fired by the keeper aside retiring itself, not by a button.

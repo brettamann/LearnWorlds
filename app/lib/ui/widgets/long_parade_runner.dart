@@ -165,20 +165,14 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
       case HintLevel.point:
         setState(() => _hintedCluster = next);
         feedback.hint();
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: warmHintLine(2),
-                cueId: 'long-parade:r$_roundIndex:hint-point',
-              ),
-            );
+        ref.narration.say(
+          warmHintLine(2),
+          cueId: 'long-parade:r$_roundIndex:hint-point',
+        );
       case HintLevel.demonstrate:
         feedback.hint();
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: warmHintLine(3),
-                cueId: 'long-parade:r$_roundIndex:hint-demo',
-              ),
-            );
+        ref.narration
+            .say(warmHintLine(3), cueId: 'long-parade:r$_roundIndex:hint-demo');
         _tapCluster(next, fromHint: true);
     }
   }
@@ -191,22 +185,17 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
   }
 
   void _speakIntro() {
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          NarrationLine(
-            text: _introDialog,
-            cueId: 'long-parade:intro',
-            speaker: kKeeperSpeaker,
-          ),
-        );
+    ref.narration.say(
+      _introDialog,
+      cueId: 'long-parade:intro',
+      speaker: kKeeperSpeaker,
+      caption: false,
+    );
   }
 
   void _speakCountingPrompt() {
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: _countingPrompt,
-            cueId: 'long-parade:r$_roundIndex:prompt',
-          ),
-        );
+    ref.narration
+        .say(_countingPrompt, cueId: 'long-parade:r$_roundIndex:prompt');
   }
 
   void _onStartFromIntro() {
@@ -236,7 +225,7 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
     // whatever is in flight, and what is in flight at that moment is the
     // demonstration's own explanation - the one line in the round that
     // says why. See HintLadder.
-    final say = ref.read(narrationPlayerProvider.notifier);
+    final say = ref.narration;
     final line = NarrationLine(
       text: '$spoken.',
       cueId: 'long-parade:r$_roundIndex:tap-$n',
@@ -278,13 +267,12 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
       _celebrationTimer = Timer(const Duration(seconds: 1), () {
         if (!mounted) return;
         setState(() => _phase = _Phase.interstitial);
-        ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-              NarrationLine(
-                text: _finalKeeperLine,
-                cueId: 'long-parade:r$_roundIndex:interstitial',
-                speaker: kKeeperSpeaker,
-              ),
-            );
+        ref.narration.say(
+          _finalKeeperLine,
+          cueId: 'long-parade:r$_roundIndex:interstitial',
+          speaker: kKeeperSpeaker,
+          caption: false,
+        );
       });
       return;
     }
@@ -298,13 +286,12 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
         _phase = _Phase.transition;
         _asideToken += 1;
       });
-      ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-            NarrationLine(
-              text: _currentRound.keeperLine,
-              cueId: 'long-parade:r$_roundIndex:interstitial',
-              speaker: kKeeperSpeaker,
-            ),
-          );
+      ref.narration.say(
+        _currentRound.keeperLine,
+        cueId: 'long-parade:r$_roundIndex:interstitial',
+        speaker: kKeeperSpeaker,
+        caption: false,
+      );
     });
   }
 

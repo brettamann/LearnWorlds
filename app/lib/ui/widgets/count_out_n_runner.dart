@@ -162,23 +162,15 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
       case HintLevel.point:
         setState(() => _hintedIndex = next);
         feedback.hint();
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: warmHintLine(2),
-                cueId: 'count-out:r$_roundIndex:hint-point',
-              ),
-            );
+        ref.narration
+            .say(warmHintLine(2), cueId: 'count-out:r$_roundIndex:hint-point');
       case HintLevel.demonstrate:
         // Do one for her. The drag is the hard part of this mechanic, so the
         // demonstration completes the whole gesture rather than just pointing
         // harder at it.
         feedback.hint();
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: warmHintLine(3),
-                cueId: 'count-out:r$_roundIndex:hint-demo',
-              ),
-            );
+        ref.narration
+            .say(warmHintLine(3), cueId: 'count-out:r$_roundIndex:hint-demo');
         _onCreatureDropped(next, fromHint: true);
     }
   }
@@ -191,24 +183,18 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
   }
 
   void _speakIntro() {
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          NarrationLine(
-            text: _introDialog,
-            cueId: 'count-out:intro',
-            speaker: kKeeperSpeaker,
-          ),
-        );
+    ref.narration.say(
+      _introDialog,
+      cueId: 'count-out:intro',
+      speaker: kKeeperSpeaker,
+      caption: false,
+    );
   }
 
   void _speakBasketPromptOnce() {
     if (_promptSpoken) return;
     _promptSpoken = true;
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: _basketPrompt,
-            cueId: 'count-out:r$_roundIndex:prompt',
-          ),
-        );
+    ref.narration.say(_basketPrompt, cueId: 'count-out:r$_roundIndex:prompt');
   }
 
   void _onStartFromIntro() {
@@ -247,12 +233,10 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
       });
       _hints?.poke();
       ref.read(feedbackEngineProvider).wrong();
-      ref.read(narrationPlayerProvider.notifier).speak(
-            NarrationLine(
-              text: _overCapLine,
-              cueId: 'count-out:r$_roundIndex:overcap-$_overCapDrops',
-            ),
-          );
+      ref.narration.say(
+        _overCapLine,
+        cueId: 'count-out:r$_roundIndex:overcap-$_overCapDrops',
+      );
       return;
     }
     setState(() {
@@ -272,7 +256,7 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
     // whatever is in flight, and what is in flight at that moment is the
     // demonstration's own explanation - the one line in the round that
     // says why. See HintLadder.
-    final say = ref.read(narrationPlayerProvider.notifier);
+    final say = ref.narration;
     final line = NarrationLine(
       text: '$spoken.',
       cueId: 'count-out:r$_roundIndex:place-$_placedCount',
@@ -311,13 +295,12 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
       _celebrationTimer = Timer(const Duration(seconds: 1), () {
         if (!mounted) return;
         setState(() => _phase = _Phase.interstitial);
-        ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-              NarrationLine(
-                text: _finalKeeperLine,
-                cueId: 'count-out:r$_roundIndex:interstitial',
-                speaker: kKeeperSpeaker,
-              ),
-            );
+        ref.narration.say(
+          _finalKeeperLine,
+          cueId: 'count-out:r$_roundIndex:interstitial',
+          speaker: kKeeperSpeaker,
+          caption: false,
+        );
       });
       return;
     }
@@ -329,13 +312,12 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
         _phase = _Phase.transition;
         _asideToken += 1;
       });
-      ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-            NarrationLine(
-              text: _currentRound.keeperLine,
-              cueId: 'count-out:r$_roundIndex:interstitial',
-              speaker: kKeeperSpeaker,
-            ),
-          );
+      ref.narration.say(
+        _currentRound.keeperLine,
+        cueId: 'count-out:r$_roundIndex:interstitial',
+        speaker: kKeeperSpeaker,
+        caption: false,
+      );
     });
   }
 
@@ -908,18 +890,12 @@ class _CountOutDemoState extends ConsumerState<_CountOutDemo>
     });
   }
 
-  void _speak(String text, String cueId) {
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(text: text, cueId: cueId),
-        );
-  }
-
   void _scheduleTimeline() {
     // 0.0s — narrate the intro.
     afterMs(200, () {
-      _speak(
+      ref.narration.say(
         "Watch — I'll show you. Drag each ${widget.singular} into the basket.",
-        'count-out:demo:intro',
+        cueId: 'count-out:demo:intro',
       );
     });
     // 1.0s — hand appears at slot 0.
@@ -948,7 +924,7 @@ class _CountOutDemoState extends ConsumerState<_CountOutDemo>
         _basketBurst += 1;
         _pokeCounter += 1;
       });
-      _speak('One.', 'count-out:demo:one');
+      ref.narration.say('One.', cueId: 'count-out:demo:one');
     });
     // 4.3s — hand glides to slot 1.
     afterMs(4300, () {
@@ -971,12 +947,12 @@ class _CountOutDemoState extends ConsumerState<_CountOutDemo>
         _basketBurst += 1;
         _pokeCounter += 1;
       });
-      _speak('Two.', 'count-out:demo:two');
+      ref.narration.say('Two.', cueId: 'count-out:demo:two');
     });
     // 7.8s — wrap up + hand off.
     afterMs(7800, () {
       setState(() => _pointerVisible = false);
-      _speak('Now you try!', 'count-out:demo:handoff');
+      ref.narration.say('Now you try!', cueId: 'count-out:demo:handoff');
     });
     afterMs(9200, widget.onComplete);
   }

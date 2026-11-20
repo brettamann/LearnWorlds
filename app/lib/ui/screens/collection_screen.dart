@@ -87,13 +87,11 @@ class CollectionScreen extends ConsumerWidget {
 /// `speak` rather than `speakWithoutCaption`: the name is exactly what she
 /// came here for, so the caption bar showing it is a feature.
 void _speak(WidgetRef ref, CreatureCard card, bool found) {
-  ref.read(narrationPlayerProvider.notifier).speak(
-        NarrationLine(
-          text: found ? cardFoundLine(card) : kCardNotFoundLine,
-          cueId: 'collection:card-${card.id}',
-          speaker: kKeeperSpeaker,
-        ),
-      );
+  ref.narration.say(
+    found ? cardFoundLine(card) : kCardNotFoundLine,
+    cueId: 'collection:card-${card.id}',
+    speaker: kKeeperSpeaker,
+  );
 }
 
 class _AlbumSlot extends StatelessWidget {

@@ -24,7 +24,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/asset_paths.dart';
 import '../../data/shape_words.dart';
-import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../common/timer_scope.dart';
 import 'animated_shape.dart';
@@ -86,12 +85,6 @@ class _ShapeFindDemoState extends ConsumerState<ShapeFindDemo>
       if (!mounted) return;
       _scheduleDemo();
     });
-  }
-
-  void _speak(String text, String cueId) {
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(text: text, cueId: cueId),
-        );
   }
 
   /// Builds a small mock board — 3 targets + 2 decor distractors arranged
@@ -158,9 +151,9 @@ class _ShapeFindDemoState extends ConsumerState<ShapeFindDemo>
     final targets = _targets;
 
     afterMs(_introMs, () {
-      _speak(
+      ref.narration.say(
         "Watch — I'll show you how to find them! I'm looking for $_targetPlural.",
-        'find-demo:${widget.targetKind}:intro',
+        cueId: 'find-demo:${widget.targetKind}:intro',
       );
       setState(() {
         _pointerVisible = true;
@@ -191,9 +184,9 @@ class _ShapeFindDemoState extends ConsumerState<ShapeFindDemo>
           _pokeCounter++;
           targets[i].tapped = true;
         });
-        _speak(
+        ref.narration.say(
           hitLines[i.clamp(0, hitLines.length - 1)],
-          'find-demo:${widget.targetKind}:hit-$i',
+          cueId: 'find-demo:${widget.targetKind}:hit-$i',
         );
       });
     }
@@ -205,9 +198,9 @@ class _ShapeFindDemoState extends ConsumerState<ShapeFindDemo>
         _pointerVisible = false;
         _activeTargetIndex = null;
       });
-      _speak(
+      ref.narration.say(
         "Now it's your turn — try and find the $_targetPlural yourself.",
-        'find-demo:${widget.targetKind}:wrapup',
+        cueId: 'find-demo:${widget.targetKind}:wrapup',
       );
     });
     afterMs(wrapupAt + _completeGapMs, widget.onComplete);

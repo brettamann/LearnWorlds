@@ -245,13 +245,12 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   void _speakKeeperIntroOnce(LessonRuntime runtime) {
     if (_keeperIntroSpoken) return;
     _keeperIntroSpoken = true;
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          NarrationLine(
-            text: _keeperIntroDialog(runtime),
-            cueId: 'lesson:keeper-intro',
-            speaker: kKeeperSpeaker,
-          ),
-        );
+    ref.narration.say(
+      _keeperIntroDialog(runtime),
+      cueId: 'lesson:keeper-intro',
+      speaker: kKeeperSpeaker,
+      caption: false,
+    );
   }
 
   /// True for lessons whose iShow scene includes painted shapes (K.G.2).
@@ -314,12 +313,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     if (next >= kShapeIntroSequence.length) {
       // All 9 shapes done — celebratory beat, then hand off via the
       // Continue arrow.
-      ref.read(narrationPlayerProvider.notifier).speak(
-            const NarrationLine(
-              text: 'Wow! You learned every shape in the garden.',
-              cueId: 'lesson:shapes-done',
-            ),
-          );
+      ref.narration.say(
+        'Wow! You learned every shape in the garden.',
+        cueId: 'lesson:shapes-done',
+      );
       setState(() {
         _phase = _LessonPhase.shapesDone;
         _continueEnabled = true;
@@ -333,7 +330,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   }
 
   void _scheduleIShow(LessonRuntime runtime) {
-    final player = ref.read(narrationPlayerProvider.notifier);
+    final player = ref.narration;
 
     // Narration cues.
     for (final cue in runtime.iShow.narrationScript) {
@@ -662,9 +659,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
         _openWeTryGate(beat);
         return;
       case WeTrySay():
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(text: beat.text, cueId: 'wetry:${beat.cueId}'),
-            );
+        ref.narration.say(beat.text, cueId: 'wetry:${beat.cueId}');
         settle = narrationSpokenEstimate(beat.text);
       case WeTryDo():
         _applyWeTryAction(beat);
@@ -918,12 +913,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     _weTryNudgeTimer = Timer(rule.after * 2, () {
       if (!mounted || !_weTryWaiting) return;
       ref.read(feedbackEngineProvider).hint();
-      ref.read(narrationPlayerProvider.notifier).speak(
-            NarrationLine(
-              text: warmHintLine(2),
-              cueId: 'we-try:hesitation-nudge',
-            ),
-          );
+      ref.narration.say(warmHintLine(2), cueId: 'we-try:hesitation-nudge');
     });
     _weTryRescueTimer?.cancel();
     _weTryRescueTimer = Timer(rule.after * 3, () {
@@ -998,9 +988,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
         ? (gate.passText ?? gate.failText)
         : (gate.failText ?? gate.passText);
     if (line != null) {
-      ref.read(narrationPlayerProvider.notifier).speak(
-            NarrationLine(text: line, cueId: 'wetry:gate'),
-          );
+      ref.narration.say(line, cueId: 'wetry:gate');
       settle = narrationSpokenEstimate(line);
     }
     _scheduleNextWeTryBeat(settle);
@@ -1049,7 +1037,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   void _goToYouDo() {
     final runtime = _runtime;
     if (runtime == null) return;
-    ref.read(narrationPlayerProvider.notifier).clear();
+    ref.narration.clear();
     final subMode = widget.subModeOverride ?? runtime.youDo.subMode;
     context.go(
       '/activity/${runtime.youDo.activityId}',
@@ -1275,7 +1263,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
             child: SafeArea(
               child: _BackToSanctuaryButton(
                 onPressed: () {
-                  ref.read(narrationPlayerProvider.notifier).clear();
+                  ref.narration.clear();
                   context.go('/sanctuary');
                 },
               ),

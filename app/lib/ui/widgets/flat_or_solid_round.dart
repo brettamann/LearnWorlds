@@ -25,7 +25,6 @@ import '../../data/asset_paths.dart';
 import '../../data/button_labels.dart';
 import '../../data/flat_or_solid_shapes.dart';
 import '../../engines/feedback/feedback_engine.dart';
-import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import 'glitter_burst.dart';
 
@@ -122,16 +121,11 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
     super.dispose();
   }
 
-  void _speak(String text, String cueId) {
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(text: text, cueId: cueId),
-        );
-  }
-
   void _maybeSpeakPrompt() {
     if (_promptSpoken) return;
     _promptSpoken = true;
-    _speak(widget.spokenPrompt, '${widget.cueIdPrefix}:prompt');
+    ref.narration
+        .say(widget.spokenPrompt, cueId: '${widget.cueIdPrefix}:prompt');
   }
 
   void _handleDrop(FlatOrSolidShape shape, {required bool binIsFlat}) {
@@ -160,12 +154,13 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
           }(),
       };
       ref.read(feedbackEngineProvider).correct();
-      _speak(hitText, '${widget.cueIdPrefix}:hit-${shape.id}');
+      ref.narration
+          .say(hitText, cueId: '${widget.cueIdPrefix}:hit-${shape.id}');
       if (_sortedIds.length == widget.shapes.length) {
         _completed = true;
-        _speak(
+        ref.narration.say(
           'Nicely done! You sorted them all.',
-          '${widget.cueIdPrefix}:done',
+          cueId: '${widget.cueIdPrefix}:done',
         );
         _completionTimer = Timer(const Duration(milliseconds: 1800), () {
           if (!mounted) return;
@@ -180,9 +175,9 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
       widget.onMiss?.call();
       final correctSide = shape.isFlat ? 'flat' : 'solid';
       final wrongSide = binIsFlat ? 'flat' : 'solid';
-      _speak(
+      ref.narration.say(
         "That's $correctSide, not $wrongSide. Try the other basket.",
-        '${widget.cueIdPrefix}:miss-${shape.id}-$wrongSide',
+        cueId: '${widget.cueIdPrefix}:miss-${shape.id}-$wrongSide',
       );
     }
   }

@@ -216,7 +216,8 @@ List<String> dartNarrationLiterals(String root) {
     // habitat runner speaks, and `wheres_buddy_words.dart` holds the position
     // phrases. Neither file mentions narration at all.
     final speaks = source.contains('NarrationLine(') ||
-        source.contains('narrationPlayerProvider');
+        source.contains('narrationPlayerProvider') ||
+        source.contains('narration.say(');
     // Windows reports lib\data\...; normalise before matching.
     final path = file.path.replaceAll(_backslash, '/');
 

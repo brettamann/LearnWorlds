@@ -228,13 +228,7 @@ class _SanctuaryMapScreenState extends ConsumerState<SanctuaryMapScreen> {
     // The only other voice on this screen is a banner tap, and a banner tap
     // either navigates away or is this same call, so these can never cut a
     // line off mid-word the way a reveal sharing a beat with the keeper would.
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: text,
-            cueId: cueId,
-            speaker: kKeeperSpeaker,
-          ),
-        );
+    ref.narration.say(text, cueId: cueId, speaker: kKeeperSpeaker);
   }
 
   void _toggleDecorating() {

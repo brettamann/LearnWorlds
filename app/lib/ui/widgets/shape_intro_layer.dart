@@ -31,7 +31,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/asset_paths.dart';
 import '../../data/example_dot_scanner.dart';
 import '../../data/shape_words.dart';
-import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../providers/shape_dots_provider.dart';
 import '../common/timer_scope.dart';
@@ -139,12 +138,6 @@ class _ShapeIntroLayerState extends ConsumerState<ShapeIntroLayer>
 
   int get _sides => kIntroSidesByKind[widget.shapeKind] ?? 0;
 
-  void _speak(String text, String cueId) {
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(text: text, cueId: cueId),
-        );
-  }
-
   /// Kicks the choreography off exactly once after the dot scan resolves
   /// (or the fallback is computed). Re-entry-safe — bail on subsequent
   /// rebuilds.
@@ -165,7 +158,8 @@ class _ShapeIntroLayerState extends ConsumerState<ShapeIntroLayer>
     // Beat 2 — opening sentence ("This is a ...!").
     afterMs(
       800,
-      () => _speak(opening, 'intro:${widget.shapeKind}:opening'),
+      () => ref.narration
+          .say(opening, cueId: 'intro:${widget.shapeKind}:opening'),
     );
 
     if (_sides == 0 || _resolvedSides.isEmpty) {
@@ -201,9 +195,9 @@ class _ShapeIntroLayerState extends ConsumerState<ShapeIntroLayer>
           _burstCounters[i] = (_burstCounters[i] ?? 0) + 1;
           _pointerPokeCounter++;
         });
-        _speak(
+        ref.narration.say(
           '${_kCountWords[i + 1]}.',
-          'intro:${widget.shapeKind}:count-${i + 1}',
+          cueId: 'intro:${widget.shapeKind}:count-${i + 1}',
         );
       });
     }

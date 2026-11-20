@@ -58,13 +58,12 @@ class _SanctuaryCutsceneScreenState
 
   void _speakCurrentPage() {
     if (!mounted) return;
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          NarrationLine(
-            text: _pages[_page],
-            cueId: 'sanctuary:kickoff-p$_page',
-            speaker: kKeeperSpeaker,
-          ),
-        );
+    ref.narration.say(
+      _pages[_page],
+      cueId: 'sanctuary:kickoff-p$_page',
+      speaker: kKeeperSpeaker,
+      caption: false,
+    );
   }
 
   void _advance() {
@@ -74,7 +73,7 @@ class _SanctuaryCutsceneScreenState
       return;
     }
     // Final page — mark explored and return to the map.
-    ref.read(narrationPlayerProvider.notifier).clear();
+    ref.narration.clear();
     ref.read(explorationProvider.notifier).markCompleted(kSanctuaryKickoffCode);
     ref.read(saveCoordinatorProvider).persist();
     context.go('/sanctuary');
@@ -152,7 +151,7 @@ class _SanctuaryCutsceneScreenState
               child: SafeArea(
                 child: _BackButton(
                   onPressed: () {
-                    ref.read(narrationPlayerProvider.notifier).clear();
+                    ref.narration.clear();
                     context.go('/sanctuary');
                   },
                 ),

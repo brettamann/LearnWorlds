@@ -19,7 +19,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/button_labels.dart';
 import '../../engines/feedback/feedback_engine.dart';
-import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../models/reward_track.dart';
 import '../../providers/reward_progress_provider.dart';
@@ -124,12 +123,11 @@ class _RewardOverlayState extends ConsumerState<RewardOverlay>
   /// prose and a button reading "Close".
   void _showFlavourMessage(BuildContext context, RewardStage stage) {
     ref.read(feedbackEngineProvider).whoosh();
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          NarrationLine(
-            text: stage.message,
-            cueId: 'reward:${widget.track.id}:flavour',
-          ),
-        );
+    ref.narration.say(
+      stage.message,
+      cueId: 'reward:${widget.track.id}:flavour',
+      caption: false,
+    );
     showDialog<void>(
       context: context,
       builder: (dialogCtx) {

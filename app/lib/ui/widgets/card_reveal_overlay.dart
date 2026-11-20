@@ -87,28 +87,26 @@ class _CardRevealOverlayState extends ConsumerState<CardRevealOverlay>
     final card = creatureCardById(cardId);
     if (card != null) {
       // Enqueued, not spoken: the keeper is very likely mid-line behind this.
-      ref.read(narrationPlayerProvider.notifier).enqueue(
-            NarrationLine(
-              text: cardRevealLine(card),
-              cueId: 'card-reveal:${card.id}',
-              speaker: kKeeperSpeaker,
-            ),
-            // The card already shows the name in bigger type than the caption
-            // bar would.
-            caption: false,
-          );
+      ref.narration.say(
+        cardRevealLine(card),
+        cueId: 'card-reveal:${card.id}',
+        speaker: kKeeperSpeaker,
+        // The card already shows the name in bigger type than the caption
+        // bar would.
+        caption: false,
+        queue: true,
+      );
     }
 
     _nudge?.cancel();
     _nudge = Timer(_kNudgeAfter, () {
       if (!mounted || _showing == null) return;
-      ref.read(narrationPlayerProvider.notifier).enqueue(
-            const NarrationLine(
-              text: kCardTapToContinueLine,
-              cueId: 'card-reveal:nudge',
-            ),
-            caption: false,
-          );
+      ref.narration.say(
+        kCardTapToContinueLine,
+        cueId: 'card-reveal:nudge',
+        caption: false,
+        queue: true,
+      );
     });
 
     _fallback?.cancel();

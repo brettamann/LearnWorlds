@@ -33,7 +33,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../engines/feedback/feedback_engine.dart';
-import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../providers/read_aloud_settings_provider.dart';
 
@@ -64,12 +63,7 @@ class ReadAloudGate extends ConsumerWidget {
   final String? cueId;
 
   void _speakLabel(WidgetRef ref) {
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          NarrationLine(
-            text: label,
-            cueId: cueId ?? 'gate:$label',
-          ),
-        );
+    ref.narration.say(label, cueId: cueId ?? 'gate:$label', caption: false);
   }
 
   /// The press itself, independent of whether anything is said.

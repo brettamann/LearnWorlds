@@ -371,12 +371,10 @@ class _WheresBuddyBodyState extends ConsumerState<_WheresBuddyBody> {
   }
 
   void _speakPrompt() {
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: _prompt,
-            cueId: 'wheres-buddy:${widget.mode.name}:r$_roundIndex:prompt',
-          ),
-        );
+    ref.narration.say(
+      _prompt,
+      cueId: 'wheres-buddy:${widget.mode.name}:r$_roundIndex:prompt',
+    );
   }
 
   void _onStartFromIntro() {
@@ -462,13 +460,11 @@ class _WheresBuddyBodyState extends ConsumerState<_WheresBuddyBody> {
         feedback.hint();
         // The round's own sentence again, not a generic nudge: the whole task
         // is one preposition, and repeating it is the hint.
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: _prompt,
-                cueId: 'wheres-buddy:${widget.mode.name}:r$_roundIndex:'
-                    'hint-point',
-              ),
-            );
+        ref.narration.say(
+          _prompt,
+          cueId: 'wheres-buddy:${widget.mode.name}:r$_roundIndex:'
+              'hint-point',
+        );
       case HintLevel.demonstrate:
         _demonstrate();
     }
@@ -499,13 +495,11 @@ class _WheresBuddyBodyState extends ConsumerState<_WheresBuddyBody> {
         ? _prompt
         : '${warmMissLine(_missRotation)} $_prompt';
     _missRotation += 1;
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: restate,
-            cueId: 'wheres-buddy:${widget.mode.name}:r$_roundIndex:'
-                'miss-$_wrongAttempts',
-          ),
-        );
+    ref.narration.say(
+      restate,
+      cueId: 'wheres-buddy:${widget.mode.name}:r$_roundIndex:'
+          'miss-$_wrongAttempts',
+    );
   }
 
   /// Show her the answer rather than leaving her stuck. Glows the target zone
@@ -519,18 +513,16 @@ class _WheresBuddyBodyState extends ConsumerState<_WheresBuddyBody> {
       _buddyPos = _targetPos;
     });
     ref.read(feedbackEngineProvider).hint();
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: _currentRound.isRelational
-                ? wheresBuddyRelationalRestate(
-                    _currentRound.landmarkId,
-                    _currentRound.secondLandmarkId!,
-                  )
-                : 'Here — Buddy is ${_currentPosition.preposition} '
-                    '${_currentLandmark.displayName}. Right there.',
-            cueId: 'wheres-buddy:${widget.mode.name}:r$_roundIndex:demo',
-          ),
-        );
+    ref.narration.say(
+      _currentRound.isRelational
+          ? wheresBuddyRelationalRestate(
+              _currentRound.landmarkId,
+              _currentRound.secondLandmarkId!,
+            )
+          : 'Here — Buddy is ${_currentPosition.preposition} '
+              '${_currentLandmark.displayName}. Right there.',
+      cueId: 'wheres-buddy:${widget.mode.name}:r$_roundIndex:demo',
+    );
     _celebrationTimer = Timer(const Duration(milliseconds: 2200), () {
       if (!mounted || _phase != _Phase.playing) return;
       _resolveRound();
@@ -572,14 +564,13 @@ class _WheresBuddyBodyState extends ConsumerState<_WheresBuddyBody> {
       _celebrationTimer = Timer(const Duration(seconds: 1), () {
         if (!mounted) return;
         setState(() => _phase = _Phase.interstitial);
-        ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-              NarrationLine(
-                text: _finalKeeperLine,
-                cueId: 'wheres-buddy:${widget.mode.name}:r$_roundIndex:'
-                    'interstitial',
-                speaker: kKeeperSpeaker,
-              ),
-            );
+        ref.narration.say(
+          _finalKeeperLine,
+          cueId: 'wheres-buddy:${widget.mode.name}:r$_roundIndex:'
+              'interstitial',
+          speaker: kKeeperSpeaker,
+          caption: false,
+        );
       });
       return;
     }
@@ -591,14 +582,12 @@ class _WheresBuddyBodyState extends ConsumerState<_WheresBuddyBody> {
         _phase = _Phase.transition;
         _asideToken += 1;
       });
-      ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-            NarrationLine(
-              text: _currentRound.keeperLine,
-              cueId:
-                  'wheres-buddy:${widget.mode.name}:r$_roundIndex:interstitial',
-              speaker: kKeeperSpeaker,
-            ),
-          );
+      ref.narration.say(
+        _currentRound.keeperLine,
+        cueId: 'wheres-buddy:${widget.mode.name}:r$_roundIndex:interstitial',
+        speaker: kKeeperSpeaker,
+        caption: false,
+      );
     });
   }
 

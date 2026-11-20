@@ -20,7 +20,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/button_labels.dart';
-import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 
 import 'touch_target.dart';
@@ -67,9 +66,7 @@ class ReplayDemoButton extends ConsumerWidget {
         child: InkWell(
           customBorder: const CircleBorder(),
           onTap: () {
-            ref.read(narrationPlayerProvider.notifier).speak(
-                  NarrationLine(text: label, cueId: cueId),
-                );
+            ref.narration.say(label, cueId: cueId);
           },
           child: SizedBox(
             width: size,

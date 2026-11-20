@@ -192,20 +192,16 @@ class _CountOnByOnesRunnerState extends ConsumerState<CountOnByOnesRunner> {
       case HintLevel.point:
         setState(() => _hintedArrival = next);
         feedback.hint();
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: warmHintLine(2),
-                cueId: 'count-on-ones:r$_roundIndex:hint-point',
-              ),
-            );
+        ref.narration.say(
+          warmHintLine(2),
+          cueId: 'count-on-ones:r$_roundIndex:hint-point',
+        );
       case HintLevel.demonstrate:
         feedback.hint();
-        ref.read(narrationPlayerProvider.notifier).speak(
-              NarrationLine(
-                text: warmHintLine(3),
-                cueId: 'count-on-ones:r$_roundIndex:hint-demo',
-              ),
-            );
+        ref.narration.say(
+          warmHintLine(3),
+          cueId: 'count-on-ones:r$_roundIndex:hint-demo',
+        );
         _tapArrival(next, fromHint: true);
     }
   }
@@ -231,7 +227,7 @@ class _CountOnByOnesRunnerState extends ConsumerState<CountOnByOnesRunner> {
       _arrivalsLanded = false;
     });
 
-    final narration = ref.read(narrationPlayerProvider.notifier);
+    final narration = ref.narration;
     narration.speak(
       NarrationLine(
         text: _alreadyCountedLine,
@@ -281,7 +277,7 @@ class _CountOnByOnesRunnerState extends ConsumerState<CountOnByOnesRunner> {
     // whatever is in flight, and what is in flight at that moment is the
     // demonstration's own explanation - the one line in the round that
     // says why. See HintLadder.
-    final say = ref.read(narrationPlayerProvider.notifier);
+    final say = ref.narration;
     final line = NarrationLine(
       text: '$spoken.',
       cueId: 'count-on-ones:r$_roundIndex:tap-${_tappedArrivals.length}',
@@ -320,13 +316,12 @@ class _CountOnByOnesRunnerState extends ConsumerState<CountOnByOnesRunner> {
       _celebrationTimer = Timer(const Duration(seconds: 1), () {
         if (!mounted) return;
         setState(() => _phase = _Phase.interstitial);
-        ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-              NarrationLine(
-                text: _finalKeeperLine,
-                cueId: 'count-on-ones:r$_roundIndex:interstitial',
-                speaker: kKeeperSpeaker,
-              ),
-            );
+        ref.narration.say(
+          _finalKeeperLine,
+          cueId: 'count-on-ones:r$_roundIndex:interstitial',
+          speaker: kKeeperSpeaker,
+          caption: false,
+        );
       });
       return;
     }
@@ -338,13 +333,12 @@ class _CountOnByOnesRunnerState extends ConsumerState<CountOnByOnesRunner> {
         _phase = _Phase.transition;
         _asideToken += 1;
       });
-      ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-            NarrationLine(
-              text: _currentRound.keeperLine,
-              cueId: 'count-on-ones:r$_roundIndex:interstitial',
-              speaker: kKeeperSpeaker,
-            ),
-          );
+      ref.narration.say(
+        _currentRound.keeperLine,
+        cueId: 'count-on-ones:r$_roundIndex:interstitial',
+        speaker: kKeeperSpeaker,
+        caption: false,
+      );
     });
   }
 
@@ -808,7 +802,8 @@ class _DemoLayerState extends ConsumerState<_DemoLayer>
       final value = i;
       after(Duration(milliseconds: t), () {
         setState(() => _step = value);
-        _speak('${kSpelledCounts[value]}.', 'demo:count-$value');
+        ref.narration
+            .say('${kSpelledCounts[value]}.', cueId: 'demo:count-$value');
       });
       t += 600;
     }
@@ -817,10 +812,10 @@ class _DemoLayerState extends ConsumerState<_DemoLayer>
     t += 700;
     after(Duration(milliseconds: t), () {
       setState(() => _step = 11);
-      _speak(
+      ref.narration.say(
         'When we count to ten, we get a special new number. '
-            'And the ones start over.',
-        'demo:collapse',
+        'And the ones start over.',
+        cueId: 'demo:collapse',
       );
     });
     // Hold on the single "10" cluster long enough for the narration to
@@ -831,7 +826,8 @@ class _DemoLayerState extends ConsumerState<_DemoLayer>
       final value = i;
       after(Duration(milliseconds: t), () {
         setState(() => _step = 10 + value);
-        _speak('${kSpelledTens[value]}.', 'demo:decade-$value');
+        ref.narration
+            .say('${kSpelledTens[value]}.', cueId: 'demo:decade-$value');
       });
       t += 1100;
     }
@@ -842,7 +838,8 @@ class _DemoLayerState extends ConsumerState<_DemoLayer>
         _step = 21;
         _showStart = true;
       });
-      _speak("Let's count all the different tens!", 'demo:kickoff');
+      ref.narration
+          .say("Let's count all the different tens!", cueId: 'demo:kickoff');
     });
   }
 
@@ -853,11 +850,6 @@ class _DemoLayerState extends ConsumerState<_DemoLayer>
   /// below arrived as "...start over.." and "...tens!.". Clips are looked up
   /// by the words spoken, so neither could ever match its recording and both
   /// stayed in the browser synth voice. Callers pass a finished sentence.
-  void _speak(String text, String cueId) {
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(text: text, cueId: cueId),
-        );
-  }
 
   /// Top-of-stage badge value. Climbs by ones during the counting
   /// phase, then by tens once the first cluster lands.

@@ -18,7 +18,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/number_words.dart';
 import '../../engines/feedback/feedback_engine.dart';
-import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 
 class CountingChallengeLayer extends ConsumerStatefulWidget {
@@ -65,13 +64,10 @@ class _CountingChallengeLayerState extends ConsumerState<CountingChallengeLayer>
     _ticker = createTicker(_onTick)..start();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      ref.read(narrationPlayerProvider.notifier).speak(
-            NarrationLine(
-              text:
-                  'Tap the creatures as they go by — count all the way to ${widget.target}!',
-              cueId: 'challenge:start',
-            ),
-          );
+      ref.narration.say(
+        'Tap the creatures as they go by — count all the way to ${widget.target}!',
+        cueId: 'challenge:start',
+      );
     });
   }
 
@@ -146,12 +142,7 @@ class _CountingChallengeLayerState extends ConsumerState<CountingChallengeLayer>
     final word = _count < kSpelledCounts.length
         ? kSpelledCounts[_count]
         : _count.toString();
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: '$word.',
-            cueId: 'challenge:tap-$_count',
-          ),
-        );
+    ref.narration.say('$word.', cueId: 'challenge:tap-$_count');
     if (_count >= widget.target) {
       _stopped = true;
       widget.onTargetReached();

@@ -42,7 +42,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/sub_mode_picker_data.dart';
 import '../../engines/feedback/feedback_engine.dart';
-import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../models/activity.dart';
 import '../../providers/read_aloud_settings_provider.dart';
@@ -218,9 +217,7 @@ class _SubModePickerSheetState extends ConsumerState<SubModePickerSheet> {
   }
 
   void _say(String text, String cueId) {
-    ref
-        .read(narrationPlayerProvider.notifier)
-        .speakWithoutCaption(NarrationLine(text: text, cueId: cueId));
+    ref.narration.say(text, cueId: cueId, caption: false);
   }
 
   @override
