@@ -7181,7 +7181,7 @@
       "id": "dart-literals",
       "title": "Lines written directly in Dart",
       "note": "Swept out of lib/ by tool/narration_sources.dart: the sanctuary prologue, const round keeperLines, reward dialog. Interpolated templates are excluded - their variants have to come from the catalog that fills the slot.",
-      "variants": 43,
+      "variants": 40,
       "complete": true,
       "lines": [
         {
@@ -7213,10 +7213,6 @@
           "clipKey": "i-m-in-charge-of-this-mystical-sanctuary__11971eaa"
         },
         {
-          "text": "Let's build!",
-          "clipKey": "let-s-build__6f22709f"
-        },
-        {
           "text": "Let's count!",
           "clipKey": "let-s-count__679acdbe"
         },
@@ -7225,16 +7221,8 @@
           "clipKey": "let-s-explore__bef8b17e"
         },
         {
-          "text": "Let's hunt!",
-          "clipKey": "let-s-hunt__41002558"
-        },
-        {
           "text": "Let's look!",
           "clipKey": "let-s-look__288e55aa"
-        },
-        {
-          "text": "Let's play!",
-          "clipKey": "let-s-play__b899d4ed"
         },
         {
           "text": "Let's sort again. Flat ones in the flat basket.",

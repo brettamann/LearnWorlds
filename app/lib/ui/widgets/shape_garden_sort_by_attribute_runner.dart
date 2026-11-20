@@ -44,7 +44,6 @@ class ShapeGardenSortByAttributeRunner extends StatelessWidget {
       roundCount: kSortAttributeRounds.length,
       conceptIdFor: (_) => 'K.G.4',
       introLine: kSortAttributeIntro,
-      startLabel: kSortAttributeStartLabel,
       keeperLineFor: (i) => kSortAttributeRounds[i].keeperLine,
       finalLine: kSortAttributeFinal,
       skipIntro: skipIntro,

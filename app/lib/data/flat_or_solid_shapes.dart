@@ -381,8 +381,6 @@ const String kGardenSortingIntro =
     '— you can hold them in your hand. Help me sort them into the right '
     'baskets!';
 
-const String kGardenSortingStartLabel = "Let's sort!";
-
 /// The visit's last beat. It used to name the clean-round total (25), which
 /// overstated the payout whenever a round needed help; like every other
 /// place, it says "some coins".

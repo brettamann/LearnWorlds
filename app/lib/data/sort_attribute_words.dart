@@ -322,8 +322,6 @@ const String kSortAttributeIntro =
     'number of sides, the size, or whether they have curves or '
     'corners. Drop each shape into the basket that matches.';
 
-const String kSortAttributeStartLabel = "Let's sort!";
-
 const String kSortAttributeFinal =
     'Every shape sorted! You can group things by all kinds of '
     'differences.';

@@ -71,7 +71,6 @@ class WheresBuddyRunner extends StatelessWidget {
       roundCount: rounds.length,
       conceptIdFor: (_) => 'K.G.1',
       introLine: wheresBuddyIntro(mode),
-      startLabel: kWheresBuddyStartLabel,
       keeperLineFor: (i) => rounds[i].keeperLine,
       finalLine: wheresBuddyFinal(mode),
       skipIntro: skipIntro,

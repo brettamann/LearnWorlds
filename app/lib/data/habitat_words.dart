@@ -82,8 +82,6 @@ const String kHabitatIntro =
     'sticks go along the sides — then we add shapes on top to make '
     "the roof. Ready? Let's start.";
 
-const String kHabitatStartLabel = "Let's build!";
-
 /// The second phase's instruction, once the frame is up.
 const String kHabitatRaisePrompt =
     'Now raise the habitat — tap each ghost shape to drop the '

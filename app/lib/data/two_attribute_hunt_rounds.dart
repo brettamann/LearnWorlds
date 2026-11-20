@@ -250,8 +250,6 @@ const List<HuntRound> kTwoAttributeHuntRounds = <HuntRound>[
 /// as the counting `tens-parade` challenge.
 const int kTwoAttributeHuntBonus = 50;
 
-const String kTwoAttributeHuntStartLabel = 'Challenge!';
-
 const String kTwoAttributeHuntIntro =
     'Ready for the big sort? Each round names TWO things at once — '
     'tap every shape that matches BOTH. Get them all and earn '

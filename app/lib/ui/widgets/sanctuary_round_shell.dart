@@ -152,7 +152,6 @@ class SanctuaryRoundShell extends ConsumerStatefulWidget {
     required this.roundBuilder,
     required this.onSequenceComplete,
     this.skipIntro = false,
-    this.startLabel = kLabelLetsGo,
     this.musicBed = kDefaultMusicBed,
     this.showBuddy = true,
     this.buddyFacing = BuddyFacing.right,
@@ -185,7 +184,6 @@ class SanctuaryRoundShell extends ConsumerStatefulWidget {
   final RoundBodyBuilder roundBuilder;
   final VoidCallback onSequenceComplete;
   final bool skipIntro;
-  final String startLabel;
   final String musicBed;
 
   /// Some mechanics put their own character in Buddy's corner.
@@ -372,7 +370,9 @@ class _SanctuaryRoundShellState extends ConsumerState<SanctuaryRoundShell> {
       case _ShellPhase.intro:
         content = KeeperIntroOverlay(
           dialog: widget.introLine,
-          startLabel: widget.startLabel,
+          // One start label for every activity: each label is a clip, and a
+          // pre-reader learns a button by its sound.
+          startLabel: kLabelLetsGo,
           startButtonKey: ValueKey('${widget.activityId}-start-button'),
           onStart: _start,
         );

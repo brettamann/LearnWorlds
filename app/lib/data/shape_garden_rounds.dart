@@ -84,8 +84,6 @@ const String kGardenIntro =
 /// Said as each shape is found (all but the last of a round).
 const String kShapeFoundLine = "There's one!";
 
-const String kGardenStartLabel = "Let's hunt!";
-
 /// The visit's last beat. It used to announce "Here are 40 coins" - eight
 /// rounds at the clean-round rate - which overstated the payout whenever a
 /// round needed help, and could never be recorded because the number was

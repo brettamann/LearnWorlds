@@ -292,8 +292,6 @@ String wheresBuddyFinal(String subMode) =>
         : 'Every position found! You really know your above, below, and '
             'beside.';
 
-const String kWheresBuddyStartLabel = "Let's play!";
-
 /// Every keeper line the activity can say, for the recording script.
 List<String> wheresBuddyKeeperScriptLines() => <String>[
       for (final mode in WheresBuddyModes.all) wheresBuddyIntro(mode),

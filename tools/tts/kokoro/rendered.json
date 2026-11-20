@@ -4066,14 +4066,6 @@
       "seconds": 9.24,
       "format": "mp3"
     },
-    "let-s-build__6f22709f": {
-      "text": "Let's build!",
-      "batch": "dart-literals",
-      "voice": "af_heart",
-      "bytes": 6720,
-      "seconds": 0.79,
-      "format": "mp3"
-    },
     "let-s-count-all-the-different-tens__5afbdc85": {
       "text": "Let's count all the different tens!",
       "batch": "dart-literals",
@@ -4106,28 +4098,12 @@
       "seconds": 9.72,
       "format": "mp3"
     },
-    "let-s-hunt__41002558": {
-      "text": "Let's hunt!",
-      "batch": "dart-literals",
-      "voice": "af_heart",
-      "bytes": 6528,
-      "seconds": 0.76,
-      "format": "mp3"
-    },
     "let-s-look__288e55aa": {
       "text": "Let's look!",
       "batch": "dart-literals",
       "voice": "af_heart",
       "bytes": 6144,
       "seconds": 0.71,
-      "format": "mp3"
-    },
-    "let-s-play__b899d4ed": {
-      "text": "Let's play!",
-      "batch": "dart-literals",
-      "voice": "af_heart",
-      "bytes": 6720,
-      "seconds": 0.79,
       "format": "mp3"
     },
     "let-s-sort-again-flat-ones-in-the-flat-basket__1bdf2c85": {

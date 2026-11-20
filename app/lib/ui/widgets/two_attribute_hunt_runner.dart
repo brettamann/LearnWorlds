@@ -83,7 +83,6 @@ class _TwoAttributeHuntRunnerState
       conceptIdFor: (_) => 'K.G.4',
       gradeRounds: false,
       introLine: kTwoAttributeHuntIntro,
-      startLabel: kTwoAttributeHuntStartLabel,
       keeperLineFor: (i) => kTwoAttributeHuntRounds[i].keeperLine,
       finalLine: finalLine,
       // A replay goes straight back to the first board, without the intro or

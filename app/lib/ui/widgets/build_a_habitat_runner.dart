@@ -71,7 +71,6 @@ class BuildAHabitatRunner extends StatelessWidget {
       roundCount: rounds.length,
       conceptIdFor: (_) => frameOnly ? 'K.G.5' : 'K.G.6',
       introLine: kHabitatIntro,
-      startLabel: kHabitatStartLabel,
       keeperLineFor: (i) => rounds[i].keeperLine,
       finalLine: kHabitatFinal,
       skipIntro: skipIntro,
