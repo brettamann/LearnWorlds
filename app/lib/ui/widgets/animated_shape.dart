@@ -204,9 +204,7 @@ class _AnimatedShapeState extends State<AnimatedShape>
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: (widget.active
-                              ? Colors.amber
-                              : Colors.amberAccent)
+                      color: (widget.active ? Colors.amber : Colors.amberAccent)
                           .withValues(alpha: 0.7),
                       blurRadius: widget.active ? 26 : 16,
                       spreadRadius: widget.active ? 3 : 1,

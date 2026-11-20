@@ -49,7 +49,37 @@ class SubMode {
   final List<String> primaryConcepts;
   final bool isDefault;
   final bool isChallenge;
+
+  /// The simplest sub-mode of this activity — where staggered demotion puts
+  /// a kid who is struggling (specs/shared/adaptive-scaffolding.md).
+  ///
+  /// Read the flag carefully before filtering on it. "Simplest" is usually
+  /// the same sub-mode as `isDefault`: Shape Garden, Where's Buddy,
+  /// Ten-Frame Pond, Scribe's Tower and Storyteller's Pond all mark their
+  /// first step both default and floor, because the easiest thing they teach
+  /// is also where a first-time kid starts. Build-a-Habitat is the one
+  /// activity with a rung *below* its entry point — `frame-only` builds the
+  /// frame and stops, and it is not default and not part of the chain.
   final bool isDemotionFloor;
+
+  /// Whether this sub-mode is a step in the chain a kid works forward
+  /// through — what the Sanctuary picker offers, what auto-advance moves on
+  /// to, and what "this activity is finished" is measured against.
+  ///
+  /// The entry point is always a step, whatever else it is marked. Past it,
+  /// two kinds sit outside the chain for opposite reasons: a challenge comes
+  /// *after* it (offered once every step is done, and skippable forever) and
+  /// a floor sits *below* it.
+  ///
+  /// This was read by nothing at all until recently, so `frame-only` was in
+  /// Build-a-Habitat's chain as an ordinary step, with three consequences.
+  /// It has no picker artwork, so the sheet drew it as a grey question mark
+  /// captioned `frame-only` in front of a child who cannot read. It comes
+  /// last in registry order, so the easiest build in the activity was the one
+  /// she played last — the ramp running backwards on the culminating round.
+  /// And the activity could not be marked complete without it, which on this
+  /// map is what lifts the fog on Where's Buddy.
+  bool get isChainStep => isDefault || (!isChallenge && !isDemotionFloor);
 
   /// When true, the sub-mode's runner plays its own animated demo/lesson
   /// at intro time. The Sanctuary picker and the activity-screen
@@ -98,4 +128,26 @@ class Activity {
 
   SubMode get defaultSubMode =>
       subModes.firstWhere((m) => m.isDefault, orElse: () => subModes.first);
+
+  /// The sub-mode one step simpler than [subModeId], for a child who is
+  /// struggling at the simplest layer of it - step two of the staggered
+  /// demotion in specs/shared/adaptive-scaffolding.md, once there is no CPA
+  /// layer left to drop.
+  ///
+  /// Within the chain that is the step before. From the entry point it is the
+  /// floor below the entry, where an activity has one (Build-a-Habitat's
+  /// frame-only, Care Pantry's categorize-only): the only way either is ever
+  /// reached. A challenge, or the floor itself, has nothing simpler - a
+  /// challenge is opt-in, and a hard time in it is not a signal to send her
+  /// backwards through the activity.
+  SubMode? simplerThan(String subModeId) {
+    final chain = subModes.where((m) => m.isChainStep).toList();
+    final i = chain.indexWhere((m) => m.id == subModeId);
+    if (i > 0) return chain[i - 1];
+    if (i < 0) return null;
+    for (final m in subModes) {
+      if (m.isDemotionFloor && !m.isChainStep) return m;
+    }
+    return null;
+  }
 }

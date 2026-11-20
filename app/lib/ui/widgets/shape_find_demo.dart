@@ -25,14 +25,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/asset_paths.dart';
+import '../../data/shape_words.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import 'animated_shape.dart';
 import 'glitter_burst.dart';
 import 'lesson_hand_pointer.dart';
 import 'shape_find_round.dart' show kFindRoundVariantsByKind;
-import 'shape_intro_layer.dart'
-    show kShapeDisplayName, kShapeDisplayPlural;
 
 class ShapeFindDemo extends ConsumerStatefulWidget {
   const ShapeFindDemo({
@@ -118,8 +117,8 @@ class _ShapeFindDemoState extends ConsumerState<ShapeFindDemo> {
   /// so the demo always lands in a clean, predictable layout the narrator
   /// can rely on.
   List<_DemoPlacement> _buildPlacements() {
-    final variants = kFindRoundVariantsByKind[widget.targetKind] ??
-        const <String>['leaf'];
+    final variants =
+        kFindRoundVariantsByKind[widget.targetKind] ?? const <String>['leaf'];
     return <_DemoPlacement>[
       _DemoPlacement(
         id: 'demo-target-0',
@@ -344,9 +343,8 @@ class _ShapeFindDemoState extends ConsumerState<ShapeFindDemo> {
                     final placement = _placements.firstWhere(
                       (p) => p.id == entry.key,
                     );
-                    final size = placement.isDecor
-                        ? _spriteSizeDecor
-                        : _spriteSize;
+                    final size =
+                        placement.isDecor ? _spriteSizeDecor : _spriteSize;
                     return Positioned(
                       left: placement.center.dx * w - size / 2 - 22,
                       top: placement.center.dy * h - size / 2 + 24 - 22,

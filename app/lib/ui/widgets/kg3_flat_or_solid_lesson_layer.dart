@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/asset_paths.dart';
+import '../../data/button_labels.dart';
 import '../../data/flat_or_solid_shapes.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
@@ -233,7 +234,7 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody> {
     _schedule(300, () {
       _speak(
         "Watch — I'll show you how to sort. The flat shapes go in the "
-        'flat basket, the solid shapes in the solid basket.',
+            'flat basket, the solid shapes in the solid basket.',
         'kg3-demo:intro',
       );
     });
@@ -367,14 +368,14 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody> {
               center: Offset(flatBinCenter.dx * w, flatBinCenter.dy * h),
               size: binSize,
               assetPath: AssetPaths.shapeGardenBin2d,
-              label: 'Flat',
+              label: kLabelFlat,
               burstCount: _flatBinBurst,
             ),
             _DemoBin(
               center: Offset(solidBinCenter.dx * w, solidBinCenter.dy * h),
               size: binSize,
               assetPath: AssetPaths.shapeGardenBin3d,
-              label: 'Solid',
+              label: kLabelSolid,
               burstCount: _solidBinBurst,
             ),
             // Flat shape — either at its source slot or "carried" with the
@@ -383,18 +384,18 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody> {
               AnimatedPositioned(
                 duration: const Duration(milliseconds: 900),
                 curve: Curves.easeInOutCubic,
-                left: (_step == _DemoStep.carryFlat ||
-                            _step == _DemoStep.dropFlat
-                        ? _carriedShapePos.dx
-                        : flatSlot.dx) *
-                        w -
-                    _shapeSize / 2,
-                top: (_step == _DemoStep.carryFlat ||
-                            _step == _DemoStep.dropFlat
-                        ? _carriedShapePos.dy
-                        : flatSlot.dy) *
-                        h -
-                    _shapeSize / 2,
+                left:
+                    (_step == _DemoStep.carryFlat || _step == _DemoStep.dropFlat
+                                ? _carriedShapePos.dx
+                                : flatSlot.dx) *
+                            w -
+                        _shapeSize / 2,
+                top:
+                    (_step == _DemoStep.carryFlat || _step == _DemoStep.dropFlat
+                                ? _carriedShapePos.dy
+                                : flatSlot.dy) *
+                            h -
+                        _shapeSize / 2,
                 width: _shapeSize,
                 height: _shapeSize,
                 child: Image.asset(_flatAsset, fit: BoxFit.contain),
@@ -405,15 +406,15 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody> {
                 duration: const Duration(milliseconds: 900),
                 curve: Curves.easeInOutCubic,
                 left: (_step == _DemoStep.carrySolid ||
-                            _step == _DemoStep.dropSolid
-                        ? _carriedShapePos.dx
-                        : solidSlot.dx) *
+                                _step == _DemoStep.dropSolid
+                            ? _carriedShapePos.dx
+                            : solidSlot.dx) *
                         w -
                     _shapeSize / 2,
                 top: (_step == _DemoStep.carrySolid ||
-                            _step == _DemoStep.dropSolid
-                        ? _carriedShapePos.dy
-                        : solidSlot.dy) *
+                                _step == _DemoStep.dropSolid
+                            ? _carriedShapePos.dy
+                            : solidSlot.dy) *
                         h -
                     _shapeSize / 2,
                 width: _shapeSize,

@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/asset_paths.dart';
+import '../../data/sort_attribute_words.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import 'glitter_burst.dart';
@@ -113,11 +114,11 @@ const List<_LessonShape> _kLessonShapes = <_LessonShape>[
 
 /// Three bins along the bottom of the stage.
 const List<_LessonBin> _kLessonBins = <_LessonBin>[
-  _LessonBin(id: 'bin-3', label: '3 sides', position: Offset(0.20, 0.78)),
-  _LessonBin(id: 'bin-4', label: '4 sides', position: Offset(0.50, 0.78)),
+  _LessonBin(id: 'bin-3', label: kSortBin3Sides, position: Offset(0.20, 0.78)),
+  _LessonBin(id: 'bin-4', label: kSortBin4Sides, position: Offset(0.50, 0.78)),
   _LessonBin(
     id: 'bin-5plus',
-    label: '5+ sides',
+    label: kSortBin5PlusSides,
     position: Offset(0.80, 0.78),
   ),
 ];
@@ -261,7 +262,7 @@ class _Kg4SortByAttributeLessonLayerState
         if (!mounted) return;
         _speak(
           'Shapes with the same number of sides go together, no matter '
-          'their size.',
+              'their size.',
           'k-g-4-lesson:ishow-closer',
         );
       }),
@@ -436,8 +437,7 @@ class _Kg4SortByAttributeLessonLayerState
                 canvasH: h,
                 burstCounter: _burstByBin[bin.id] ?? 0,
                 highlighted: inviteShape?.targetBin == bin.id,
-                onAccept: (shape) =>
-                    _onShapeDropOnBin(shape: shape, bin: bin),
+                onAccept: (shape) => _onShapeDropOnBin(shape: shape, bin: bin),
               ),
             // Shapes — placed ones lock to their bin; unplaced ones
             // are draggable in We-Try (only the invited one).
@@ -448,8 +448,7 @@ class _Kg4SortByAttributeLessonLayerState
                 canvasW: w,
                 canvasH: h,
                 placed: _placed.contains(shape.id),
-                draggable:
-                    _beat == _Beat.weTry && inviteShape?.id == shape.id,
+                draggable: _beat == _Beat.weTry && inviteShape?.id == shape.id,
               ),
             // Hand pointer overlay for the I-Show + auto-complete beats.
             if (_handVisible)
@@ -579,9 +578,8 @@ class _BinTarget extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(22),
                   border: Border.all(
-                    color: hot
-                        ? Colors.amber.shade400
-                        : const Color(0xFFD8D2C2),
+                    color:
+                        hot ? Colors.amber.shade400 : const Color(0xFFD8D2C2),
                     width: hot ? 4 : 2,
                   ),
                   boxShadow: const [

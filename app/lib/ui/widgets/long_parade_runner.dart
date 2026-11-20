@@ -6,10 +6,15 @@
 // The narrator says "Ten. Twenty. Thirty." while the count badge ticks
 // up by ten per tap.
 //
-// Three rounds: 3 clusters (30) → 4 clusters (40) → 5 clusters (50).
+// Four rounds: 3 clusters (30) → 5 (50) → 7 (70) → 10 (100).
 // Each round resolves through RoundCoordinator with conceptId K.CC.1.
 // The cluster cards wrap so they use the full vertical area on a tablet
 // and stay big enough to tap comfortably.
+//
+// Feedback follows the Counting Parade pattern: each cluster tapped sounds
+// the next note up the scale, so counting by tens *sounds* like climbing,
+// and the between-round keeper line plays over the live meadow rather than
+// through a blocking modal.
 
 import 'dart:async';
 
@@ -18,112 +23,40 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../coordinators/round_coordinator.dart';
 import '../../data/asset_paths.dart';
+import '../../data/button_labels.dart';
+import '../../data/long_parade_rounds.dart';
+import '../../data/number_words.dart';
+import '../../data/sfx_catalog.dart';
+import '../../data/warm_lines.dart';
+import '../../engines/feedback/feedback_engine.dart';
+import '../../engines/mastery/round_outcome.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
+import '../../engines/scaffolding/hint_ladder.dart';
+import '../../platform/sfx_engine.dart';
+import 'buddy_companion.dart';
 import 'continue_arrow_shelf.dart';
 import 'glitter_burst.dart';
+import 'keeper_aside.dart';
 import 'keeper_intro_overlay.dart';
 import 'next_arrow_button.dart';
-import 'progress_bar_to_reward.dart';
+import 'playfield_scaffold.dart';
 import 'replay_demo_button.dart';
 
-enum _Phase { intro, counting, celebrating, interstitial }
+enum _Phase {
+  intro,
+  counting,
 
-class _Round {
-  const _Round({
-    required this.clusterCount,
-    required this.spriteAsset,
-    required this.singular,
-    required this.plural,
-    required this.keeperLine,
-  });
+  /// Keeper talks over the live meadow and advances the round herself. See
+  /// the same phase on CountTheParadeRunner for why the blocking version
+  /// went away.
+  transition,
 
-  final int clusterCount;
-  final String spriteAsset;
-  final String singular;
-  final String plural;
-  final String keeperLine;
+  celebrating,
 
-  int get totalCreatures => clusterCount * 10;
+  /// Final beat only — the reward payoff, which is meant to interrupt.
+  interstitial,
 }
-
-// K.CC.1 standard: "Count to 100 by ones and by tens." So this sub-mode
-// runs eight rounds — one per creature in the canonical parade sequence
-// — climbing from 30 → 40 → 50 → 60 → 70 → 80 → 90 → 100, finishing on
-// the golden eggs at one hundred.
-const List<_Round> _kRounds = <_Round>[
-  _Round(
-    clusterCount: 3,
-    spriteAsset: AssetPaths.countingParadeFawn,
-    singular: 'fawn',
-    plural: 'fawns',
-    keeperLine: 'Thirty fawns! Next: more groups of ten — gryphons.',
-  ),
-  _Round(
-    clusterCount: 4,
-    spriteAsset: AssetPaths.countingParadeBabyGryphon,
-    singular: 'gryphon',
-    plural: 'gryphons',
-    keeperLine: 'Forty gryphons! Now the dragons.',
-  ),
-  _Round(
-    clusterCount: 5,
-    spriteAsset: AssetPaths.countingParadeBabyDragon,
-    singular: 'dragon',
-    plural: 'dragons',
-    keeperLine: 'Fifty dragons! Look — here come the unicorns.',
-  ),
-  _Round(
-    clusterCount: 6,
-    spriteAsset: AssetPaths.countingParadeBabyUnicorn,
-    singular: 'unicorn',
-    plural: 'unicorns',
-    keeperLine: 'Sixty unicorns! Phoenix babies are next.',
-  ),
-  _Round(
-    clusterCount: 7,
-    spriteAsset: AssetPaths.countingParadeBabyPhoenix,
-    singular: 'phoenix',
-    plural: 'phoenixes',
-    keeperLine: 'Seventy phoenixes! Centaur babies, please.',
-  ),
-  _Round(
-    clusterCount: 8,
-    spriteAsset: AssetPaths.countingParadeBabyCentaur,
-    singular: 'centaur',
-    plural: 'centaurs',
-    keeperLine: 'Eighty centaurs! The toucan babies are waiting.',
-  ),
-  _Round(
-    clusterCount: 9,
-    spriteAsset: AssetPaths.countingParadeBabyToucan,
-    singular: 'toucan',
-    plural: 'toucans',
-    keeperLine: 'Ninety toucans! Last group — the golden eggs.',
-  ),
-  _Round(
-    clusterCount: 10,
-    spriteAsset: AssetPaths.countingParadeGoldenEgg,
-    singular: 'golden egg',
-    plural: 'golden eggs',
-    keeperLine:
-        "One hundred! You counted to one hundred by tens — that's amazing.",
-  ),
-];
-
-const List<String> _kTensSpelled = <String>[
-  'Zero',
-  'Ten',
-  'Twenty',
-  'Thirty',
-  'Forty',
-  'Fifty',
-  'Sixty',
-  'Seventy',
-  'Eighty',
-  'Ninety',
-  'One hundred',
-];
 
 class LongParadeRunner extends ConsumerStatefulWidget {
   const LongParadeRunner({
@@ -140,8 +73,7 @@ class LongParadeRunner extends ConsumerStatefulWidget {
 }
 
 class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
-  late _Phase _phase =
-      widget.skipIntro ? _Phase.counting : _Phase.intro;
+  late _Phase _phase = widget.skipIntro ? _Phase.counting : _Phase.intro;
   int _roundIndex = 0;
   int _completedRounds = 0;
   Set<int> _tappedClusters = <int>{};
@@ -152,20 +84,29 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
   Map<int, int> _burstCounters = <int, int>{};
   Timer? _celebrationTimer;
 
-  _Round get _currentRound => _kRounds[_roundIndex];
-  bool get _isLastRound => _roundIndex == _kRounds.length - 1;
-  bool get _allTapped =>
-      _tappedClusters.length == _currentRound.clusterCount;
+  /// Bumped to (re)present the between-round keeper aside.
+  int _asideToken = 0;
+
+  /// Cluster the hint ladder is glowing, if any.
+  int? _hintedCluster;
+
+  HintLadder? _hints;
+
+  /// Read eagerly — `ref.read` is illegal once dispose() has begun, and
+  /// dispose() is where the music bed has to stop.
+  SfxEngine? _sfxForDispose;
+
+  LongParadeRound get _currentRound => kLongParadeRounds[_roundIndex];
+  bool get _isLastRound => _roundIndex == kLongParadeRounds.length - 1;
+  bool get _allTapped => _tappedClusters.length == _currentRound.clusterCount;
   int get _currentCount => _tappedClusters.length * 10;
-  double get _progress => _completedRounds / _kRounds.length;
+  double get _progress => _completedRounds / kLongParadeRounds.length;
 
   String get _introDialog =>
       "Today's parade is HUGE — but we won't count one by one. Each group "
       'is ten. Tap each group and count by tens together!';
 
-  String get _countingPrompt =>
-      'Tap each group of ${_currentRound.plural} — count by tens out loud '
-      'with me!';
+  String get _countingPrompt => longParadeCountingPrompt(_currentRound);
 
   String get _finalKeeperLine =>
       'One hundred! Counting by tens carries you all the way there.';
@@ -173,11 +114,19 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
   @override
   void initState() {
     super.initState();
+    _sfxForDispose = ref.read(sfxEngineProvider);
+    // Claimed here, not in the post-frame callback below: the release in
+    // dispose() is unconditional, so the claim has to be too, or a teardown
+    // before the first frame gives back a claim it never took. See
+    // SfxEngine.releaseMusicBed for what that costs.
+    unawaited(_sfxForDispose!.startMusicBed(kDefaultMusicBed));
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
+      ref.read(feedbackEngineProvider).resetRound();
       if (_phase == _Phase.intro) {
         _speakIntro();
       } else {
+        _startHints();
         _speakCountingPrompt();
       }
     });
@@ -185,11 +134,60 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
 
   @override
   void dispose() {
+    _hints?.dispose();
     _celebrationTimer?.cancel();
     for (final t in _exitTimers.values) {
       t.cancel();
     }
+    final sfx = _sfxForDispose;
+    if (sfx != null) sfx.releaseMusicBed();
     super.dispose();
+  }
+
+  void _startHints() {
+    _hints?.dispose();
+    _hints = HintLadder(onLevel: _onHintLevel)..start();
+  }
+
+  /// Escalating help for a kid who has stalled. There is no wrong cluster to
+  /// tap here, so being stuck looks like doing nothing at all — which is
+  /// exactly the state that used to produce no response of any kind.
+  void _onHintLevel(HintLevel level) {
+    if (!mounted || _phase != _Phase.counting) return;
+    final next = _nextUntapped();
+    if (next == null) return;
+    final feedback = ref.read(feedbackEngineProvider);
+    switch (level) {
+      case HintLevel.none:
+        return;
+      case HintLevel.highlight:
+        setState(() => _hintedCluster = next);
+      case HintLevel.point:
+        setState(() => _hintedCluster = next);
+        feedback.hint();
+        ref.read(narrationPlayerProvider.notifier).speak(
+              NarrationLine(
+                text: warmHintLine(2),
+                cueId: 'long-parade:r$_roundIndex:hint-point',
+              ),
+            );
+      case HintLevel.demonstrate:
+        feedback.hint();
+        ref.read(narrationPlayerProvider.notifier).speak(
+              NarrationLine(
+                text: warmHintLine(3),
+                cueId: 'long-parade:r$_roundIndex:hint-demo',
+              ),
+            );
+        _tapCluster(next, fromHint: true);
+    }
+  }
+
+  int? _nextUntapped() {
+    for (var c = 0; c < _currentRound.clusterCount; c++) {
+      if (!_tappedClusters.contains(c)) return c;
+    }
+    return null;
   }
 
   void _speakIntro() {
@@ -213,26 +211,41 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
 
   void _onStartFromIntro() {
     setState(() => _phase = _Phase.counting);
+    _startHints();
     _speakCountingPrompt();
   }
 
-  void _tapCluster(int idx) {
+  void _tapCluster(int idx, {bool fromHint = false}) {
     if (_phase != _Phase.counting) return;
     if (_tappedClusters.contains(idx)) return;
     setState(() {
       _tappedClusters.add(idx);
       _burstCounters[idx] = (_burstCounters[idx] ?? 0) + 1;
+      _hintedCluster = null;
     });
+    // A hint-driven tap must not reset the ladder, or a stalled kid would be
+    // demonstrated at forever instead of the round resolving as a soft pass.
+    if (!fromHint) _hints?.poke();
     final n = _tappedClusters.length;
-    final spoken = n < _kTensSpelled.length
-        ? _kTensSpelled[n]
-        : (n * 10).toString();
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: '$spoken.',
-            cueId: 'long-parade:r$_roundIndex:tap-$n',
-          ),
-        );
+    // Same pitch ladder as counting by ones: ten, twenty, thirty each sound a
+    // step higher, so counting by tens is audibly the same kind of climb.
+    ref.read(feedbackEngineProvider).countStep(n);
+    final spoken =
+        n < kSpelledTens.length ? kSpelledTens[n] : (n * 10).toString();
+    // Queued, not spoken, when the ladder did this tap. `speak` cuts off
+    // whatever is in flight, and what is in flight at that moment is the
+    // demonstration's own explanation - the one line in the round that
+    // says why. See HintLadder.
+    final say = ref.read(narrationPlayerProvider.notifier);
+    final line = NarrationLine(
+      text: '$spoken.',
+      cueId: 'long-parade:r$_roundIndex:tap-$n',
+    );
+    if (fromHint) {
+      say.enqueue(line);
+    } else {
+      say.speak(line);
+    }
     _exitTimers[idx] = Timer(const Duration(milliseconds: 1100), () {
       if (!mounted) return;
       setState(() => _exitedClusters.add(idx));
@@ -241,22 +254,55 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
 
   void _finishRound() {
     if (!_allTapped) return;
+    _hints?.pause();
+
+    // Every cluster here is a correct target — there is nothing wrong to tap
+    // — so the only thing separating a clean round from a soft one is whether
+    // the ladder had to demonstrate. adaptive-scaffolding.md §Hint Layer: a
+    // round that needed a hint counts as soft-success and does not advance
+    // the promotion streak.
+    final result = (_hints?.hintsUsed ?? 0) > 0
+        ? RoundResult.softSuccess
+        : RoundResult.success;
     ref.read(roundCoordinatorProvider).resolveRound(
           activityId: 'counting-parade',
           conceptId: 'K.CC.1',
-          success: true,
+          result: result,
         );
     setState(() {
       _completedRounds += 1;
       _phase = _Phase.celebrating;
     });
+
+    final feedback = ref.read(feedbackEngineProvider);
+    if (_isLastRound) {
+      feedback.celebrate();
+      _celebrationTimer = Timer(const Duration(seconds: 1), () {
+        if (!mounted) return;
+        setState(() => _phase = _Phase.interstitial);
+        ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
+              NarrationLine(
+                text: _finalKeeperLine,
+                cueId: 'long-parade:r$_roundIndex:interstitial',
+                speaker: 'sanctuary-keeper-mystic',
+              ),
+            );
+      });
+      return;
+    }
+
+    feedback.roundPass();
+    // Non-final: the keeper speaks over the live meadow and the aside
+    // advances the round when it retires itself. No tap required.
     _celebrationTimer = Timer(const Duration(seconds: 1), () {
       if (!mounted) return;
-      setState(() => _phase = _Phase.interstitial);
-      final line = _isLastRound ? _finalKeeperLine : _currentRound.keeperLine;
+      setState(() {
+        _phase = _Phase.transition;
+        _asideToken += 1;
+      });
       ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
             NarrationLine(
-              text: line,
+              text: _currentRound.keeperLine,
               cueId: 'long-parade:r$_roundIndex:interstitial',
               speaker: 'sanctuary-keeper-mystic',
             ),
@@ -264,11 +310,10 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
     });
   }
 
-  void _advanceFromInterstitial() {
-    if (_isLastRound) {
-      widget.onSequenceComplete();
-      return;
-    }
+  /// Fired by the keeper aside retiring itself. Guards on the phase because
+  /// the exit animation can land after the widget has already moved on.
+  void _advanceToNextRound() {
+    if (!mounted || _phase != _Phase.transition) return;
     for (final t in _exitTimers.values) {
       t.cancel();
     }
@@ -278,8 +323,12 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
       _tappedClusters = <int>{};
       _exitedClusters = <int>{};
       _burstCounters = <int, int>{};
+      _hintedCluster = null;
       _phase = _Phase.counting;
     });
+    // Back to the bottom of the scale — every round is its own climb.
+    ref.read(feedbackEngineProvider).resetRound();
+    _startHints();
     _speakCountingPrompt();
   }
 
@@ -292,29 +341,34 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
           startButtonKey: const ValueKey('long-parade-start-button'),
           onStart: _onStartFromIntro,
         ),
-      _Phase.counting || _Phase.celebrating => _LongParadeLayer(
+      // The meadow stays up through the transition, which is the point of
+      // the aside — the child can keep looking at what she just counted
+      // while the keeper talks over it.
+      _Phase.counting ||
+      _Phase.celebrating ||
+      _Phase.transition =>
+        _LongParadeLayer(
           roundIndex: _roundIndex,
           clusterCount: _currentRound.clusterCount,
           spriteAsset: _currentRound.spriteAsset,
           tappedClusters: _tappedClusters,
           exitedClusters: _exitedClusters,
           burstCounters: _burstCounters,
+          hintedCluster: _hintedCluster,
           currentCount: _currentCount,
           targetCount: _currentRound.totalCreatures,
           onTapCluster: _tapCluster,
           onDone: _finishRound,
           allTapped: _allTapped,
-          inputLocked: _phase == _Phase.celebrating,
+          inputLocked: _phase != _Phase.counting,
           replayPrompt: _countingPrompt,
           replayCueId: 'long-parade:replay-r$_roundIndex',
         ),
       _Phase.interstitial => KeeperIntroOverlay(
-          dialog:
-              _isLastRound ? _finalKeeperLine : _currentRound.keeperLine,
-          startLabel: _isLastRound ? 'Continue' : "Let's go!",
-          startButtonKey:
-              const ValueKey('long-parade-interstitial-next'),
-          onStart: _advanceFromInterstitial,
+          dialog: _finalKeeperLine,
+          startLabel: 'Continue',
+          startButtonKey: const ValueKey('long-parade-interstitial-next'),
+          onStart: widget.onSequenceComplete,
         ),
     };
 
@@ -325,20 +379,26 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
           AssetPaths.countingParadeMeadow,
           fit: BoxFit.cover,
         ),
-        SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
-                child: ProgressBarToReward(
-                  progress: _progress,
-                  celebrate: _phase == _Phase.celebrating,
-                ),
-              ),
-              Expanded(child: phaseContent),
-            ],
-          ),
+        PlayfieldScaffold(
+          progress: _progress,
+          celebrate: _phase == _Phase.celebrating,
+          child: phaseContent,
         ),
+        // Outer stack, not inside the layer: the layer's left edge is the
+        // replay-demo shelf and Buddy would collide with it.
+        if (_phase != _Phase.intro && _phase != _Phase.interstitial)
+          const BuddyCompanionCorner(),
+        if (_phase == _Phase.transition)
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: KeeperAside(
+              text: _currentRound.keeperLine,
+              token: _asideToken,
+              onDismissed: _advanceToNextRound,
+            ),
+          ),
       ],
     );
   }
@@ -352,6 +412,7 @@ class _LongParadeLayer extends StatelessWidget {
     required this.tappedClusters,
     required this.exitedClusters,
     required this.burstCounters,
+    required this.hintedCluster,
     required this.currentCount,
     required this.targetCount,
     required this.onTapCluster,
@@ -368,6 +429,10 @@ class _LongParadeLayer extends StatelessWidget {
   final Set<int> tappedClusters;
   final Set<int> exitedClusters;
   final Map<int, int> burstCounters;
+
+  /// Cluster the hint ladder wants glowed, or null.
+  final int? hintedCluster;
+
   final int currentCount;
   final int targetCount;
   final ValueChanged<int> onTapCluster;
@@ -423,11 +488,12 @@ class _LongParadeLayer extends StatelessWidget {
                                 spriteAsset: spriteAsset,
                                 tapped: tappedClusters.contains(c),
                                 gone: exitedClusters.contains(c),
+                                hinted: hintedCluster == c,
                                 burstCounter: burstCounters[c] ?? 0,
-                                onTap: (inputLocked ||
-                                        exitedClusters.contains(c))
-                                    ? null
-                                    : () => onTapCluster(c),
+                                onTap:
+                                    (inputLocked || exitedClusters.contains(c))
+                                        ? null
+                                        : () => onTapCluster(c),
                               ),
                           ],
                         ),
@@ -446,7 +512,7 @@ class _LongParadeLayer extends StatelessWidget {
                       idleHintText:
                           'Great counting by tens! Tap the arrow to keep going.',
                       onPressed: onDone,
-                      label: 'Done',
+                      label: kLabelDone,
                     )
                   : null,
             ),
@@ -465,6 +531,7 @@ class _ClusterCard extends StatelessWidget {
     required this.spriteAsset,
     required this.tapped,
     required this.gone,
+    required this.hinted,
     required this.burstCounter,
     required this.onTap,
   });
@@ -475,6 +542,10 @@ class _ClusterCard extends StatelessWidget {
   /// Once true the cluster slides off-screen + fades. Hit-testing is
   /// already disabled by the parent passing `onTap: null`.
   final bool gone;
+
+  /// The hint ladder is pointing here. Same soft amber glow AnimatedFawn uses
+  /// for its `pointed` state, so help looks the same everywhere in the game.
+  final bool hinted;
 
   final int burstCounter;
   final VoidCallback? onTap;
@@ -492,93 +563,94 @@ class _ClusterCard extends StatelessWidget {
           behavior: HitTestBehavior.opaque,
           onTap: onTap,
           child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.center,
-        children: [
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
-            padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: tapped ? 0.75 : 0.55),
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: tapped
-                  ? const [
-                      BoxShadow(
-                        color: Colors.amber,
-                        blurRadius: 26,
-                        spreadRadius: 3,
-                      ),
-                    ]
-                  : const [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 8,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // 2 cols × 5 rows of creatures.
-                for (var row = 0; row < 5; row++)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset(
-                          spriteAsset,
-                          width: _LongParadeLayer._creatureSize,
-                          height: _LongParadeLayer._creatureSize,
-                          fit: BoxFit.contain,
-                        ),
-                        const SizedBox(width: 6),
-                        Image.asset(
-                          spriteAsset,
-                          width: _LongParadeLayer._creatureSize,
-                          height: _LongParadeLayer._creatureSize,
-                          fit: BoxFit.contain,
-                        ),
-                      ],
-                    ),
-                  ),
-                const SizedBox(height: 6),
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: tapped
-                        ? Colors.amber.shade100
-                        : Colors.brown.shade100,
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: const Text(
-                    '10',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.black87,
-                    ),
-                  ),
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: [
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                decoration: BoxDecoration(
+                  color: Colors.white
+                      .withValues(alpha: tapped || hinted ? 0.75 : 0.55),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: tapped || hinted
+                      ? const [
+                          BoxShadow(
+                            color: Colors.amber,
+                            blurRadius: 26,
+                            spreadRadius: 3,
+                          ),
+                        ]
+                      : const [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 8,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
                 ),
-              ],
-            ),
-          ),
-          if (burstCounter > 0)
-            Positioned.fill(
-              child: IgnorePointer(
-                child: GlitterBurst(
-                  key: ValueKey('long-parade-cluster-burst-$burstCounter'),
-                  maxRadius: 110,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // 2 cols × 5 rows of creatures.
+                    for (var row = 0; row < 5; row++)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.asset(
+                              spriteAsset,
+                              width: _LongParadeLayer._creatureSize,
+                              height: _LongParadeLayer._creatureSize,
+                              fit: BoxFit.contain,
+                            ),
+                            const SizedBox(width: 6),
+                            Image.asset(
+                              spriteAsset,
+                              width: _LongParadeLayer._creatureSize,
+                              height: _LongParadeLayer._creatureSize,
+                              fit: BoxFit.contain,
+                            ),
+                          ],
+                        ),
+                      ),
+                    const SizedBox(height: 6),
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 250),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: tapped
+                            ? Colors.amber.shade100
+                            : Colors.brown.shade100,
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: const Text(
+                        '10',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-        ],
-      ),
+              if (burstCounter > 0)
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: GlitterBurst(
+                      key: ValueKey('long-parade-cluster-burst-$burstCounter'),
+                      maxRadius: 110,
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

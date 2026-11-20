@@ -3,7 +3,6 @@
   "version": 1,
   "lastUpdated": "2026-05-30",
   "_note": "K-region reward catalog. Sets and trophies enumerated comprehensively per K activity specs; individual items shown as representative samples (full item lists authored by content team).",
-
   "items": [
     {
       "id": "creature-card-fawn",
@@ -12,7 +11,11 @@
       "rarity": "common",
       "coinPrice": null,
       "sources": [
-        { "type": "activity-drop", "activityId": "counting-parade", "dropRate": 0.2 }
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.2
+        }
       ],
       "regionTheme": "sanctuary"
     },
@@ -23,7 +26,101 @@
       "rarity": "uncommon",
       "coinPrice": null,
       "sources": [
-        { "type": "activity-drop", "activityId": "counting-parade", "dropRate": 0.1 }
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.1
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-baby-dragon",
+      "displayName": "Baby Dragon",
+      "category": "creature-card",
+      "rarity": "uncommon",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.1
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-baby-unicorn",
+      "displayName": "Baby Unicorn",
+      "category": "creature-card",
+      "rarity": "uncommon",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.1
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-baby-phoenix",
+      "displayName": "Baby Phoenix",
+      "category": "creature-card",
+      "rarity": "rare",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.05
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-baby-centaur",
+      "displayName": "Baby Centaur",
+      "category": "creature-card",
+      "rarity": "uncommon",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.1
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-baby-toucan",
+      "displayName": "Baby Toucan",
+      "category": "creature-card",
+      "rarity": "common",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.2
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-golden-egg",
+      "displayName": "Golden Egg",
+      "category": "creature-card",
+      "rarity": "rare",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.05
+        }
       ],
       "regionTheme": "sanctuary"
     },
@@ -34,7 +131,235 @@
       "rarity": "rare",
       "coinPrice": null,
       "sources": [
-        { "type": "challenge", "challengeActivityId": "counting-parade" }
+        {
+          "type": "challenge",
+          "challengeActivityId": "counting-parade"
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-moss-bunny",
+      "displayName": "Moss Bunny",
+      "category": "creature-card",
+      "rarity": "common",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.2
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-acorn-squirrel",
+      "displayName": "Acorn Squirrel",
+      "category": "creature-card",
+      "rarity": "common",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.2
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-berry-hedgehog",
+      "displayName": "Berry Hedgehog",
+      "category": "creature-card",
+      "rarity": "common",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.2
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-meadow-frog",
+      "displayName": "Meadow Frog",
+      "category": "creature-card",
+      "rarity": "common",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.2
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-star-turtle",
+      "displayName": "Star Turtle",
+      "category": "creature-card",
+      "rarity": "common",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.2
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-honey-cub",
+      "displayName": "Honey Cub",
+      "category": "creature-card",
+      "rarity": "common",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.2
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-pebble-mouse",
+      "displayName": "Pebble Mouse",
+      "category": "creature-card",
+      "rarity": "common",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.2
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-firefly-sprite",
+      "displayName": "Firefly Sprite",
+      "category": "creature-card",
+      "rarity": "common",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.2
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-baby-pegasus",
+      "displayName": "Baby Pegasus",
+      "category": "creature-card",
+      "rarity": "uncommon",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.1
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-crystal-deer",
+      "displayName": "Crystal Deer",
+      "category": "creature-card",
+      "rarity": "uncommon",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.1
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-lantern-moth",
+      "displayName": "Lantern Moth",
+      "category": "creature-card",
+      "rarity": "uncommon",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.1
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-snow-fox",
+      "displayName": "Snow Fox",
+      "category": "creature-card",
+      "rarity": "uncommon",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.1
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-rainbow-chameleon",
+      "displayName": "Rainbow Chameleon",
+      "category": "creature-card",
+      "rarity": "uncommon",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.1
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-moonlight-owl",
+      "displayName": "Moonlight Owl",
+      "category": "creature-card",
+      "rarity": "rare",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.05
+        }
+      ],
+      "regionTheme": "sanctuary"
+    },
+    {
+      "id": "creature-card-sunbeam-stag",
+      "displayName": "Sunbeam Stag",
+      "category": "creature-card",
+      "rarity": "rare",
+      "coinPrice": null,
+      "sources": [
+        {
+          "type": "activity-drop",
+          "activityId": "counting-parade",
+          "dropRate": 0.05
+        }
       ],
       "regionTheme": "sanctuary"
     },
@@ -45,7 +370,11 @@
       "rarity": "common",
       "coinPrice": null,
       "sources": [
-        { "type": "activity-drop", "activityId": "ten-frame-pond", "dropRate": 0.2 }
+        {
+          "type": "activity-drop",
+          "activityId": "ten-frame-pond",
+          "dropRate": 0.2
+        }
       ],
       "regionTheme": "sanctuary"
     },
@@ -56,8 +385,15 @@
       "rarity": "rare",
       "coinPrice": null,
       "sources": [
-        { "type": "activity-drop", "activityId": "ten-frame-pond", "dropRate": 0.05 },
-        { "type": "challenge", "challengeActivityId": "ten-frame-pond" }
+        {
+          "type": "activity-drop",
+          "activityId": "ten-frame-pond",
+          "dropRate": 0.05
+        },
+        {
+          "type": "challenge",
+          "challengeActivityId": "ten-frame-pond"
+        }
       ],
       "regionTheme": "sanctuary",
       "description": "One of 6 rare Sanctuary Reef fish; earned via the strategy-variety bonus (three distinct decompositions of the same target in one session)."
@@ -69,7 +405,9 @@
       "rarity": "common",
       "coinPrice": null,
       "sources": [
-        { "type": "mastery" }
+        {
+          "type": "mastery"
+        }
       ],
       "regionTheme": "sanctuary",
       "description": "Earned when the kid masters writing the numeral '5' in Scribe's Tower (per-instance mastery)."
@@ -81,8 +419,14 @@
       "rarity": "uncommon",
       "coinPrice": 40,
       "sources": [
-        { "type": "shop", "shop": "avatar" },
-        { "type": "challenge", "challengeActivityId": "scribes-tower" }
+        {
+          "type": "shop",
+          "shop": "avatar"
+        },
+        {
+          "type": "challenge",
+          "challengeActivityId": "scribes-tower"
+        }
       ],
       "regionTheme": "sanctuary"
     },
@@ -93,7 +437,10 @@
       "rarity": "common",
       "coinPrice": null,
       "sources": [
-        { "type": "activity-drop", "activityId": "storytellers-pond" }
+        {
+          "type": "activity-drop",
+          "activityId": "storytellers-pond"
+        }
       ],
       "regionTheme": "sanctuary",
       "description": "One of ~30 story mementos; earned by completing each unique story template."
@@ -105,7 +452,10 @@
       "rarity": "common",
       "coinPrice": null,
       "sources": [
-        { "type": "activity-drop", "activityId": "build-a-habitat" }
+        {
+          "type": "activity-drop",
+          "activityId": "build-a-habitat"
+        }
       ],
       "regionTheme": "sanctuary",
       "description": "Permanent fixture in the Sanctuary Habitat Map. Built habitats are deduplicated by layout."
@@ -117,7 +467,11 @@
       "rarity": "common",
       "coinPrice": null,
       "sources": [
-        { "type": "activity-drop", "activityId": "wheres-buddy", "dropRate": 0.25 }
+        {
+          "type": "activity-drop",
+          "activityId": "wheres-buddy",
+          "dropRate": 0.25
+        }
       ],
       "regionTheme": "sanctuary"
     },
@@ -128,7 +482,11 @@
       "rarity": "common",
       "coinPrice": null,
       "sources": [
-        { "type": "activity-drop", "activityId": "picnic-baskets", "dropRate": 0.25 }
+        {
+          "type": "activity-drop",
+          "activityId": "picnic-baskets",
+          "dropRate": 0.25
+        }
       ],
       "regionTheme": "sanctuary"
     },
@@ -139,7 +497,11 @@
       "rarity": "common",
       "coinPrice": null,
       "sources": [
-        { "type": "activity-drop", "activityId": "caretakers-bench", "dropRate": 0.25 }
+        {
+          "type": "activity-drop",
+          "activityId": "caretakers-bench",
+          "dropRate": 0.25
+        }
       ],
       "regionTheme": "sanctuary"
     },
@@ -150,12 +512,15 @@
       "rarity": "common",
       "coinPrice": null,
       "sources": [
-        { "type": "activity-drop", "activityId": "care-pantry", "dropRate": 0.25 }
+        {
+          "type": "activity-drop",
+          "activityId": "care-pantry",
+          "dropRate": 0.25
+        }
       ],
       "regionTheme": "sanctuary"
     }
   ],
-
   "chests": [
     {
       "id": "small-sanctuary-chest",
@@ -165,11 +530,18 @@
         {
           "category": "any-cosmetic",
           "count": 1,
-          "pool": ["creature-card-fawn", "hideout-hat-flower-crown", "picnic-food-berry-pie-slice"],
+          "pool": [
+            "creature-card-fawn",
+            "hideout-hat-flower-crown",
+            "picnic-food-berry-pie-slice"
+          ],
           "rarityFilter": "common"
         }
       ],
-      "coinPayoutRange": { "min": 5, "max": 10 },
+      "coinPayoutRange": {
+        "min": 5,
+        "max": 10
+      },
       "pityTimer": 10,
       "regionTheme": "sanctuary"
     },
@@ -181,10 +553,18 @@
         {
           "category": "cosmetic-with-rare-chance",
           "count": 2,
-          "pool": ["creature-card-fawn", "creature-card-baby-gryphon", "hideout-hat-flower-crown", "picnic-food-berry-pie-slice"]
+          "pool": [
+            "creature-card-fawn",
+            "creature-card-baby-gryphon",
+            "hideout-hat-flower-crown",
+            "picnic-food-berry-pie-slice"
+          ]
         }
       ],
-      "coinPayoutRange": { "min": 15, "max": 25 },
+      "coinPayoutRange": {
+        "min": 15,
+        "max": 25
+      },
       "pityTimer": 6,
       "regionTheme": "sanctuary"
     },
@@ -196,11 +576,17 @@
         {
           "category": "rare-cosmetic",
           "count": 3,
-          "pool": ["creature-card-baby-gryphon", "creature-card-rare-pearl-fish"],
+          "pool": [
+            "creature-card-baby-gryphon",
+            "creature-card-rare-pearl-fish"
+          ],
           "rarityFilter": "rare"
         }
       ],
-      "coinPayoutRange": { "min": 40, "max": 60 },
+      "coinPayoutRange": {
+        "min": 40,
+        "max": 60
+      },
       "pityTimer": 4,
       "regionTheme": "sanctuary"
     },
@@ -212,11 +598,17 @@
         {
           "category": "prestige-cosmetic",
           "count": 4,
-          "pool": ["creature-card-rare-pearl-fish", "creature-card-rare-tens-parade-unicorn"],
+          "pool": [
+            "creature-card-rare-pearl-fish",
+            "creature-card-rare-tens-parade-unicorn"
+          ],
           "rarityFilter": "prestige"
         }
       ],
-      "coinPayoutRange": { "min": 100, "max": 150 },
+      "coinPayoutRange": {
+        "min": 100,
+        "max": 150
+      },
       "pityTimer": 2,
       "regionTheme": "sanctuary"
     },
@@ -228,29 +620,61 @@
         {
           "category": "challenge-creature",
           "count": 1,
-          "pool": ["creature-card-rare-tens-parade-unicorn"],
+          "pool": [
+            "creature-card-rare-tens-parade-unicorn"
+          ],
           "rarityFilter": "rare"
         }
       ],
-      "coinPayoutRange": { "min": 20, "max": 30 },
+      "coinPayoutRange": {
+        "min": 20,
+        "max": 30
+      },
       "pityTimer": 4,
       "regionTheme": "sanctuary"
     }
   ],
-
   "collectibleSets": [
     {
       "id": "sanctuary-creature-cards-set",
       "setName": "Sanctuary Creature Cards",
-      "itemIds": ["creature-card-fawn", "creature-card-baby-gryphon", "creature-card-rare-tens-parade-unicorn"],
+      "itemIds": [
+        "creature-card-fawn",
+        "creature-card-baby-gryphon",
+        "creature-card-baby-dragon",
+        "creature-card-baby-unicorn",
+        "creature-card-baby-phoenix",
+        "creature-card-baby-centaur",
+        "creature-card-baby-toucan",
+        "creature-card-golden-egg",
+        "creature-card-rare-tens-parade-unicorn",
+        "creature-card-moss-bunny",
+        "creature-card-acorn-squirrel",
+        "creature-card-berry-hedgehog",
+        "creature-card-meadow-frog",
+        "creature-card-star-turtle",
+        "creature-card-honey-cub",
+        "creature-card-pebble-mouse",
+        "creature-card-firefly-sprite",
+        "creature-card-baby-pegasus",
+        "creature-card-crystal-deer",
+        "creature-card-lantern-moth",
+        "creature-card-snow-fox",
+        "creature-card-rainbow-chameleon",
+        "creature-card-moonlight-owl",
+        "creature-card-sunbeam-stag"
+      ],
       "unlocksTrophyId": "sanctuary-atlas",
       "activityId": "counting-parade",
-      "_note": "Authored set has 24 items; only representative samples listed in this draft catalog."
+      "_note": "All 24 authored cards are implemented. Eight reuse the Counting Parade sprites, the Cloud Unicorn is granted by the Tens Parade challenge, and fifteen were drawn for the album (tools/artgen). Runtime drops are one weighted roll per passed round rather than these per-item dropRates - see RoundCoordinator.kCardDropChance."
     },
     {
       "id": "sanctuary-reef-cards-set",
       "setName": "Sanctuary Reef Cards",
-      "itemIds": ["creature-card-blue-koi", "creature-card-rare-pearl-fish"],
+      "itemIds": [
+        "creature-card-blue-koi",
+        "creature-card-rare-pearl-fish"
+      ],
       "unlocksTrophyId": "reef-atlas",
       "activityId": "ten-frame-pond",
       "_note": "Authored set has 20 common + 6 rare items."
@@ -258,7 +682,9 @@
     {
       "id": "scribe-numeral-stamps-set",
       "setName": "Numeral Stamps (0–20)",
-      "itemIds": ["stamp-numeral-5"],
+      "itemIds": [
+        "stamp-numeral-5"
+      ],
       "unlocksTrophyId": "scribes-atlas",
       "activityId": "scribes-tower",
       "_note": "Authored set has all 21 numeral stamps; only one shown here."
@@ -266,14 +692,18 @@
     {
       "id": "story-mementos-set",
       "setName": "Story Mementos",
-      "itemIds": ["story-memento-day-of-six-ducks"],
+      "itemIds": [
+        "story-memento-day-of-six-ducks"
+      ],
       "activityId": "storytellers-pond",
       "_note": "Authored set has ~30 mementos, one per unique story template."
     },
     {
       "id": "hide-and-seek-hats-set",
       "setName": "Hide-and-Seek Hats",
-      "itemIds": ["hideout-hat-flower-crown"],
+      "itemIds": [
+        "hideout-hat-flower-crown"
+      ],
       "unlocksTrophyId": "hide-and-seek-wardrobe",
       "activityId": "wheres-buddy",
       "_note": "Authored set has 8 hats."
@@ -281,7 +711,9 @@
     {
       "id": "picnic-food-set",
       "setName": "Picnic Feast Spread",
-      "itemIds": ["picnic-food-berry-pie-slice"],
+      "itemIds": [
+        "picnic-food-berry-pie-slice"
+      ],
       "unlocksTrophyId": "picnic-feast-spread",
       "activityId": "picnic-baskets",
       "_note": "Authored set has 12 food items."
@@ -289,7 +721,9 @@
     {
       "id": "caretaker-tools-set",
       "setName": "Caretaker Tools",
-      "itemIds": ["caretaker-tool-magnifying-glass"],
+      "itemIds": [
+        "caretaker-tool-magnifying-glass"
+      ],
       "unlocksTrophyId": "caretakers-apprentice-kit",
       "activityId": "caretakers-bench",
       "_note": "Authored set has 10 tools."
@@ -297,7 +731,9 @@
     {
       "id": "pantry-supplies-set",
       "setName": "Sanctuary Supplies",
-      "itemIds": ["pantry-supply-fancy-treat-jar"],
+      "itemIds": [
+        "pantry-supply-fancy-treat-jar"
+      ],
       "unlocksTrophyId": "caretakers-apprentice-badge",
       "activityId": "care-pantry",
       "_note": "Authored set has 12 supply items."
@@ -322,7 +758,6 @@
       "_note": "10 treats (reduced from 42 in K-review pass). Awarded at fact-mastery milestones: 1st, 5th, 10th, 15th, 20th, 25th, 30th, 35th, 40th, all-42. The 'rainbow-bite' is the last treat — the all-42 milestone earns it AND the cabinet trophy."
     }
   ],
-
   "trophies": [
     {
       "id": "sanctuary-atlas",
@@ -331,7 +766,10 @@
         "type": "complete-collectible-set",
         "collectibleSetId": "sanctuary-creature-cards-set"
       },
-      "hubDisplay": { "region": "sanctuary", "shelfCategory": "atlas" },
+      "hubDisplay": {
+        "region": "sanctuary",
+        "shelfCategory": "atlas"
+      },
       "description": "Earned by collecting all 24 Sanctuary Creature Cards in Counting Parade."
     },
     {
@@ -341,7 +779,10 @@
         "type": "complete-collectible-set",
         "collectibleSetId": "sanctuary-reef-cards-set"
       },
-      "hubDisplay": { "region": "sanctuary", "shelfCategory": "atlas" }
+      "hubDisplay": {
+        "region": "sanctuary",
+        "shelfCategory": "atlas"
+      }
     },
     {
       "id": "sanctuary-garden-atlas",
@@ -350,7 +791,10 @@
         "type": "complete-collectible-set",
         "collectibleSetId": "sanctuary-garden-plant-cards"
       },
-      "hubDisplay": { "region": "sanctuary", "shelfCategory": "atlas" }
+      "hubDisplay": {
+        "region": "sanctuary",
+        "shelfCategory": "atlas"
+      }
     },
     {
       "id": "scribes-atlas",
@@ -359,7 +803,10 @@
         "type": "complete-collectible-set",
         "collectibleSetId": "scribe-numeral-stamps-set"
       },
-      "hubDisplay": { "region": "sanctuary", "shelfCategory": "atlas" }
+      "hubDisplay": {
+        "region": "sanctuary",
+        "shelfCategory": "atlas"
+      }
     },
     {
       "id": "pond-census-atlas",
@@ -368,7 +815,10 @@
         "type": "complete-collectible-set",
         "collectibleSetId": "pond-creature-cards"
       },
-      "hubDisplay": { "region": "sanctuary", "shelfCategory": "atlas" }
+      "hubDisplay": {
+        "region": "sanctuary",
+        "shelfCategory": "atlas"
+      }
     },
     {
       "id": "sanctuary-keepers-map",
@@ -378,7 +828,10 @@
         "fixtureType": "habitat",
         "fixtureCount": 12
       },
-      "hubDisplay": { "region": "sanctuary", "shelfCategory": "atlas" },
+      "hubDisplay": {
+        "region": "sanctuary",
+        "shelfCategory": "atlas"
+      },
       "description": "Earned by building all 12 habitat layouts in Build-a-Habitat. The fixture map view in the Hub fills with the kid's accumulated creations."
     },
     {
@@ -388,7 +841,10 @@
         "type": "complete-collectible-set",
         "collectibleSetId": "hide-and-seek-hats-set"
       },
-      "hubDisplay": { "region": "sanctuary", "shelfCategory": "wardrobe" }
+      "hubDisplay": {
+        "region": "sanctuary",
+        "shelfCategory": "wardrobe"
+      }
     },
     {
       "id": "picnic-feast-spread",
@@ -397,7 +853,10 @@
         "type": "complete-collectible-set",
         "collectibleSetId": "picnic-food-set"
       },
-      "hubDisplay": { "region": "sanctuary", "shelfCategory": "shelf" }
+      "hubDisplay": {
+        "region": "sanctuary",
+        "shelfCategory": "shelf"
+      }
     },
     {
       "id": "caretakers-apprentice-kit",
@@ -406,7 +865,10 @@
         "type": "complete-collectible-set",
         "collectibleSetId": "caretaker-tools-set"
       },
-      "hubDisplay": { "region": "sanctuary", "shelfCategory": "shelf" }
+      "hubDisplay": {
+        "region": "sanctuary",
+        "shelfCategory": "shelf"
+      }
     },
     {
       "id": "caretakers-apprentice-badge",
@@ -415,9 +877,11 @@
         "type": "complete-collectible-set",
         "collectibleSetId": "pantry-supplies-set"
       },
-      "hubDisplay": { "region": "sanctuary", "shelfCategory": "wall" }
+      "hubDisplay": {
+        "region": "sanctuary",
+        "shelfCategory": "wall"
+      }
     },
-
     {
       "id": "scribe-first-five-stamps",
       "displayName": "Five Numerals Written",
@@ -428,7 +892,10 @@
         "instanceKeyCount": 5
       },
       "celebrationStyle": "quiet-pop",
-      "hubDisplay": { "region": "sanctuary", "shelfCategory": "wall" },
+      "hubDisplay": {
+        "region": "sanctuary",
+        "shelfCategory": "wall"
+      },
       "description": "Earned when the kid masters any five numerals in Scribe's Tower. The first plateau on the road to all 21."
     },
     {
@@ -438,10 +905,24 @@
       "unlockCondition": {
         "type": "concept-instance-subset-mastered",
         "conceptId": "K.CC.3",
-        "instanceKeys": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        "instanceKeys": [
+          "0",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9"
+        ]
       },
       "celebrationStyle": "stinger",
-      "hubDisplay": { "region": "sanctuary", "shelfCategory": "wall" },
+      "hubDisplay": {
+        "region": "sanctuary",
+        "shelfCategory": "wall"
+      },
       "description": "Earned when all ten single digits (0–9) are mastered. The teen numbers (11–20) are still to come, but the kid has the full digit alphabet."
     },
     {
@@ -451,13 +932,27 @@
       "unlockCondition": {
         "type": "concept-instance-subset-mastered",
         "conceptId": "K.CC.3",
-        "instanceKeys": ["10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]
+        "instanceKeys": [
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "18",
+          "19",
+          "20"
+        ]
       },
       "celebrationStyle": "stinger",
-      "hubDisplay": { "region": "sanctuary", "shelfCategory": "wall" },
+      "hubDisplay": {
+        "region": "sanctuary",
+        "shelfCategory": "wall"
+      },
       "description": "Earned when all teen numbers (10–20) are mastered. Pairs with the single-digits milestone; together they unlock the Scribe's Atlas trophy."
     },
-
     {
       "id": "fluency-first-five-facts",
       "displayName": "Five Facts Mastered",
@@ -468,7 +963,10 @@
         "instanceKeyCount": 5
       },
       "celebrationStyle": "quiet-pop",
-      "hubDisplay": { "region": "sanctuary", "shelfCategory": "wall" },
+      "hubDisplay": {
+        "region": "sanctuary",
+        "shelfCategory": "wall"
+      },
       "description": "Earned when the kid masters any five facts in Fluency Within 5. Buddy gives a special treat."
     },
     {
@@ -479,16 +977,34 @@
         "type": "concept-instance-subset-mastered",
         "conceptId": "K.OA.5",
         "instanceKeys": [
-          "0+0", "0+1", "0+2", "0+3", "0+4", "0+5",
-          "1+0", "1+1", "1+2", "1+3", "1+4",
-          "2+0", "2+1", "2+2", "2+3",
-          "3+0", "3+1", "3+2",
-          "4+0", "4+1",
+          "0+0",
+          "0+1",
+          "0+2",
+          "0+3",
+          "0+4",
+          "0+5",
+          "1+0",
+          "1+1",
+          "1+2",
+          "1+3",
+          "1+4",
+          "2+0",
+          "2+1",
+          "2+2",
+          "2+3",
+          "3+0",
+          "3+1",
+          "3+2",
+          "4+0",
+          "4+1",
           "5+0"
         ]
       },
       "celebrationStyle": "stinger",
-      "hubDisplay": { "region": "sanctuary", "shelfCategory": "wall" },
+      "hubDisplay": {
+        "region": "sanctuary",
+        "shelfCategory": "wall"
+      },
       "description": "Earned when all 21 addition facts within 5 are mastered. Subtraction still to come."
     },
     {
@@ -499,18 +1015,35 @@
         "type": "concept-instance-subset-mastered",
         "conceptId": "K.OA.5",
         "instanceKeys": [
-          "1-0", "1-1",
-          "2-0", "2-1", "2-2",
-          "3-0", "3-1", "3-2", "3-3",
-          "4-0", "4-1", "4-2", "4-3", "4-4",
-          "5-0", "5-1", "5-2", "5-3", "5-4", "5-5"
+          "1-0",
+          "1-1",
+          "2-0",
+          "2-1",
+          "2-2",
+          "3-0",
+          "3-1",
+          "3-2",
+          "3-3",
+          "4-0",
+          "4-1",
+          "4-2",
+          "4-3",
+          "4-4",
+          "5-0",
+          "5-1",
+          "5-2",
+          "5-3",
+          "5-4",
+          "5-5"
         ]
       },
       "celebrationStyle": "stinger",
-      "hubDisplay": { "region": "sanctuary", "shelfCategory": "wall" },
+      "hubDisplay": {
+        "region": "sanctuary",
+        "shelfCategory": "wall"
+      },
       "description": "Earned when all 20 subtraction facts within 5 are mastered. Pairs with the addition milestone toward the Buddy Treat Cabinet."
     },
-
     {
       "id": "habitat-first-three-built",
       "displayName": "Three Habitats Built",
@@ -521,10 +1054,12 @@
         "fixtureCount": 3
       },
       "celebrationStyle": "quiet-pop",
-      "hubDisplay": { "region": "sanctuary", "shelfCategory": "wall" },
+      "hubDisplay": {
+        "region": "sanctuary",
+        "shelfCategory": "wall"
+      },
       "description": "Earned when the kid builds their first three habitats. The Sanctuary Habitat Map starts to feel populated."
     },
-
     {
       "id": "buddy-treat-cabinet",
       "displayName": "Buddy Treat Cabinet",
@@ -534,7 +1069,10 @@
         "collectibleSetId": "buddy-treats-set"
       },
       "celebrationStyle": "fanfare",
-      "hubDisplay": { "region": "sanctuary", "shelfCategory": "shelf" },
+      "hubDisplay": {
+        "region": "sanctuary",
+        "shelfCategory": "shelf"
+      },
       "description": "Earned by collecting all 10 Buddy Treats. The cabinet is a small wooden case in the Hub with all the treats displayed; Buddy reacts when the kid taps it."
     }
   ]

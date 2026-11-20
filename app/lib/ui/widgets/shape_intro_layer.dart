@@ -31,6 +31,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/asset_paths.dart';
 import '../../data/example_dot_scanner.dart';
+import '../../data/shape_words.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../providers/shape_dots_provider.dart';
@@ -59,33 +60,6 @@ const Map<String, int> kIntroSidesByKind = {
 // (rectangles, right triangles, and semicircles previously had visible
 // drift because the example dots described a different outline than the
 // material-variant sprite being rendered).
-
-/// Display name used in narration ("This is a <name>!", "Now tap all the
-/// <plural>s on the screen!"). Right-triangle and the semicircles get
-/// custom phrasing rather than the raw key.
-const Map<String, String> kShapeDisplayName = {
-  'circle': 'circle',
-  'triangle': 'triangle',
-  'triangle-right': 'right triangle',
-  'square': 'square',
-  'rectangle': 'rectangle',
-  'pentagon': 'pentagon',
-  'hexagon': 'hexagon',
-  'semicircle_half': 'half circle',
-  'semicircle_quarter': 'quarter circle',
-};
-
-const Map<String, String> kShapeDisplayPlural = {
-  'circle': 'circles',
-  'triangle': 'triangles',
-  'triangle-right': 'right triangles',
-  'square': 'squares',
-  'rectangle': 'rectangles',
-  'pentagon': 'pentagons',
-  'hexagon': 'hexagons',
-  'semicircle_half': 'half circles',
-  'semicircle_quarter': 'quarter circles',
-};
 
 /// Per-kind opening narration. These run after the sprite fades in. The
 /// "Look —" suffix flows into the count narration; circle / no-sides path
@@ -337,10 +311,8 @@ class _ShapeIntroLayerState extends ConsumerState<ShapeIntroLayer> {
           paintedHeight = shapeBoxSize;
           paintedWidth = shapeBoxSize * aspectRatio;
         }
-        final paintedLeft =
-            shapeBoxLeft + (shapeBoxSize - paintedWidth) / 2;
-        final paintedTop =
-            shapeBoxTop + (shapeBoxSize - paintedHeight) / 2;
+        final paintedLeft = shapeBoxLeft + (shapeBoxSize - paintedWidth) / 2;
+        final paintedTop = shapeBoxTop + (shapeBoxSize - paintedHeight) / 2;
 
         Offset dotToScreen(Offset normalized) {
           return Offset(

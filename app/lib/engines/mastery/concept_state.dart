@@ -2,9 +2,8 @@
 // reads and writes. Persistence shape lives in save-recovery.md; this is the
 // in-memory runtime shape that engines manipulate.
 //
-// Sprint 1 implements the subset used by the vertical slice
-// (Counting Parade → K.CC.4a). Hint/tile-fallback triggers and the
-// "no failures in last 3 Abstract attempts" tail check arrive in later sprints.
+// The "no failures in last 3 Abstract attempts" tail check is still deferred;
+// CPA promotion, demotion, and the soft-success path are implemented.
 
 enum MasteryStatus { notStarted, introduced, practicing, mastered }
 
@@ -17,6 +16,7 @@ class ConceptState {
     this.status = MasteryStatus.notStarted,
     this.currentLayer = CpaLayer.concrete,
     this.currentStreak = 0,
+    this.consecutiveFailures = 0,
     this.abstractSuccessCount = 0,
     this.sessionIds = const <String>{},
     this.daysTouched = const <String>{},
@@ -29,6 +29,13 @@ class ConceptState {
   final MasteryStatus status;
   final CpaLayer currentLayer;
   final int currentStreak;
+
+  /// Failures in a row at the current layer. Demotion fires at 2, against 3
+  /// successes to promote — deliberately asymmetric, because
+  /// specs/shared/adaptive-scaffolding.md wants us "generous on the way down,
+  /// conservative on the way up". Reset by any success, soft or otherwise.
+  final int consecutiveFailures;
+
   final int abstractSuccessCount;
   final Set<String> sessionIds;
   final Set<String> daysTouched;
@@ -45,6 +52,7 @@ class ConceptState {
     MasteryStatus? status,
     CpaLayer? currentLayer,
     int? currentStreak,
+    int? consecutiveFailures,
     int? abstractSuccessCount,
     Set<String>? sessionIds,
     Set<String>? daysTouched,
@@ -57,6 +65,7 @@ class ConceptState {
       status: status ?? this.status,
       currentLayer: currentLayer ?? this.currentLayer,
       currentStreak: currentStreak ?? this.currentStreak,
+      consecutiveFailures: consecutiveFailures ?? this.consecutiveFailures,
       abstractSuccessCount: abstractSuccessCount ?? this.abstractSuccessCount,
       sessionIds: sessionIds ?? this.sessionIds,
       daysTouched: daysTouched ?? this.daysTouched,

@@ -19,6 +19,7 @@ import '../../engines/narration/narration_player.dart';
 import '../../providers/exploration_provider.dart';
 import '../../providers/save_provider.dart';
 import '../widgets/caption_overlay.dart';
+import '../widgets/music_bed_scope.dart';
 import '../widgets/next_arrow_button.dart';
 
 /// Code of the Sanctuary's "story kickoff" anchor (the magenta `#FF00F0`).
@@ -81,81 +82,85 @@ class _SanctuaryCutsceneScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.asset(
-            AssetPaths.countingParadeMeadow,
-            fit: BoxFit.cover,
-          ),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Image.asset(
-                            AssetPaths.sanctuaryKeeperMystic,
-                            height: 360,
-                            fit: BoxFit.contain,
+    // The cutscene is the Sanctuary's own opening beat; it should not be the
+    // one screen in the region that plays silent.
+    return MusicBedScope(
+      child: Scaffold(
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(
+              AssetPaths.countingParadeMeadow,
+              fit: BoxFit.cover,
+            ),
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Image.asset(
+                              AssetPaths.sanctuaryKeeperMystic,
+                              height: 360,
+                              fit: BoxFit.contain,
+                            ),
                           ),
-                        ),
-                        const Align(
-                          alignment: Alignment.bottomRight,
-                          child: _BouncingDragon(),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    flex: 2,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        _SpeechBubble(text: _pages[_page]),
-                        const SizedBox(height: 24),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: NextArrowButton(
-                            key: const ValueKey('cutscene-next'),
-                            onPressed: _advance,
-                            label: _page < _pages.length - 1
-                                ? 'Next'
-                                : "Let's explore!",
+                          const Align(
+                            alignment: Alignment.bottomRight,
+                            child: _BouncingDragon(),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 16),
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _SpeechBubble(text: _pages[_page]),
+                          const SizedBox(height: 24),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: NextArrowButton(
+                              key: const ValueKey('cutscene-next'),
+                              onPressed: _advance,
+                              label: _page < _pages.length - 1
+                                  ? 'Next'
+                                  : "Let's explore!",
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          // Persistent back-to-Sanctuary affordance, same as the lesson
-          // screen, so the kid can bail out mid-cutscene.
-          Positioned(
-            top: 12,
-            left: 12,
-            child: SafeArea(
-              child: _BackButton(
-                onPressed: () {
-                  ref.read(narrationPlayerProvider.notifier).clear();
-                  context.go('/sanctuary');
-                },
+            // Persistent back-to-Sanctuary affordance, same as the lesson
+            // screen, so the kid can bail out mid-cutscene.
+            Positioned(
+              top: 12,
+              left: 12,
+              child: SafeArea(
+                child: _BackButton(
+                  onPressed: () {
+                    ref.read(narrationPlayerProvider.notifier).clear();
+                    context.go('/sanctuary');
+                  },
+                ),
               ),
             ),
-          ),
-          const CaptionOverlay(),
-        ],
+            const CaptionOverlay(),
+          ],
+        ),
       ),
     );
   }

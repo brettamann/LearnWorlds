@@ -3,7 +3,14 @@
 
 import 'concept_state.dart';
 
-enum RoundResult { success, failure }
+/// How a round went.
+///
+/// [softSuccess] is the "got there, but with help" case that
+/// specs/shared/adaptive-scaffolding.md calls for: the kid finished, so
+/// nothing punitive happens and coins still pay out, but it does not count
+/// toward the promotion streak. A round that needed a hint, or that took a
+/// couple of wrong taps, resolves here.
+enum RoundResult { success, softSuccess, failure }
 
 class RoundOutcome {
   const RoundOutcome({

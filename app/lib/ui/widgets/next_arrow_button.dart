@@ -15,7 +15,16 @@
 // Idle hint: if `idleHintEnabled` is true the button fires a periodic
 // narration nudge ("Tap the arrow to continue!") and plays a bigger hop
 // every 10 s of inactivity. Used at completion moments where a K-grader
+// Idle hint: if `idleHintEnabled` is true the button fires a periodic
+// narration nudge ("Tap the arrow to continue!") and plays a bigger hop
+// every 10 s of inactivity. Used at completion moments where a K-grader
 // might not yet recognise the wiggling arrow as "the way forward."
+//
+// It gives up after [kMaxIdleHints]. Five nudges is a minute of a voice asking
+// a child to do something; if it has not worked by then she is not there, and
+// a game that keeps calling out to an empty room is worse than one that waits
+// quietly. The arrow keeps its wiggle and glow, so whenever she does come back
+// there is still something moving to aim at.
 
 import 'dart:async';
 import 'dart:math' as math;
@@ -23,8 +32,12 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../data/button_labels.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
+
+/// How many idle nudges before the button assumes nobody is listening.
+const int kMaxIdleHints = 5;
 
 class NextArrowButton extends ConsumerStatefulWidget {
   const NextArrowButton({
@@ -102,6 +115,7 @@ class _NextArrowButtonState extends ConsumerState<NextArrowButton>
 
   void _scheduleNextHint() {
     _idleTimer?.cancel();
+    if (_hintFireCount >= kMaxIdleHints) return;
     _idleTimer = Timer(widget.idleHintInterval, _fireHint);
   }
 
@@ -126,6 +140,24 @@ class _NextArrowButtonState extends ConsumerState<NextArrowButton>
   }
 
   @override
+  void didUpdateWidget(NextArrowButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // A different line means a different beat, which means she got here by
+    // doing something — so the nudges start over. Without this, a button that
+    // survives from one beat to the next inherits a spent counter and never
+    // speaks again.
+    if (widget.idleHintText != oldWidget.idleHintText ||
+        widget.idleHintEnabled != oldWidget.idleHintEnabled) {
+      _hintFireCount = 0;
+      if (widget.idleHintEnabled) {
+        _scheduleNextHint();
+      } else {
+        _idleTimer?.cancel();
+      }
+    }
+  }
+
+  @override
   void dispose() {
     _idleTimer?.cancel();
     _wiggle.dispose();
@@ -146,7 +178,7 @@ class _NextArrowButtonState extends ConsumerState<NextArrowButton>
     // Other gated widgets (banners, map nodes) still narrate on tap.
     return Semantics(
       button: true,
-      label: widget.label ?? 'Next',
+      label: widget.label ?? kLabelNext,
       child: _buildButton(),
     );
   }
@@ -178,23 +210,28 @@ class _NextArrowButtonState extends ConsumerState<NextArrowButton>
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: widget.color
-                            .withValues(alpha: 0.55 + glowT * 0.35),
-                        blurRadius:
-                            22 + glowT * 14 + hintEnvelope * 18,
-                        spreadRadius:
-                            2 + glowT * 4 + hintEnvelope * 6,
+                        color:
+                            widget.color.withValues(alpha: 0.55 + glowT * 0.35),
+                        blurRadius: 22 + glowT * 14 + hintEnvelope * 18,
+                        spreadRadius: 2 + glowT * 4 + hintEnvelope * 6,
                       ),
                       BoxShadow(
-                        color: Colors.amber
-                            .withValues(alpha: 0.25 + glowT * 0.25),
+                        color:
+                            Colors.amber.withValues(alpha: 0.25 + glowT * 0.25),
                         blurRadius: 40 + glowT * 20,
                         spreadRadius: 6 + glowT * 6,
                       ),
                     ],
                   ),
                   child: Material(
-                    shape: const CircleBorder(),
+                    // A dark ring, not decoration. The button is warm amber and
+                    // the meadow behind it is bright yellow-green, so on the
+                    // real background the disc dissolved into the leaves — for
+                    // the one control that means "go", on the one screen where
+                    // a stuck child has nothing else to aim at.
+                    shape: const CircleBorder(
+                      side: BorderSide(color: Color(0xFF2B2318), width: 4),
+                    ),
                     color: widget.color,
                     elevation: 6,
                     child: InkWell(
@@ -209,7 +246,7 @@ class _NextArrowButtonState extends ConsumerState<NextArrowButton>
                           color: Colors.white,
                           shadows: const [
                             Shadow(
-                              color: Colors.black26,
+                              color: Colors.black54,
                               blurRadius: 6,
                               offset: Offset(0, 2),
                             ),
@@ -229,8 +266,9 @@ class _NextArrowButtonState extends ConsumerState<NextArrowButton>
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.88),
+                  color: Colors.white.withValues(alpha: 0.94),
                   borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: const Color(0xFF2B2318), width: 2),
                 ),
                 child: Text(
                   widget.label!,

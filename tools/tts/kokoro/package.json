@@ -1,0 +1,11 @@
+{
+  "name": "critmath-kokoro",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Renders the narration script to voice clips with Kokoro-82M, locally and free.",
+  "dependencies": {
+    "@breezystack/lamejs": "^1.2.7",
+    "kokoro-js": "^1.2.1"
+  }
+}

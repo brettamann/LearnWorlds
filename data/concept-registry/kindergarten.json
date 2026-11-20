@@ -14,7 +14,7 @@
       "introducedBy": "counting-parade",
       "granularity": "concept-wide",
       "exercisedBy": ["counting-parade"],
-      "notes": "The 'by tens' part is introduced via Counting Parade's Tens Parade challenge variant. The 'by ones to 100' extension is exercised via Counting Parade's Long Parade sub-mode (no separate lesson; same procedure as K.CC.4a at higher number ranges)."
+      "notes": "Lesson teaches 'count by tens' (one-tap-per-ten cluster). Counting Parade chains the practice as: Long Parade (count by tens up to 100) → Count-on by Ones (climb decade-by-decade by ones, 10→20, 20→30, …, 90→100) → optional Tens Parade challenge (count 1→100 by ones in one go). The challenge sits at the end of the chain as the activity's final-check; challenge modes follow this end-of-chain pattern across activities going forward."
     },
     {
       "id": "K.CC.2",

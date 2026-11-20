@@ -8,6 +8,8 @@ on:
       - 'content/**'
       - 'schemas/**'
       - 'tools/scripts/**'
+      - 'app/assets/maps/**'
+      - 'app/lib/ui/screens/home_map_screen.dart'
       - '.github/workflows/data-validation.yml'
   pull_request:
     paths:
@@ -15,6 +17,8 @@ on:
       - 'content/**'
       - 'schemas/**'
       - 'tools/scripts/**'
+      - 'app/assets/maps/**'
+      - 'app/lib/ui/screens/home_map_screen.dart'
       - '.github/workflows/data-validation.yml'
 
 jobs:
@@ -33,3 +37,13 @@ jobs:
         # its declared $schema. Auto-installs ajv into tools/scripts/node_modules/
         # on first run. See specs/shared/system-architecture.md "Loading & validation".
         run: node tools/scripts/validate-data.mjs --quiet
+
+      - name: Check the island map's tap targets still cover their badges
+        # The medallions painted into home_screen_map.png ARE the buttons -
+        # they are the only things on that screen shaped like one. The tap
+        # rectangles were once authored against the scenery instead, which put
+        # all four targets above their own badge; the Portals spiral did not
+        # overlap its region at all. Invisible in code and in a screenshot.
+        # This re-measures the art, so replacing it fails here rather than on
+        # the first screen a child sees.
+        run: node tools/scripts/check-map-regions.mjs

@@ -65,11 +65,11 @@ The kid watches. The lesson establishes that the four fawns *are already counted
 >
 > *(0:19)* "Seven." *(touches new fawn 3)*
 >
-> *(0:22)* "Seven fawns. We started where we left off."
+> *(0:22)* "We got to seven fawns, starting from four."
 
 ### Notes for the narrator
 - "We don't need to start over" — this is the conceptual punchline. Let it have a small breath.
-- "We started where we left off" — closes the lesson with the strategy named in kid-language.
+- "We got to seven fawns, starting from four." — closes the lesson with the strategy named in kid-language.
 
 ---
 

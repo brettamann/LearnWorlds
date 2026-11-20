@@ -1,0 +1,833 @@
+{
+  "version": 1,
+  "generations": {
+    "b215871bc83e6ab4d3432067": {
+      "generation_id": "7118caea-d96c-4d06-a2fa-f761618f57ff",
+      "provider": "openai",
+      "model": "gpt-image-2",
+      "cost_cents": 4.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this cartoon mouth in the identical art style — same black outline weight, same flat colour fill — but as a warm happy open smile: a broad upward crescent, upper row of square white teeth, dark red inner mouth, soft pink tongue resting at the bottom. Friendly and delighted, not laughing. Just the mouth shape — no lips, no skin, no face. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-01T20:04:11.205Z",
+      "bytes": 800726
+    },
+    "67f2af1814e6dc8e74b5f6e7": {
+      "generation_id": "74dc95e2-ec34-4193-9959-6822bfa76f6e",
+      "provider": "openai",
+      "model": "gpt-image-2",
+      "cost_cents": 4.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this cartoon mouth in the identical art style — same black outline weight, same flat colour fill — but as a small round open \"o\", a gentle surprised curious expression. Dark red inner mouth, small soft pink tongue at the bottom, no teeth. Just the mouth shape — no lips, no skin, no face. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-01T20:05:04.037Z",
+      "bytes": 765052
+    },
+    "05d153afaa2a74b72b170992": {
+      "generation_id": "adae5ddb-2e23-428e-99f7-b48cb384e212",
+      "provider": "openai",
+      "model": "gpt-image-2",
+      "cost_cents": 4.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this cartoon mouth in the identical art style — same black outline weight, same flat colour fill — but as a closed thoughtful mouth: one simple horizontal line with a soft gentle wave in it, slightly thicker than a hairline, rounded ends. Mouth completely closed. No teeth, no tongue, no red fill, no open area at all. Just the line — no lips, no skin, no face. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-01T20:05:43.268Z",
+      "bytes": 747540
+    },
+    "ff4fb537aa5effe609f4d55d": {
+      "generation_id": "1de545d2-4c1f-4429-8ed1-8df5c9f8e83b",
+      "provider": "openai",
+      "model": "gpt-image-2",
+      "cost_cents": 4.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this baby unicorn in the identical art style, line weight and proportions, but as a Cloud Unicorn: coat of soft white cloud-fluff, pale sky-blue shading, a mane and tail like wisps of cloud tinted warm sunrise gold, small pearl-white horn. Same friendly baby proportions, same pose, same standing three-quarter view. Gentle and dreamlike, still clearly the same creature family. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-01T20:06:17.806Z",
+      "bytes": 900941
+    },
+    "0a3988573986bad1faf175a1": {
+      "generation_id": "c1ed184e-3bda-4dab-b07e-f1944dcf0de5",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this cartoon mouth in the identical art style — same black outline weight, same flat colour fill — but as a small round open \"o\", a gentle surprised curious expression. It MUST have the same thick bold black outline as the reference — a heavy black ring all the way around the opening, exactly the line weight of the original. Dark red inner mouth, small soft pink tongue at the bottom, no teeth. Just the mouth shape — no lips, no skin, no face. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-01T20:09:33.394Z",
+      "bytes": 1350528
+    },
+    "9d003a861ed3760a5d6b764d": {
+      "generation_id": "e22ec2b2-0777-4b3c-aa79-2999cbb25d3d",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this cartoon mouth in the identical art style — same black outline weight, same flat colour fill — but as a closed thoughtful mouth: one horizontal line with a soft gentle wave in it. The line MUST be thick and bold — the same heavy black line weight as the outline in the reference image, not a thin stroke — with rounded ends. Mouth completely closed. No teeth, no tongue, no red fill, no open area at all. Just the line — no lips, no skin, no face. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-01T20:09:52.442Z",
+      "bytes": 1282521
+    },
+    "cfbe53594fccf66fa144e25e": {
+      "generation_id": "9a13116f-0dc6-4ff3-ac78-95a674b8233b",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this baby unicorn in the identical art style, line weight and proportions, but as a Cloud Unicorn: coat of soft white cloud-fluff, pale sky-blue shading, a mane and tail like wisps of cloud tinted warm sunrise gold, small pearl-white horn. Same friendly baby proportions, same pose, same standing three-quarter view. Gentle and dreamlike, still clearly the same creature family. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-01T20:10:08.778Z",
+      "bytes": 1562430
+    },
+    "b6f20076093e1f92af3bed82": {
+      "generation_id": "5ff1240d-4721-47de-807a-67d5c3636359",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this cartoon mouth in the identical art style — same black outline weight, same flat colour fill — but as a small round open \"o\", a gentle surprised curious expression. It MUST have the same thick bold black outline as the reference — a heavy black ring all the way around the opening, exactly the line weight of the original. The inside of the mouth MUST be filled solid dark red all the way across — it is a closed filled shape, NOT a ring, NOT a hollow donut, NOT transparent in the middle. A small soft pink tongue sits at the bottom of the red area. No teeth. Just the mouth shape — no lips, no skin, no face. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-01T20:11:16.212Z",
+      "bytes": 1437688
+    },
+    "4b0da8213310cf7e2c0b3ea4": {
+      "generation_id": "0ea9012c-5388-48ed-a405-d22ea213fa19",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this cartoon mouth in the identical art style — same black outline weight, same flat colour fill — but as a closed thoughtful mouth: a single LEVEL horizontal line, running straight across left to right with only the faintest wave in it. It must NOT curve upward into a smile and must NOT curve downward into a frown — it is flat, neutral, pensive. The line MUST be thick and bold — the same heavy black line weight as the outline in the reference image, not a thin stroke — with rounded ends. Mouth completely closed. No teeth, no tongue, no red fill, no open area at all. Just the line — no lips, no skin, no face. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-01T20:11:32.734Z",
+      "bytes": 1307319
+    },
+    "9a1e4b5b45ddb5690d10898f": {
+      "generation_id": "4e0961c2-26b4-4385-b14a-5824af636323",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this cartoon mouth in the identical art style — same black outline weight, same flat colour fill — but as a warm happy open smile: a broad upward crescent, upper row of square white teeth, dark red inner mouth, soft pink tongue resting at the bottom. Friendly and delighted, not laughing. Just the mouth shape — no lips, no skin, no face. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-01T20:12:27.479Z",
+      "bytes": 1402896
+    },
+    "ba49721fcf27b45a1f953680": {
+      "generation_id": "8be4e4e0-e3d9-4197-a8b6-51468216f9a3",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is a cluster of three plump storybook toadstools of different heights, warm red caps with soft cream spots, thick pale stalks, a little moss at the base. It is a small decorative garden object that will be placed on a storybook map. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-02T07:42:11.718Z",
+      "bytes": 1546224
+    },
+    "7b7270aeee5745a92dacec34": {
+      "generation_id": "30032397-fc04-492f-bfd9-aa643232d03a",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is a small patch of five simple garden flowers on green stems — pink, gold and pale violet blooms with round friendly petals and two broad leaves. It is a small decorative garden object that will be placed on a storybook map. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-02T07:42:33.812Z",
+      "bytes": 1636547
+    },
+    "eaa892e3bc664c5ab2bdc145": {
+      "generation_id": "fba3a142-1e52-44d5-a13f-bc51002f38cd",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is a short standing garden lantern: a dark iron post with a glass box lamp on top, warm gold light glowing inside it, a small curl of ironwork under the lamp. It is a small decorative garden object that will be placed on a storybook map. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-02T07:42:57.727Z",
+      "bytes": 1398859
+    },
+    "b1d367a0991d8df52b85c4ef": {
+      "generation_id": "8b5f893d-72d8-470e-bc99-f356477fdd39",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is a single weathered standing stone, tall and rounded at the top, soft grey-blue, with three simple pale-teal spiral runes carved into its face and moss at its foot. It is a small decorative garden object that will be placed on a storybook map. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-02T07:43:19.158Z",
+      "bytes": 1365214
+    },
+    "1216b9cb92e4691edf86bd15": {
+      "generation_id": "1e594326-252b-4603-aadc-84a915263e06",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is a small oval pond seen from a low three-quarter angle: calm blue water with two flat green lily pads and one pink water lily, ringed by smooth grey stones. It is a small decorative garden object that will be placed on a storybook map. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-02T07:43:37.949Z",
+      "bytes": 1581554
+    },
+    "8c3884e23457924364e3d6b9": {
+      "generation_id": "fc2edcec-aa18-4378-958d-e3c5f2b1bcfb",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is a small potted topiary: a slim brown trunk carrying two stacked round balls of neat green foliage, planted in a terracotta pot. It is a small decorative garden object that will be placed on a storybook map. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-02T07:43:56.725Z",
+      "bytes": 1427201
+    },
+    "7a5c1fcbc7e748745246867e": {
+      "generation_id": "7f175c25-2504-4cec-a046-e09955883d4f",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is an ornate little stone fountain with a star-shaped basin, pale cream stone, a gentle arc of pale blue water rising from the centre and small gold stars sparkling in the spray. It is a small decorative garden object that will be placed on a storybook map. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-02T07:44:15.548Z",
+      "bytes": 1547951
+    },
+    "190cdc3e494bea0a3d714eb1": {
+      "generation_id": "6c8ecf02-16e5-47fb-afbe-24f7b901f4ca",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is a freestanding decorative garden arch shaped like a rainbow, six soft bands of colour from red through violet, its two feet planted in small tufts of grass. It is a small decorative garden object that will be placed on a storybook map. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-02T07:44:34.298Z",
+      "bytes": 1578235
+    },
+    "0e6de324e8f9b748062c4599": {
+      "generation_id": "f3afa72f-5095-400d-80a4-2f7bdbc08776",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is an old-fashioned garden lamp post standing upright on the ground. From bottom to top: a small round dark base resting on the grass, then a slim dark-grey iron post, then at the very TOP a square lantern box with four clear glass panes glowing warm yellow from the candle inside, capped by a small pointed roof. The complete lamp post from base to roof must be inside the frame, standing the right way up. It is a small decorative garden object that will be placed on a storybook map. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-02T07:46:03.927Z",
+      "bytes": 1412846
+    },
+    "0da52278784674b411f292ea": {
+      "generation_id": "904368c0-f3e2-4b92-9a21-b86529f78ee8",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is one single upright standing stone, like a small menhir: a tall rounded-top slab of soft grey-blue rock, wider at the bottom and narrowing to a smooth domed top, standing on a patch of green grass with a little moss at its foot. Three simple pale-teal spiral runes are carved into the front face. The whole stone, its domed top and its grassy base must all be inside the frame. It is a small decorative garden object that will be placed on a storybook map. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-02T07:46:22.881Z",
+      "bytes": 1534081
+    },
+    "766c4e4f275c10de250f14bf": {
+      "generation_id": "2b8047e6-3885-430c-a47a-54b8bfcff36d",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is a small potted topiary tree with three clearly separate parts stacked vertically: at the BOTTOM a terracotta flower pot, ABOVE it a slim bare brown trunk, and on the trunk TWO round balls of neat green foliage, one above the other with a visible gap of bare trunk between them. The pot, the trunk and both foliage balls must all be visible inside the frame. It is a small decorative garden object that will be placed on a storybook map. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-02T07:46:44.342Z",
+      "bytes": 1447071
+    },
+    "29c7bed2ccc94cb0648c18d3": {
+      "generation_id": "a85d5107-d232-48ab-a9ee-79b43f100c52",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is a small ornate stone fountain seen from a low three-quarter angle: a wide five-pointed star-shaped basin of pale cream stone holding shallow blue water, with a short carved pillar rising from its centre and a gentle low arc of pale blue water curving out of the pillar and falling back into the basin. A few small gold sparkle stars float near the water. The entire fountain including the top of the water arc must be inside the frame. It is a small decorative garden object that will be placed on a storybook map. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-02T07:47:03.156Z",
+      "bytes": 1504296
+    },
+    "08ea26dd445b6852890f837f": {
+      "generation_id": "b5a45a12-d402-4b30-94c3-e31088e89a23",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is a small potted topiary tree with three clearly separate parts stacked vertically: at the BOTTOM a terracotta flower pot, ABOVE it a slim bare brown trunk, and on the trunk TWO round balls of neat green foliage, one above the other with a visible gap of bare trunk between them. The pot, the trunk and both foliage balls must all be visible inside the frame. IMPORTANT: this object is tall and narrow, so draw it SMALL in the frame - leave a wide band of empty space above the top foliage ball and below the bottom of the pot. Nothing may touch the top or bottom edge. It is a small decorative garden object that will be placed on a storybook map. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-02T07:55:17.744Z",
+      "bytes": 687305
+    },
+    "b26eeafda3e5d99125a46eb9": {
+      "generation_id": "377711af-4f98-4c80-90f9-fb5dbddd2b75",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new creature in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill, same friendly storybook baby animal proportions with a large head and big gentle eyes. The creature is a small round baby rabbit with soft moss-green fur, a cream belly, long gently drooping ears with pale pink inners, tiny sprigs of clover growing along its back, and big friendly dark eyes. Standing three-quarter view, calm and friendly, the kind of creature a small child would want to meet. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-03T03:58:20.086Z",
+      "bytes": 1592090
+    },
+    "e1334ca8362e36cdf093f825": {
+      "generation_id": "a5ad9c20-54fc-4a62-b086-ebf1965371fa",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new creature in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill, same friendly storybook baby animal proportions with a large head and big gentle eyes. The creature is a plump baby squirrel with warm russet-brown fur, a huge bushy tail curled up behind it, a pale cream chest, and a single golden acorn held in both front paws. Standing three-quarter view, calm and friendly, the kind of creature a small child would want to meet. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-03T03:59:29.554Z",
+      "bytes": 1579452
+    },
+    "51a308a17432d3ccb00fc098": {
+      "generation_id": "a1914335-e64b-49c5-ba60-bb411cd6e215",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new creature in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill, same friendly storybook baby animal proportions with a large head and big gentle eyes. The creature is a small round baby hedgehog with soft tan face and paws, a rounded cap of blunt friendly spines in dusty plum, and three little red berries balanced among the spines. Standing three-quarter view, calm and friendly, the kind of creature a small child would want to meet. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-03T03:59:51.141Z",
+      "bytes": 1552839
+    },
+    "c97402d4843e181f213e2b93": {
+      "generation_id": "ee7dcfb7-6fd4-4635-bbb0-af34b1805012",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new creature in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill, same friendly storybook baby animal proportions with a large head and big gentle eyes. The creature is a cheerful round baby frog with bright spring-green skin, a pale yellow belly, big round eyes with golden irises, and a tiny white daisy tucked behind one eye. Standing three-quarter view, calm and friendly, the kind of creature a small child would want to meet. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-03T04:00:12.646Z",
+      "bytes": 1491999
+    },
+    "eb89d491eeec10cd0c52f0d5": {
+      "generation_id": "e029aee6-b13a-4f9a-a228-59acebfd80e8",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new creature in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill, same friendly storybook baby animal proportions with a large head and big gentle eyes. The creature is a small baby tortoise with a gentle teal-blue shell patterned with pale cream stars, soft sandy-yellow legs and head, and a sleepy contented smile. Standing three-quarter view, calm and friendly, the kind of creature a small child would want to meet. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-03T04:00:34.180Z",
+      "bytes": 1475499
+    },
+    "85bceb9668d8cc4864c239fb": {
+      "generation_id": "38c39956-f285-4e03-875f-d0511b7a9107",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new creature in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill, same friendly storybook baby animal proportions with a large head and big gentle eyes. The creature is a chubby baby bear cub with warm honey-gold fur, a paler muzzle, small round ears, and a little pot of honey hugged against its chest. Standing three-quarter view, calm and friendly, the kind of creature a small child would want to meet. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-03T04:00:53.088Z",
+      "bytes": 1517314
+    },
+    "a3c58c12484d1a0c693b03f6": {
+      "generation_id": "f70b1951-8d55-4640-82a9-25476931fb1e",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new creature in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill, same friendly storybook baby animal proportions with a large head and big gentle eyes. The creature is a tiny baby mouse with soft dove-grey fur, very large round pale-pink ears, a cream belly, a long thin curling tail, and a smooth speckled pebble held in its paws. Standing three-quarter view, calm and friendly, the kind of creature a small child would want to meet. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-03T04:01:11.999Z",
+      "bytes": 1564063
+    },
+    "f6b5de303ef374d260ee0e9c": {
+      "generation_id": "c2fe7c0d-67a2-4d2f-9ba3-867b84dc9514",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new creature in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill, same friendly storybook bird proportions with a large head and big gentle eyes. The creature is a tiny friendly firefly creature: a round soft-bodied bug in deep moss green with a glowing warm-gold lantern tail, two small rounded translucent wings, gentle dot eyes and a little smile. Standing three-quarter view, calm and friendly, the kind of creature a small child would want to meet. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-03T04:01:31.214Z",
+      "bytes": 1471631
+    },
+    "2bb37ce161c341f18f449149": {
+      "generation_id": "f6a8f1a6-f605-424c-b920-351436d5d18f",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new creature in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill, same friendly storybook baby animal proportions with a large head and big gentle eyes. The creature is a baby winged horse with a soft cream-white coat, a pale lavender mane and tail, and two small feathered wings folded neatly at its sides. Stubby foal legs, big gentle eyes. Standing three-quarter view, calm and friendly, the kind of creature a small child would want to meet. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-03T04:01:50.034Z",
+      "bytes": 1551957
+    },
+    "08c8c392408615c5b946979d": {
+      "generation_id": "41bf75db-acb7-4e74-afea-1e0d500c58d2",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new creature in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill, same friendly storybook baby animal proportions with a large head and big gentle eyes. The creature is a baby deer with a pale ice-blue coat, a soft white belly, and small branching antlers made of translucent pale-violet crystal that catch the light. Same friendly fawn proportions. Standing three-quarter view, calm and friendly, the kind of creature a small child would want to meet. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-03T04:02:08.848Z",
+      "bytes": 1633217
+    },
+    "0d13a014c04a0528b748cec1": {
+      "generation_id": "7cc92837-21f9-48f3-a382-289787ace963",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new creature in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill, same friendly storybook bird proportions with a large head and big gentle eyes. The creature is a gentle storybook moth with a plump dusty-violet furry body, broad rounded wings in warm cream and soft amber patterned with round glowing spots, and two curled feathery antennae. Standing three-quarter view, calm and friendly, the kind of creature a small child would want to meet. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-03T04:02:27.681Z",
+      "bytes": 1556642
+    },
+    "68a79b399c305f5f11189129": {
+      "generation_id": "a14706a8-4e57-48fd-a1a9-66155f50342b",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new creature in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill, same friendly storybook baby animal proportions with a large head and big gentle eyes. The creature is a baby arctic fox cub with soft snow-white fur, faint pale-blue shading, large pointed ears, a very fluffy tail with a silver-grey tip, and bright dark eyes. Standing three-quarter view, calm and friendly, the kind of creature a small child would want to meet. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-03T04:02:46.530Z",
+      "bytes": 1498355
+    },
+    "3971a11e79acfbc63f9d0509": {
+      "generation_id": "08cf63eb-c1f2-4ae7-9ab3-0bbd0889d1b2",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new creature in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill, same friendly storybook baby animal proportions with a large head and big gentle eyes. The creature is a small friendly baby chameleon with a body banded in soft rainbow pastels from mint to peach to lilac, a curled spiral tail, round independently swivelling eyes, and little gripping feet on a short twig. Standing three-quarter view, calm and friendly, the kind of creature a small child would want to meet. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-03T04:03:05.355Z",
+      "bytes": 1528386
+    },
+    "d23d83367507c4b79dbc1441": {
+      "generation_id": "10a8c283-96a6-4dc1-93b3-9dd864f1e863",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new creature in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill, same friendly storybook bird proportions with a large head and big gentle eyes. The creature is a small round baby owl with plumage in deep midnight blue flecked with tiny silver stars, a pale moon-white heart-shaped face, huge amber eyes, and soft tufted ears. Standing three-quarter view, calm and friendly, the kind of creature a small child would want to meet. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-03T04:04:10.255Z",
+      "bytes": 1473149
+    },
+    "0fc3244ac778b41314e2c117": {
+      "generation_id": "088e814b-05a3-478b-95f6-5e3736a13035",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new creature in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill, same friendly storybook baby animal proportions with a large head and big gentle eyes. The creature is a young stag with a coat of warm sunlit gold, a cream underside, and tall elegant antlers that glow like soft sunbeams with small warm-white light motes drifting near their tips. Noble and calm, still a young animal. Standing three-quarter view, calm and friendly, the kind of creature a small child would want to meet. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-03T04:04:26.571Z",
+      "bytes": 1614158
+    },
+    "7187cc0edd0cb0d7ba998db9": {
+      "generation_id": "14fcdda9-a258-40a8-82d1-3bd08224f92d",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new creature in the identical art style to this reference image — same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill, same friendly storybook bird proportions with a large head and big gentle eyes. The creature is a tiny friendly firefly: a small round bug with a soft moss-green head and chest, two large clear rounded insect wings held open at its sides, and two curled antennae. Its whole rear half is a big round lantern that GLOWS bright warm amber-gold, clearly lit from within with a soft golden halo around it - the glow is the most important part of the drawing. Gentle dot eyes and a little smile. Standing three-quarter view, calm and friendly, the kind of creature a small child would want to meet. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-03T04:05:21.753Z",
+      "bytes": 1510990
+    },
+    "e5473a379bc023eff36258bd": {
+      "generation_id": "76053c79-720d-48ac-8d56-baeb320b673b",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image - same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is a friendly storybook hollow tree: a stout brown trunk with a large dark rounded hollow opening in the front big enough for a small animal to hide inside, a round leafy green canopy on top, two thick roots at the base with a little grass. The hollow opening is the most important feature and must read clearly. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-04T06:11:51.840Z",
+      "bytes": 1438843
+    },
+    "ad96df2c27c0c16b6f1e553e": {
+      "generation_id": "b4355c1f-5ffa-4a31-8ea5-7b07be695cab",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image - same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is a tiny storybook cottage: cream walls, a steep shingled roof in warm terracotta, one round-topped wooden door, one square window with a cross frame, a small chimney. Cosy and simple, seen straight on from the front. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-04T06:12:16.002Z",
+      "bytes": 1487175
+    },
+    "cf93c74592f21ad7aae14d55": {
+      "generation_id": "247c81a6-62c1-4955-b353-fa2a0d05d148",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image - same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is a cluster of four or five smooth grey boulders of different sizes heaped together, the largest at the back, a little green moss and grass at the base. Plainly several separate rocks piled together, not one big stone. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-04T06:12:34.734Z",
+      "bytes": 1526613
+    },
+    "71146e0a2552c00fc5b59d3a": {
+      "generation_id": "b88f0f2d-8a64-4bce-ae46-9d9ce61dd338",
+      "provider": "openai",
+      "model": "gpt-image-2",
+      "cost_cents": 4.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Paint a new background illustration in the identical art style to this reference image - same soft painted storybook look, same warm daylight palette, same gentle cartoon shapes. It is a wide sunny clearing in a magical sanctuary, seen from slightly above. IMPORTANT COMPOSITION: the horizon sits high, about one quarter of the way down the image. Above it, a thin strip of soft blue sky with a few clouds and a distant treeline. Below it, the remaining three quarters is one broad open expanse of sunlit green grass running all the way to the bottom edge. Small wildflowers and low bushes only along the far left and far right edges. The whole centre of the grass is completely EMPTY - no buildings, no trees, no ponds, no rocks, no animals, no paths, no objects of any kind. It is an empty meadow that other artwork will be placed on top of. No characters, no text, no watermark, no border, no vignette, no frame.",
+      "created_at": "2026-09-04T14:16:59.473Z",
+      "bytes": 1446863
+    },
+    "33f7808d886e6e135fb242fb": {
+      "generation_id": "1910f87b-9298-4d1a-b0db-b06de29732ba",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this cartoon limb in the identical art style, as a different shape: a rounded animal paw with three plump toe pads at the end, one small thumb pad at the wrist side. ORIENTATION MATTERS: this is a RIGHT arm seen from the front. The shoulder end is the narrow stump at the TOP LEFT of the frame, and the limb extends down and to the right, exactly like the reference. Keep the same overall length and thickness as the reference. No body, no shoulder joint, no torso - just the arm. Flat vector cartoon, one single flat colour fill and one clean heavy black outline of even weight, exactly like the reference. No gradients, no shading, no texture, no inner detail lines beyond the one or two the shape needs. Bright grass green fill, the same green as the reference. Centred with an even margin, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text.",
+      "created_at": "2026-09-04T17:52:36.023Z",
+      "bytes": 726634
+    },
+    "fd2594b89316665f40460bf0": {
+      "generation_id": "e2fb8bd2-3f0c-44de-a496-b72b325bef78",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this cartoon limb in the identical art style, as a different shape: a simple round mitten with no fingers at all, just a soft ball of a hand with one small thumb bump. ORIENTATION MATTERS: this is a RIGHT arm seen from the front. The shoulder end is the narrow stump at the TOP LEFT of the frame, and the limb extends down and to the right, exactly like the reference. Keep the same overall length and thickness as the reference. No body, no shoulder joint, no torso - just the arm. Flat vector cartoon, one single flat colour fill and one clean heavy black outline of even weight, exactly like the reference. No gradients, no shading, no texture, no inner detail lines beyond the one or two the shape needs. Bright grass green fill, the same green as the reference. Centred with an even margin, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text.",
+      "created_at": "2026-09-04T17:53:03.202Z",
+      "bytes": 704237
+    },
+    "438f8771e59be45bfdaebcff": {
+      "generation_id": "8b8830bd-06e3-4a0d-a3c1-3d11bbbe25b5",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this cartoon limb in the identical art style, as a different shape: a small rounded wing instead of a hand, with three broad feather shapes fanning out at the end. ORIENTATION MATTERS: this is a RIGHT arm seen from the front. The shoulder end is the narrow stump at the TOP LEFT of the frame, and the limb extends down and to the right, exactly like the reference. Keep the same overall length and thickness as the reference. No body, no shoulder joint, no torso - just the arm. Flat vector cartoon, one single flat colour fill and one clean heavy black outline of even weight, exactly like the reference. No gradients, no shading, no texture, no inner detail lines beyond the one or two the shape needs. Bright grass green fill, the same green as the reference. Centred with an even margin, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text.",
+      "created_at": "2026-09-04T17:53:19.589Z",
+      "bytes": 1058212
+    },
+    "545c9c95623c4e432dbc54e7": {
+      "generation_id": "64b4d909-db46-49f1-81b6-8be4441e0eaa",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this cartoon limb in the identical art style, as a different shape: the foot is a rounded animal paw with three plump toes across the front. ORIENTATION MATTERS: this is a RIGHT leg seen from the front. The hip end is the rounded top LEFT of the frame and the foot points down and to the right, exactly like the reference. Keep the same overall length and thickness as the reference. No body, no hip joint, no torso - just the leg and its foot. Flat vector cartoon, one single flat colour fill and one clean heavy black outline of even weight, exactly like the reference. No gradients, no shading, no texture, no inner detail lines beyond the one or two the shape needs. Bright grass green fill, the same green as the reference. Centred with an even margin, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text.",
+      "created_at": "2026-09-04T17:53:48.954Z",
+      "bytes": 1076290
+    },
+    "4024ab47f186e41a3ee45313": {
+      "generation_id": "786a84c5-fb52-442e-a0ea-f369bcb5d5e1",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this cartoon limb in the identical art style, as a different shape: the foot is a chunky rounded ankle boot with a turned-over cuff at the top of it and a flat sole. ORIENTATION MATTERS: this is a RIGHT leg seen from the front. The hip end is the rounded top LEFT of the frame and the foot points down and to the right, exactly like the reference. Keep the same overall length and thickness as the reference. No body, no hip joint, no torso - just the leg and its foot. Flat vector cartoon, one single flat colour fill and one clean heavy black outline of even weight, exactly like the reference. No gradients, no shading, no texture, no inner detail lines beyond the one or two the shape needs. Bright grass green fill, the same green as the reference. Centred with an even margin, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text.",
+      "created_at": "2026-09-04T17:54:05.069Z",
+      "bytes": 1417905
+    },
+    "38eb840f8125272e9065c006": {
+      "generation_id": "afe8b877-60db-48ef-925f-2f92604367dc",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this cartoon limb in the identical art style, as a different shape: the foot has three long splayed toes like a bird foot, spread wide and flat on the ground. ORIENTATION MATTERS: this is a RIGHT leg seen from the front. The hip end is the rounded top LEFT of the frame and the foot points down and to the right, exactly like the reference. Keep the same overall length and thickness as the reference. No body, no hip joint, no torso - just the leg and its foot. Flat vector cartoon, one single flat colour fill and one clean heavy black outline of even weight, exactly like the reference. No gradients, no shading, no texture, no inner detail lines beyond the one or two the shape needs. Bright grass green fill, the same green as the reference. Centred with an even margin, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text.",
+      "created_at": "2026-09-04T17:54:34.316Z",
+      "bytes": 1401151
+    },
+    "7a4b8c7f6d502a70e8c0ddc4": {
+      "generation_id": "783fab89-79a1-45c1-99dc-d53ea900b30d",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this cartoon limb in the identical art style, as a different shape: the foot is a rounded animal paw with three plump toes across the front. THE OUTLINE IS THE MOST IMPORTANT PART: the whole shape must be surrounded by a thick, solid, pure BLACK outline of even weight, exactly like the reference. The first attempt came back with no outline at all and pale mint fill, which is unusable. Bold black line, bright saturated green fill. ORIENTATION MATTERS: this is a RIGHT leg seen from the front. The hip end is the rounded top LEFT of the frame and the foot points down and to the right, exactly like the reference. Keep the same overall length and thickness as the reference. No body, no hip joint, no torso - just the leg and its foot. Flat vector cartoon, one single flat colour fill and one clean heavy black outline of even weight, exactly like the reference. No gradients, no shading, no texture, no inner detail lines beyond the one or two the shape needs. Bright grass green fill, the same green as the reference. Centred with an even margin, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text.",
+      "created_at": "2026-09-04T17:57:15.763Z",
+      "bytes": 674162
+    },
+    "60df3306afb5418e4c388dd3": {
+      "generation_id": "b8d0f8c6-4722-46d4-bd1d-b1a24491c42e",
+      "provider": "openai",
+      "model": "gpt-image-2",
+      "cost_cents": 4.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Paint a new background illustration in the identical art style to this reference image - same soft painted storybook look, same warm daylight palette, same gentle cartoon shapes. It is a calm magical pond in a sunny sanctuary, seen from slightly above. IMPORTANT COMPOSITION: the horizon sits high, about one fifth of the way down the image. Above it, a thin strip of soft blue sky and a distant soft green treeline. Below it, the whole rest of the image is one broad calm clear blue-green pond surface running all the way to the bottom edge. Reeds, cattails and two or three pink water lilies only along the far left and far right edges. The whole centre of the water is completely EMPTY - no lily pads, no rocks, no animals, no logs, no objects of any kind. It is empty water that other artwork will be placed on top of. No characters, no text, no watermark, no border, no vignette, no frame.",
+      "created_at": "2026-09-24T18:19:44.955Z",
+      "bytes": 1326364
+    },
+    "8e0224a9334cb427def8db12": {
+      "generation_id": "3ce820bf-4733-47d1-8d16-80ae32fd02d5",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image - same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is a single round green lily pad seen from directly above: a wide flat circle of fresh leaf green with one narrow wedge-shaped notch cut in from the edge, and a few soft slightly darker green vein lines radiating from the centre. Simple, flat, perfectly round. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-24T18:20:27.551Z",
+      "bytes": 1428542
+    },
+    "37db4cfd60dafddf74a82987": {
+      "generation_id": "d5bcea69-abd0-4a8f-b249-716487621c05",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this frog in the identical art style to the reference - same flat cartoon look, same clean black outline, same big friendly eyes and rosy cheeks, same chunky baby proportions - but SITTING calmly and facing straight forward with both front feet down on the ground and no waving arm, with a small happy smile. Bright grass-green body with a pale yellow-green belly. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-24T18:20:47.176Z",
+      "bytes": 1487967
+    },
+    "a21892997850a85999597bf3": {
+      "generation_id": "4f85d6a1-f890-4c05-8d23-e5e382e96de0",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Redraw this frog in the identical art style to the reference - same flat cartoon look, same clean black outline, same big friendly eyes and rosy cheeks, same chunky baby proportions - but SITTING calmly and facing straight forward with both front feet down on the ground and no waving arm, with a small happy smile. Its whole body is a warm bright ORANGE, like a tangerine, with a pale cream belly and a few small darker orange spots on its head. It must not look green anywhere. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-24T18:21:03.814Z",
+      "bytes": 1491160
+    },
+    "2e81606a185082d6113610fc": {
+      "generation_id": "c7f9a958-482e-4cbe-a777-218e5f33aa45",
+      "provider": "openai",
+      "model": "gpt-image-2",
+      "cost_cents": 4.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Paint a new background illustration in the identical art style to this reference image - same soft painted storybook look, same warm palette, same gentle cartoon shapes. It is the inside of a cosy wooden supply hut in a magical sanctuary. IMPORTANT COMPOSITION: a warm wooden plank wall fills the top third, with two plain empty wooden shelves and a few small bundles of dried herbs hanging near the very top edge, and a small sunny window at the top left. The lower two thirds is one broad plain empty floor of warm honey-coloured wooden planks running to the bottom edge. The whole centre and bottom of the image is completely EMPTY - no crates, no barrels, no baskets, no tables, no food, no objects of any kind. No characters, no text, no watermark, no border, no vignette, no frame.",
+      "created_at": "2026-09-24T18:21:25.524Z",
+      "bytes": 1706262
+    },
+    "de7e7544188696182f044ea3": {
+      "generation_id": "c6832b2c-d5a1-4d0d-88a1-6d3f64bbc5e8",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image - same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is one single plump acorn standing upright: a shiny warm brown nut with a bumpy darker brown cap on top and a tiny stem. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-24T18:22:08.066Z",
+      "bytes": 1473168
+    },
+    "3e28c457c967c17cdbdca7ca": {
+      "generation_id": "abc85819-93e2-4e4f-a579-d363a027eec4",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image - same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is one small bunch of exactly three round shiny bright red berries joined to one short green stem with a single small green leaf. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-24T18:22:24.546Z",
+      "bytes": 1435768
+    },
+    "ce0193b5817f65f062cd0132": {
+      "generation_id": "47da67dd-3160-4994-af15-976787964950",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image - same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is one single fresh bright orange carrot, standing upright with its pointed end down, with a short bushy tuft of bright green leaves on top. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-24T18:22:43.548Z",
+      "bytes": 1412284
+    },
+    "29c8e026c2a0f20acaccf320": {
+      "generation_id": "03b2ee96-48ac-4a9c-b247-f16ee3a9158a",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image - same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is one single shiny round red apple with a short brown stem and one green leaf. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-24T18:23:02.550Z",
+      "bytes": 1435081
+    },
+    "f451c639823dfbf15f04a384": {
+      "generation_id": "b4d421df-2632-4ae3-a91b-e2ab0a989b44",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image - same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is one open EMPTY wooden crate seen from the front and slightly above, made of warm light-brown planks with small nail dots, the open top showing the empty inside. Wider than it is tall. Absolutely nothing inside it. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-24T18:23:21.586Z",
+      "bytes": 1423678
+    },
+    "9848f19340a32d611daa3bb4": {
+      "generation_id": "a12c6df2-7802-4b8f-84ff-220981ae8a40",
+      "provider": "openai",
+      "model": "gpt-image-2",
+      "cost_cents": 4.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Paint a new background illustration in the identical art style to this reference image - same soft painted storybook look, same warm palette, same gentle cartoon shapes. It is the inside of a small round stone writing tower in a magical sanctuary, warm and golden. IMPORTANT COMPOSITION: a curved pale stone wall with two tall arched stained-glass windows and a few shelves of rolled scrolls fills only the top quarter of the image and a narrow strip down the far left and far right edges. The whole centre and bottom of the image is one broad, plain, softly lit empty space of warm cream stone floor and soft golden light - no desk, no furniture, no scrolls, no objects. A few tiny floating gold sparkles. No characters, no text, no letters, no numbers, no watermark, no border, no frame.",
+      "created_at": "2026-09-24T18:23:38.102Z",
+      "bytes": 1363019
+    },
+    "d452da9365ba0f4ec9eebb87": {
+      "generation_id": "aea91d85-bc3d-45c8-8fef-0f07543636cc",
+      "provider": "openai",
+      "model": "gpt-image-2",
+      "cost_cents": 4.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Paint a new background illustration in the identical art style to this reference image - same soft painted storybook look, same gentle cartoon shapes, but in warm golden sunset light. It is a reedy pond in a magical sanctuary at golden hour. IMPORTANT COMPOSITION: a warm peach and pink sunset sky with soft clouds and a distant treeline across the top fifth. Below it, a broad calm pond with golden reflections fills the middle of the image, and a soft grassy bank runs across the bottom third to the bottom edge. Tall reeds and cattails only at the far left and far right edges. The centre of the water and the centre of the grassy bank are completely EMPTY - no animals, no rocks, no logs, no objects. No characters, no text, no watermark, no border, no vignette, no frame.",
+      "created_at": "2026-09-24T18:24:20.550Z",
+      "bytes": 1481081
+    },
+    "407cdc25e402819460864a58": {
+      "generation_id": "d1e3b497-2122-48c9-b7aa-b56603b5b90e",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new creature in the identical art style to this reference image - same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill, same friendly storybook baby animal proportions with a large head and big gentle eyes. The creature is a fluffy round baby duckling, sunny yellow all over, with a small orange beak and small orange webbed feet, standing three-quarter view, cheerful. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-24T18:25:03.085Z",
+      "bytes": 1486648
+    },
+    "bdea2d79185e8d7207d164d7": {
+      "generation_id": "5335d741-d859-486d-9237-6a0d1d45fe99",
+      "provider": "openai",
+      "model": "gpt-image-2",
+      "cost_cents": 4.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Paint a new background illustration in the identical art style to this reference image - same soft painted storybook look, same warm palette, same gentle cartoon shapes. It is a cosy corner of a garden workshop in a magical sanctuary. IMPORTANT COMPOSITION: a warm wooden plank wall with a small glowing hanging lantern and a few garden tools on pegs fills the top third only. Below it, the entire rest of the image is the broad, flat, EMPTY top surface of one long light wooden workbench running edge to edge and all the way to the bottom of the image. The workbench surface is completely empty - no tools, no jars, no objects of any kind. No characters, no text, no watermark, no border, no vignette, no frame.",
+      "created_at": "2026-09-24T18:25:33.184Z",
+      "bytes": 1583241
+    },
+    "befd66a48f3b43fc00dc7f7a": {
+      "generation_id": "44e31d1c-c836-48f7-8b6a-0de79694156f",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image - same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is only the stand of an old-fashioned balance scale, with NO beam and NO pans: a heavy round golden brass base and one single tall straight golden brass post rising from the middle of it, ending in a small round knob at the very top. Nothing else. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-24T18:26:18.082Z",
+      "bytes": 1405692
+    },
+    "b2fd0d9fd8c3c6961e42ae9a": {
+      "generation_id": "f6268b64-4013-4fb7-ae86-94271dd6e09f",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image - same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is one big round ribbed orange pumpkin with a short curly green stem. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-24T18:26:34.382Z",
+      "bytes": 1452452
+    },
+    "a116f13118b60f2ac49d6c8f": {
+      "generation_id": "bd209336-606b-403d-9f39-1e0772e5a736",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image - same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is one large whole oval watermelon lying on its side, dark and light green stripes. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-24T18:26:55.906Z",
+      "bytes": 1504645
+    },
+    "9ab594a0bd8ab170c7afaded": {
+      "generation_id": "7c1710f2-a339-4cf6-a58c-50111a076e2b",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image - same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is one single chunky rounded grey boulder, smooth, solid and heavy looking. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-24T18:27:14.800Z",
+      "bytes": 1458733
+    },
+    "3869504f5009bd50b088a8d8": {
+      "generation_id": "3a7c1759-5928-4128-8504-83f631ad3737",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image - same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is one single small light green leaf with a short thin stem, gently curved. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-24T18:27:36.359Z",
+      "bytes": 1449109
+    },
+    "18fdf9f395548f72b97a16cd": {
+      "generation_id": "f3beac9e-30a4-4045-802e-9349203f4d20",
+      "provider": "openai",
+      "model": "gpt-image-2",
+      "cost_cents": 4.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Paint a new background illustration in the identical art style to this reference image - same soft painted storybook look, same warm daylight palette, same gentle cartoon shapes. It is a sunny grassy glade in a magical sanctuary, set for a picnic. IMPORTANT COMPOSITION: soft blue sky and a gentle treeline across the top fifth. The rest is sunny green grass. One very large plain red-and-white gingham picnic blanket lies flat on the grass across the middle and lower part of the image, seen from slightly above, filling most of the width. The blanket is completely EMPTY - no food, no baskets, no plates, no cups, no animals, no objects of any kind on it. No characters, no text, no watermark, no border, no vignette, no frame.",
+      "created_at": "2026-09-24T18:29:19.641Z",
+      "bytes": 1733220
+    },
+    "8d60cf64273a0573e717f7eb": {
+      "generation_id": "01c7dee8-2fee-4896-be01-927209bab57a",
+      "provider": "openai",
+      "model": "gpt-image-1-mini",
+      "cost_cents": 1.1,
+      "width": 1024,
+      "height": 1024,
+      "prompt": "Draw a new object in the identical art style to this reference image - same flat vector cartoon look, same clean black outline weight, same flat unshaded colour fill. The object is one woven wicker picnic basket with a curved handle over the top, light golden-brown weave, lid closed, seen from the front. Flat vector cartoon, clean even line weight, no gradients, no texture. Centred, front view, generous even margin on all four sides, nothing touching the edge of the frame. Fully transparent background. No drop shadow, no outer glow, no background shapes, no text, no watermark.",
+      "created_at": "2026-09-24T18:30:07.748Z",
+      "bytes": 1498936
+    }
+  },
+  "uploads": {
+    "d8a053dbd9ef12c4aaa1f41649a1cd86692878fa369b506f908409656229d2ad": {
+      "upload_id": "e717ee31-a9fa-4f85-9f1d-8593adbb0fcf",
+      "source": "v1.png",
+      "uploaded_at": "2026-09-01T20:04:11.085Z"
+    },
+    "036053a231565b8e6a1d0a7017bc0d9a8b086596c4ffa161182e24662ea6b9b3": {
+      "upload_id": "bff83140-f930-427b-bd51-213736c7da90",
+      "source": "unicorn_baby.png",
+      "uploaded_at": "2026-09-01T20:06:17.876Z"
+    },
+    "3ce76b64820f27dbef3c5ca0734f6c0de9ba021bf85130a71e7672718011c6bf": {
+      "upload_id": "4bbb7ed6-a13f-4408-8a6b-16fe270e1d47",
+      "source": "watering-can-decor.png",
+      "uploaded_at": "2026-09-02T07:42:12.028Z"
+    },
+    "b93817d5edb80d8f0ca6d18a03cd675e06756d214cbf4be21f9d9bc422230516": {
+      "upload_id": "eb0388a0-ee44-4a90-a921-b95204c53c67",
+      "source": "fawn.png",
+      "uploaded_at": "2026-09-03T03:58:20.084Z"
+    },
+    "ef562976fc2cc2b11337765e64e26b3f62355311cb6cd97b56581689d6ad99ef": {
+      "upload_id": "f9f17133-73b7-4181-90ab-2217f74ccf4b",
+      "source": "toucan_baby.png",
+      "uploaded_at": "2026-09-03T04:01:31.270Z"
+    },
+    "ee32ec08f54923c0220d4d27892ba8b6a74eddce7c322c32ac4e0176cf575bae": {
+      "upload_id": "c87a484d-612c-4724-9f7b-cea88bc9a797",
+      "source": "shape_garden_background.png",
+      "uploaded_at": "2026-09-04T14:16:59.484Z"
+    },
+    "676b1558c96b8c261e53b58183b7ecaad94b8359ea62e67c3e49405a163871e2": {
+      "upload_id": "10b73862-58ba-49df-b9bf-605c0c9a5505",
+      "source": "arm-1-r.png",
+      "uploaded_at": "2026-09-04T17:52:36.102Z"
+    },
+    "d9b7cda06aacdc55d184e01802adefd49861bb9cb9c67a42c6b427d929132950": {
+      "upload_id": "c13af927-0acf-476d-849b-61d6949aed0a",
+      "source": "leg-1-r.png",
+      "uploaded_at": "2026-09-04T17:53:49.096Z"
+    },
+    "bdc4699258705d2a826723c9b8807e6011e29f0e0fd1ab4fbed159cecb42d487": {
+      "upload_id": "891d65d2-90f0-4a3f-ad4c-0b7925957cdc",
+      "source": "frog.png",
+      "uploaded_at": "2026-09-24T18:20:47.218Z"
+    }
+  }
+}

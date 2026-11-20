@@ -15,13 +15,18 @@
 // this widget should generalise to take a RewardTrack + first-stage
 // presentation parameters.
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../data/asset_paths.dart';
+import '../../data/button_labels.dart';
+import '../../data/sfx_catalog.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
+import '../../platform/sfx_engine.dart';
 import '../widgets/next_arrow_button.dart';
 
 class RewardGiftScreen extends ConsumerStatefulWidget {
@@ -39,10 +44,31 @@ class RewardGiftScreen extends ConsumerStatefulWidget {
 class _RewardGiftScreenState extends ConsumerState<RewardGiftScreen> {
   bool _narrated = false;
 
+  /// Read eagerly — `ref.read` is illegal once dispose() has begun.
+  SfxEngine? _sfxForDispose;
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _narrateOnce());
+    _sfxForDispose = ref.read(sfxEngineProvider);
+    // Claimed here, not in the post-frame callback below: the release in
+    // dispose() is unconditional, so the claim has to be too, or a teardown
+    // before the first frame gives back a claim it never took. See
+    // SfxEngine.releaseMusicBed for what that costs.
+    // The gift lands mid-visit, between two rounds. Claiming the bed the
+    // round was already playing keeps this beat inside the same piece of
+    // music rather than dropping it into silence.
+    unawaited(_sfxForDispose!.startMusicBed(kDefaultMusicBed));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _narrateOnce();
+    });
+  }
+
+  @override
+  void dispose() {
+    _sfxForDispose?.releaseMusicBed();
+    super.dispose();
   }
 
   void _narrateOnce() {
@@ -175,7 +201,7 @@ class _RewardGiftScreenState extends ConsumerState<RewardGiftScreen> {
                     child: NextArrowButton(
                       key: const ValueKey('reward-gift-continue'),
                       onPressed: _onContinue,
-                      label: 'Continue',
+                      label: kLabelContinue,
                     ),
                   ),
                 ],

@@ -17,9 +17,14 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../data/button_labels.dart';
+import '../../engines/feedback/feedback_engine.dart';
+import '../../engines/narration/narration_line.dart';
+import '../../engines/narration/narration_player.dart';
 import '../../models/reward_track.dart';
 import '../../providers/reward_progress_provider.dart';
 import '../../providers/save_provider.dart';
+import 'next_arrow_button.dart';
 
 class RewardOverlay extends ConsumerStatefulWidget {
   const RewardOverlay({super.key, required this.track});
@@ -66,12 +71,22 @@ class _RewardOverlayState extends ConsumerState<RewardOverlay>
     final trackState = progress[widget.track.id] ?? const RewardTrackState();
     final target = widget.track.computeTargetStage(
       trackState.completedActivities,
+      trackState.completionEvents,
+      trackState.lastSeenStage,
     );
     if (target > trackState.lastSeenStage) {
       setState(() {
         _animatingFromStage = trackState.lastSeenStage;
         _animatingToStage = target;
       });
+      // The sprite swaps halfway through; the crack lands with it rather than
+      // at the start, so the sound and the picture are the same event.
+      Future<void>.delayed(
+        _advancement.duration! * 0.5,
+        () {
+          if (mounted) ref.read(feedbackEngineProvider).eggAdvance();
+        },
+      );
       _advancement.forward(from: 0).then((_) {
         if (!mounted) return;
         ref.read(rewardProgressProvider.notifier).markStageSeen(
@@ -98,7 +113,23 @@ class _RewardOverlayState extends ConsumerState<RewardOverlay>
     }
   }
 
+  /// The stage's line, on tap.
+  ///
+  /// It is spoken now. These eight messages are the entire story of the
+  /// game's long-cycle reward - a jump, a crack, a snout - and none of them
+  /// had ever been said out loud in any voice, because they live on
+  /// `kMysteryEggTrack` in lib/models/ and the literal sweep reads lib/data/
+  /// and files that mention narration. So the renderer could not see them,
+  /// and what a five-year-old got when she tapped her egg was a paragraph of
+  /// prose and a button reading "Close".
   void _showFlavourMessage(BuildContext context, RewardStage stage) {
+    ref.read(feedbackEngineProvider).whoosh();
+    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
+          NarrationLine(
+            text: stage.message,
+            cueId: 'reward:${widget.track.id}:flavour',
+          ),
+        );
     showDialog<void>(
       context: context,
       builder: (dialogCtx) {
@@ -127,9 +158,14 @@ class _RewardOverlayState extends ConsumerState<RewardOverlay>
                   ),
                 ),
                 const SizedBox(height: 24),
-                FilledButton(
+                // The same arrow that ends every other beat in the game,
+                // rather than a text button reading "Close" - which was the
+                // only way out of this dialog and unreadable to the person it
+                // was in front of.
+                NextArrowButton(
+                  key: const ValueKey('reward-flavour-close'),
                   onPressed: () => Navigator.of(dialogCtx).pop(),
-                  child: const Text('Close'),
+                  label: kLabelOkay,
                 ),
               ],
             ),
@@ -143,6 +179,8 @@ class _RewardOverlayState extends ConsumerState<RewardOverlay>
   RewardStage? _displayStage(RewardTrackState trackState) {
     final target = widget.track.computeTargetStage(
       trackState.completedActivities,
+      trackState.completionEvents,
+      trackState.lastSeenStage,
     );
     if (target == 0) return null; // Nothing earned yet
     if (trackState.graduated) return widget.track.completeStage;
@@ -155,9 +193,8 @@ class _RewardOverlayState extends ConsumerState<RewardOverlay>
 
   @override
   Widget build(BuildContext context) {
-    final trackState =
-        ref.watch(rewardProgressProvider)[widget.track.id] ??
-            const RewardTrackState();
+    final trackState = ref.watch(rewardProgressProvider)[widget.track.id] ??
+        const RewardTrackState();
     final stage = _displayStage(trackState);
     if (stage == null) return const SizedBox.shrink();
 
@@ -270,10 +307,8 @@ class _RewardOverlayState extends ConsumerState<RewardOverlay>
               shakeIntensity = 1.0 - (t - 0.55) / 0.20;
             }
           }
-          final shakeDx =
-              (_rng.nextDouble() - 0.5) * 12 * shakeIntensity;
-          final shakeDy =
-              (_rng.nextDouble() - 0.5) * 12 * shakeIntensity;
+          final shakeDx = (_rng.nextDouble() - 0.5) * 12 * shakeIntensity;
+          final shakeDy = (_rng.nextDouble() - 0.5) * 12 * shakeIntensity;
 
           // Which sprite to draw — old or new.
           final showNewSprite = !hasOldSprite || t >= 0.525;
@@ -286,9 +321,10 @@ class _RewardOverlayState extends ConsumerState<RewardOverlay>
                 child: IgnorePointer(
                   child: Container(
                     color: Colors.black.withValues(
-                      alpha: 0.35 * Curves.easeInOut.transform(
-                        phaseT(0.05, 0.25),
-                      ) *
+                      alpha: 0.35 *
+                          Curves.easeInOut.transform(
+                            phaseT(0.05, 0.25),
+                          ) *
                           (1 - phaseT(0.75, 0.95)),
                     ),
                   ),

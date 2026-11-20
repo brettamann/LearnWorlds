@@ -15,6 +15,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class RewardTrackState {
   const RewardTrackState({
     this.completedActivities = const <String>{},
+    this.completionEvents = const <String>{},
     this.lastSeenStage = 0,
     this.graduated = false,
   });
@@ -22,6 +23,15 @@ class RewardTrackState {
   /// Set of activity ids (from the registry, e.g. `counting-parade`) that
   /// have been completed at least once for this track's grant table.
   final Set<String> completedActivities;
+
+  /// Finer-grained completions — one key per cleared sub-mode, e.g.
+  /// `counting-parade/count-the-parade`. Counted against
+  /// [RewardTrack.eventsPerStage].
+  ///
+  /// A set rather than a counter on purpose: replaying a sub-mode she has
+  /// already cleared must not farm the track forward. The egg should measure
+  /// how much of the curriculum she has actually covered.
+  final Set<String> completionEvents;
 
   /// Highest stage number (1..N) the kid has watched on the map. Drives the
   /// advancement-animation trigger: if `targetStage > lastSeenStage` on a
@@ -35,11 +45,13 @@ class RewardTrackState {
 
   RewardTrackState copyWith({
     Set<String>? completedActivities,
+    Set<String>? completionEvents,
     int? lastSeenStage,
     bool? graduated,
   }) {
     return RewardTrackState(
       completedActivities: completedActivities ?? this.completedActivities,
+      completionEvents: completionEvents ?? this.completionEvents,
       lastSeenStage: lastSeenStage ?? this.lastSeenStage,
       graduated: graduated ?? this.graduated,
     );
@@ -64,6 +76,19 @@ class RewardProgress extends Notifier<Map<String, RewardTrackState>> {
       completedActivities: {...current.completedActivities, activityId},
     );
     state = {...state, trackId: next};
+  }
+
+  /// Records one cleared sub-mode against the track. Idempotent by [key], so
+  /// a replay of something already cleared changes nothing.
+  void markCompletionEvent({required String trackId, required String key}) {
+    final current = stateFor(trackId);
+    if (current.completionEvents.contains(key)) return;
+    state = {
+      ...state,
+      trackId: current.copyWith(
+        completionEvents: {...current.completionEvents, key},
+      ),
+    };
   }
 
   void markStageSeen({required String trackId, required int stage}) {

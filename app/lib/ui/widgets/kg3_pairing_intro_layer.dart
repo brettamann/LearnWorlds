@@ -91,7 +91,7 @@ class _Kg3PairingIntroLayerState extends ConsumerState<Kg3PairingIntroLayer> {
       700,
       () => _speak(
         'This is a flat ${p.flatName}. But every shape has a solid '
-        'version you could hold in your hand!',
+            'version you could hold in your hand!',
         '$cuePrefix:flat',
       ),
     );
@@ -102,8 +102,8 @@ class _Kg3PairingIntroLayerState extends ConsumerState<Kg3PairingIntroLayer> {
       5400,
       () => _speak(
         'When a ${p.flatName} is solid, instead of flat, we call it a '
-        '${p.solidName} or a ${p.solidAltName}! '
-        "It's something you could hold in your hand.",
+            '${p.solidName} or a ${p.solidAltName}! '
+            "It's something you could hold in your hand.",
         '$cuePrefix:outline',
       ),
     );
@@ -114,7 +114,7 @@ class _Kg3PairingIntroLayerState extends ConsumerState<Kg3PairingIntroLayer> {
       10900,
       () => _speak(
         'These shapes can take many forms. See how this ${p.creatureName} '
-        'looks like a ${p.solidName} or ${p.solidAltName}?',
+            'looks like a ${p.solidName} or ${p.solidAltName}?',
         '$cuePrefix:themed',
       ),
     );

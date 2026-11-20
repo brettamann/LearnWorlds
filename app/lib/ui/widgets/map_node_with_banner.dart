@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/asset_paths.dart';
 import 'read_aloud_gate.dart';
+import 'touch_target.dart';
 
 /// Which side of the node the banner sits on.
 enum BannerSide { right, left, above, below }
@@ -49,6 +50,7 @@ class MapNodeWithBanner extends StatelessWidget {
     this.bannerSide = BannerSide.right,
     this.numberInside,
     this.isCutscene = false,
+    this.asleep = false,
     this.renderMode = MapNodeRenderMode.both,
   });
 
@@ -76,6 +78,19 @@ class MapNodeWithBanner extends StatelessWidget {
   /// "watch me, no math here."
   final bool isCutscene;
 
+  /// Draw the node as a place that exists but is not built yet.
+  ///
+  /// Drained of colour, faded, and carrying a crescent moon instead of its
+  /// lesson number — so the difference from a playable node is visible at a
+  /// glance to someone who cannot read the banner beside it. Seven of the
+  /// Sanctuary's eleven nodes are in this state today.
+  ///
+  /// A sleeping node is not wrapped in ReadAloudGate. The gate exists to read
+  /// a label out before acting on it, and there is nothing here to act on —
+  /// the caller's onTap is expected to say why instead, and it should say it
+  /// on the first touch rather than the second.
+  final bool asleep;
+
   /// Which part of the node/banner pair to draw. The Sanctuary map
   /// uses `nodeOnly` for a pass below the fog layer and `bannerOnly`
   /// for a pass above it, so the banner text floats over the clouds
@@ -89,6 +104,25 @@ class MapNodeWithBanner extends StatelessWidget {
 
   // Text font is fitted to the banner's text-area height with a small inset.
   double get _fontSize => _bannerHeight * 0.36;
+
+  /// Drains the colour out of a sleeping node and fades it back.
+  ///
+  /// Both, not either: opacity alone leaves a pale yellow disc that still
+  /// reads as a button on a bright painted map, and greyscale alone leaves a
+  /// node that is merely a different colour. Together they read as "not yet"
+  /// without a word of text.
+  static Widget _dimmed(Widget child) => Opacity(
+        opacity: 0.55,
+        child: ColorFiltered(
+          colorFilter: const ColorFilter.matrix(<double>[
+            0.2126, 0.7152, 0.0722, 0, 0, //
+            0.2126, 0.7152, 0.0722, 0, 0, //
+            0.2126, 0.7152, 0.0722, 0, 0, //
+            0, 0, 0, 1, 0, //
+          ]),
+          child: child,
+        ),
+      );
 
   /// Compute the banner width such that the label fits inside the text area
   /// at the chosen font size; never shrink below the natural banner width.
@@ -114,9 +148,8 @@ class MapNodeWithBanner extends StatelessWidget {
     final scale = _bannerHeight / _BannerArt.sourceHeight;
     final naturalWidth = _BannerArt.sourceWidth * scale;
     const safety = 10.0;
-    final requiredBannerW = (tp.width + safety) *
-        _BannerArt.sourceWidth /
-        _BannerArt.textWidth;
+    final requiredBannerW =
+        (tp.width + safety) * _BannerArt.sourceWidth / _BannerArt.textWidth;
     return math.max(naturalWidth, requiredBannerW);
   }
 
@@ -202,7 +235,23 @@ class MapNodeWithBanner extends StatelessWidget {
           AssetPaths.mapNodeYellow,
           fit: BoxFit.contain,
         ),
-        if (numberInside != null)
+        if (asleep)
+          FractionallySizedBox(
+            widthFactor: 0.5,
+            heightFactor: 0.5,
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: Icon(
+                // A moon, not a padlock. A lock says "you have not earned
+                // this"; nothing here is earned, it simply is not made yet,
+                // and art-direction.md asks for warm over punitive.
+                Icons.bedtime_rounded,
+                color: Colors.black54,
+                size: nodeDiameter,
+              ),
+            ),
+          )
+        else if (numberInside != null)
           // Number occupies most of the node interior — bounded by
           // ~60% of the diameter so descenders don't kiss the rim.
           FractionallySizedBox(
@@ -251,31 +300,63 @@ class MapNodeWithBanner extends StatelessWidget {
     // passes — node below the fog, banner above it — by asking for one
     // half at a time. The default `both` keeps the original behaviour
     // for any caller that wants the pair drawn in a single layer.
-    final bannerPositioned = Positioned(
-      left: bannerTL.dx,
-      top: bannerTL.dy,
-      width: bannerW,
-      height: bannerH,
-      child: ReadAloudGate(
-        label: label,
-        onTap: onTap,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: onTap,
+    final bannerTappable = GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Center(
+        child: SizedBox(
+          width: bannerW,
+          height: bannerH,
           child: bannerVisual,
         ),
       ),
     );
-    final nodePositioned = Positioned(
-      left: center.dx - nodeDiameter / 2,
-      top: center.dy - nodeDiameter / 2,
-      width: nodeDiameter,
-      height: nodeDiameter,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onTap,
-        child: nodeVisual,
+    // Same treatment for the banner, which is 45 pixels tall - it is a strip
+    // of parchment sized to its text, and making the parchment taller would
+    // change the painting rather than the target.
+    final bannerHit = math.max(bannerH, kMinTouchTarget);
+    final bannerPositioned = Positioned(
+      left: bannerTL.dx,
+      top: bannerTL.dy - (bannerHit - bannerH) / 2,
+      width: bannerW,
+      height: bannerHit,
+      // A sleeping node skips the gate: it opens nothing, so there is no
+      // second tap to protect, and its onTap already speaks.
+      child: asleep
+          ? _dimmed(bannerTappable)
+          : ReadAloudGate(
+              label: label,
+              onTap: onTap,
+              child: bannerTappable,
+            ),
+    );
+    // The gesture detector wraps the padding, not the other way round: a
+    // detector inside a bigger box is still only as big as itself, and the
+    // extra space around it does nothing at all.
+    final nodeTappable = GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Center(
+        child: SizedBox(
+          width: nodeDiameter,
+          height: nodeDiameter,
+          child: nodeVisual,
+        ),
       ),
+    );
+    // The medallion is drawn at `nodeDiameter` and touched at whatever is
+    // bigger, that or `kMinTouchTarget`. The drawn size cannot simply grow:
+    // it is `shortest * 0.07`, chosen so a node sits on the path in the
+    // painting, and `README.md` is explicit that node geometry is not to be
+    // made responsive. But at the reference window that is 53 pixels - about
+    // 11mm on the iPad - for the control every session begins with.
+    final nodeHit = math.max(nodeDiameter, kMinTouchTarget);
+    final nodePositioned = Positioned(
+      left: center.dx - nodeHit / 2,
+      top: center.dy - nodeHit / 2,
+      width: nodeHit,
+      height: nodeHit,
+      child: asleep ? _dimmed(nodeTappable) : nodeTappable,
     );
     switch (renderMode) {
       case MapNodeRenderMode.nodeOnly:

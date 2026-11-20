@@ -19,15 +19,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../data/button_labels.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
+
+import 'touch_target.dart';
 
 class ReplayDemoButton extends ConsumerWidget {
   const ReplayDemoButton({
     super.key,
     required this.label,
     required this.cueId,
-    this.size = 56,
+    this.size = kMinTouchTarget + 4,
     this.color = const Color(0xFF4FC3F7),
   });
 
@@ -41,6 +44,11 @@ class ReplayDemoButton extends ConsumerWidget {
   final String cueId;
 
   /// Diameter of the circular button.
+  ///
+  /// Just over [kMinTouchTarget]: this is the control a child reaches for
+  /// when she is already stuck, so it is the last one that should be hard to
+  /// hit. It was 56, which is under the floor - and it fits the 72-wide
+  /// shelf either way.
   final double size;
 
   /// Body / glow tint. Defaults to a soft sky-blue so the button reads
@@ -51,7 +59,7 @@ class ReplayDemoButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Semantics(
       button: true,
-      label: 'Replay the directions',
+      label: kLabelReplayDirections,
       child: Material(
         shape: const CircleBorder(),
         color: color,

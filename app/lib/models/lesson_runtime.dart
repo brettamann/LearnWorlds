@@ -3,6 +3,12 @@
 // weTry narration cues, and youDo handoff parameters. Animation choreography
 // is loaded into a flexible map so later sprints can render scenes without
 // the loader changing.
+//
+// `weTry` used to stop at its narration map: the lines were parsed, and the
+// `choreography` that says when to speak them was skipped. That is why the
+// phase was authored in all 22 lessons and ran in none of them.
+
+import 'we_try_script.dart';
 
 class NarrationCue {
   const NarrationCue({required this.at, required this.text});
@@ -88,7 +94,10 @@ class IShowPhase {
     required this.animationSteps,
     required this.skipAvailableAfterSec,
     required this.shapes,
+    required this.landmarkIds,
+    required this.creatureCount,
     this.background,
+    this.musicBed,
   });
 
   factory IShowPhase.fromJson(Map<String, dynamic> json) {
@@ -107,7 +116,13 @@ class IShowPhase {
       shapes: (scene['shapes'] as List<dynamic>? ?? const <dynamic>[])
           .map((e) => SceneShape.fromJson(e as Map<String, dynamic>))
           .toList(growable: false),
+      landmarkIds: <String>[
+        for (final id in scene['landmarks'] as List<dynamic>? ?? const [])
+          if (id is String) id,
+      ],
+      creatureCount: _creatureCount(scene),
       background: scene['background'] as String?,
+      musicBed: scene['musicBed'] as String?,
     );
   }
 
@@ -121,15 +136,45 @@ class IShowPhase {
   /// yet because the existing renderer hard-codes "3 fawns."
   final List<SceneShape> shapes;
 
+  /// Places standing in the clearing, for the K.G.1 position lessons. Ids
+  /// match `kWheresBuddyLandmarks`, so the lesson stands the kid in front of
+  /// the same tree the round will ask her about.
+  ///
+  /// The scene block has carried these since the lesson was written; nothing
+  /// read them, which is why K.G.1 rendered three fawns.
+  final List<String> landmarkIds;
+
+  /// How many creatures stand in the scene.
+  ///
+  /// Read rather than assumed because the We-Try scenes deliberately hold one
+  /// more than the I-Show did - the demonstration counts three fawns, her turn
+  /// counts four, so the phase asks for a new quantity instead of replaying
+  /// the one she just watched. A renderer that keeps its own count draws three
+  /// while the narrator says "Three. Four."
+  final int creatureCount;
+
   /// Logical background key from the JSON (e.g. `shape-garden-enchanted-path`).
   /// Renderer maps this to an actual asset.
   final String? background;
+
+  /// Music bed the scene asks for, resolved against [kMusicBeds]. Authored in
+  /// every lesson since the content was written and read by nobody until the
+  /// bed became continuous — the lesson screen used to play in silence
+  /// between two rounds that had music.
+  final String? musicBed;
 }
 
 class WeTryPhase {
   const WeTryPhase({
     required this.durationSec,
     required this.narrationByCueId,
+    required this.script,
+    required this.initialGlowTarget,
+    required this.landmarkIds,
+    required this.creatureCount,
+    required this.framePrebuilt,
+    required this.showsRoof,
+    this.musicBed,
   });
 
   factory WeTryPhase.fromJson(Map<String, dynamic> json) {
@@ -138,14 +183,64 @@ class WeTryPhase {
       final map = cue as Map<String, dynamic>;
       byCue[map['at'] as String] = map['text'] as String;
     }
+    final scene = json['scene'] as Map<String, dynamic>? ?? const {};
     return WeTryPhase(
       durationSec: (json['durationSec'] as num).toInt(),
       narrationByCueId: byCue,
+      script: WeTryScript.compile(
+        choreography: <Map<String, dynamic>>[
+          for (final step in json['choreography'] as List<dynamic>? ?? const [])
+            if (step is Map) Map<String, dynamic>.from(step),
+        ],
+        narrationByCueId: byCue,
+        hesitationRule: json['hesitationRule'] as Map<String, dynamic>?,
+      ),
+      initialGlowTarget: scene['initialGlowTarget'] as String?,
+      landmarkIds: <String>[
+        for (final id in scene['landmarks'] as List<dynamic>? ?? const [])
+          if (id is String) id,
+      ],
+      creatureCount: _creatureCount(scene),
+      framePrebuilt: (scene['buildSite'] as Map?)?['completedFrame'] != null,
+      showsRoof: (scene['buildSite'] as Map?)?['phase2GhostOutline'] != null,
+      musicBed: scene['musicBed'] as String?,
     );
   }
 
   final int durationSec;
   final Map<String, String> narrationByCueId;
+
+  /// The authored choreography, compiled into beats the lesson screen can run.
+  /// Every lesson has had one of these since the content was written; until
+  /// now nothing read the `choreography` key at all, so the phase existed on
+  /// disk and nowhere else.
+  final WeTryScript script;
+
+  /// What lights up before she is asked to do anything, so the first thing on
+  /// screen already says where to look.
+  final String? initialGlowTarget;
+
+  /// Places in the clearing, same vocabulary as the I-Show scene.
+  final List<String> landmarkIds;
+
+  /// See [IShowPhase.creatureCount] - this is the one that is usually four.
+  final int creatureCount;
+
+  /// Whether the shelter frame is already standing when her turn begins.
+  ///
+  /// The two Build-a-Habitat lessons want opposite things and both say so:
+  /// K.G.5's We-Try scene declares `ghostOutline: bright-triangle` with vertex
+  /// and edge indicators - an empty site she fills in - while K.G.6's declares
+  /// `completedFrame: triangle-solid`, because its subject is what goes on top
+  /// of a frame that already exists. Inheriting whatever the I-Show left
+  /// behind gets K.G.5 wrong in the way that matters most: she is asked to
+  /// place a corner on a triangle that is already finished.
+  final bool framePrebuilt;
+
+  /// Whether the phase-2 shapes are part of this scene.
+  final bool showsRoof;
+
+  final String? musicBed;
 
   String? line(String cueId) => narrationByCueId[cueId];
 }
@@ -196,4 +291,19 @@ class LessonRuntime {
   final IShowPhase iShow;
   final WeTryPhase weTry;
   final YouDoPhase youDo;
+}
+
+/// Creatures in a scene block, however that lesson counts them.
+///
+/// `count` in the one-to-one lessons, `clusterCount` where the unit is a
+/// cluster of ten, `preCountedCount` where some are already numbered. Falls
+/// back to 3, which is what the fawn stage drew before it read anything.
+int _creatureCount(Map<String, dynamic> scene) {
+  final creatures = scene['creatures'];
+  if (creatures is! Map) return 3;
+  for (final key in const ['count', 'clusterCount', 'preCountedCount']) {
+    final value = creatures[key];
+    if (value is num) return value.toInt();
+  }
+  return 3;
 }

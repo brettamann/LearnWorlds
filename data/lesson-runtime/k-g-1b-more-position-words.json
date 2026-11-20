@@ -10,8 +10,9 @@
   "subModeTarget": "place-mode",
   "narratorVoice": "sanctuary-warm-naturalist",
   "totalDurationTargetSec": 60,
-  "prerequisites": ["lesson-k-g-1-positional-language"],
-
+  "prerequisites": [
+    "lesson-k-g-1-positional-language"
+  ],
   "phases": {
     "iShow": {
       "durationSec": 25,
@@ -19,74 +20,319 @@
         "background": "sanctuary-clearing-late-afternoon",
         "lighting": "late-afternoon",
         "musicBed": "sanctuary-low",
-        "landmarks": ["well", "tree", "mushroom", "rock-cluster", "cottage"],
+        "landmarks": [
+          "fountain",
+          "hollow-tree",
+          "mushroom",
+          "rock-cluster",
+          "cottage"
+        ],
         "buddyPosition": "center-stage-of-clearing",
-        "hud": { "doneButton": "hidden" }
+        "hud": {
+          "doneButton": "hidden"
+        }
       },
       "animationSteps": [
-        { "at": "0s",  "action": "scene-fade-up" },
-        { "at": "0s",  "action": "music-bed-in" },
-        { "at": "2s",  "action": "narrator-begin" },
-        { "at": "5s",  "action": "pointer-move-buddy", "params": { "to": "above-well" } },
-        { "at": "7s",  "action": "pointer-move-buddy", "params": { "to": "below-well" } },
-        { "at": "7s",  "action": "directional-arrow", "params": { "from": "well", "direction": "down", "to": "buddy" } },
-        { "at": "10s", "action": "buddy-return-to-center" },
-        { "at": "12s", "action": "buddy-turn-toward", "params": { "target": "cottage" } },
-        { "at": "13s", "action": "pointer-move-buddy", "params": { "to": "behind-cottage", "durationSec": 1 } },
-        { "at": "14s", "action": "pointer-move-buddy", "params": { "to": "in-front-of-cottage" } },
-        { "at": "14s", "action": "directional-arrow", "params": { "from": "cottage-front", "direction": "outward" } },
-        { "at": "17s", "action": "buddy-return-to-center" },
-        { "at": "18s", "action": "ive-got-this-button-show" },
-        { "at": "19s", "action": "buddy-turn-toward", "params": { "target": "rock-cluster" } },
-        { "at": "20s", "action": "pointer-move-buddy", "params": { "to": "beside-rocks" } },
-        { "at": "20s", "action": "directional-arrow", "params": { "between": ["buddy", "rock-cluster"], "style": "side-by-side" } },
-        { "at": "22s", "action": "buddy-return-to-center" },
-        { "at": "22s", "action": "pointer-fade-out" },
-        { "at": "25s", "action": "phase-end" }
+        {
+          "at": "0s",
+          "action": "scene-fade-up"
+        },
+        {
+          "at": "0s",
+          "action": "music-bed-in"
+        },
+        {
+          "at": "2s",
+          "action": "narrator-begin"
+        },
+        {
+          "at": "5s",
+          "action": "pointer-move-buddy",
+          "params": {
+            "position": "above",
+            "landmark": "fountain"
+          }
+        },
+        {
+          "at": "7s",
+          "action": "pointer-move-buddy",
+          "params": {
+            "position": "below",
+            "landmark": "fountain"
+          }
+        },
+        {
+          "at": "7s",
+          "action": "directional-arrow",
+          "params": {
+            "from": "fountain",
+            "direction": "down",
+            "to": "buddy"
+          }
+        },
+        {
+          "at": "10s",
+          "action": "buddy-return-to-center"
+        },
+        {
+          "at": "12s",
+          "action": "buddy-turn-toward",
+          "params": {
+            "target": "cottage"
+          }
+        },
+        {
+          "at": "13s",
+          "action": "pointer-move-buddy",
+          "params": {
+            "durationSec": 1,
+            "position": "behind",
+            "landmark": "cottage"
+          }
+        },
+        {
+          "at": "14s",
+          "action": "pointer-move-buddy",
+          "params": {
+            "position": "in-front-of",
+            "landmark": "cottage"
+          }
+        },
+        {
+          "at": "14s",
+          "action": "directional-arrow",
+          "params": {
+            "from": "cottage",
+            "direction": "outward"
+          }
+        },
+        {
+          "at": "17s",
+          "action": "buddy-return-to-center"
+        },
+        {
+          "at": "18s",
+          "action": "ive-got-this-button-show"
+        },
+        {
+          "at": "19s",
+          "action": "buddy-turn-toward",
+          "params": {
+            "target": "rock-cluster"
+          }
+        },
+        {
+          "at": "20s",
+          "action": "pointer-move-buddy",
+          "params": {
+            "position": "beside",
+            "landmark": "rock-cluster"
+          }
+        },
+        {
+          "at": "20s",
+          "action": "directional-arrow",
+          "params": {
+            "between": [
+              "buddy",
+              "rock-cluster"
+            ],
+            "style": "side-by-side"
+          }
+        },
+        {
+          "at": "22s",
+          "action": "buddy-return-to-center"
+        },
+        {
+          "at": "22s",
+          "action": "pointer-fade-out"
+        },
+        {
+          "at": "25s",
+          "action": "phase-end"
+        }
       ],
       "narrationScript": [
-        { "at": "2s",  "text": "You already know some position words. Let's add three more." },
-        { "at": "5s",  "text": "You know this — above the well." },
-        { "at": "7s",  "text": "Now this — below the well." },
-        { "at": "13s", "text": "Behind the cottage — you know that." },
-        { "at": "14s", "text": "And in front of the cottage." },
-        { "at": "20s", "text": "Beside the rocks. That's like 'next to' — right alongside." },
-        { "at": "23s", "text": "Above, below. Behind, in front of. Next to, beside. Six words. They tell us where." }
+        {
+          "at": "2s",
+          "text": "You already know some position words. Let's add three more."
+        },
+        {
+          "at": "5s",
+          "text": "You know this — above the star fountain."
+        },
+        {
+          "at": "7s",
+          "text": "Now this — below the star fountain."
+        },
+        {
+          "at": "13s",
+          "text": "Behind the cottage — you know that."
+        },
+        {
+          "at": "14s",
+          "text": "And in front of the cottage."
+        },
+        {
+          "at": "20s",
+          "text": "Beside the rock cluster. That's like 'next to' — right alongside."
+        },
+        {
+          "at": "23s",
+          "text": "Above, below. Behind, in front of. Next to, beside. Six words. They tell us where."
+        }
       ],
       "skipToYouDoAvailableAfterSec": 18
     },
-
     "weTry": {
       "durationSec": 22,
       "scene": {
         "background": "sanctuary-clearing-late-afternoon",
         "musicBed": "sanctuary-low",
-        "landmarks": ["well", "tree", "mushroom", "rock-cluster", "cottage"],
+        "landmarks": [
+          "fountain",
+          "hollow-tree",
+          "mushroom",
+          "rock-cluster",
+          "cottage"
+        ],
         "buddyPosition": "center-of-clearing-draggable",
         "initialGlowTarget": "mushroom"
       },
       "choreography": [
-        { "at": "0s",            "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-prompt-1" } },
-        { "at": "0s",            "type": "system-action",       "params": { "action": "halo-intensify-on-speak-word", "target": "mushroom", "word": "mushroom" } },
-        { "at": "3s",            "type": "system-action",       "params": { "action": "directional-arrow", "at": "mushroom", "direction": "down" } },
-        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-buddy", "expectedZone": "below-mushroom", "tolerantOfMiss": true } },
-        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "drop-feedback", "passCue": "we-try-correct-1", "failCue": "we-try-corrective-1" } },
-        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "halo", "target": "tree" } },
-        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "directional-arrow", "at": "tree", "direction": "outward-from-front" } },
-        { "at": "+0.5s",         "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-prompt-2" } },
-        { "at": "on-kid-input",  "type": "kid-action-expected", "params": { "expectedAction": "drag-buddy", "expectedZone": "in-front-of-tree", "tolerantOfMiss": true } },
-        { "at": "on-kid-input",  "type": "system-action",       "params": { "action": "drop-feedback", "passCue": "we-try-correct-2", "failCue": "we-try-corrective-2" } },
-        { "at": "+1s",           "type": "system-action",       "params": { "action": "narration", "cueId": "we-try-closing" } },
-        { "at": "22s",           "type": "system-action",       "params": { "action": "phase-end" } }
+        {
+          "at": "0s",
+          "type": "system-action",
+          "params": {
+            "action": "narration",
+            "cueId": "we-try-prompt-1"
+          }
+        },
+        {
+          "at": "0s",
+          "type": "system-action",
+          "params": {
+            "action": "halo-intensify-on-speak-word",
+            "target": "mushroom",
+            "word": "toadstools"
+          }
+        },
+        {
+          "at": "3s",
+          "type": "system-action",
+          "params": {
+            "action": "directional-arrow",
+            "at": "mushroom",
+            "direction": "down"
+          }
+        },
+        {
+          "at": "on-kid-input",
+          "type": "kid-action-expected",
+          "params": {
+            "expectedAction": "drag-buddy",
+            "expectedZone": "below-mushroom",
+            "tolerantOfMiss": true
+          }
+        },
+        {
+          "at": "on-kid-input",
+          "type": "system-action",
+          "params": {
+            "action": "drop-feedback",
+            "passCue": "we-try-correct-1",
+            "failCue": "we-try-corrective-1"
+          }
+        },
+        {
+          "at": "+0.5s",
+          "type": "system-action",
+          "params": {
+            "action": "halo",
+            "target": "hollow-tree"
+          }
+        },
+        {
+          "at": "+0.5s",
+          "type": "system-action",
+          "params": {
+            "action": "directional-arrow",
+            "at": "tree",
+            "direction": "outward-from-front"
+          }
+        },
+        {
+          "at": "+0.5s",
+          "type": "system-action",
+          "params": {
+            "action": "narration",
+            "cueId": "we-try-prompt-2"
+          }
+        },
+        {
+          "at": "on-kid-input",
+          "type": "kid-action-expected",
+          "params": {
+            "expectedAction": "drag-buddy",
+            "expectedZone": "in-front-of-hollow-tree",
+            "tolerantOfMiss": true
+          }
+        },
+        {
+          "at": "on-kid-input",
+          "type": "system-action",
+          "params": {
+            "action": "drop-feedback",
+            "passCue": "we-try-correct-2",
+            "failCue": "we-try-corrective-2"
+          }
+        },
+        {
+          "at": "+1s",
+          "type": "system-action",
+          "params": {
+            "action": "narration",
+            "cueId": "we-try-closing"
+          }
+        },
+        {
+          "at": "22s",
+          "type": "system-action",
+          "params": {
+            "action": "phase-end"
+          }
+        }
       ],
       "narrationScript": [
-        { "at": "we-try-prompt-1",     "text": "Your turn. Put the Buddy below the mushroom." },
-        { "at": "we-try-correct-1",    "text": "Below the mushroom — yes." },
-        { "at": "we-try-corrective-1", "text": "Below the mushroom — try the spot lower than the mushroom." },
-        { "at": "we-try-prompt-2",     "text": "Now put the Buddy in front of the tree." },
-        { "at": "we-try-correct-2",    "text": "In front of the tree." },
-        { "at": "we-try-corrective-2", "text": "In front of the tree — try the spot on the front side of the tree." },
-        { "at": "we-try-closing",      "text": "Two more places for the Buddy. You know all six words now." }
+        {
+          "at": "we-try-prompt-1",
+          "text": "Your turn. Put the Buddy below the toadstools."
+        },
+        {
+          "at": "we-try-correct-1",
+          "text": "Below the toadstools — yes."
+        },
+        {
+          "at": "we-try-corrective-1",
+          "text": "Below the toadstools — try the spot lower than the toadstools."
+        },
+        {
+          "at": "we-try-prompt-2",
+          "text": "Now put the Buddy in front of the hollow tree."
+        },
+        {
+          "at": "we-try-correct-2",
+          "text": "In front of the hollow tree."
+        },
+        {
+          "at": "we-try-corrective-2",
+          "text": "In front of the hollow tree — try the spot on the front side of the tree."
+        },
+        {
+          "at": "we-try-closing",
+          "text": "Two more places for the Buddy. You know all six words now."
+        }
       ],
       "hesitationRule": {
         "thresholdSec": 5,
@@ -94,7 +340,6 @@
       },
       "passCondition": "Any kid drag onto any zone passes (correct steers; incorrect corrects)."
     },
-
     "youDo": {
       "activityId": "wheres-buddy",
       "subMode": "place-mode",
@@ -112,13 +357,13 @@
       "cpaLayer": "Concrete"
     }
   },
-
   "libraryEntry": {
     "thumbnail": "assets/lessons/k-g-1b/thumbnail.png",
     "shortLabel": "Three more position words",
     "regionBadge": "sanctuary-leaf",
     "replayDurationSec": 60
   },
-
-  "telemetryExtensions": ["lesson.wetry_drop"]
+  "telemetryExtensions": [
+    "lesson.wetry_drop"
+  ]
 }

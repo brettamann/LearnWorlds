@@ -16,74 +16,37 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../coordinators/round_coordinator.dart';
 import '../../data/asset_paths.dart';
+import '../../data/count_out_n_rounds.dart';
+import '../../data/number_words.dart';
+import '../../data/sfx_catalog.dart';
+import '../../data/warm_lines.dart';
+import '../../engines/feedback/feedback_engine.dart';
+import '../../engines/mastery/round_outcome.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
+import '../../engines/scaffolding/hint_ladder.dart';
+import '../../platform/sfx_engine.dart';
+import 'buddy_companion.dart';
 import 'glitter_burst.dart';
+import 'keeper_aside.dart';
 import 'keeper_intro_overlay.dart';
 import 'lesson_hand_pointer.dart';
-import 'progress_bar_to_reward.dart';
+import 'playfield_scaffold.dart';
 import 'replay_demo_button.dart';
 
-enum _Phase { intro, demo, counting, celebrating, interstitial }
+enum _Phase {
+  intro,
+  demo,
+  counting,
 
-class _Round {
-  const _Round({
-    required this.targetN,
-    required this.poolSize,
-    required this.spriteAsset,
-    required this.singular,
-    required this.plural,
-    required this.keeperLine,
-  });
+  /// Keeper speaks over the live meadow and advances the round herself.
+  transition,
 
-  final int targetN;
-  final int poolSize;
-  final String spriteAsset;
-  final String singular;
-  final String plural;
-  final String keeperLine;
+  celebrating,
+
+  /// Final beat only — the reward payoff, which is meant to interrupt.
+  interstitial,
 }
-
-const List<_Round> _kRounds = <_Round>[
-  _Round(
-    targetN: 4,
-    poolSize: 8,
-    spriteAsset: AssetPaths.countingParadeFawn,
-    singular: 'fawn',
-    plural: 'fawns',
-    keeperLine: 'Four fawns! Now I need some gryphons.',
-  ),
-  _Round(
-    targetN: 6,
-    poolSize: 9,
-    spriteAsset: AssetPaths.countingParadeBabyGryphon,
-    singular: 'gryphon',
-    plural: 'gryphons',
-    keeperLine: 'Six gryphons! One more round — the dragons.',
-  ),
-  _Round(
-    targetN: 8,
-    poolSize: 10,
-    spriteAsset: AssetPaths.countingParadeBabyDragon,
-    singular: 'dragon',
-    plural: 'dragons',
-    keeperLine: 'Eight dragons! You counted out every group.',
-  ),
-];
-
-const List<String> _kSpelled = [
-  'Zero',
-  'One',
-  'Two',
-  'Three',
-  'Four',
-  'Five',
-  'Six',
-  'Seven',
-  'Eight',
-  'Nine',
-  'Ten',
-];
 
 class CountOutNRunner extends ConsumerStatefulWidget {
   const CountOutNRunner({
@@ -100,8 +63,7 @@ class CountOutNRunner extends ConsumerStatefulWidget {
 }
 
 class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
-  late _Phase _phase =
-      widget.skipIntro ? _Phase.counting : _Phase.intro;
+  late _Phase _phase = widget.skipIntro ? _Phase.counting : _Phase.intro;
   int _roundIndex = 0;
   int _completedRounds = 0;
   Set<int> _placedIndices = <int>{};
@@ -118,9 +80,25 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
   // knows the drag mechanic.
   bool _demoShown = false;
 
-  _Round get _currentRound => _kRounds[_roundIndex];
-  bool get _isLastRound => _roundIndex == _kRounds.length - 1;
-  double get _progress => _completedRounds / _kRounds.length;
+  /// Bumped to (re)present the between-round keeper aside.
+  int _asideToken = 0;
+
+  /// Drags attempted after the basket already held enough. This is the only
+  /// wrong answer the round has, and it is what makes the round gradeable.
+  int _overCapDrops = 0;
+  int _missRotation = 0;
+
+  /// Pool creature the hint ladder is glowing, if any.
+  int? _hintedIndex;
+
+  HintLadder? _hints;
+
+  /// Read eagerly — `ref.read` is illegal once dispose() has begun.
+  SfxEngine? _sfxForDispose;
+
+  CountOutNRound get _currentRound => kCountOutNRounds[_roundIndex];
+  bool get _isLastRound => _roundIndex == kCountOutNRounds.length - 1;
+  double get _progress => _completedRounds / kCountOutNRounds.length;
   int get _placedCount => _placedIndices.length;
   bool get _targetReached => _placedCount >= _currentRound.targetN;
 
@@ -128,21 +106,29 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
       "Sometimes I just need a few creatures, not all of them! I'll ask for "
       'a number, and you bring me exactly that many. Ready?';
 
-  String get _basketPrompt =>
-      'Bring me ${_kSpelled[_currentRound.targetN].toLowerCase()} '
-      '${_currentRound.plural}.';
+  String get _basketPrompt => countOutNBasketPrompt(_currentRound);
 
   String get _finalKeeperLine =>
       'Beautifully counted out! Just the number I asked for, every time.';
 
+  String get _overCapLine => countOutNOverCapLine(_currentRound, _missRotation);
+
   @override
   void initState() {
     super.initState();
+    _sfxForDispose = ref.read(sfxEngineProvider);
+    // Claimed here, not in the post-frame callback below: the release in
+    // dispose() is unconditional, so the claim has to be too, or a teardown
+    // before the first frame gives back a claim it never took. See
+    // SfxEngine.releaseMusicBed for what that costs.
+    unawaited(_sfxForDispose!.startMusicBed(kDefaultMusicBed));
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
+      ref.read(feedbackEngineProvider).resetRound();
       if (_phase == _Phase.intro) {
         _speakIntro();
       } else {
+        _startHints();
         _speakBasketPromptOnce();
       }
     });
@@ -150,8 +136,57 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
 
   @override
   void dispose() {
+    _hints?.dispose();
     _celebrationTimer?.cancel();
+    final sfx = _sfxForDispose;
+    if (sfx != null) sfx.releaseMusicBed();
     super.dispose();
+  }
+
+  void _startHints() {
+    _hints?.dispose();
+    _hints = HintLadder(onLevel: _onHintLevel)..start();
+  }
+
+  void _onHintLevel(HintLevel level) {
+    if (!mounted || _phase != _Phase.counting) return;
+    final next = _nextAvailable();
+    if (next == null) return;
+    final feedback = ref.read(feedbackEngineProvider);
+    switch (level) {
+      case HintLevel.none:
+        return;
+      case HintLevel.highlight:
+        setState(() => _hintedIndex = next);
+      case HintLevel.point:
+        setState(() => _hintedIndex = next);
+        feedback.hint();
+        ref.read(narrationPlayerProvider.notifier).speak(
+              NarrationLine(
+                text: warmHintLine(2),
+                cueId: 'count-out:r$_roundIndex:hint-point',
+              ),
+            );
+      case HintLevel.demonstrate:
+        // Do one for her. The drag is the hard part of this mechanic, so the
+        // demonstration completes the whole gesture rather than just pointing
+        // harder at it.
+        feedback.hint();
+        ref.read(narrationPlayerProvider.notifier).speak(
+              NarrationLine(
+                text: warmHintLine(3),
+                cueId: 'count-out:r$_roundIndex:hint-demo',
+              ),
+            );
+        _onCreatureDropped(next, fromHint: true);
+    }
+  }
+
+  int? _nextAvailable() {
+    for (var i = 0; i < _currentRound.poolSize; i++) {
+      if (!_placedIndices.contains(i)) return i;
+    }
+    return null;
   }
 
   void _speakIntro() {
@@ -182,6 +217,7 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
     }
     setState(() => _phase = _Phase.counting);
     _promptSpoken = false;
+    _startHints();
     _speakBasketPromptOnce();
   }
 
@@ -192,19 +228,28 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
       _phase = _Phase.counting;
       _promptSpoken = false;
     });
+    _startHints();
     _speakBasketPromptOnce();
   }
 
-  void _onCreatureDropped(int idx) {
+  void _onCreatureDropped(int idx, {bool fromHint = false}) {
     if (_phase != _Phase.counting) return;
     if (_placedIndices.contains(idx)) return;
     if (_targetReached) {
-      // Over-cap: gentle "you have enough" line; don't accept the drop.
+      // Over-cap. This is the wrong answer for "count out N" — bringing more
+      // than asked is exactly the error the standard is about — so it now
+      // registers as one: soft thud, Buddy tilts, and it counts against the
+      // round. The drop is still refused rather than punished.
+      setState(() {
+        _overCapDrops += 1;
+        _missRotation += 1;
+      });
+      _hints?.poke();
+      ref.read(feedbackEngineProvider).wrong();
       ref.read(narrationPlayerProvider.notifier).speak(
             NarrationLine(
-              text:
-                  "I have enough — that's ${_kSpelled[_currentRound.targetN].toLowerCase()}!",
-              cueId: 'count-out:r$_roundIndex:overcap',
+              text: _overCapLine,
+              cueId: 'count-out:r$_roundIndex:overcap-$_overCapDrops',
             ),
           );
       return;
@@ -213,38 +258,83 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
       _placedIndices.add(idx);
       _strayPositions.remove(idx);
       _basketBurstCounter += 1;
+      _hintedIndex = null;
     });
-    final spoken = _placedCount < _kSpelled.length
-        ? _kSpelled[_placedCount]
+    if (!fromHint) _hints?.poke();
+    // One note per creature in the basket, so filling it to four *sounds*
+    // like counting to four.
+    ref.read(feedbackEngineProvider).countStep(_placedCount);
+    final spoken = _placedCount < kSpelledCounts.length
+        ? kSpelledCounts[_placedCount]
         : _placedCount.toString();
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: '$spoken.',
-            cueId: 'count-out:r$_roundIndex:place-$_placedCount',
-          ),
-        );
+    // Queued, not spoken, when the ladder did this tap. `speak` cuts off
+    // whatever is in flight, and what is in flight at that moment is the
+    // demonstration's own explanation - the one line in the round that
+    // says why. See HintLadder.
+    final say = ref.read(narrationPlayerProvider.notifier);
+    final line = NarrationLine(
+      text: '$spoken.',
+      cueId: 'count-out:r$_roundIndex:place-$_placedCount',
+    );
+    if (fromHint) {
+      say.enqueue(line);
+    } else {
+      say.speak(line);
+    }
     if (_placedCount >= _currentRound.targetN) {
       _finishRound();
     }
   }
 
   void _finishRound() {
+    _hints?.pause();
+
+    // Three over-cap drags means she was not tracking the target at all —
+    // that is a genuine miss and the mastery ladder should see it. One or two,
+    // or a demonstration, resolves soft: she got there, with help.
+    final hintsUsed = _hints?.hintsUsed ?? 0;
+    final result = _overCapDrops >= 3
+        ? RoundResult.failure
+        : (_overCapDrops == 0 && hintsUsed == 0
+            ? RoundResult.success
+            : RoundResult.softSuccess);
     ref.read(roundCoordinatorProvider).resolveRound(
           activityId: 'counting-parade',
           conceptId: 'K.CC.5',
-          success: true,
+          result: result,
         );
     setState(() {
       _completedRounds += 1;
       _phase = _Phase.celebrating;
     });
+
+    final feedback = ref.read(feedbackEngineProvider);
+    if (_isLastRound) {
+      feedback.celebrate();
+      _celebrationTimer = Timer(const Duration(seconds: 1), () {
+        if (!mounted) return;
+        setState(() => _phase = _Phase.interstitial);
+        ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
+              NarrationLine(
+                text: _finalKeeperLine,
+                cueId: 'count-out:r$_roundIndex:interstitial',
+                speaker: 'sanctuary-keeper-mystic',
+              ),
+            );
+      });
+      return;
+    }
+
+    feedback.roundPass();
     _celebrationTimer = Timer(const Duration(seconds: 1), () {
       if (!mounted) return;
-      setState(() => _phase = _Phase.interstitial);
-      final line = _isLastRound ? _finalKeeperLine : _currentRound.keeperLine;
+      setState(() {
+        _phase = _Phase.transition;
+        _asideToken += 1;
+      });
       ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
             NarrationLine(
-              text: line,
+              text: _currentRound.keeperLine,
               cueId: 'count-out:r$_roundIndex:interstitial',
               speaker: 'sanctuary-keeper-mystic',
             ),
@@ -252,19 +342,22 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
     });
   }
 
-  void _advanceFromInterstitial() {
-    if (_isLastRound) {
-      widget.onSequenceComplete();
-      return;
-    }
+  /// Fired by the keeper aside retiring itself, not by a button.
+  void _advanceToNextRound() {
+    if (!mounted || _phase != _Phase.transition) return;
     setState(() {
       _roundIndex += 1;
       _placedIndices = <int>{};
       _strayPositions = <int, Offset>{};
       _basketBurstCounter = 0;
       _promptSpoken = false;
+      _overCapDrops = 0;
+      _missRotation = 0;
+      _hintedIndex = null;
       _phase = _Phase.counting;
     });
+    ref.read(feedbackEngineProvider).resetRound();
+    _startHints();
     _speakBasketPromptOnce();
   }
 
@@ -291,7 +384,10 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
           singular: _currentRound.singular,
           onComplete: _onDemoComplete,
         ),
-      _Phase.counting || _Phase.celebrating => _CountOutLayer(
+      _Phase.counting ||
+      _Phase.celebrating ||
+      _Phase.transition =>
+        _CountOutLayer(
           roundIndex: _roundIndex,
           targetN: _currentRound.targetN,
           poolSize: _currentRound.poolSize,
@@ -300,18 +396,18 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
           placedIndices: _placedIndices,
           strayPositions: _strayPositions,
           basketBurstCounter: _basketBurstCounter,
+          hintedIndex: _hintedIndex,
           onDropped: _onCreatureDropped,
           onStrayDrop: _onStrayDrop,
-          inputLocked: _phase == _Phase.celebrating,
+          inputLocked: _phase != _Phase.counting,
           replayPrompt: _basketPrompt,
           replayCueId: 'count-out:replay-r$_roundIndex',
         ),
       _Phase.interstitial => KeeperIntroOverlay(
-          dialog:
-              _isLastRound ? _finalKeeperLine : _currentRound.keeperLine,
-          startLabel: _isLastRound ? 'Continue' : "Let's go!",
+          dialog: _finalKeeperLine,
+          startLabel: 'Continue',
           startButtonKey: const ValueKey('count-out-interstitial-next'),
-          onStart: _advanceFromInterstitial,
+          onStart: widget.onSequenceComplete,
         ),
     };
 
@@ -322,20 +418,26 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
           AssetPaths.countingParadeMeadow,
           fit: BoxFit.cover,
         ),
-        SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
-                child: ProgressBarToReward(
-                  progress: _progress,
-                  celebrate: _phase == _Phase.celebrating,
-                ),
-              ),
-              Expanded(child: phaseContent),
-            ],
-          ),
+        PlayfieldScaffold(
+          progress: _progress,
+          celebrate: _phase == _Phase.celebrating,
+          child: phaseContent,
         ),
+        if (_phase != _Phase.intro &&
+            _phase != _Phase.demo &&
+            _phase != _Phase.interstitial)
+          const BuddyCompanionCorner(),
+        if (_phase == _Phase.transition)
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: KeeperAside(
+              text: _currentRound.keeperLine,
+              token: _asideToken,
+              onDismissed: _advanceToNextRound,
+            ),
+          ),
       ],
     );
   }
@@ -351,6 +453,7 @@ class _CountOutLayer extends StatelessWidget {
     required this.placedIndices,
     required this.strayPositions,
     required this.basketBurstCounter,
+    required this.hintedIndex,
     required this.onDropped,
     required this.onStrayDrop,
     required this.inputLocked,
@@ -366,6 +469,10 @@ class _CountOutLayer extends StatelessWidget {
   final Set<int> placedIndices;
   final Map<int, Offset> strayPositions;
   final int basketBurstCounter;
+
+  /// Pool creature the hint ladder wants glowed, or null.
+  final int? hintedIndex;
+
   final ValueChanged<int> onDropped;
   final void Function(int idx, Offset localOffset) onStrayDrop;
   final bool inputLocked;
@@ -437,84 +544,85 @@ class _CountOutLayer extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
-            // Pool + basket live in a single Stack so creatures can be
-            // dropped anywhere on the layer and stay there.
-            Expanded(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final w = constraints.maxWidth;
-                  final h = constraints.maxHeight;
-                  final poolH = h * _poolHeightFraction;
-                  final basketTop = h * _basketTopFraction;
-                  return Builder(
-                    builder: (stackContext) {
-                      return Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          // Basket — DragTarget sits at the bottom, taking
-                          // the rest of the layer width. Drops anywhere
-                          // inside this rectangle count toward the round.
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            top: basketTop,
-                            bottom: 0,
-                            child: _Basket(
-                              roundIndex: roundIndex,
-                              targetN: targetN,
-                              spriteAsset: spriteAsset,
-                              placedIndices: placedIndices,
-                              basketBurstCounter: basketBurstCounter,
-                              inputLocked: inputLocked,
-                              onDropped: onDropped,
-                            ),
-                          ),
-                          // Pool creatures — drawn over the basket so they
-                          // can be picked up from any position, including
-                          // strays that landed in the basket zone.
-                          for (var i = 0; i < poolSize; i++)
-                            if (!placedIndices.contains(i))
-                              _PoolCreature(
-                                key: ValueKey(
-                                  'count-out-r$roundIndex-pool-$i',
+                  // Pool + basket live in a single Stack so creatures can be
+                  // dropped anywhere on the layer and stay there.
+                  Expanded(
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final w = constraints.maxWidth;
+                        final h = constraints.maxHeight;
+                        final poolH = h * _poolHeightFraction;
+                        final basketTop = h * _basketTopFraction;
+                        return Builder(
+                          builder: (stackContext) {
+                            return Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                // Basket — DragTarget sits at the bottom, taking
+                                // the rest of the layer width. Drops anywhere
+                                // inside this rectangle count toward the round.
+                                Positioned(
+                                  left: 0,
+                                  right: 0,
+                                  top: basketTop,
+                                  bottom: 0,
+                                  child: _Basket(
+                                    roundIndex: roundIndex,
+                                    targetN: targetN,
+                                    spriteAsset: spriteAsset,
+                                    placedIndices: placedIndices,
+                                    basketBurstCounter: basketBurstCounter,
+                                    inputLocked: inputLocked,
+                                    onDropped: onDropped,
+                                  ),
                                 ),
-                                index: i,
-                                spriteAsset: spriteAsset,
-                                position: strayPositions[i] ??
-                                    _slotFor(i, w, poolH),
-                                spriteSize: _spriteSize,
-                                inputLocked: inputLocked,
-                                onStrayDrop: (dropOffset) {
-                                  final box = stackContext
-                                      .findRenderObject() as RenderBox?;
-                                  if (box == null) return;
-                                  final local =
-                                      box.globalToLocal(dropOffset);
-                                  // Snap-back zone: ≥ 1/3 of the sprite
-                                  // has gone past a stack edge. Anywhere
-                                  // else, leave the creature where it
-                                  // landed (the user's request — kids
-                                  // can't reliably hold a finger / drag).
-                                  const minX = -_spriteSize / 3;
-                                  final maxX = w - _spriteSize * 2 / 3;
-                                  const minY = -_spriteSize / 3;
-                                  final maxY = h - _spriteSize * 2 / 3;
-                                  if (local.dx < minX ||
-                                      local.dx > maxX ||
-                                      local.dy < minY ||
-                                      local.dy > maxY) {
-                                    return;
-                                  }
-                                  onStrayDrop(i, local);
-                                },
-                              ),
-                        ],
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
+                                // Pool creatures — drawn over the basket so they
+                                // can be picked up from any position, including
+                                // strays that landed in the basket zone.
+                                for (var i = 0; i < poolSize; i++)
+                                  if (!placedIndices.contains(i))
+                                    _PoolCreature(
+                                      key: ValueKey(
+                                        'count-out-r$roundIndex-pool-$i',
+                                      ),
+                                      index: i,
+                                      spriteAsset: spriteAsset,
+                                      position: strayPositions[i] ??
+                                          _slotFor(i, w, poolH),
+                                      spriteSize: _spriteSize,
+                                      inputLocked: inputLocked,
+                                      hinted: hintedIndex == i,
+                                      onStrayDrop: (dropOffset) {
+                                        final box = stackContext
+                                            .findRenderObject() as RenderBox?;
+                                        if (box == null) return;
+                                        final local =
+                                            box.globalToLocal(dropOffset);
+                                        // Snap-back zone: ≥ 1/3 of the sprite
+                                        // has gone past a stack edge. Anywhere
+                                        // else, leave the creature where it
+                                        // landed (the user's request — kids
+                                        // can't reliably hold a finger / drag).
+                                        const minX = -_spriteSize / 3;
+                                        final maxX = w - _spriteSize * 2 / 3;
+                                        const minY = -_spriteSize / 3;
+                                        final maxY = h - _spriteSize * 2 / 3;
+                                        if (local.dx < minX ||
+                                            local.dx > maxX ||
+                                            local.dy < minY ||
+                                            local.dy > maxY) {
+                                          return;
+                                        }
+                                        onStrayDrop(i, local);
+                                      },
+                                    ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -675,6 +783,7 @@ class _PoolCreature extends StatelessWidget {
     required this.position,
     required this.spriteSize,
     required this.inputLocked,
+    required this.hinted,
     required this.onStrayDrop,
   });
 
@@ -683,16 +792,36 @@ class _PoolCreature extends StatelessWidget {
   final Offset position;
   final double spriteSize;
   final bool inputLocked;
+
+  /// The hint ladder is pointing here. Same soft amber glow the rest of the
+  /// game uses for help, so it reads as "this one" rather than as an alert.
+  final bool hinted;
+
   final ValueChanged<Offset> onStrayDrop;
 
   @override
   Widget build(BuildContext context) {
-    final sprite = Image.asset(
+    Widget sprite = Image.asset(
       spriteAsset,
       width: spriteSize,
       height: spriteSize,
       fit: BoxFit.contain,
     );
+    if (hinted) {
+      sprite = DecoratedBox(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.amber.withValues(alpha: 0.85),
+              blurRadius: 24,
+              spreadRadius: 4,
+            ),
+          ],
+        ),
+        child: sprite,
+      );
+    }
     // Plain Positioned (not AnimatedPositioned): when the kid releases a
     // drag the Draggable's child briefly snaps back to the source slot
     // before our state update lands. With an animated transition the kid

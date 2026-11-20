@@ -16,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../data/number_words.dart';
+import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 
@@ -56,30 +58,6 @@ class _CountingChallengeLayerState extends ConsumerState<CountingChallengeLayer>
   Size? _stageSize;
   int _idCounter = 0;
   bool _stopped = false;
-
-  static const List<String> _spelled = [
-    'Zero',
-    'One',
-    'Two',
-    'Three',
-    'Four',
-    'Five',
-    'Six',
-    'Seven',
-    'Eight',
-    'Nine',
-    'Ten',
-    'Eleven',
-    'Twelve',
-    'Thirteen',
-    'Fourteen',
-    'Fifteen',
-    'Sixteen',
-    'Seventeen',
-    'Eighteen',
-    'Nineteen',
-    'Twenty',
-  ];
 
   @override
   void initState() {
@@ -158,8 +136,16 @@ class _CountingChallengeLayerState extends ConsumerState<CountingChallengeLayer>
       _count++;
     });
     widget.onCountChanged(_count);
-    final word =
-        _count < _spelled.length ? _spelled[_count] : _count.toString();
+    // The pitch ladder, cycled per decade rather than clamped. This
+    // challenge runs to a hundred and the scale is twelve notes, so a
+    // straight climb would flatten out at the top and leave eighty-odd taps
+    // sounding identical. Restarting the run every ten turns the rollover
+    // into something audible: each new decade starts the climb again, which
+    // is exactly the structure of the number names she is reciting.
+    ref.read(feedbackEngineProvider).countStep((_count - 1) % 10 + 1);
+    final word = _count < kSpelledCounts.length
+        ? kSpelledCounts[_count]
+        : _count.toString();
     ref.read(narrationPlayerProvider.notifier).speak(
           NarrationLine(
             text: '$word.',

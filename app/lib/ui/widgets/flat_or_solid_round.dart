@@ -22,7 +22,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/asset_paths.dart';
+import '../../data/button_labels.dart';
 import '../../data/flat_or_solid_shapes.dart';
+import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import 'glitter_burst.dart';
@@ -43,6 +45,7 @@ class FlatOrSolidRound extends ConsumerStatefulWidget {
     required this.shapes,
     required this.onComplete,
     required this.cueIdPrefix,
+    this.onMiss,
     this.headerPrompt = 'Sort the shapes — flat or solid?',
     this.spokenPrompt =
         'Sort the shapes! Flat ones in the flat basket. Solid ones in the solid basket.',
@@ -58,6 +61,11 @@ class FlatOrSolidRound extends ConsumerStatefulWidget {
   /// Fires after the last shape lands in its correct bin (+ a short
   /// celebratory beat).
   final VoidCallback onComplete;
+
+  /// Fires on each wrong-bin drop, so the host can grade the round. Optional
+  /// because the K.G.3 lesson's you-do beat is not graded — only the
+  /// activity sub-mode is.
+  final VoidCallback? onMiss;
 
   /// Cue-id namespace so narration replays across rounds don't collide
   /// (e.g. `kg3-lesson:try`, `garden:r3`).
@@ -151,6 +159,7 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
             return '${_spelledCount(n)} $side $noun.';
           }(),
       };
+      ref.read(feedbackEngineProvider).correct();
       _speak(hitText, '${widget.cueIdPrefix}:hit-${shape.id}');
       if (_sortedIds.length == widget.shapes.length) {
         _completed = true;
@@ -164,6 +173,11 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
         });
       }
     } else {
+      // The shape already bounces back to the pool on the next rebuild —
+      // this was the one wrong-answer beat in the whole app that showed the
+      // kid anything at all. Keep the bounce; add the half it was missing.
+      ref.read(feedbackEngineProvider).wrong();
+      widget.onMiss?.call();
       final correctSide = shape.isFlat ? 'flat' : 'solid';
       final wrongSide = binIsFlat ? 'flat' : 'solid';
       _speak(
@@ -255,7 +269,7 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
                 Expanded(
                   child: _Bin(
                     binIsFlat: true,
-                    label: 'Flat',
+                    label: kLabelFlat,
                     sortedShapes: sortedFlat,
                     burstCounter: _binBurstCounters['flat'] ?? 0,
                     onAccept: (s) => _handleDrop(s, binIsFlat: true),
@@ -265,7 +279,7 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
                 Expanded(
                   child: _Bin(
                     binIsFlat: false,
-                    label: 'Solid',
+                    label: kLabelSolid,
                     sortedShapes: sortedSolid,
                     burstCounter: _binBurstCounters['solid'] ?? 0,
                     onAccept: (s) => _handleDrop(s, binIsFlat: false),
@@ -406,7 +420,9 @@ class _Bin extends StatelessWidget {
               Positioned.fill(
                 child: IgnorePointer(
                   child: GlitterBurst(
-                    key: ValueKey('bin-${binIsFlat ? 'flat' : 'solid'}-burst-$burstCounter'),
+                    key: ValueKey(
+                      'bin-${binIsFlat ? 'flat' : 'solid'}-burst-$burstCounter',
+                    ),
                     maxRadius: 110,
                   ),
                 ),

@@ -44,7 +44,8 @@ class SubModeProgress extends Notifier<Map<String, Set<String>>> {
   /// Boot-time hydration from disk via SaveCoordinator.
   void replaceAll(Map<String, Set<String>> snapshot) {
     state = {
-      for (final entry in snapshot.entries) entry.key: Set<String>.from(entry.value),
+      for (final entry in snapshot.entries)
+        entry.key: Set<String>.from(entry.value),
     };
   }
 }

@@ -22,9 +22,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/asset_paths.dart';
+import '../../data/button_labels.dart';
+import '../../data/creature_card_catalog.dart';
+import '../../data/sfx_catalog.dart';
+import '../../data/tens_parade_words.dart';
+import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
+import '../../platform/sfx_engine.dart';
+import '../../providers/collection_provider.dart';
 import '../../providers/wallet_provider.dart';
+import 'buddy_companion.dart';
 import 'counting_challenge_layer.dart';
 import 'keeper_choice_overlay.dart';
 import 'lesson_hand_pointer.dart';
@@ -36,10 +44,12 @@ enum _Phase { demo, challenge, reward }
 /// How many taps the kid needs to land the bonus.
 const int _kTarget = 100;
 
-/// Coins awarded on a single successful completion. Final-check
-/// payouts sit comfortably above a regular round (5 coins) without
-/// dwarfing the long-running rewards from the rest of the curriculum.
-const int _kRewardCoins = 50;
+// The card this challenge exists to award is `kTensParadeChallengeCardId`.
+// It is granted outright rather than rolled for: the reward catalog gives it
+// exactly one source, `{ type: challenge, challengeActivityId:
+// counting-parade }`, and `challenge-counting-parade-chest` guarantees one
+// card from a pool containing only this one. A rare that a hundred taps might
+// still fail to produce would be a worse reward than no card at all.
 
 /// Sprites the flying creatures are picked from. Mirrors the canonical
 /// parade sequence so the kid sees a familiar species mix.
@@ -69,13 +79,41 @@ class TensParadeRunner extends ConsumerStatefulWidget {
 }
 
 class _TensParadeRunnerState extends ConsumerState<TensParadeRunner> {
-  late _Phase _phase =
-      widget.skipIntro ? _Phase.challenge : _Phase.demo;
+  late _Phase _phase = widget.skipIntro ? _Phase.challenge : _Phase.demo;
   int _count = 0;
 
-  String get _rewardDialog =>
-      'One hundred! You counted every single one. '
-      "Here are $_kRewardCoins bonus coins — you've earned them.";
+  /// Read eagerly — `ref.read` is illegal once dispose() has begun.
+  SfxEngine? _sfxForDispose;
+
+  /// True when this run is the one that earned the Cloud Unicorn, so a replay
+  /// does not promise her a card she already has.
+  bool _earnedCard = false;
+
+  String get _rewardDialog => tensParadeRewardLine(earnedCard: _earnedCard);
+
+  @override
+  void initState() {
+    super.initState();
+    _sfxForDispose = ref.read(sfxEngineProvider);
+    // Claimed here, not in the post-frame callback below: the release in
+    // dispose() is unconditional, so the claim has to be too, or a teardown
+    // before the first frame gives back a claim it never took. See
+    // SfxEngine.releaseMusicBed for what that costs.
+    // The challenge gets the higher-energy bed the lesson JSON already
+    // names for it, rather than the calm meadow loop.
+    unawaited(_sfxForDispose!.startMusicBed(kChallengeMusicBed));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ref.read(feedbackEngineProvider).resetRound();
+    });
+  }
+
+  @override
+  void dispose() {
+    final sfx = _sfxForDispose;
+    if (sfx != null) sfx.releaseMusicBed();
+    super.dispose();
+  }
 
   void _onDemoComplete() {
     if (!mounted) return;
@@ -83,6 +121,7 @@ class _TensParadeRunnerState extends ConsumerState<TensParadeRunner> {
       _count = 0;
       _phase = _Phase.challenge;
     });
+    ref.read(feedbackEngineProvider).resetRound();
   }
 
   void _onCountChanged(int value) {
@@ -90,8 +129,23 @@ class _TensParadeRunnerState extends ConsumerState<TensParadeRunner> {
   }
 
   void _onTargetReached() {
-    ref.read(walletProvider.notifier).award(_kRewardCoins);
-    setState(() => _phase = _Phase.reward);
+    ref.read(walletProvider.notifier).award(kTensParadeRewardCoins);
+    ref.read(feedbackEngineProvider).celebrate();
+    // Grant before the dialog is built, because the dialog reads _earnedCard.
+    // `grant` returns false on a replay, which is what keeps the wording
+    // honest the second time through.
+    final earned = ref
+        .read(cardCollectionProvider.notifier)
+        .grant(kTensParadeChallengeCardId);
+    if (earned) {
+      ref
+          .read(pendingCardRevealProvider.notifier)
+          .show(kTensParadeChallengeCardId);
+    }
+    setState(() {
+      _earnedCard = earned;
+      _phase = _Phase.reward;
+    });
     ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
           NarrationLine(
             text: _rewardDialog,
@@ -106,6 +160,7 @@ class _TensParadeRunnerState extends ConsumerState<TensParadeRunner> {
       _count = 0;
       _phase = _Phase.challenge;
     });
+    ref.read(feedbackEngineProvider).resetRound();
   }
 
   void _finish() {
@@ -163,10 +218,10 @@ class _TensParadeRunnerState extends ConsumerState<TensParadeRunner> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
                 child: ProgressBarToReward(
-                  progress: _phase == _Phase.challenge ||
-                          _phase == _Phase.reward
-                      ? (_count / _kTarget).clamp(0.0, 1.0)
-                      : 0.0,
+                  progress:
+                      _phase == _Phase.challenge || _phase == _Phase.reward
+                          ? (_count / _kTarget).clamp(0.0, 1.0)
+                          : 0.0,
                   celebrate: _phase == _Phase.reward,
                 ),
               ),
@@ -174,6 +229,7 @@ class _TensParadeRunnerState extends ConsumerState<TensParadeRunner> {
             ],
           ),
         ),
+        if (_phase == _Phase.challenge) const BuddyCompanionCorner(),
       ],
     );
   }
@@ -260,8 +316,7 @@ class _DemoLayerState extends ConsumerState<_DemoLayer>
         // Vertical band the creature drifts through — keep it well
         // above the bottom button area.
         final spriteY = h * 0.42;
-        final spriteX = (-_spriteSize) +
-            _drift.value * (w + _spriteSize * 2);
+        final spriteX = (-_spriteSize) + _drift.value * (w + _spriteSize * 2);
         // The hand floats just above the creature and pokes once at
         // mid-screen; before the poke fires it sits off-stage right.
         final handTarget = _pokeFired
@@ -303,7 +358,7 @@ class _DemoLayerState extends ConsumerState<_DemoLayer>
                         idleHintEnabled: true,
                         idleHintText: 'Tap the arrow to start the challenge!',
                         onPressed: widget.onComplete,
-                        label: 'Start',
+                        label: kLabelStart,
                       ),
                     ),
                   ),

@@ -21,11 +21,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/shape_find_placements.dart';
+import '../../data/shape_words.dart';
+import '../../data/warm_lines.dart';
+import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import 'animated_shape.dart';
+import 'answer_feedback.dart';
 import 'glitter_burst.dart';
-import 'shape_intro_layer.dart';
 
 /// Re-export of the variant table for callers that previously imported it
 /// from this file. The canonical home is `shape_find_placements.dart`.
@@ -76,6 +79,11 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
   List<ShapeFindPlacement> _placements = const <ShapeFindPlacement>[];
   Set<String> _tappedIds = <String>{};
   Map<String, int> _burstCounters = <String, int>{};
+
+  /// Placement id -> wrong taps on it, driving the shake. The wrong branch
+  /// here used to be narration and nothing else — no sound, no movement.
+  Map<String, int> _wrongTokens = <String, int>{};
+  int _missRotation = 0;
   bool _promptSpoken = false;
   bool _completed = false;
   int _currentRound = 0;
@@ -138,8 +146,11 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
       _placements = _generatePlacements(_currentRound);
       _tappedIds = <String>{};
       _burstCounters = <String, int>{};
+      _wrongTokens = <String, int>{};
+      _missRotation = 0;
       _promptSpoken = false;
     });
+    ref.read(feedbackEngineProvider).resetRound();
   }
 
   void _handleTap(ShapeFindPlacement p) {
@@ -150,11 +161,13 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
         _tappedIds.add(p.id);
         _burstCounters[p.id] = (_burstCounters[p.id] ?? 0) + 1;
       });
-      final remaining = _placements
-          .where((q) => q.isTarget && !_tappedIds.contains(q.id));
+      ref.read(feedbackEngineProvider).countStep(_tappedIds.length);
+      final remaining =
+          _placements.where((q) => q.isTarget && !_tappedIds.contains(q.id));
       if (remaining.isEmpty) {
         final isLastRound = _currentRound + 1 >= widget.roundsPerShape;
         if (isLastRound) {
+          ref.read(feedbackEngineProvider).celebrate();
           _speak(
             'Nicely done! You found all the $_targetPlural.',
             'find:${widget.targetKind}:done',
@@ -165,6 +178,7 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
             widget.onComplete();
           });
         } else {
+          ref.read(feedbackEngineProvider).roundPass(payout: false);
           _speak(
             'Nice work!',
             'find:${widget.targetKind}:r$_currentRound:done',
@@ -182,13 +196,23 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
       }
     } else {
       // Wrong tap — gentle redirect. Decor gets "that's a butterfly, not a
-      // shape"; another shape kind gets "that's a {kind}".
+      // shape"; another shape kind gets "that's a {kind}". Naming what she
+      // actually tapped is the useful half; only the follow-up rotates.
+      setState(() {
+        _wrongTokens = <String, int>{
+          ..._wrongTokens,
+          p.id: (_wrongTokens[p.id] ?? 0) + 1,
+        };
+      });
+      ref.read(feedbackEngineProvider).wrong();
       final wrongName = p.isDecor
           ? _decorName(p.assetPath)
           : (kShapeDisplayName[p.kind] ?? p.kind);
+      _missRotation += 1;
       _speak(
-        "That's a $wrongName — try again. Find the $_targetPlural.",
-        'find:${widget.targetKind}:r$_currentRound:miss-${p.id}',
+        "That's a $wrongName. ${warmMissLine(_missRotation)} "
+            'Find the $_targetPlural.',
+        'find:${widget.targetKind}:r$_currentRound:miss-${p.id}-$_missRotation',
       );
     }
   }
@@ -290,19 +314,24 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
                   ),
                   behavior: HitTestBehavior.opaque,
                   onTap: () => _handleTap(p),
-                  child: p.isDecor
-                      ? Image.asset(
-                          p.assetPath,
-                          fit: BoxFit.contain,
-                        )
-                      : AnimatedShape(
-                          spriteAsset: p.assetPath,
-                          active: _tappedIds.contains(p.id),
-                          pose: ShapePose(
-                            rotationDegrees: p.rotationDegrees,
+                  // Burst is drawn separately below, so only the wrong
+                  // reaction is wanted here.
+                  child: AnswerFeedback(
+                    wrongToken: _wrongTokens[p.id] ?? 0,
+                    child: p.isDecor
+                        ? Image.asset(
+                            p.assetPath,
+                            fit: BoxFit.contain,
+                          )
+                        : AnimatedShape(
+                            spriteAsset: p.assetPath,
+                            active: _tappedIds.contains(p.id),
+                            pose: ShapePose(
+                              rotationDegrees: p.rotationDegrees,
+                            ),
+                            size: _spriteSize,
                           ),
-                          size: _spriteSize,
-                        ),
+                  ),
                 ),
               ),
             for (final entry in _burstCounters.entries)
@@ -312,9 +341,8 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
                     final placement = _placements.firstWhere(
                       (p) => p.id == entry.key,
                     );
-                    final size = placement.isDecor
-                        ? _spriteSizeDecor
-                        : _spriteSize;
+                    final size =
+                        placement.isDecor ? _spriteSizeDecor : _spriteSize;
                     return Positioned(
                       left: placement.center.dx * w - size / 2 - 22,
                       top: placement.center.dy * h - size / 2 + 24 - 22,

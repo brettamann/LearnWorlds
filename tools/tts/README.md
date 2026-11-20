@@ -209,3 +209,157 @@ Analyze:
 ```bash
 dart analyze
 ```
+
+---
+
+## The voice you actually get today: `kokoro/`
+
+**Start here.** `kokoro/` renders the entire narration script with Kokoro-82M,
+locally, for free, in about ten minutes. It is Apache-2.0 and runs on the CPU,
+so re-rendering after a wording change costs nothing but the wait.
+
+```
+cd tools/tts/kokoro && npm install
+node render.mjs status
+node render.mjs render
+```
+
+That is the whole setup. No app code changes - `NarrationPlayer` already
+prefers a bundled clip over system TTS, so a rendered clip is picked up because
+it is in the folder under the right name.
+
+`record/` below is still the path for lines you want in your own voice.
+Rendering never overwrites an existing clip in any format, so a hand-recorded
+`.wav` always wins and the machine fills in everything around it. The two are
+complementary rather than alternatives, and the practical division is: record
+the handful of lines that carry the most warmth, let Kokoro speak the other
+two hundred.
+
+See `kokoro/README.md` for voices, formats and the reuse rules.
+
+---
+
+## Recording the voice yourself (`record/`)
+
+The ElevenLabs pipeline above is deferred (`specs/shared/text-and-tts-deferral.md`),
+which left every line in the OS text-to-speech voice. `record/index.html` is the
+way around that without un-deferring anything: a browser harness that shows you
+the script, records you reading it, and writes each line under the filename the
+app looks for.
+
+The app plays a recorded clip when one exists and speaks the line through system
+TTS when one doesn't, so **recording is incremental and never blocks a build**.
+Zero clips is a valid state; so is a hundred.
+
+### Clips are keyed by the words, not by the cueId
+
+This is the thing to understand before recording anything.
+
+A cueId names a *slot* — `parade:tap-r0-3` is "the third tap of round one". It is
+the wrong key for a recording, for two reasons:
+
+- **The same sentence occupies dozens of slots.** `parade:tap-r0-3` through
+  `parade:tap-r4-7` are twenty-five cueIds whose text is only ever some number
+  word. Keyed by cueId you would record "Three." over and over under different
+  names.
+- **A slot does not say the same thing twice.** Species are seeded per session,
+  so `parade:counting-prompt-r2` is "Touch each fawn…" today and "Touch each baby
+  dragon…" tomorrow. A clip filed under that cueId would eventually speak the
+  wrong creature to a child, and nothing would report an error.
+
+So a clip's filename is derived from its sentence: a readable slug of the first
+48 characters, then `__`, then FNV-1a over the UTF-8 bytes of the whitespace-
+normalised text.
+
+```
+"Seven."                                       -> seven__<hash>.wav
+"Touch each fawn — and count out loud with me!" -> touch-each-fawn-and-count-out-loud-with-me__4a5087aa.wav
+```
+
+Two consequences worth knowing:
+
+- **Recordings are shared.** All five counting activities speak the same hundred
+  number words, so one take of "Seven." serves Counting Parade, Count On By Ones,
+  Count Forward From N, Count Out N and the challenge layer at once.
+- **Rewording a line orphans its clip, on purpose.** The recording says the old
+  words. The export reports orphans so you know what to re-cut.
+
+The transform lives in `narrationClipKey()` in
+`app/lib/platform/narration_audio.dart` and is implemented independently in
+`record/index.html`. Shared vectors are pinned in
+`app/test/narration_script_test.dart` and in `record/check.mjs`, so a drift on
+either side fails loudly rather than producing files the app never opens.
+
+### Getting the script
+
+Most of it needs no playthrough. `app/lib/data/narration_script.dart` walks the
+same catalogs and calls the same line-building functions the runners call, so it
+can enumerate every line the game is able to compose — 253 of them across eight
+batches.
+
+The remainder is assembled from lesson JSON and only appears once the lesson that
+owns it has been played. `NarrationCueLog` records those as they are heard and
+**persists across sessions**, so that half fills in as the game gets used rather
+than demanding one heroic playthrough.
+
+**Settings → Copy recording script** puts both halves on the clipboard, together
+with a coverage count and the orphan list.
+
+### Recording
+
+1. Serve the harness — the mic and the folder picker both need a secure context,
+   and `file://` is not one:
+   `npx serve tools/tts/record` or `python -m http.server -d tools/tts/record`.
+2. Paste the script, **Load script**.
+3. **Choose output folder** → `app/assets/audio/narration/`. Takes are then
+   written straight in. Without it they download one at a time, which for the
+   100-line counts batch is not a workflow.
+4. Pick a batch. They are ordered most-heard first, so recording straight down
+   the list makes the game warmer fastest per minute at the microphone.
+5. **Continuous take** (the default): hit record once, read the whole batch top
+   to bottom leaving about a second of silence between lines, then stop. The take
+   is split on those silences and each piece is named for you.
+
+   The header says how many segments it found against how many it expected. If
+   those disagree, adjust the **threshold** and **gap** sliders — re-splitting is
+   instant and does not need another take. Only when they match will it save.
+6. **One at a time** for anything the split got wrong: `space` records and stops,
+   `enter` saves and advances. Clicking any line in the list jumps to it.
+7. Rebuild. There is no manifest step — the app discovers clips from Flutter's own
+   asset manifest at boot, so `build-manifests.mjs` is not part of this path.
+
+Each clip is downmixed to mono, trimmed, peak-normalised to −1 dBFS and written as
+16-bit PCM WAV. WAV rather than the browser's native webm/opus because Safari and
+iOS cannot decode webm and the iPad is the eventual target.
+
+Run `node tools/tts/record/check.mjs` after touching the harness.
+
+### What to record first
+
+The batches are already in that order. Concretely:
+
+| Batch | Lines | Why |
+|---|---:|---|
+| `counts` | 100 | One sounds on **every tap in five activities**. Nothing else in the game comes close. |
+| `warm-miss` | 4 | Heard on every wrong answer. |
+| `warm-hint` | 3 | Heard whenever she stalls. |
+| `parade-prompt` | 8 | Opens every parade round. |
+| `parade-reward` | 6 | The coin payout. |
+| `parade-final` | 64 | The last-round wrap-up, per count per species. |
+| `parade-intro` | 64 | The longest line and the first she hears each visit. Skippable. |
+| `parade-transition` | 4 of 1792 | **Sampled deliberately — see below.** |
+
+Read to a five-year-old, not to a microphone: warm, unhurried, smiling. For the
+`counts` batch, count the way you would count objects *with* a child rather than
+reading a list — the game plays a rising musical note under each one, and a flat
+read fights it.
+
+### The one family that stays synthetic
+
+`paradeTransitionLine` names the count, the species just finished **and** the
+species coming next. That is 1,792 combinations, of which a session speaks four.
+It is marked incomplete in the script and left to system TTS on purpose; the
+harness shows four as a sample so you can hear how it would sound.
+
+If it ever matters enough to record, the fix is upstream: stop naming the next
+species in that line, which collapses the family to 64.

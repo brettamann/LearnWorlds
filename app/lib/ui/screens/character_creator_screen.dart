@@ -1,105 +1,178 @@
-// CharacterCreatorScreen — the kid's mix-and-match Buddy designer.
-// Lives behind the "Home" region on the island map. Big live preview on
-// the left, category tabs on the right (Body / Eyes / Mouth / Arms /
-// Legs), and a wrap of swatches inside each tab.
+// CharacterCreatorScreen — the kid's Buddy designer, and (in shop mode) the
+// place her coins finally buy something.
 //
-// Behavior:
-//   - Every tap on a swatch immediately updates the preview *and*
-//     applies the change to the saved appearance — there's no
-//     "confirm" step. K-grade UX: what they touch is what they get.
-//   - The Save coordinator persists on each change so closing the
-//     screen without explicit save still keeps the new look.
-//   - Mouth tab is hidden when only one option exists (currently the
-//     case) so the kid doesn't see a tab with a single chip.
+// One screen, two presentations:
 //
-// Layout: portrait phone gets a stacked layout; landscape / tablet
-// (the default target) gets the preview on the left, picker on the
-// right.
+//   create — the wardrobe. Shows only parts she owns, with no prices and no
+//            coin balance. A first-run kid can tap every tile and every tile
+//            works; onboarding never turns into a storefront. If a category
+//            has parts she doesn't own yet, a single shop tile sits at the end
+//            of the grid as the way through.
+//   shop   — the storefront. Shows every part. Owned ones equip on tap; locked
+//            ones are dimmed with a price chip and buy-then-equip on tap.
+//
+// Locked tiles staying visible is a deliberate exception to
+// specs/shared/ui-affordances.md ("missing buttons, not disabled buttons"):
+// in a shop, the thing you cannot afford yet is the reason to come back. The
+// rule still holds in create mode, which shows owned parts only.
+//
+// Behavior kept from the original creator:
+//   - Every tap on a swatch immediately updates the preview *and* applies the
+//     change to the saved appearance — there is no "confirm" step. K-grade UX:
+//     what they touch is what they get.
+//   - The Save coordinator persists on each change so closing the screen
+//     without explicit save still keeps the new look.
+//   - A category with nothing to choose between is hidden rather than shown
+//     as a tab with a single chip.
+//
+// Layout: portrait phone gets a stacked layout; landscape / tablet (the
+// default target) gets the preview on the left, picker on the right.
+//
+// Claims the music bed. This is where she comes to spend what a sub-mode just
+// paid her, so it is reached with the music already playing and used to be the
+// place it died — which read as the reward screen being the boring bit.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../data/buddy_parts_catalog.dart';
+import '../../data/buddy_shop_catalog.dart';
+import '../../engines/feedback/feedback_engine.dart';
+import '../../models/buddy_appearance.dart';
 import '../../providers/buddy_appearance_provider.dart';
+import '../../providers/buddy_wardrobe_provider.dart';
 import '../../providers/save_provider.dart';
+import '../../providers/wallet_provider.dart';
+import '../widgets/answer_feedback.dart';
 import '../widgets/buddy_widget.dart';
+import '../widgets/coin_hud.dart';
+import '../widgets/music_bed_scope.dart';
+
+/// Which face of the screen to show. Defaults to `create` everywhere so a
+/// caller that predates the shop cannot accidentally drop a five-year-old
+/// into a storefront.
+enum BuddyScreenMode { create, shop }
 
 class CharacterCreatorScreen extends ConsumerStatefulWidget {
-  const CharacterCreatorScreen({super.key});
+  const CharacterCreatorScreen({super.key, this.mode = BuddyScreenMode.create});
+
+  final BuddyScreenMode mode;
 
   @override
   ConsumerState<CharacterCreatorScreen> createState() =>
       _CharacterCreatorScreenState();
 }
 
-enum _Category { body, eyes, mouth, arms, legs, hat }
-
 class _CharacterCreatorScreenState
     extends ConsumerState<CharacterCreatorScreen> {
-  _Category _category = _Category.body;
+  BuddyPartKind _category = BuddyPartKind.body;
 
-  /// Persist on every change so the kid never loses a tweak. Fire-and-
-  /// forget — the save is small and the round-coordinator pattern keeps
-  /// concurrent writes coalesced.
+  bool get _isShop => widget.mode == BuddyScreenMode.shop;
+
+  /// Persist on every change so the kid never loses a tweak. Fire-and-forget —
+  /// the save is small and the round-coordinator pattern keeps concurrent
+  /// writes coalesced.
   void _persist() {
     ref.read(saveCoordinatorProvider).persist();
   }
 
-  List<_Category> get _availableCategories {
-    // Hide the Mouth tab when there's only one option — a tab with a
-    // single swatch is just noise to a K kid.
-    final cats = <_Category>[];
-    for (final c in _Category.values) {
-      if (c == _Category.mouth && kBuddyMouths.length <= 1) continue;
-      cats.add(c);
+  /// Which tabs are worth showing.
+  ///
+  /// In create mode a category earns a tab once there are two things to choose
+  /// between — a tab holding one swatch is noise. Hats are the exception: "no
+  /// hat" is always a real choice, so one owned hat is enough. In shop mode a
+  /// category earns a tab if anything in it is actually for sale.
+  ///
+  /// Both rules were written before there was anything but one arm and one
+  /// leg, and both did the right thing on their own when three of each landed:
+  /// the shop grew an Arms tab and a Legs tab the moment those parts had a
+  /// price, and the creator still shows neither until she has *bought* one,
+  /// because owning a single option is not a choice. Mouth is the one category
+  /// still in the state arms and legs were in.
+  List<BuddyPartKind> _availableCategories(Set<String> owned) {
+    final cats = <BuddyPartKind>[];
+    for (final kind in BuddyPartKind.values) {
+      final parts = buddyPartsOfKind(kind);
+      if (_isShop) {
+        if (parts.any((p) => buddyPartPrice(kind, p.id) > 0)) cats.add(kind);
+        continue;
+      }
+      final ownedCount = parts.where((p) {
+        final key = buddyOwnershipKey(kind, p.id);
+        return kBuddyFreeParts.contains(key) || owned.contains(key);
+      }).length;
+      final threshold = kind == BuddyPartKind.hat ? 1 : 2;
+      if (ownedCount >= threshold) cats.add(kind);
     }
     return cats;
   }
 
   @override
   Widget build(BuildContext context) {
-    final categories = _availableCategories;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Design your Buddy'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          tooltip: 'Back to the island',
-          onPressed: () => context.go('/'),
+    final owned = ref.watch(buddyWardrobeProvider);
+    final categories = _availableCategories(owned);
+    // A purchase can add a tab and a fresh save can remove one, so never trust
+    // the remembered selection to still be on the strip.
+    final category = categories.contains(_category)
+        ? _category
+        : (categories.isEmpty ? BuddyPartKind.body : categories.first);
+
+    return MusicBedScope(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(_isShop ? 'Buddy Shop' : 'Design your Buddy'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            tooltip: 'Back to the island',
+            onPressed: () => context.go('/'),
+          ),
+          actions: [
+            if (_isShop)
+              const Padding(
+                padding: EdgeInsets.only(right: 12),
+                child: Center(child: CoinHud(compact: true)),
+              )
+            else
+              IconButton(
+                tooltip: 'Buddy Shop',
+                icon: const Icon(Icons.storefront),
+                onPressed: () => context.go('/home/buddy-shop'),
+              ),
+          ],
         ),
-      ),
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final isWide = constraints.maxWidth >= 720;
-            final previewSize =
-                (isWide ? constraints.maxWidth * 0.42 : constraints.maxWidth)
-                    .clamp(220.0, 460.0);
-            final preview = _PreviewPane(size: previewSize);
-            final picker = _PickerPane(
-              category: _category,
-              categories: categories,
-              onCategorySelected: (c) => setState(() => _category = c),
-              onChanged: _persist,
-            );
-            if (isWide) {
-              return Row(
+        body: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final isWide = constraints.maxWidth >= 720;
+              final previewSize =
+                  (isWide ? constraints.maxWidth * 0.42 : constraints.maxWidth)
+                      .clamp(220.0, 460.0);
+              final preview = _PreviewPane(size: previewSize);
+              final picker = _PickerPane(
+                category: category,
+                categories: categories,
+                mode: widget.mode,
+                onCategorySelected: (c) => setState(() => _category = c),
+                onChanged: _persist,
+              );
+              if (isWide) {
+                return Row(
+                  children: [
+                    Expanded(flex: 5, child: preview),
+                    const VerticalDivider(width: 1),
+                    Expanded(flex: 6, child: picker),
+                  ],
+                );
+              }
+              return Column(
                 children: [
-                  Expanded(flex: 5, child: preview),
-                  const VerticalDivider(width: 1),
-                  Expanded(flex: 6, child: picker),
+                  SizedBox(height: previewSize + 32, child: preview),
+                  const Divider(height: 1),
+                  Expanded(child: picker),
                 ],
               );
-            }
-            return Column(
-              children: [
-                SizedBox(height: previewSize + 32, child: preview),
-                const Divider(height: 1),
-                Expanded(child: picker),
-              ],
-            );
-          },
+            },
+          ),
         ),
       ),
     );
@@ -126,13 +199,15 @@ class _PickerPane extends ConsumerWidget {
   const _PickerPane({
     required this.category,
     required this.categories,
+    required this.mode,
     required this.onCategorySelected,
     required this.onChanged,
   });
 
-  final _Category category;
-  final List<_Category> categories;
-  final ValueChanged<_Category> onCategorySelected;
+  final BuddyPartKind category;
+  final List<BuddyPartKind> categories;
+  final BuddyScreenMode mode;
+  final ValueChanged<BuddyPartKind> onCategorySelected;
   final VoidCallback onChanged;
 
   @override
@@ -151,7 +226,10 @@ class _PickerPane extends ConsumerWidget {
                 _CategoryChip(
                   label: _categoryLabel(c),
                   selected: c == category,
-                  onTap: () => onCategorySelected(c),
+                  onTap: () {
+                    ref.read(feedbackEngineProvider).uiTap();
+                    onCategorySelected(c);
+                  },
                 ),
             ],
           ),
@@ -161,26 +239,30 @@ class _PickerPane extends ConsumerWidget {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-            child: _SwatchGrid(category: category, onChanged: onChanged),
+            child: _SwatchGrid(
+              kind: category,
+              mode: mode,
+              onChanged: onChanged,
+            ),
           ),
         ),
       ],
     );
   }
 
-  String _categoryLabel(_Category c) {
+  String _categoryLabel(BuddyPartKind c) {
     switch (c) {
-      case _Category.body:
+      case BuddyPartKind.body:
         return 'Body';
-      case _Category.eyes:
+      case BuddyPartKind.eyes:
         return 'Eyes';
-      case _Category.mouth:
+      case BuddyPartKind.mouth:
         return 'Mouth';
-      case _Category.arms:
+      case BuddyPartKind.arms:
         return 'Arms';
-      case _Category.legs:
+      case BuddyPartKind.legs:
         return 'Legs';
-      case _Category.hat:
+      case BuddyPartKind.hat:
         return 'Hat';
     }
   }
@@ -204,8 +286,7 @@ class _CategoryChip extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(
-          color:
-              selected ? const Color(0xFFEAA916) : const Color(0xFFD8D2C2),
+          color: selected ? const Color(0xFFEAA916) : const Color(0xFFD8D2C2),
           width: 2,
         ),
       ),
@@ -228,121 +309,161 @@ class _CategoryChip extends StatelessWidget {
   }
 }
 
-class _SwatchGrid extends ConsumerWidget {
-  const _SwatchGrid({required this.category, required this.onChanged});
+class _SwatchGrid extends ConsumerStatefulWidget {
+  const _SwatchGrid({
+    required this.kind,
+    required this.mode,
+    required this.onChanged,
+  });
 
-  final _Category category;
+  final BuddyPartKind kind;
+  final BuddyScreenMode mode;
   final VoidCallback onChanged;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final appearance = ref.watch(buddyAppearanceProvider);
+  ConsumerState<_SwatchGrid> createState() => _SwatchGridState();
+}
+
+class _SwatchGridState extends ConsumerState<_SwatchGrid> {
+  /// Per-tile "you cannot afford this yet" shake counters, keyed by ownership
+  /// key. Same generation-counter idiom AnswerFeedback uses for wrong answers,
+  /// which is exactly what a refused purchase is: a soft no, not an error.
+  final Map<String, int> _denied = <String, int>{};
+
+  void _equip(BuddyPartKind kind, String? id) {
     final notifier = ref.read(buddyAppearanceProvider.notifier);
-    switch (category) {
-      case _Category.body:
-        return _GridOfSwatches(
-          items: [
-            for (final o in kBuddyBodies)
-              _Swatch(
-                key: ValueKey('body-${o.id}'),
-                assetPath: o.assetPath,
-                selected: appearance.bodyId == o.id,
-                onTap: () {
-                  notifier.setBody(o.id);
-                  onChanged();
-                },
-              ),
-          ],
-        );
-      case _Category.eyes:
-        return _GridOfSwatches(
-          items: [
-            for (final o in kBuddyEyes)
-              _Swatch(
-                key: ValueKey('eyes-${o.id}'),
-                assetPath: o.assetPath,
-                selected: appearance.eyesId == o.id,
-                onTap: () {
-                  notifier.setEyes(o.id);
-                  onChanged();
-                },
-              ),
-          ],
-        );
-      case _Category.mouth:
-        return _GridOfSwatches(
-          items: [
-            for (final o in kBuddyMouths)
-              _Swatch(
-                key: ValueKey('mouth-${o.id}'),
-                assetPath: o.assetPath,
-                selected: appearance.mouthId == o.id,
-                onTap: () {
-                  notifier.setMouth(o.id);
-                  onChanged();
-                },
-              ),
-          ],
-        );
-      case _Category.arms:
-        return _GridOfSwatches(
-          items: [
-            for (final o in kBuddyArms)
-              _Swatch(
-                key: ValueKey('arms-${o.id}'),
-                // Show the right-side sprite as the swatch — it tends
-                // to be the more recognizable silhouette of the pair.
-                assetPath: o.rightAsset,
-                selected: appearance.armsId == o.id,
-                onTap: () {
-                  notifier.setArms(o.id);
-                  onChanged();
-                },
-              ),
-          ],
-        );
-      case _Category.legs:
-        return _GridOfSwatches(
-          items: [
-            for (final o in kBuddyLegs)
-              _Swatch(
-                key: ValueKey('legs-${o.id}'),
-                assetPath: o.rightAsset,
-                selected: appearance.legsId == o.id,
-                onTap: () {
-                  notifier.setLegs(o.id);
-                  onChanged();
-                },
-              ),
-          ],
-        );
-      case _Category.hat:
-        return _GridOfSwatches(
-          items: [
-            // "No hat" swatch — first option so the kid can always
-            // bail out of an accessory without hunting for a toggle.
-            _Swatch(
-              key: const ValueKey('hat-none'),
-              assetPath: null,
-              selected: appearance.hatId == null,
-              onTap: () {
-                notifier.setHat(null);
-                onChanged();
-              },
-            ),
-            for (final o in kBuddyHats)
-              _Swatch(
-                key: ValueKey('hat-${o.id}'),
-                assetPath: o.assetPath,
-                selected: appearance.hatId == o.id,
-                onTap: () {
-                  notifier.setHat(o.id);
-                  onChanged();
-                },
-              ),
-          ],
-        );
+    switch (kind) {
+      case BuddyPartKind.body:
+        notifier.setBody(id!);
+      case BuddyPartKind.eyes:
+        notifier.setEyes(id!);
+      case BuddyPartKind.mouth:
+        notifier.setMouth(id!);
+      case BuddyPartKind.arms:
+        notifier.setArms(id!);
+      case BuddyPartKind.legs:
+        notifier.setLegs(id!);
+      case BuddyPartKind.hat:
+        notifier.setHat(id);
     }
+    widget.onChanged();
+  }
+
+  void _onTap(BuddyPartKind kind, String id) {
+    final key = buddyOwnershipKey(kind, id);
+    final wardrobe = ref.read(buddyWardrobeProvider.notifier);
+    final feedback = ref.read(feedbackEngineProvider);
+
+    if (wardrobe.owns(key)) {
+      feedback.uiTap();
+      _equip(kind, id);
+      return;
+    }
+
+    // Locked. Charge first — Wallet.spend refuses rather than going negative,
+    // so an unaffordable tap cannot half-complete.
+    final price = buddyPartPrice(kind, id);
+    if (!ref.read(walletProvider.notifier).spend(price)) {
+      // Not enough coins yet. Reuse the wrong-answer beat rather than an error
+      // tone: a shop that scolds is a shop she stops opening.
+      feedback.wrong();
+      setState(() => _denied[key] = (_denied[key] ?? 0) + 1);
+      return;
+    }
+    wardrobe.grant(key);
+    feedback.purchase();
+    // Auto-equip. She just spent her coins on it; making her tap a second time
+    // to actually wear it is the kind of step an adult tolerates and a
+    // five-year-old reads as the purchase not having worked.
+    _equip(kind, id);
+  }
+
+  String? _selectedId(BuddyAppearance a, BuddyPartKind kind) {
+    switch (kind) {
+      case BuddyPartKind.body:
+        return a.bodyId;
+      case BuddyPartKind.eyes:
+        return a.eyesId;
+      case BuddyPartKind.mouth:
+        return a.mouthId;
+      case BuddyPartKind.arms:
+        return a.armsId;
+      case BuddyPartKind.legs:
+        return a.legsId;
+      case BuddyPartKind.hat:
+        return a.hatId;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final kind = widget.kind;
+    final isShop = widget.mode == BuddyScreenMode.shop;
+    final appearance = ref.watch(buddyAppearanceProvider);
+    // Watched, not read: buying a part has to repaint the tile that was locked
+    // a frame ago.
+    ref.watch(buddyWardrobeProvider);
+    final wardrobe = ref.read(buddyWardrobeProvider.notifier);
+    final coins = ref.watch(walletProvider);
+    final selected = _selectedId(appearance, kind);
+
+    final tiles = <Widget>[];
+
+    // "No hat" comes first so the kid can always bail out of an accessory
+    // without hunting for a toggle.
+    if (kind == BuddyPartKind.hat) {
+      tiles.add(
+        _Swatch(
+          key: const ValueKey('hat-none'),
+          assetPath: null,
+          selected: appearance.hatId == null,
+          onTap: () {
+            ref.read(feedbackEngineProvider).uiTap();
+            _equip(BuddyPartKind.hat, null);
+          },
+        ),
+      );
+    }
+
+    var anyLocked = false;
+    for (final part in buddyPartsOfKind(kind)) {
+      final key = buddyOwnershipKey(kind, part.id);
+      final owns = wardrobe.owns(key);
+      if (!owns) anyLocked = true;
+      if (!owns && !isShop) continue;
+      final price = buddyPartPrice(kind, part.id);
+      tiles.add(
+        AnswerFeedback(
+          key: ValueKey('feedback-$key'),
+          wrongToken: _denied[key] ?? 0,
+          shakeExtent: 7,
+          child: _Swatch(
+            key: ValueKey('${kind.name}-${part.id}'),
+            assetPath: part.assetPath,
+            selected: owns && selected == part.id,
+            lockedPrice: owns ? null : price,
+            affordable: owns || coins >= price,
+            onTap: () => _onTap(kind, part.id),
+          ),
+        ),
+      );
+    }
+
+    // The way out of create mode when there is more to be had. One tile, at
+    // the end, only when it leads somewhere.
+    if (!isShop && anyLocked) {
+      tiles.add(
+        _ShopTile(
+          key: const ValueKey('swatch-shop'),
+          onTap: () {
+            ref.read(feedbackEngineProvider).uiTap();
+            context.go('/home/buddy-shop');
+          },
+        ),
+      );
+    }
+
+    return _GridOfSwatches(items: tiles);
   }
 }
 
@@ -369,24 +490,46 @@ class _Swatch extends StatelessWidget {
     required this.assetPath,
     required this.selected,
     required this.onTap,
+    this.lockedPrice,
+    this.affordable = true,
   });
 
-  /// Sprite shown in the swatch. Null draws a "no thanks" tile —
-  /// currently only used by the Hat category for the "no hat" option.
+  /// Sprite shown in the swatch. Null draws a "no thanks" tile — currently
+  /// only used by the Hat category for the "no hat" option.
   final String? assetPath;
   final bool selected;
   final VoidCallback onTap;
 
+  /// Non-null when the kid does not own this yet; draws the price chip.
+  final int? lockedPrice;
+
+  /// Whether the balance covers [lockedPrice]. Affordable-but-unowned tiles
+  /// stay at full colour so what she can buy *right now* reads at a glance.
+  final bool affordable;
+
   @override
   Widget build(BuildContext context) {
     final path = assetPath;
+    final locked = lockedPrice != null;
+    Widget sprite = path == null
+        ? const Center(
+            child: Icon(Icons.block, size: 36, color: Color(0xFFA39A82)),
+          )
+        : Image.asset(path, fit: BoxFit.contain);
+    if (locked && !affordable) {
+      // Drained rather than greyed to nothing: the colour is the whole appeal
+      // of a body swatch, so keep enough of it to want.
+      sprite = Opacity(opacity: 0.55, child: sprite);
+    }
+
     return Material(
       color: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
         side: BorderSide(
-          color:
-              selected ? const Color(0xFFEAA916) : const Color(0xFFE3DED0),
+          color: selected
+              ? const Color(0xFFEAA916)
+              : (locked ? const Color(0xFFEDE8DC) : const Color(0xFFE3DED0)),
           width: selected ? 4 : 2,
         ),
       ),
@@ -399,15 +542,86 @@ class _Swatch extends StatelessWidget {
           child: SizedBox(
             width: 76,
             height: 76,
-            child: path == null
-                ? const Center(
-                    child: Icon(
-                      Icons.block,
-                      size: 36,
-                      color: Color(0xFFA39A82),
-                    ),
+            child: locked
+                ? Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      sprite,
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: _PriceChip(
+                          price: lockedPrice!,
+                          affordable: affordable,
+                        ),
+                      ),
+                    ],
                   )
-                : Image.asset(path, fit: BoxFit.contain),
+                : sprite,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PriceChip extends StatelessWidget {
+  const _PriceChip({required this.price, required this.affordable});
+
+  final int price;
+  final bool affordable;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: affordable ? const Color(0xFF2E7D32) : Colors.black54,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.monetization_on, size: 14, color: Color(0xFFFFC94A)),
+          const SizedBox(width: 3),
+          Text(
+            '$price',
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w800,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ShopTile extends StatelessWidget {
+  const _ShopTile({super.key, required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: const Color(0xFFFFF3D6),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: const BorderSide(color: Color(0xFFEAA916), width: 2),
+      ),
+      elevation: 1,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
+        onTap: onTap,
+        child: const Padding(
+          padding: EdgeInsets.all(10),
+          child: SizedBox(
+            width: 76,
+            height: 76,
+            child: Center(
+              child: Icon(Icons.storefront, size: 40, color: Color(0xFFB07A12)),
+            ),
           ),
         ),
       ),

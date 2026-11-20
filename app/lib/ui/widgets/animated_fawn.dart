@@ -101,8 +101,8 @@ class _AnimatedFawnState extends State<AnimatedFawn>
     _scaleX = TweenSequence<double>([
       // Inversely compresses while scaleY squashes — volume-preserving.
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 1.2)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween:
+            Tween(begin: 1.0, end: 1.2).chain(CurveTween(curve: Curves.easeIn)),
         weight: 15,
       ),
       TweenSequenceItem(
@@ -116,8 +116,8 @@ class _AnimatedFawnState extends State<AnimatedFawn>
         weight: 30,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 1.1)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween:
+            Tween(begin: 1.0, end: 1.1).chain(CurveTween(curve: Curves.easeIn)),
         weight: 15,
       ),
       TweenSequenceItem(
@@ -207,9 +207,7 @@ class _AnimatedFawnState extends State<AnimatedFawn>
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: (widget.active
-                              ? Colors.amber
-                              : Colors.amberAccent)
+                      color: (widget.active ? Colors.amber : Colors.amberAccent)
                           .withValues(alpha: 0.7),
                       blurRadius: widget.active ? 28 : 18,
                       spreadRadius: widget.active ? 4 : 1,

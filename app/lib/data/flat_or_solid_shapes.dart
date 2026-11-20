@@ -185,12 +185,10 @@ class FlatSolidPairing {
   /// 2D `*-example` sprite (the dot-bearing one, displayed for stage 1 of
   /// the pairing intro). Magenta dots are 1-px and invisible at display
   /// resolution.
-  String get flatExampleAsset =>
-      AssetPaths.shapeGarden2dExample(flatKind);
+  String get flatExampleAsset => AssetPaths.shapeGarden2dExample(flatKind);
 
   /// Abstract 3D outline (stage 2 of the pairing intro).
-  String get solidOutlineAsset =>
-      AssetPaths.shapeGarden3dOutline(solidKind);
+  String get solidOutlineAsset => AssetPaths.shapeGarden3dOutline(solidKind);
 
   /// Themed 3D creature sprite (stage 3 of the pairing intro + the sort
   /// round's "solid" instances).
@@ -281,4 +279,3 @@ FlatOrSolidShape solidShapeFromPairing(FlatSolidPairing p, int instance) {
     isFlat: false,
   );
 }
-

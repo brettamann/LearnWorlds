@@ -1,12 +1,12 @@
 {
-    "name": "critmath",
-    "short_name": "critmath",
+    "name": "CritMath",
+    "short_name": "CritMath",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
+    "background_color": "#2E3A2C",
+    "theme_color": "#2E3A2C",
+    "description": "Counting and shapes in the Mystic Sanctuary.",
+    "orientation": "landscape",
     "prefer_related_applications": false,
     "icons": [
         {

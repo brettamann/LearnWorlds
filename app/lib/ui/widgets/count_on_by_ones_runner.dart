@@ -1,14 +1,28 @@
 // CountOnByOnesRunner — K.CC.1 "count to 100 by ones" + K.CC.2 "count
 // forward from a given number" sub-mode of the Counting Parade. Each
-// round picks up where the kid left off and counts a decade by ones:
-// round 1 starts at 10 and climbs to 20, round 2 starts at 20 and
-// climbs to 30, and so on through round 9 finishing at 100.
+// round joins the parade at a given number and counts the next decade by
+// ones: 10 → 20, then 40 → 50, 70 → 80, and 90 → 100.
+//
+// It used to walk all nine decades in order, picking up exactly where the
+// previous round stopped. That was ninety taps of the identical interaction
+// in one sitting. Sampling four decades instead keeps the hard part — the
+// decade boundary, which is the whole difficulty of counting on — and drops
+// the sitting to forty taps. Starting somewhere other than "wherever we
+// happened to stop" is also a truer reading of K.CC.2, which is about
+// counting on from *any* given number rather than from the beginning.
 //
 // Layout per round: a single filled cluster-of-ten card on the left
 // shows the kid where we are (e.g. "10"), and ten individual creatures
 // on the right are the new arrivals to tap one-by-one. The narrator
 // confirms each tap with the next number ("Eleven. Twelve. ...") and
 // the count badge ticks up alongside it.
+//
+// The round opens in two beats, the same staging as Count Forward From N and
+// for the same reason: everything used to be on screen at once under a single
+// sentence spoken once, and nothing in that marked the moment the game stopped
+// explaining and started waiting. Now the cluster cards stand alone while the
+// narrator says where we are, then the newcomers walk on under the go signal
+// and the cards behind them dim. Input opens as they land.
 //
 // Each round resolves through RoundCoordinator with conceptId K.CC.1
 // so streak + 5-coin payouts match the rest of the parade. The host's
@@ -21,226 +35,51 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../coordinators/round_coordinator.dart';
 import '../../data/asset_paths.dart';
+import '../../data/button_labels.dart';
+import '../../data/count_on_by_ones_rounds.dart';
+import '../../data/number_words.dart';
+import '../../data/sfx_catalog.dart';
+import '../../data/warm_lines.dart';
+import '../../engines/feedback/feedback_engine.dart';
+import '../../engines/mastery/round_outcome.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
+import '../../engines/scaffolding/hint_ladder.dart';
+import '../../platform/sfx_engine.dart';
 import 'animated_fawn.dart';
+import 'buddy_companion.dart';
 import 'continue_arrow_shelf.dart';
 import 'glitter_burst.dart';
+import 'keeper_aside.dart';
 import 'keeper_intro_overlay.dart';
 import 'next_arrow_button.dart';
-import 'progress_bar_to_reward.dart';
+import 'playfield_scaffold.dart';
 import 'replay_demo_button.dart';
 
-enum _Phase { intro, counting, celebrating, interstitial }
+enum _Phase {
+  intro,
 
-class _Round {
-  const _Round({
-    required this.startN,
-    required this.spriteAsset,
-    required this.singular,
-    required this.plural,
-    required this.keeperLine,
-  });
+  /// The two-beat round opening. Input is locked; the newcomers are walking
+  /// on. Ends the moment they land.
+  arriving,
 
-  /// Where we pick up counting from — 10, 20, ..., 90.
-  final int startN;
-  final String spriteAsset;
-  final String singular;
-  final String plural;
-  final String keeperLine;
+  counting,
 
-  /// Always 10 — we cross one decade per round.
-  int get arrivalsCount => 10;
+  /// Keeper speaks over the live meadow and advances the round herself.
+  transition,
 
-  int get finalCount => startN + arrivalsCount;
+  celebrating,
+
+  /// Final beat only — the reward payoff, which is meant to interrupt.
+  interstitial,
 }
 
-// One round per decade. Climbs the same sprite ladder as the long parade
-// so the kid sees a familiar species sequence regardless of how they got
-// here.
-const List<_Round> _kRounds = <_Round>[
-  _Round(
-    startN: 10,
-    spriteAsset: AssetPaths.countingParadeFawn,
-    singular: 'fawn',
-    plural: 'fawns',
-    keeperLine: 'Twenty fawns! Now the gryphons join in.',
-  ),
-  _Round(
-    startN: 20,
-    spriteAsset: AssetPaths.countingParadeBabyGryphon,
-    singular: 'gryphon',
-    plural: 'gryphons',
-    keeperLine: 'Thirty gryphons! Dragons are next.',
-  ),
-  _Round(
-    startN: 30,
-    spriteAsset: AssetPaths.countingParadeBabyDragon,
-    singular: 'dragon',
-    plural: 'dragons',
-    keeperLine: 'Forty dragons! Look — unicorns are catching up.',
-  ),
-  _Round(
-    startN: 40,
-    spriteAsset: AssetPaths.countingParadeBabyUnicorn,
-    singular: 'unicorn',
-    plural: 'unicorns',
-    keeperLine: 'Fifty unicorns! Phoenix babies, please.',
-  ),
-  _Round(
-    startN: 50,
-    spriteAsset: AssetPaths.countingParadeBabyPhoenix,
-    singular: 'phoenix',
-    plural: 'phoenixes',
-    keeperLine: 'Sixty phoenixes! Centaur babies next.',
-  ),
-  _Round(
-    startN: 60,
-    spriteAsset: AssetPaths.countingParadeBabyCentaur,
-    singular: 'centaur',
-    plural: 'centaurs',
-    keeperLine: 'Seventy centaurs! Toucan babies, here you go.',
-  ),
-  _Round(
-    startN: 70,
-    spriteAsset: AssetPaths.countingParadeBabyToucan,
-    singular: 'toucan',
-    plural: 'toucans',
-    keeperLine: 'Eighty toucans! Last two groups — fawns again.',
-  ),
-  _Round(
-    startN: 80,
-    spriteAsset: AssetPaths.countingParadeFawn,
-    singular: 'fawn',
-    plural: 'fawns',
-    keeperLine: 'Ninety fawns! One more decade — the golden eggs.',
-  ),
-  _Round(
-    startN: 90,
-    spriteAsset: AssetPaths.countingParadeGoldenEgg,
-    singular: 'golden egg',
-    plural: 'golden eggs',
-    keeperLine: 'One hundred! You counted all the way to one hundred by ones.',
-  ),
-];
+/// How long the counted cluster stands alone before the newcomers walk on —
+/// about as long as it takes to say "We're at forty already."
+const Duration _kArrivalDelay = Duration(milliseconds: 1000);
 
-const List<String> _kSpelled = <String>[
-  'Zero',
-  'One',
-  'Two',
-  'Three',
-  'Four',
-  'Five',
-  'Six',
-  'Seven',
-  'Eight',
-  'Nine',
-  'Ten',
-  'Eleven',
-  'Twelve',
-  'Thirteen',
-  'Fourteen',
-  'Fifteen',
-  'Sixteen',
-  'Seventeen',
-  'Eighteen',
-  'Nineteen',
-  'Twenty',
-  'Twenty-one',
-  'Twenty-two',
-  'Twenty-three',
-  'Twenty-four',
-  'Twenty-five',
-  'Twenty-six',
-  'Twenty-seven',
-  'Twenty-eight',
-  'Twenty-nine',
-  'Thirty',
-  'Thirty-one',
-  'Thirty-two',
-  'Thirty-three',
-  'Thirty-four',
-  'Thirty-five',
-  'Thirty-six',
-  'Thirty-seven',
-  'Thirty-eight',
-  'Thirty-nine',
-  'Forty',
-  'Forty-one',
-  'Forty-two',
-  'Forty-three',
-  'Forty-four',
-  'Forty-five',
-  'Forty-six',
-  'Forty-seven',
-  'Forty-eight',
-  'Forty-nine',
-  'Fifty',
-  'Fifty-one',
-  'Fifty-two',
-  'Fifty-three',
-  'Fifty-four',
-  'Fifty-five',
-  'Fifty-six',
-  'Fifty-seven',
-  'Fifty-eight',
-  'Fifty-nine',
-  'Sixty',
-  'Sixty-one',
-  'Sixty-two',
-  'Sixty-three',
-  'Sixty-four',
-  'Sixty-five',
-  'Sixty-six',
-  'Sixty-seven',
-  'Sixty-eight',
-  'Sixty-nine',
-  'Seventy',
-  'Seventy-one',
-  'Seventy-two',
-  'Seventy-three',
-  'Seventy-four',
-  'Seventy-five',
-  'Seventy-six',
-  'Seventy-seven',
-  'Seventy-eight',
-  'Seventy-nine',
-  'Eighty',
-  'Eighty-one',
-  'Eighty-two',
-  'Eighty-three',
-  'Eighty-four',
-  'Eighty-five',
-  'Eighty-six',
-  'Eighty-seven',
-  'Eighty-eight',
-  'Eighty-nine',
-  'Ninety',
-  'Ninety-one',
-  'Ninety-two',
-  'Ninety-three',
-  'Ninety-four',
-  'Ninety-five',
-  'Ninety-six',
-  'Ninety-seven',
-  'Ninety-eight',
-  'Ninety-nine',
-  'One hundred',
-];
-
-const List<String> _kTensSpelled = <String>[
-  'Zero',
-  'Ten',
-  'Twenty',
-  'Thirty',
-  'Forty',
-  'Fifty',
-  'Sixty',
-  'Seventy',
-  'Eighty',
-  'Ninety',
-  'One hundred',
-];
+/// The walk-on itself. Input opens when they land.
+const Duration _kArrivalWalk = Duration(milliseconds: 750);
 
 class CountOnByOnesRunner extends ConsumerStatefulWidget {
   const CountOnByOnesRunner({
@@ -257,10 +96,8 @@ class CountOnByOnesRunner extends ConsumerStatefulWidget {
       _CountOnByOnesRunnerState();
 }
 
-class _CountOnByOnesRunnerState
-    extends ConsumerState<CountOnByOnesRunner> {
-  late _Phase _phase =
-      widget.skipIntro ? _Phase.counting : _Phase.intro;
+class _CountOnByOnesRunnerState extends ConsumerState<CountOnByOnesRunner> {
+  late _Phase _phase = widget.skipIntro ? _Phase.arriving : _Phase.intro;
   int _roundIndex = 0;
   int _completedRounds = 0;
   Set<int> _tappedArrivals = <int>{};
@@ -270,19 +107,34 @@ class _CountOnByOnesRunnerState
   final Map<int, Timer> _exitTimers = <int, Timer>{};
   Timer? _celebrationTimer;
 
-  _Round get _currentRound => _kRounds[_roundIndex];
-  bool get _isLastRound => _roundIndex == _kRounds.length - 1;
-  bool get _allTapped =>
-      _tappedArrivals.length == _currentRound.arrivalsCount;
-  int get _currentCount => _currentRound.startN + _tappedArrivals.length;
-  double get _progress => _completedRounds / _kRounds.length;
+  /// False until the newcomers have walked on. Drives the opening: they are
+  /// off-stage right, the cluster cards behind them are at full strength, and
+  /// the row label is still hidden.
+  bool _arrivalsLanded = false;
+  Timer? _arriveTimer;
+  Timer? _unlockTimer;
 
-  String get _countingPrompt {
-    final start = _kTensSpelled[_currentRound.startN ~/ 10].toLowerCase();
-    final end = _kTensSpelled[_currentRound.finalCount ~/ 10].toLowerCase();
-    return "We're at $start. Touch each new ${_currentRound.singular} — "
-        'count by ones up to $end!';
-  }
+  /// Bumped to (re)present the between-round keeper aside.
+  int _asideToken = 0;
+
+  /// Arrival the hint ladder is glowing, if any.
+  int? _hintedArrival;
+
+  HintLadder? _hints;
+
+  /// Read eagerly — `ref.read` is illegal once dispose() has begun.
+  SfxEngine? _sfxForDispose;
+
+  CountOnByOnesRound get _currentRound => kCountOnByOnesRounds[_roundIndex];
+  bool get _isLastRound => _roundIndex == kCountOnByOnesRounds.length - 1;
+  bool get _allTapped => _tappedArrivals.length == _currentRound.arrivalsCount;
+  int get _currentCount => _currentRound.startN + _tappedArrivals.length;
+  double get _progress => _completedRounds / kCountOnByOnesRounds.length;
+
+  String get _alreadyCountedLine =>
+      countOnByOnesAlreadyCountedLine(_currentRound);
+
+  String get _countingPrompt => countOnByOnesPrompt(_currentRound);
 
   String get _finalKeeperLine =>
       'One hundred! Counting by ones got you all the way there. '
@@ -291,52 +143,153 @@ class _CountOnByOnesRunnerState
   @override
   void initState() {
     super.initState();
+    _sfxForDispose = ref.read(sfxEngineProvider);
+    // Claimed here, not in the post-frame callback below: the release in
+    // dispose() is unconditional, so the claim has to be too, or a teardown
+    // before the first frame gives back a claim it never took. See
+    // SfxEngine.releaseMusicBed for what that costs.
+    unawaited(_sfxForDispose!.startMusicBed(kDefaultMusicBed));
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
+      ref.read(feedbackEngineProvider).resetRound();
       // _Phase.intro is the animated _DemoLayer, which owns its own
-      // narration timeline. Only speak the round prompt when we land
-      // directly in the counting phase (i.e. skipIntro = true).
-      if (_phase == _Phase.counting) {
-        _speakCountingPrompt();
-      }
+      // narration timeline. Only open a round when we land straight in it
+      // (i.e. skipIntro = true).
+      if (_phase == _Phase.arriving) _beginRound();
     });
   }
 
   @override
   void dispose() {
+    _hints?.dispose();
     _celebrationTimer?.cancel();
+    _arriveTimer?.cancel();
+    _unlockTimer?.cancel();
     for (final t in _exitTimers.values) {
       t.cancel();
     }
+    final sfx = _sfxForDispose;
+    if (sfx != null) sfx.releaseMusicBed();
     super.dispose();
   }
 
-  void _speakCountingPrompt() {
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: _countingPrompt,
-            cueId: 'count-on-ones:r$_roundIndex:prompt',
-          ),
-        );
+  void _startHints() {
+    _hints?.dispose();
+    _hints = HintLadder(onLevel: _onHintLevel)..start();
   }
 
-  void _onStartFromIntro() {
-    setState(() => _phase = _Phase.counting);
-    _speakCountingPrompt();
+  void _onHintLevel(HintLevel level) {
+    if (!mounted || _phase != _Phase.counting) return;
+    final next = _nextUntapped();
+    if (next == null) return;
+    final feedback = ref.read(feedbackEngineProvider);
+    switch (level) {
+      case HintLevel.none:
+        return;
+      case HintLevel.highlight:
+        setState(() => _hintedArrival = next);
+      case HintLevel.point:
+        setState(() => _hintedArrival = next);
+        feedback.hint();
+        ref.read(narrationPlayerProvider.notifier).speak(
+              NarrationLine(
+                text: warmHintLine(2),
+                cueId: 'count-on-ones:r$_roundIndex:hint-point',
+              ),
+            );
+      case HintLevel.demonstrate:
+        feedback.hint();
+        ref.read(narrationPlayerProvider.notifier).speak(
+              NarrationLine(
+                text: warmHintLine(3),
+                cueId: 'count-on-ones:r$_roundIndex:hint-demo',
+              ),
+            );
+        _tapArrival(next, fromHint: true);
+    }
   }
 
-  void _tapArrival(int idx) {
+  int? _nextUntapped() {
+    for (var i = 0; i < _currentRound.arrivalsCount; i++) {
+      if (!_tappedArrivals.contains(i)) return i;
+    }
+    return null;
+  }
+
+  /// Open a round: say where we are, walk the newcomers on, hand over.
+  ///
+  /// The two lines go out together but not at once — `enqueue` waits for the
+  /// first to finish rather than cutting it off. The timers pace the picture to
+  /// match: the cluster gets the length of the first line to itself, then the
+  /// newcomers arrive under the second.
+  void _beginRound() {
+    _arriveTimer?.cancel();
+    _unlockTimer?.cancel();
+    setState(() {
+      _phase = _Phase.arriving;
+      _arrivalsLanded = false;
+    });
+
+    final narration = ref.read(narrationPlayerProvider.notifier);
+    narration.speak(
+      NarrationLine(
+        text: _alreadyCountedLine,
+        cueId: 'count-on-ones:r$_roundIndex:already-counted',
+      ),
+    );
+    narration.enqueue(
+      NarrationLine(
+        text: _countingPrompt,
+        cueId: 'count-on-ones:r$_roundIndex:prompt',
+      ),
+    );
+
+    _arriveTimer = Timer(_kArrivalDelay, () {
+      if (!mounted) return;
+      setState(() => _arrivalsLanded = true);
+    });
+    // Hints start only once she can act on one, or the ladder would be
+    // counting her hesitation while the game was still talking.
+    _unlockTimer = Timer(_kArrivalDelay + _kArrivalWalk, () {
+      if (!mounted || _phase != _Phase.arriving) return;
+      setState(() => _phase = _Phase.counting);
+      _startHints();
+    });
+  }
+
+  void _onStartFromIntro() => _beginRound();
+
+  void _tapArrival(int idx, {bool fromHint = false}) {
     if (_phase != _Phase.counting) return;
     if (_tappedArrivals.contains(idx)) return;
-    setState(() => _tappedArrivals.add(idx));
+    setState(() {
+      _tappedArrivals.add(idx);
+      _hintedArrival = null;
+    });
+    if (!fromHint) _hints?.poke();
+    // Note this is keyed off the taps *this round*, not the absolute count:
+    // the scale climbs the same ten steps whether the parade is at ten or at
+    // ninety, so crossing each decade sounds identical. That is the point of
+    // the exercise — ninety-one through one hundred is the same walk as
+    // eleven through twenty.
+    ref.read(feedbackEngineProvider).countStep(_tappedArrivals.length);
     final next = _currentCount;
-    final spoken = next < _kSpelled.length ? _kSpelled[next] : next.toString();
-    ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(
-            text: '$spoken.',
-            cueId: 'count-on-ones:r$_roundIndex:tap-${_tappedArrivals.length}',
-          ),
-        );
+    final spoken =
+        next < kSpelledCounts.length ? kSpelledCounts[next] : next.toString();
+    // Queued, not spoken, when the ladder did this tap. `speak` cuts off
+    // whatever is in flight, and what is in flight at that moment is the
+    // demonstration's own explanation - the one line in the round that
+    // says why. See HintLadder.
+    final say = ref.read(narrationPlayerProvider.notifier);
+    final line = NarrationLine(
+      text: '$spoken.',
+      cueId: 'count-on-ones:r$_roundIndex:tap-${_tappedArrivals.length}',
+    );
+    if (fromHint) {
+      say.enqueue(line);
+    } else {
+      say.speak(line);
+    }
     _exitTimers[idx] = Timer(const Duration(milliseconds: 900), () {
       if (!mounted) return;
       setState(() => _exitedArrivals.add(idx));
@@ -345,22 +298,50 @@ class _CountOnByOnesRunnerState
 
   void _finishRound() {
     if (!_allTapped) return;
+    _hints?.pause();
+
+    // Every arrival is a correct target, so the only thing separating a clean
+    // round from a soft one is whether the ladder had to demonstrate.
+    final result = (_hints?.hintsUsed ?? 0) > 0
+        ? RoundResult.softSuccess
+        : RoundResult.success;
     ref.read(roundCoordinatorProvider).resolveRound(
           activityId: 'counting-parade',
           conceptId: 'K.CC.1',
-          success: true,
+          result: result,
         );
     setState(() {
       _completedRounds += 1;
       _phase = _Phase.celebrating;
     });
+
+    final feedback = ref.read(feedbackEngineProvider);
+    if (_isLastRound) {
+      feedback.celebrate();
+      _celebrationTimer = Timer(const Duration(seconds: 1), () {
+        if (!mounted) return;
+        setState(() => _phase = _Phase.interstitial);
+        ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
+              NarrationLine(
+                text: _finalKeeperLine,
+                cueId: 'count-on-ones:r$_roundIndex:interstitial',
+                speaker: 'sanctuary-keeper-mystic',
+              ),
+            );
+      });
+      return;
+    }
+
+    feedback.roundPass();
     _celebrationTimer = Timer(const Duration(seconds: 1), () {
       if (!mounted) return;
-      setState(() => _phase = _Phase.interstitial);
-      final line = _isLastRound ? _finalKeeperLine : _currentRound.keeperLine;
+      setState(() {
+        _phase = _Phase.transition;
+        _asideToken += 1;
+      });
       ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
             NarrationLine(
-              text: line,
+              text: _currentRound.keeperLine,
               cueId: 'count-on-ones:r$_roundIndex:interstitial',
               speaker: 'sanctuary-keeper-mystic',
             ),
@@ -368,11 +349,9 @@ class _CountOnByOnesRunnerState
     });
   }
 
-  void _advanceFromInterstitial() {
-    if (_isLastRound) {
-      widget.onSequenceComplete();
-      return;
-    }
+  /// Fired by the keeper aside retiring itself, not by a button.
+  void _advanceToNextRound() {
+    if (!mounted || _phase != _Phase.transition) return;
     for (final t in _exitTimers.values) {
       t.cancel();
     }
@@ -381,38 +360,43 @@ class _CountOnByOnesRunnerState
       _roundIndex += 1;
       _tappedArrivals = <int>{};
       _exitedArrivals = <int>{};
-      _phase = _Phase.counting;
+      _hintedArrival = null;
     });
-    _speakCountingPrompt();
+    ref.read(feedbackEngineProvider).resetRound();
+    _beginRound();
   }
 
   @override
   Widget build(BuildContext context) {
     final phaseContent = switch (_phase) {
       _Phase.intro => _DemoLayer(onComplete: _onStartFromIntro),
-      _Phase.counting || _Phase.celebrating => _CountOnByOnesLayer(
+      _Phase.arriving ||
+      _Phase.counting ||
+      _Phase.celebrating ||
+      _Phase.transition =>
+        _CountOnByOnesLayer(
           roundIndex: _roundIndex,
           startN: _currentRound.startN,
           arrivalsCount: _currentRound.arrivalsCount,
           spriteAsset: _currentRound.spriteAsset,
           tappedArrivals: _tappedArrivals,
           exitedArrivals: _exitedArrivals,
+          arrivalsLanded: _arrivalsLanded,
+          hintedArrival: _hintedArrival,
           currentCount: _currentCount,
           finalCount: _currentRound.finalCount,
           onTap: _tapArrival,
           onDone: _finishRound,
           allTapped: _allTapped,
-          inputLocked: _phase == _Phase.celebrating,
+          inputLocked: _phase != _Phase.counting,
           replayPrompt: _countingPrompt,
           replayCueId: 'count-on-ones:replay-r$_roundIndex',
         ),
       _Phase.interstitial => KeeperIntroOverlay(
-          dialog:
-              _isLastRound ? _finalKeeperLine : _currentRound.keeperLine,
-          startLabel: _isLastRound ? 'Continue' : "Let's go!",
-          startButtonKey:
-              const ValueKey('count-on-ones-interstitial-next'),
-          onStart: _advanceFromInterstitial,
+          dialog: _finalKeeperLine,
+          startLabel: 'Continue',
+          startButtonKey: const ValueKey('count-on-ones-interstitial-next'),
+          onStart: widget.onSequenceComplete,
         ),
     };
 
@@ -423,20 +407,24 @@ class _CountOnByOnesRunnerState
           AssetPaths.countingParadeMeadow,
           fit: BoxFit.cover,
         ),
-        SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
-                child: ProgressBarToReward(
-                  progress: _progress,
-                  celebrate: _phase == _Phase.celebrating,
-                ),
-              ),
-              Expanded(child: phaseContent),
-            ],
-          ),
+        PlayfieldScaffold(
+          progress: _progress,
+          celebrate: _phase == _Phase.celebrating,
+          child: phaseContent,
         ),
+        if (_phase != _Phase.intro && _phase != _Phase.interstitial)
+          const BuddyCompanionCorner(),
+        if (_phase == _Phase.transition)
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: KeeperAside(
+              text: _currentRound.keeperLine,
+              token: _asideToken,
+              onDismissed: _advanceToNextRound,
+            ),
+          ),
       ],
     );
   }
@@ -450,6 +438,8 @@ class _CountOnByOnesLayer extends StatelessWidget {
     required this.spriteAsset,
     required this.tappedArrivals,
     required this.exitedArrivals,
+    required this.arrivalsLanded,
+    required this.hintedArrival,
     required this.currentCount,
     required this.finalCount,
     required this.onTap,
@@ -466,6 +456,15 @@ class _CountOnByOnesLayer extends StatelessWidget {
   final String spriteAsset;
   final Set<int> tappedArrivals;
   final Set<int> exitedArrivals;
+
+  /// False during the opening, while the newcomers are still off-stage. Holds
+  /// the counted cluster at full strength and the row label hidden.
+  final bool arrivalsLanded;
+
+  /// Arrival the hint ladder wants glowed, or null. Rendered through
+  /// AnimatedFawn's existing `pointed` state.
+  final int? hintedArrival;
+
   final int currentCount;
   final int finalCount;
   final ValueChanged<int> onTap;
@@ -509,25 +508,40 @@ class _CountOnByOnesLayer extends StatelessWidget {
                           // static visual anchor showing where we picked
                           // up. Each card = 10, so we render one card per
                           // ten in startN.
-                          Wrap(
-                            alignment: WrapAlignment.center,
-                            spacing: 10,
-                            runSpacing: 10,
-                            children: [
-                              for (var c = 0; c < startN ~/ 10; c++)
-                                _CompletedClusterCard(
-                                  spriteAsset: spriteAsset,
-                                  label: '${(c + 1) * 10}',
-                                ),
-                            ],
+                          //
+                          // Full strength while the narrator names it, then
+                          // dimmed as the newcomers land. That handover is the
+                          // "your turn now" cue, drawn rather than written.
+                          AnimatedOpacity(
+                            duration: const Duration(milliseconds: 600),
+                            opacity: arrivalsLanded ? 0.6 : 1,
+                            child: Wrap(
+                              alignment: WrapAlignment.center,
+                              spacing: 10,
+                              runSpacing: 10,
+                              children: [
+                                for (var c = 0; c < startN ~/ 10; c++)
+                                  _CompletedClusterCard(
+                                    spriteAsset: spriteAsset,
+                                    label: decadeLabel(c),
+                                  ),
+                              ],
+                            ),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
-                            '— count by ones —',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black54,
+                          // Kept for whoever is sitting next to her; it is not
+                          // load bearing. The narration and the walk-on carry
+                          // the same information for the kid playing.
+                          AnimatedOpacity(
+                            duration: const Duration(milliseconds: 600),
+                            opacity: arrivalsLanded ? 1 : 0,
+                            child: const Text(
+                              '— count by ones —',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black54,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 6),
@@ -544,39 +558,47 @@ class _CountOnByOnesLayer extends StatelessWidget {
                                   ),
                                   builder: (_) {
                                     final gone = exitedArrivals.contains(i);
+                                    // Off-stage right before they arrive and
+                                    // off-stage right once counted, so one
+                                    // pair of offsets covers both. The zero
+                                    // duration is what stops the first build
+                                    // animating them in from nowhere.
+                                    final waiting = !arrivalsLanded;
                                     return GestureDetector(
                                       behavior: HitTestBehavior.opaque,
                                       onTap: (inputLocked || gone)
                                           ? null
                                           : () => onTap(i),
                                       child: AnimatedSlide(
-                                        duration: const Duration(
-                                          milliseconds: 700,
-                                        ),
-                                        curve: Curves.easeInQuart,
-                                        offset: gone
+                                        duration: waiting
+                                            ? Duration.zero
+                                            : _kArrivalWalk,
+                                        curve: gone
+                                            ? Curves.easeInQuart
+                                            : Curves.easeOutCubic,
+                                        offset: (gone || waiting)
                                             ? const Offset(2.2, 0)
                                             : Offset.zero,
                                         child: AnimatedOpacity(
-                                          duration: const Duration(
-                                            milliseconds: 700,
-                                          ),
-                                          opacity: gone ? 0 : 1,
+                                          duration: waiting
+                                              ? Duration.zero
+                                              : const Duration(
+                                                  milliseconds: 600,
+                                                ),
+                                          opacity: (gone || waiting) ? 0 : 1,
                                           child: Stack(
                                             alignment: Alignment.center,
                                             clipBehavior: Clip.none,
                                             children: [
                                               AnimatedFawn(
-                                                active: tappedArrivals
-                                                    .contains(i),
-                                                pointed: false,
+                                                active:
+                                                    tappedArrivals.contains(i),
+                                                pointed: hintedArrival == i,
                                                 width: _arrivalSize,
-                                                height:
-                                                    _arrivalSize * 1.15,
+                                                height: _arrivalSize * 1.15,
                                                 spriteAsset: spriteAsset,
                                               ),
-                                              if (tappedArrivals
-                                                  .contains(i))
+                                              if (tappedArrivals.contains(i))
                                                 const Positioned.fill(
                                                   child: IgnorePointer(
                                                     child: GlitterBurst(
@@ -609,7 +631,7 @@ class _CountOnByOnesLayer extends StatelessWidget {
                       idleHintText:
                           'Beautifully counted! Tap the arrow to keep going.',
                       onPressed: onDone,
-                      label: 'Done',
+                      label: kLabelDone,
                     )
                   : null,
             ),
@@ -789,7 +811,7 @@ class _DemoLayerState extends ConsumerState<_DemoLayer> {
         Timer(Duration(milliseconds: t), () {
           if (!mounted) return;
           setState(() => _step = value);
-          _speak(_kSpelled[value], 'demo:count-$value');
+          _speak('${kSpelledCounts[value]}.', 'demo:count-$value');
         }),
       );
       t += 600;
@@ -803,7 +825,7 @@ class _DemoLayerState extends ConsumerState<_DemoLayer> {
         setState(() => _step = 11);
         _speak(
           'When we count to ten, we get a special new number. '
-          'And the ones start over.',
+              'And the ones start over.',
           'demo:collapse',
         );
       }),
@@ -818,7 +840,7 @@ class _DemoLayerState extends ConsumerState<_DemoLayer> {
         Timer(Duration(milliseconds: t), () {
           if (!mounted) return;
           setState(() => _step = 10 + value);
-          _speak(_kTensSpelled[value], 'demo:decade-$value');
+          _speak('${kSpelledTens[value]}.', 'demo:decade-$value');
         }),
       );
       t += 1100;
@@ -837,9 +859,16 @@ class _DemoLayerState extends ConsumerState<_DemoLayer> {
     );
   }
 
+  /// Speaks [text] exactly as given.
+  ///
+  /// It used to append a full stop, which was right for the bare number words
+  /// it was first written for and wrong for everything else: the two sentences
+  /// below arrived as "...start over.." and "...tens!.". Clips are looked up
+  /// by the words spoken, so neither could ever match its recording and both
+  /// stayed in the browser synth voice. Callers pass a finished sentence.
   void _speak(String text, String cueId) {
     ref.read(narrationPlayerProvider.notifier).speak(
-          NarrationLine(text: '$text.', cueId: cueId),
+          NarrationLine(text: text, cueId: cueId),
         );
   }
 
@@ -907,7 +936,7 @@ class _DemoLayerState extends ConsumerState<_DemoLayer> {
                       idleHintText:
                           'Tap the arrow when you are ready to count!',
                       onPressed: widget.onComplete,
-                      label: 'Start',
+                      label: kLabelStart,
                     )
                   : null,
             ),
@@ -1041,7 +1070,7 @@ class _DemoClusterWrap extends StatelessWidget {
                 _CompletedClusterCard(
                   key: ValueKey('demo-cluster-$c'),
                   spriteAsset: spriteAsset,
-                  label: '${(c + 1) * 10}',
+                  label: decadeLabel(c),
                 ),
             ],
           ),

@@ -129,8 +129,8 @@ Future<DevAdvanceResult> applyDevAdvance(
   // egg's stage grants are static — adding to `completedActivities`
   // produces the correct target stage on next map mount.
   //
-  // Sub-mode progress: mark every non-challenge sub-mode of each
-  // preceding activity completed too, so the Sanctuary picker treats
+  // Sub-mode progress: mark every chain sub-mode of each preceding
+  // activity completed too, so the Sanctuary picker treats
   // those nodes as "fully cleared" (no `next` chip, replays only). The
   // target activity itself is left untouched so the picker shows it cold.
   final rewardNotifier = ref.read(rewardProgressProvider.notifier);
@@ -148,7 +148,7 @@ Future<DevAdvanceResult> applyDevAdvance(
     final activity = registry?.byIdOrNull(activityId);
     if (activity != null) {
       for (final subMode in activity.subModes) {
-        if (subMode.isChallenge) continue;
+        if (!subMode.isChainStep) continue;
         subModeNotifier.markCompleted(
           activityId: activityId,
           subModeId: subMode.id,
@@ -179,11 +179,11 @@ Future<DevAdvanceResult> applyDevAdvance(
 Future<void> resetDevAdvance(WidgetRef ref) async {
   ref.read(explorationProvider.notifier).replaceAll(const <int>{});
   ref.read(rewardProgressProvider.notifier).replaceAll(
-        const <String, RewardTrackState>{},
-      );
+    const <String, RewardTrackState>{},
+  );
   ref.read(subModeProgressProvider.notifier).replaceAll(
-        const <String, Set<String>>{},
-      );
+    const <String, Set<String>>{},
+  );
   ref.read(walletProvider.notifier).set(0);
   await ref.read(saveCoordinatorProvider).persist();
 }
