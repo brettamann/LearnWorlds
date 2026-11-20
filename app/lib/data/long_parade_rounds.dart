@@ -14,21 +14,17 @@
 // it, and the clip for the old wording turns up as an orphan rather than being
 // silently looked up and missed.
 
-import 'asset_paths.dart';
+import 'parade_species.dart';
 
 class LongParadeRound {
   const LongParadeRound({
     required this.clusterCount,
-    required this.spriteAsset,
-    required this.singular,
-    required this.plural,
+    required this.species,
     required this.keeperLine,
   });
 
   final int clusterCount;
-  final String spriteAsset;
-  final String singular;
-  final String plural;
+  final ParadeSpecies species;
   final String keeperLine;
 
   int get totalCreatures => clusterCount * 10;
@@ -44,30 +40,22 @@ class LongParadeRound {
 const List<LongParadeRound> kLongParadeRounds = <LongParadeRound>[
   LongParadeRound(
     clusterCount: 3,
-    spriteAsset: AssetPaths.countingParadeFawn,
-    singular: 'fawn',
-    plural: 'fawns',
+    species: kParadeFawn,
     keeperLine: 'Thirty fawns! Next: more groups of ten — dragons.',
   ),
   LongParadeRound(
     clusterCount: 5,
-    spriteAsset: AssetPaths.countingParadeBabyDragon,
-    singular: 'dragon',
-    plural: 'dragons',
+    species: kParadeDragon,
     keeperLine: 'Fifty dragons! Phoenix babies are next.',
   ),
   LongParadeRound(
     clusterCount: 7,
-    spriteAsset: AssetPaths.countingParadeBabyPhoenix,
-    singular: 'phoenix',
-    plural: 'phoenixes',
+    species: kParadePhoenix,
     keeperLine: 'Seventy phoenixes! Last group — the golden eggs.',
   ),
   LongParadeRound(
     clusterCount: 10,
-    spriteAsset: AssetPaths.countingParadeGoldenEgg,
-    singular: 'golden egg',
-    plural: 'golden eggs',
+    species: kParadeGoldenEgg,
     keeperLine:
         "One hundred! You counted to one hundred by tens — that's amazing.",
   ),
@@ -76,5 +64,18 @@ const List<LongParadeRound> kLongParadeRounds = <LongParadeRound>[
 /// The instruction. Names the creature but not a number: every round of this
 /// activity counts by tens, and which ten you are on is what the taps say.
 String longParadeCountingPrompt(LongParadeRound round) =>
-    'Tap each group of ${round.plural} — count by tens out loud '
+    'Tap each group of ${round.species.plural} — count by tens out loud '
     'with me!';
+
+/// The keeper's opening, before the first round.
+const String kLongParadeIntro =
+    "Today's parade is HUGE — but we won't count one by one. Each group "
+    'is ten. Tap each group and count by tens together!';
+
+/// The visit's last beat.
+const String kLongParadeFinal =
+    'One hundred! Counting by tens carries you all the way there.';
+
+/// What the Done arrow says when she leaves it waiting.
+const String kLongParadeDoneHint =
+    'Great counting by tens! Tap the arrow to keep going.';

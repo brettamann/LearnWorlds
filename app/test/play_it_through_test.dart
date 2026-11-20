@@ -58,6 +58,17 @@ const List<String> _tapPrefixes = <String>[
   'habitat-',
   'sort-bin-',
   '2attr-shape-',
+  'challenge-creature-',
+  'count-forward-r',
+  'count-forward-done',
+  'count-on-ones-r',
+  'count-on-ones-done',
+  'long-parade-r',
+  'long-parade-done',
+  'fawn-',
+  'decor-',
+  'parade-species-card',
+  'parade-done',
 ];
 
 Future<ProviderContainer> _mount(WidgetTester tester, String key) async {

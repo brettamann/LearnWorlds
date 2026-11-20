@@ -16,15 +16,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../data/number_words.dart';
+import '../../data/tens_parade_words.dart';
 import '../../engines/feedback/feedback_engine.dart';
-import '../../engines/narration/narration_player.dart';
+import '../../engines/scaffolding/hint_ladder.dart';
+import '../common/target_hint.dart';
+import 'parade_pieces.dart';
+import 'touch_here_halo.dart';
 
 class CountingChallengeLayer extends ConsumerStatefulWidget {
   const CountingChallengeLayer({
     super.key,
     required this.target,
     required this.spriteAssets,
+    required this.say,
     required this.onCountChanged,
     required this.onTargetReached,
   });
@@ -34,6 +38,10 @@ class CountingChallengeLayer extends ConsumerStatefulWidget {
 
   /// Sprites to randomly pull from when spawning a new creature.
   final List<String> spriteAssets;
+
+  /// How the layer speaks - a round body's `c.say`, so the opening call is
+  /// what the "?" button replays.
+  final SayLine say;
 
   /// Fires each time a creature is successfully tapped.
   final ValueChanged<int> onCountChanged;
@@ -57,6 +65,10 @@ class _CountingChallengeLayerState extends ConsumerState<CountingChallengeLayer>
   Size? _stageSize;
   int _idCounter = 0;
   bool _stopped = false;
+  HintLadder? _hints;
+
+  /// The creature the hint ladder is ringing, by id.
+  int? _ringed;
 
   @override
   void initState() {
@@ -64,17 +76,39 @@ class _CountingChallengeLayerState extends ConsumerState<CountingChallengeLayer>
     _ticker = createTicker(_onTick)..start();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      ref.narration.say(
-        'Tap the creatures as they go by — count all the way to ${widget.target}!',
-        cueId: 'challenge:start',
-      );
+      widget.say(countingChallengePrompt(widget.target));
+      _hints = HintLadder(onLevel: _onHint)..start();
     });
   }
 
   @override
   void dispose() {
     _ticker.dispose();
+    _hints?.dispose();
     super.dispose();
+  }
+
+  /// Idle help, the same three rungs as everywhere: ring a creature, then
+  /// ring it and point it out, then count it for her. It used to have none,
+  /// so a child who froze in front of a hundred moving things got nothing.
+  void _onHint(HintLevel level) {
+    if (!mounted || _stopped) return;
+    final width = _stageSize?.width ?? 0;
+    // The untapped creature most fully on screen, so the ring has time to be
+    // seen before it flies off.
+    final candidates = _creatures
+        .where((c) => !c.tapped && c.x > c.size && c.x < width - c.size)
+        .toList()
+      ..sort((a, b) => b.x.compareTo(a.x));
+    if (candidates.isEmpty) return;
+    final next = candidates.first;
+    answerTargetHint(
+      level,
+      ring: () => setState(() => _ringed = next.id),
+      chime: ref.read(feedbackEngineProvider).hint,
+      say: (line) => widget.say(line, replay: false),
+      demonstrate: () => _onCreatureTap(next, fromHint: true),
+    );
   }
 
   void _onTick(Duration elapsed) {
@@ -124,9 +158,13 @@ class _CountingChallengeLayerState extends ConsumerState<CountingChallengeLayer>
     );
   }
 
-  void _onCreatureTap(_FlyingCreature c) {
-    if (c.tapped) return;
+  void _onCreatureTap(_FlyingCreature c, {bool fromHint = false}) {
+    // Stopped at the target: the board stays up under the celebration, and a
+    // hundred-and-first tap would count past it and talk over the reward.
+    if (c.tapped || _stopped) return;
+    if (!fromHint) _hints?.poke();
     setState(() {
+      if (_ringed == c.id) _ringed = null;
       c.tapped = true;
       c.speed *= 2;
       _count++;
@@ -138,13 +176,16 @@ class _CountingChallengeLayerState extends ConsumerState<CountingChallengeLayer>
     // sounding identical. Restarting the run every ten turns the rollover
     // into something audible: each new decade starts the climb again, which
     // is exactly the structure of the number names she is reciting.
-    ref.read(feedbackEngineProvider).countStep((_count - 1) % 10 + 1);
-    final word = _count < kSpelledCounts.length
-        ? kSpelledCounts[_count]
-        : _count.toString();
-    ref.narration.say('$word.', cueId: 'challenge:tap-$_count');
+    countAloud(
+      widget.say,
+      ref.read(feedbackEngineProvider),
+      step: (_count - 1) % 10 + 1,
+      value: _count,
+      fromHint: fromHint,
+    );
     if (_count >= widget.target) {
       _stopped = true;
+      _hints?.pause();
       widget.onTargetReached();
     }
   }
@@ -164,15 +205,24 @@ class _CountingChallengeLayerState extends ConsumerState<CountingChallengeLayer>
                 width: c.size,
                 height: c.size,
                 child: GestureDetector(
+                  key: ValueKey('challenge-creature-${c.id}'),
                   behavior: HitTestBehavior.opaque,
                   onTap: () => _onCreatureTap(c),
                   child: AnimatedOpacity(
                     duration: const Duration(milliseconds: 200),
                     opacity: c.tapped ? 0.65 : 1.0,
-                    child: Transform.scale(
-                      scaleX: 1 + math.sin(c.wigglePhase * 1.5) * 0.07,
-                      scaleY: 1 - math.sin(c.wigglePhase * 1.5) * 0.07,
-                      child: Image.asset(c.spriteAsset, fit: BoxFit.contain),
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Transform.scale(
+                          scaleX: 1 + math.sin(c.wigglePhase * 1.5) * 0.07,
+                          scaleY: 1 - math.sin(c.wigglePhase * 1.5) * 0.07,
+                          child:
+                              Image.asset(c.spriteAsset, fit: BoxFit.contain),
+                        ),
+                        if (_ringed == c.id)
+                          const Positioned.fill(child: TouchHereRing()),
+                      ],
                     ),
                   ),
                 ),

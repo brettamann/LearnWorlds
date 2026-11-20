@@ -47,12 +47,14 @@ import 'package:critmath/ui/widgets/shape_garden_runner.dart';
 import 'package:critmath/ui/widgets/shape_garden_sort_by_attribute_runner.dart';
 import 'package:critmath/ui/widgets/storytellers_pond_runner.dart';
 import 'package:critmath/ui/widgets/ten_frame_pond_runner.dart';
+import 'package:critmath/ui/widgets/tens_parade_runner.dart';
 import 'package:critmath/ui/widgets/two_attribute_hunt_runner.dart';
 import 'package:critmath/ui/widgets/wheres_buddy_runner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'support/harness.dart';
 
 /// Every playfield a child can reach, built the way the activity screen
@@ -82,6 +84,10 @@ Map<String, Widget> playfields() => <String, Widget>{
         skipIntro: true,
       ),
       'shape-garden-find': ShapeGardenRunner(
+        onSequenceComplete: () {},
+        skipIntro: true,
+      ),
+      'tens-parade': TensParadeRunner(
         onSequenceComplete: () {},
         skipIntro: true,
       ),

@@ -925,54 +925,6 @@
       "seconds": 2.86,
       "format": "mp3"
     },
-    "thank-you-friend-here-are-15-coins-from-the-sanc__e63a768a": {
-      "text": "Thank you, friend! Here are 15 coins from the Sanctuary.",
-      "batch": "parade-reward",
-      "voice": "af_heart",
-      "bytes": 26496,
-      "seconds": 3.24,
-      "format": "mp3"
-    },
-    "thank-you-friend-here-are-20-coins-from-the-sanc__96b77cfa": {
-      "text": "Thank you, friend! Here are 20 coins from the Sanctuary.",
-      "batch": "parade-reward",
-      "voice": "af_heart",
-      "bytes": 25152,
-      "seconds": 3.08,
-      "format": "mp3"
-    },
-    "thank-you-friend-here-are-25-coins-from-the-sanc__2f6300f5": {
-      "text": "Thank you, friend! Here are 25 coins from the Sanctuary.",
-      "batch": "parade-reward",
-      "voice": "af_heart",
-      "bytes": 27648,
-      "seconds": 3.4,
-      "format": "mp3"
-    },
-    "thank-you-friend-here-are-30-coins-from-the-sanc__8244c903": {
-      "text": "Thank you, friend! Here are 30 coins from the Sanctuary.",
-      "batch": "parade-reward",
-      "voice": "af_heart",
-      "bytes": 25344,
-      "seconds": 3.1,
-      "format": "mp3"
-    },
-    "thank-you-friend-here-are-35-coins-from-the-sanc__9986d130": {
-      "text": "Thank you, friend! Here are 35 coins from the Sanctuary.",
-      "batch": "parade-reward",
-      "voice": "af_heart",
-      "bytes": 28416,
-      "seconds": 3.5,
-      "format": "mp3"
-    },
-    "thank-you-friend-here-are-40-coins-from-the-sanc__4db16a30": {
-      "text": "Thank you, friend! Here are 40 coins from the Sanctuary.",
-      "batch": "parade-reward",
-      "voice": "af_heart",
-      "bytes": 25920,
-      "seconds": 3.19,
-      "format": "mp3"
-    },
     "all-three-fawns-counted-beautifully-done__2075a8d9": {
       "text": "All three fawns counted. Beautifully done.",
       "batch": "parade-final",
@@ -4610,14 +4562,6 @@
       "voice": "af_heart",
       "bytes": 54144,
       "seconds": 6.7,
-      "format": "mp3"
-    },
-    "watch-drag-creatures-into-the-basket__709c57da": {
-      "text": "Watch — drag creatures into the basket!",
-      "batch": "dart-literals",
-      "voice": "af_heart",
-      "bytes": 17472,
-      "seconds": 2.12,
       "format": "mp3"
     },
     "watch-how-to-sort-flat-vs-solid__d5416019": {
@@ -16085,6 +16029,30 @@
       "voice": "af_heart",
       "bytes": 44736,
       "seconds": 5.54,
+      "format": "mp3"
+    },
+    "watch-i-ll-show-you-drag-each-fawn-into-the-bask__56ec27cc": {
+      "text": "Watch — I'll show you. Drag each fawn into the basket.",
+      "batch": "count-out-n-keeper",
+      "voice": "af_heart",
+      "bytes": 25152,
+      "seconds": 3.08,
+      "format": "mp3"
+    },
+    "thank-you-friend-here-are-some-coins-from-the-sa__52225670": {
+      "text": "Thank you, friend! Here are some coins from the Sanctuary.",
+      "batch": "parade-reward",
+      "voice": "af_heart",
+      "bytes": 24384,
+      "seconds": 2.98,
+      "format": "mp3"
+    },
+    "again__e1a9a64a": {
+      "text": "Again!",
+      "batch": "button-labels",
+      "voice": "af_heart",
+      "bytes": 4800,
+      "seconds": 0.55,
       "format": "mp3"
     }
   }

@@ -98,7 +98,7 @@ class _TwoAttributeHuntRunnerState
       finaleBuilder: (context, done) => KeeperChoiceOverlay(
         dialog: finalLine,
         secondaryLabel: kLabelContinue,
-        primaryLabel: 'Again!',
+        primaryLabel: kLabelAgain,
         onSecondary: done,
         onPrimary: _again,
         secondaryButtonKey: const ValueKey('2attr-finish'),

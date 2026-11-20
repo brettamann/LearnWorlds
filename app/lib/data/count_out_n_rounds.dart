@@ -14,24 +14,20 @@
 // clip for the old wording shows up as an orphan instead of being silently
 // looked up and missed.
 
-import 'asset_paths.dart';
 import 'number_words.dart';
+import 'parade_species.dart';
 
 class CountOutNRound {
   const CountOutNRound({
     required this.targetN,
     required this.poolSize,
-    required this.spriteAsset,
-    required this.singular,
-    required this.plural,
+    required this.species,
     required this.keeperLine,
   });
 
   final int targetN;
   final int poolSize;
-  final String spriteAsset;
-  final String singular;
-  final String plural;
+  final ParadeSpecies species;
   final String keeperLine;
 }
 
@@ -39,25 +35,19 @@ const List<CountOutNRound> kCountOutNRounds = <CountOutNRound>[
   CountOutNRound(
     targetN: 4,
     poolSize: 8,
-    spriteAsset: AssetPaths.countingParadeFawn,
-    singular: 'fawn',
-    plural: 'fawns',
+    species: kParadeFawn,
     keeperLine: 'Four fawns! Now I need some gryphons.',
   ),
   CountOutNRound(
     targetN: 6,
     poolSize: 9,
-    spriteAsset: AssetPaths.countingParadeBabyGryphon,
-    singular: 'gryphon',
-    plural: 'gryphons',
+    species: kParadeGryphon,
     keeperLine: 'Six gryphons! One more round — the dragons.',
   ),
   CountOutNRound(
     targetN: 8,
     poolSize: 10,
-    spriteAsset: AssetPaths.countingParadeBabyDragon,
-    singular: 'dragon',
-    plural: 'dragons',
+    species: kParadeDragon,
     keeperLine: 'Eight dragons! You counted out every group.',
   ),
 ];
@@ -65,8 +55,8 @@ const List<CountOutNRound> kCountOutNRounds = <CountOutNRound>[
 /// The keeper asking for a number of creatures. K.CC.5: the number word has
 /// to name the quantity, so it is spoken, not shown.
 String countOutNBasketPrompt(CountOutNRound round) =>
-    'Bring me ${kSpelledCounts[round.targetN].toLowerCase()} '
-    '${round.plural}.';
+    'Bring me ${spellCount(round.targetN).toLowerCase()} '
+    '${round.species.plural}.';
 
 /// The "you already have enough" line, rotated so a kid who keeps dragging
 /// does not hear the identical sentence four times running -
@@ -74,7 +64,7 @@ String countOutNBasketPrompt(CountOutNRound round) =>
 /// name the target number, because saying the total is the whole point of
 /// K.CC.5.
 String countOutNOverCapLine(CountOutNRound round, int rotation) {
-  final n = kSpelledCounts[round.targetN].toLowerCase();
+  final n = spellCount(round.targetN).toLowerCase();
   switch (rotation.abs() % kCountOutNOverCapRotations) {
     case 0:
       return "I have enough — that's $n!";
@@ -89,3 +79,20 @@ String countOutNOverCapLine(CountOutNRound round, int rotation) {
 /// script enumerates every one rather than a number someone has to remember
 /// to bump.
 const int kCountOutNOverCapRotations = 3;
+
+/// The keeper's opening, before the first round.
+const String kCountOutNIntro =
+    "Sometimes I just need a few creatures, not all of them! I'll ask for "
+    'a number, and you bring me exactly that many. Ready?';
+
+/// The visit's last beat.
+const String kCountOutNFinal =
+    'Beautifully counted out! Just the number I asked for, every time.';
+
+/// The one-time drag demo after the intro, on the first round's creature:
+/// this line, two creatures dragged in and counted (the shared 'One.' and
+/// 'Two.' clips), then the hand-off.
+String countOutNDemoLine(CountOutNRound round) =>
+    "Watch — I'll show you. Drag each ${round.species.singular} into the "
+    'basket.';
+const String kCountOutNDemoHandoff = 'Now you try!';

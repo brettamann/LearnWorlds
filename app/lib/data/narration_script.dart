@@ -29,7 +29,6 @@
 import '../activities/activity_ids.dart';
 import '../activities/sub_mode_ids.dart';
 import '../engines/activity_runner/round_plan.dart';
-import '../engines/mastery/round_outcome.dart';
 import '../models/reward_track.dart';
 import '../platform/narration_clip_key.dart';
 import 'button_labels.dart';
@@ -92,10 +91,6 @@ class ScriptBatch {
   /// un-recorded remainder stays on system TTS by design.
   bool get isComplete => variants == lines.length;
 }
-
-/// Coin totals the parade reward line can report: one per plausible round
-/// count, at the clean-round rate RoundCoordinator pays.
-const List<int> _kRewardRoundCounts = <int>[3, 4, 5, 6, 7, 8];
 
 /// Every batch, most-heard first. Recording strictly down this list means the
 /// game gets warmer fastest per minute at the microphone.
@@ -392,6 +387,21 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
               countOutNOverCapLine(round, r),
         ],
       ),
+      ScriptBatch(
+        id: 'count-out-n-keeper',
+        title: 'Count Out N — the demo and the keeper',
+        note: 'The opening, then the one-time drag demo: "Watch", two '
+            'creatures counted in on the shared number clips, and the hand-'
+            'off. Then the line over each finished round, which names the '
+            'number she brought, and the last beat.',
+        lines: <String>[
+          kCountOutNIntro,
+          countOutNDemoLine(kCountOutNRounds.first),
+          kCountOutNDemoHandoff,
+          for (final round in kCountOutNRounds) round.keeperLine,
+          kCountOutNFinal,
+        ],
+      ),
 
       // ---- Count Forward From N -----------------------------------
       ScriptBatch(
@@ -408,6 +418,20 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
             countForwardAlreadyCountedLine(round),
             countForwardPrompt(round),
           ],
+        ],
+      ),
+      ScriptBatch(
+        id: 'count-forward-keeper',
+        title: 'Count Forward From N — the keeper',
+        note: 'The opening, the line over each finished round, and the last '
+            'beat. The round lines carry the total she just reached, so land '
+            'on the number. The arrow nudge is said to a child who has '
+            'counted everything and not yet pressed Done.',
+        lines: <String>[
+          kCountForwardIntro,
+          for (final round in kCountForwardRounds) round.keeperLine,
+          kCountForwardFinal,
+          kCountForwardDoneHint,
         ],
       ),
 
@@ -427,6 +451,23 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
           ],
         ],
       ),
+      ScriptBatch(
+        id: 'count-on-by-ones-keeper',
+        title: 'Count On By Ones — the demo and the keeper',
+        note: 'The demo counts to ten and then by tens to a hundred on the '
+            'shared number clips; these are the two sentences around those '
+            'counts, and the nudge on its Start arrow. Then the line over '
+            'each finished round, the last beat, and the nudge on the Done '
+            'arrow.',
+        lines: <String>[
+          kCountOnByOnesDemoCollapse,
+          kCountOnByOnesDemoKickoff,
+          kCountOnByOnesDemoStartHint,
+          for (final round in kCountOnByOnesRounds) round.keeperLine,
+          kCountOnByOnesFinal,
+          kCountOnByOnesDoneHint,
+        ],
+      ),
 
       // ---- Long Parade --------------------------------------------
       ScriptBatch(
@@ -437,6 +478,19 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
         lines: <String>[
           for (final round in kLongParadeRounds)
             longParadeCountingPrompt(round),
+        ],
+      ),
+      ScriptBatch(
+        id: 'long-parade-keeper',
+        title: 'Long Parade — the keeper',
+        note: 'The opening, the line over each finished round (it names the '
+            'ten she reached, so land on it), the last beat, and the nudge on '
+            'the Done arrow.',
+        lines: <String>[
+          kLongParadeIntro,
+          for (final round in kLongParadeRounds) round.keeperLine,
+          kLongParadeFinal,
+          kLongParadeDoneHint,
         ],
       ),
 
@@ -473,7 +527,7 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
             'the synth voice.',
         lines: <String>[
           for (var target = 10; target <= 100; target += 10)
-            'Tap the creatures as they go by — count all the way to $target!',
+            countingChallengePrompt(target),
         ],
       ),
 
@@ -527,12 +581,17 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
         title: 'Tens Parade — the hundredth tap',
         note: 'The payoff for a hundred taps, and the loudest single moment '
             'in the game. Two wordings: the run that earns the Cloud Unicorn, '
-            'and every replay after it. Built by calling the same function '
-            'the runner calls, so a reworded line cannot leave a stale clip '
-            'behind.',
+            'and a later visit, when she has it and is paid coins instead. '
+            'Then the line for an "Again!" run in the same visit, which pays '
+            'nothing, and the demo with its Start-arrow nudge. Built by '
+            'calling the same functions the runner calls, so a reworded line '
+            'cannot leave a stale clip behind.',
         lines: <String>[
           for (final earned in <bool>[true, false])
             tensParadeRewardLine(earnedCard: earned),
+          kTensParadeRepeatLine,
+          kTensParadeDemoLine,
+          kTensParadeDemoStartHint,
         ],
       ),
 
@@ -556,14 +615,14 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
           for (final s in kParadeSpecies) paradeCountingPrompt(s),
         ],
       ),
-      ScriptBatch(
+      const ScriptBatch(
         id: 'parade-reward',
-        title: 'Counting Parade — the coin payout',
-        note: 'The keeper handing over the coins at the end of a visit.',
-        lines: <String>[
-          for (final rounds in _kRewardRoundCounts)
-            paradeRewardLine(rounds * kCoinsForCleanRound),
-        ],
+        title: 'Counting Parade — the coin payout, and the Done arrow',
+        note: 'The keeper handing over the coins at the end of a visit. It '
+            'used to name a total for each possible round count; it says '
+            '"some coins" now, like everywhere else. Then the nudge on the '
+            'Done arrow, said to a child who has counted everything.',
+        lines: <String>[kParadeRewardLine, kParadeDoneHint],
       ),
       ScriptBatch(
         id: 'parade-final',

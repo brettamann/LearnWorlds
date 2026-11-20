@@ -37,55 +37,73 @@ class ParadeSpecies {
   final String plural;
 }
 
+// One const per member, so a fixed round list (Count Forward From N, Long
+// Parade...) can name its creature rather than restate its sprite and words.
+const ParadeSpecies kParadeFawn = ParadeSpecies(
+  id: 'fawn',
+  spriteAsset: AssetPaths.countingParadeFawn,
+  singular: 'fawn',
+  plural: 'fawns',
+);
+
+const ParadeSpecies kParadeGryphon = ParadeSpecies(
+  id: 'gryphon',
+  spriteAsset: AssetPaths.countingParadeBabyGryphon,
+  singular: 'gryphon',
+  plural: 'gryphons',
+);
+
+const ParadeSpecies kParadeDragon = ParadeSpecies(
+  id: 'dragon',
+  spriteAsset: AssetPaths.countingParadeBabyDragon,
+  singular: 'dragon',
+  plural: 'dragons',
+);
+
+const ParadeSpecies kParadeUnicorn = ParadeSpecies(
+  id: 'unicorn',
+  spriteAsset: AssetPaths.countingParadeBabyUnicorn,
+  singular: 'unicorn',
+  plural: 'unicorns',
+);
+
+const ParadeSpecies kParadePhoenix = ParadeSpecies(
+  id: 'phoenix',
+  spriteAsset: AssetPaths.countingParadeBabyPhoenix,
+  singular: 'phoenix',
+  plural: 'phoenixes',
+);
+
+const ParadeSpecies kParadeCentaur = ParadeSpecies(
+  id: 'centaur',
+  spriteAsset: AssetPaths.countingParadeBabyCentaur,
+  singular: 'centaur',
+  plural: 'centaurs',
+);
+
+const ParadeSpecies kParadeToucan = ParadeSpecies(
+  id: 'toucan',
+  spriteAsset: AssetPaths.countingParadeBabyToucan,
+  singular: 'toucan',
+  plural: 'toucans',
+);
+
+const ParadeSpecies kParadeGoldenEgg = ParadeSpecies(
+  id: 'golden-egg',
+  spriteAsset: AssetPaths.countingParadeGoldenEgg,
+  singular: 'golden egg',
+  plural: 'golden eggs',
+);
+
 const List<ParadeSpecies> kParadeSpecies = <ParadeSpecies>[
-  ParadeSpecies(
-    id: 'fawn',
-    spriteAsset: AssetPaths.countingParadeFawn,
-    singular: 'fawn',
-    plural: 'fawns',
-  ),
-  ParadeSpecies(
-    id: 'gryphon',
-    spriteAsset: AssetPaths.countingParadeBabyGryphon,
-    singular: 'gryphon',
-    plural: 'gryphons',
-  ),
-  ParadeSpecies(
-    id: 'dragon',
-    spriteAsset: AssetPaths.countingParadeBabyDragon,
-    singular: 'dragon',
-    plural: 'dragons',
-  ),
-  ParadeSpecies(
-    id: 'unicorn',
-    spriteAsset: AssetPaths.countingParadeBabyUnicorn,
-    singular: 'unicorn',
-    plural: 'unicorns',
-  ),
-  ParadeSpecies(
-    id: 'phoenix',
-    spriteAsset: AssetPaths.countingParadeBabyPhoenix,
-    singular: 'phoenix',
-    plural: 'phoenixes',
-  ),
-  ParadeSpecies(
-    id: 'centaur',
-    spriteAsset: AssetPaths.countingParadeBabyCentaur,
-    singular: 'centaur',
-    plural: 'centaurs',
-  ),
-  ParadeSpecies(
-    id: 'toucan',
-    spriteAsset: AssetPaths.countingParadeBabyToucan,
-    singular: 'toucan',
-    plural: 'toucans',
-  ),
-  ParadeSpecies(
-    id: 'golden-egg',
-    spriteAsset: AssetPaths.countingParadeGoldenEgg,
-    singular: 'golden egg',
-    plural: 'golden eggs',
-  ),
+  kParadeFawn,
+  kParadeGryphon,
+  kParadeDragon,
+  kParadeUnicorn,
+  kParadePhoenix,
+  kParadeCentaur,
+  kParadeToucan,
+  kParadeGoldenEgg,
 ];
 
 const List<String> kAllParadeSpeciesIds = <String>[
@@ -178,10 +196,19 @@ String paradeIntroDialog({
 String paradeCountingPrompt(ParadeSpecies species) =>
     'Touch each ${species.singular} — and count out loud with me!';
 
-/// Reward line after the final celebration. Names the coin total so the kid
-/// hears a concrete result rather than watching a number change.
-String paradeRewardLine(int coins) =>
-    'Thank you, friend! Here are $coins coins from the Sanctuary.';
+/// The keeper's last line of a visit, as she hands over the coins.
+///
+/// It used to name a total - rounds x the clean-round rate - which overstated
+/// the payout whenever a round needed help, and could only be recorded for the
+/// six round counts someone remembered to enumerate. Every other activity says
+/// "some coins"; so does this one.
+const String kParadeRewardLine =
+    'Thank you, friend! Here are some coins from the Sanctuary.';
+
+/// What the Done arrow says when she has counted everything and left it
+/// waiting.
+const String kParadeDoneHint =
+    'You counted them all! Tap the arrow to keep going.';
 
 /// "a" or "an" for [word].
 ///

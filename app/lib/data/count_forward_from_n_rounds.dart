@@ -14,24 +14,20 @@
 // it, and the clip for the old wording turns up as an orphan rather than being
 // silently looked up and missed.
 
-import 'asset_paths.dart';
 import 'number_words.dart';
+import 'parade_species.dart';
 
 class CountForwardRound {
   const CountForwardRound({
     required this.startN,
     required this.arrivalsCount,
-    required this.spriteAsset,
-    required this.singular,
-    required this.plural,
+    required this.species,
     required this.keeperLine,
   });
 
   final int startN;
   final int arrivalsCount;
-  final String spriteAsset;
-  final String singular;
-  final String plural;
+  final ParadeSpecies species;
   final String keeperLine;
 
   int get finalCount => startN + arrivalsCount;
@@ -41,25 +37,19 @@ const List<CountForwardRound> kCountForwardRounds = <CountForwardRound>[
   CountForwardRound(
     startN: 3,
     arrivalsCount: 3,
-    spriteAsset: AssetPaths.countingParadeFawn,
-    singular: 'fawn',
-    plural: 'fawns',
+    species: kParadeFawn,
     keeperLine: 'Six fawns! Now some gryphons are catching up.',
   ),
   CountForwardRound(
     startN: 5,
     arrivalsCount: 3,
-    spriteAsset: AssetPaths.countingParadeBabyGryphon,
-    singular: 'gryphon',
-    plural: 'gryphons',
+    species: kParadeGryphon,
     keeperLine: 'Eight gryphons! Last one — the dragons.',
   ),
   CountForwardRound(
     startN: 7,
     arrivalsCount: 3,
-    spriteAsset: AssetPaths.countingParadeBabyDragon,
-    singular: 'dragon',
-    plural: 'dragons',
+    species: kParadeDragon,
     keeperLine: 'Ten dragons! Beautifully counted on.',
   ),
 ];
@@ -78,7 +68,7 @@ const List<CountForwardRound> kCountForwardRounds = <CountForwardRound>[
 /// you were told rather than starting over at one.
 String countForwardAlreadyCountedLine(CountForwardRound round) =>
     'We already counted '
-    '${kSpelledCounts[round.startN].toLowerCase()} ${round.plural}.';
+    '${spellCount(round.startN).toLowerCase()} ${round.species.plural}.';
 
 /// Beat two: the go signal, spoken as the new creatures arrive.
 ///
@@ -86,5 +76,18 @@ String countForwardAlreadyCountedLine(CountForwardRound round) =>
 /// counting-on for her, and that is the entire thing being learned — the
 /// ladder tone and the spoken number on her first tap confirm it instead.
 String countForwardPrompt(CountForwardRound round) =>
-    'Here come ${kSpelledCounts[round.arrivalsCount].toLowerCase()} more! '
-    'Now touch each new ${round.singular} and keep counting.';
+    'Here come ${spellCount(round.arrivalsCount).toLowerCase()} more! '
+    'Now touch each new ${round.species.singular} and keep counting.';
+
+/// The keeper's opening, before the first round.
+const String kCountForwardIntro =
+    "Sometimes we don't start at one. We can start at the number we left "
+    'off! Watch — I count on from there.';
+
+/// The visit's last beat.
+const String kCountForwardFinal =
+    'You counted all the new creatures! Wonderful work.';
+
+/// What the Done arrow says when she leaves it waiting.
+const String kCountForwardDoneHint =
+    'Nice counting! Tap the arrow to keep going.';

@@ -6,61 +6,31 @@
 // The narrator says "Ten. Twenty. Thirty." while the count badge ticks
 // up by ten per tap.
 //
-// Four rounds: 3 clusters (30) → 5 (50) → 7 (70) → 10 (100).
-// Each round resolves through RoundCoordinator with conceptId K.CC.1.
-// The cluster cards wrap so they use the full vertical area on a tablet
-// and stay big enough to tap comfortably.
+// Four rounds: 3 clusters (30) → 5 (50) → 7 (70) → 10 (100). The cluster
+// cards wrap so they use the full vertical area on a tablet and stay big
+// enough to tap comfortably.
 //
-// Feedback follows the Counting Parade pattern: each cluster tapped sounds
-// the next note up the scale, so counting by tens *sounds* like climbing,
-// and the between-round keeper line plays over the live meadow rather than
-// through a blocking modal.
-
-import 'dart:async';
+// Each cluster tapped sounds the next note up the scale, so counting by tens
+// *sounds* like climbing. The lifecycle - intro, grading, celebration, the
+// keeper's aside over the live meadow, the finale - is SanctuaryRoundShell's.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../activities/activity_ids.dart';
-import '../../coordinators/round_coordinator.dart';
 import '../../data/asset_paths.dart';
-import '../../data/button_labels.dart';
 import '../../data/long_parade_rounds.dart';
-import '../../data/number_words.dart';
-import '../../data/sfx_catalog.dart';
-import '../../data/warm_lines.dart';
 import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/mastery/round_outcome.dart';
-import '../../engines/narration/narration_line.dart';
-import '../../engines/narration/narration_player.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
-import '../../platform/sfx_engine.dart';
 import '../../ui/common/count_badge.dart';
-import 'buddy_companion.dart';
-import 'continue_arrow_shelf.dart';
+import '../common/target_hint.dart';
+import '../common/timer_scope.dart';
 import 'glitter_burst.dart';
-import 'keeper_aside.dart';
-import 'keeper_intro_overlay.dart';
-import 'next_arrow_button.dart';
-import 'playfield_scaffold.dart';
-import 'replay_demo_button.dart';
+import 'parade_pieces.dart';
+import 'sanctuary_round_shell.dart';
 
-enum _Phase {
-  intro,
-  counting,
-
-  /// Keeper talks over the live meadow and advances the round herself. See
-  /// the same phase on CountTheParadeRunner for why the blocking version
-  /// went away.
-  transition,
-
-  celebrating,
-
-  /// Final beat only — the reward payoff, which is meant to interrupt.
-  interstitial,
-}
-
-class LongParadeRunner extends ConsumerStatefulWidget {
+class LongParadeRunner extends StatelessWidget {
   const LongParadeRunner({
     super.key,
     required this.onSequenceComplete,
@@ -71,445 +41,178 @@ class LongParadeRunner extends ConsumerStatefulWidget {
   final bool skipIntro;
 
   @override
-  ConsumerState<LongParadeRunner> createState() => _LongParadeRunnerState();
+  Widget build(BuildContext context) {
+    return SanctuaryRoundShell(
+      activityId: ActivityIds.countingParade,
+      roundCount: kLongParadeRounds.length,
+      conceptIdFor: (_) => 'K.CC.1',
+      introLine: kLongParadeIntro,
+      keeperLineFor: (i) => kLongParadeRounds[i].keeperLine,
+      finalLine: kLongParadeFinal,
+      skipIntro: skipIntro,
+      celebrationHold: const Duration(seconds: 1),
+      onSequenceComplete: onSequenceComplete,
+      background: Image.asset(
+        AssetPaths.countingParadeMeadow,
+        fit: BoxFit.cover,
+      ),
+      roundBuilder: (context, c) => LongParadeRoundBody(c: c),
+    );
+  }
 }
 
-class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
-  late _Phase _phase = widget.skipIntro ? _Phase.counting : _Phase.intro;
-  int _roundIndex = 0;
-  int _completedRounds = 0;
-  Set<int> _tappedClusters = <int>{};
-  // Cluster wanders off after its tap so kids stop re-tapping a group
-  // they've already counted. Each tap gets its own delay timer.
-  Set<int> _exitedClusters = <int>{};
-  final Map<int, Timer> _exitTimers = <int, Timer>{};
-  Map<int, int> _burstCounters = <int, int>{};
-  Timer? _celebrationTimer;
+/// One round: tap each group of ten, counting by tens.
+class LongParadeRoundBody extends ConsumerStatefulWidget {
+  const LongParadeRoundBody({super.key, required this.c});
 
-  /// Bumped to (re)present the between-round keeper aside.
-  int _asideToken = 0;
+  final RoundContext c;
 
-  /// Cluster the hint ladder is glowing, if any.
-  int? _hintedCluster;
+  @override
+  ConsumerState<LongParadeRoundBody> createState() =>
+      _LongParadeRoundBodyState();
+}
 
+class _LongParadeRoundBodyState extends ConsumerState<LongParadeRoundBody>
+    with TimerScope<LongParadeRoundBody> {
+  late final LongParadeRound _round = kLongParadeRounds[widget.c.index];
+  final Set<int> _tapped = <int>{};
+
+  /// A counted cluster wanders off, so she stops re-tapping a group she has
+  /// already counted.
+  final Set<int> _exited = <int>{};
+  final Map<int, int> _bursts = <int, int>{};
+  int? _hinted;
   HintLadder? _hints;
+  bool _done = false;
 
-  /// Read eagerly — `ref.read` is illegal once dispose() has begun, and
-  /// dispose() is where the music bed has to stop.
-  SfxEngine? _sfxForDispose;
-
-  LongParadeRound get _currentRound => kLongParadeRounds[_roundIndex];
-  bool get _isLastRound => _roundIndex == kLongParadeRounds.length - 1;
-  bool get _allTapped => _tappedClusters.length == _currentRound.clusterCount;
-  int get _currentCount => _tappedClusters.length * 10;
-  double get _progress => _completedRounds / kLongParadeRounds.length;
-
-  String get _introDialog =>
-      "Today's parade is HUGE — but we won't count one by one. Each group "
-      'is ten. Tap each group and count by tens together!';
-
-  String get _countingPrompt => longParadeCountingPrompt(_currentRound);
-
-  String get _finalKeeperLine =>
-      'One hundred! Counting by tens carries you all the way there.';
+  bool get _open => !_done && !widget.c.locked;
+  bool get _allTapped => _tapped.length == _round.clusterCount;
 
   @override
   void initState() {
     super.initState();
-    _sfxForDispose = ref.read(sfxEngineProvider);
-    // Claimed here, not in the post-frame callback below: the release in
-    // dispose() is unconditional, so the claim has to be too, or a teardown
-    // before the first frame gives back a claim it never took. See
-    // SfxEngine.releaseMusicBed for what that costs.
-    unawaited(_sfxForDispose!.startMusicBed(kDefaultMusicBed));
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      ref.read(feedbackEngineProvider).resetRound();
-      if (_phase == _Phase.intro) {
-        _speakIntro();
-      } else {
-        _startHints();
-        _speakCountingPrompt();
-      }
+      widget.c.say(longParadeCountingPrompt(_round));
+      _hints = HintLadder(onLevel: _onHint)..start();
     });
   }
 
   @override
   void dispose() {
     _hints?.dispose();
-    _celebrationTimer?.cancel();
-    for (final t in _exitTimers.values) {
-      t.cancel();
-    }
-    final sfx = _sfxForDispose;
-    if (sfx != null) sfx.releaseMusicBed();
     super.dispose();
   }
 
-  void _startHints() {
-    _hints?.dispose();
-    _hints = HintLadder(onLevel: _onHintLevel)..start();
-  }
-
-  /// Escalating help for a kid who has stalled. There is no wrong cluster to
-  /// tap here, so being stuck looks like doing nothing at all — which is
-  /// exactly the state that used to produce no response of any kind.
-  void _onHintLevel(HintLevel level) {
-    if (!mounted || _phase != _Phase.counting) return;
-    final next = _nextUntapped();
-    if (next == null) return;
-    final feedback = ref.read(feedbackEngineProvider);
-    switch (level) {
-      case HintLevel.none:
-        return;
-      case HintLevel.highlight:
-        setState(() => _hintedCluster = next);
-      case HintLevel.point:
-        setState(() => _hintedCluster = next);
-        feedback.hint();
-        ref.narration.say(
-          warmHintLine(2),
-          cueId: 'long-parade:r$_roundIndex:hint-point',
-        );
-      case HintLevel.demonstrate:
-        feedback.hint();
-        ref.narration
-            .say(warmHintLine(3), cueId: 'long-parade:r$_roundIndex:hint-demo');
-        _tapCluster(next, fromHint: true);
-    }
-  }
-
-  int? _nextUntapped() {
-    for (var c = 0; c < _currentRound.clusterCount; c++) {
-      if (!_tappedClusters.contains(c)) return c;
+  int? get _nextUntapped {
+    for (var i = 0; i < _round.clusterCount; i++) {
+      if (!_tapped.contains(i)) return i;
     }
     return null;
   }
 
-  void _speakIntro() {
-    ref.narration.say(
-      _introDialog,
-      cueId: 'long-parade:intro',
-      speaker: kKeeperSpeaker,
-      caption: false,
+  /// There is no wrong cluster to tap here, so being stuck looks like doing
+  /// nothing at all - exactly the state that used to produce no response.
+  void _onHint(HintLevel level) {
+    if (!mounted || !_open) return;
+    final next = _nextUntapped;
+    if (next == null) return;
+    answerTargetHint(
+      level,
+      ring: () => setState(() => _hinted = next),
+      chime: ref.read(feedbackEngineProvider).hint,
+      say: (line) => widget.c.say(line, replay: false),
+      demonstrate: () => _tap(next, fromHint: true),
     );
   }
 
-  void _speakCountingPrompt() {
-    ref.narration
-        .say(_countingPrompt, cueId: 'long-parade:r$_roundIndex:prompt');
-  }
-
-  void _onStartFromIntro() {
-    setState(() => _phase = _Phase.counting);
-    _startHints();
-    _speakCountingPrompt();
-  }
-
-  void _tapCluster(int idx, {bool fromHint = false}) {
-    if (_phase != _Phase.counting) return;
-    if (_tappedClusters.contains(idx)) return;
+  void _tap(int i, {bool fromHint = false}) {
+    if (!_open || _tapped.contains(i)) return;
     setState(() {
-      _tappedClusters.add(idx);
-      _burstCounters[idx] = (_burstCounters[idx] ?? 0) + 1;
-      _hintedCluster = null;
+      _tapped.add(i);
+      _bursts[i] = (_bursts[i] ?? 0) + 1;
+      _hinted = null;
     });
     // A hint-driven tap must not reset the ladder, or a stalled kid would be
     // demonstrated at forever instead of the round resolving as a soft pass.
     if (!fromHint) _hints?.poke();
-    final n = _tappedClusters.length;
+    final n = _tapped.length;
     // Same pitch ladder as counting by ones: ten, twenty, thirty each sound a
     // step higher, so counting by tens is audibly the same kind of climb.
-    ref.read(feedbackEngineProvider).countStep(n);
-    final spoken =
-        n < kSpelledTens.length ? kSpelledTens[n] : (n * 10).toString();
-    // Queued, not spoken, when the ladder did this tap. `speak` cuts off
-    // whatever is in flight, and what is in flight at that moment is the
-    // demonstration's own explanation - the one line in the round that
-    // says why. See HintLadder.
-    final say = ref.narration;
-    final line = NarrationLine(
-      text: '$spoken.',
-      cueId: 'long-parade:r$_roundIndex:tap-$n',
+    countAloud(
+      widget.c.say,
+      ref.read(feedbackEngineProvider),
+      step: n,
+      value: n * 10,
+      fromHint: fromHint,
     );
-    if (fromHint) {
-      say.enqueue(line);
-    } else {
-      say.speak(line);
-    }
-    _exitTimers[idx] = Timer(const Duration(milliseconds: 1100), () {
-      if (!mounted) return;
-      setState(() => _exitedClusters.add(idx));
+    after(const Duration(milliseconds: 1100), () {
+      setState(() => _exited.add(i));
     });
   }
 
-  void _finishRound() {
-    if (!_allTapped) return;
+  void _onDone() {
+    if (_done || !_allTapped) return;
+    setState(() => _done = true);
     _hints?.pause();
-
-    // Every cluster here is a correct target — there is nothing wrong to tap
-    // — so the only thing separating a clean round from a soft one is whether
-    // the ladder had to demonstrate. adaptive-scaffolding.md §Hint Layer: a
-    // round that needed a hint counts as soft-success and does not advance
-    // the promotion streak.
-    final result = gradeRound(helped: (_hints?.hintsUsed ?? 0) > 0);
-    ref.read(roundCoordinatorProvider).resolveRound(
-          activityId: ActivityIds.countingParade,
-          conceptId: 'K.CC.1',
-          result: result,
-        );
-    setState(() {
-      _completedRounds += 1;
-      _phase = _Phase.celebrating;
-    });
-
-    final feedback = ref.read(feedbackEngineProvider);
-    if (_isLastRound) {
-      feedback.celebrate();
-      _celebrationTimer = Timer(const Duration(seconds: 1), () {
-        if (!mounted) return;
-        setState(() => _phase = _Phase.interstitial);
-        ref.narration.say(
-          _finalKeeperLine,
-          cueId: 'long-parade:r$_roundIndex:interstitial',
-          speaker: kKeeperSpeaker,
-          caption: false,
-        );
-      });
-      return;
-    }
-
-    feedback.roundPass();
-    // Non-final: the keeper speaks over the live meadow and the aside
-    // advances the round when it retires itself. No tap required.
-    _celebrationTimer = Timer(const Duration(seconds: 1), () {
-      if (!mounted) return;
-      setState(() {
-        _phase = _Phase.transition;
-        _asideToken += 1;
-      });
-      ref.narration.say(
-        _currentRound.keeperLine,
-        cueId: 'long-parade:r$_roundIndex:interstitial',
-        speaker: kKeeperSpeaker,
-        caption: false,
-      );
-    });
-  }
-
-  /// Fired by the keeper aside retiring itself. Guards on the phase because
-  /// the exit animation can land after the widget has already moved on.
-  void _advanceToNextRound() {
-    if (!mounted || _phase != _Phase.transition) return;
-    for (final t in _exitTimers.values) {
-      t.cancel();
-    }
-    _exitTimers.clear();
-    setState(() {
-      _roundIndex += 1;
-      _tappedClusters = <int>{};
-      _exitedClusters = <int>{};
-      _burstCounters = <int, int>{};
-      _hintedCluster = null;
-      _phase = _Phase.counting;
-    });
-    // Back to the bottom of the scale — every round is its own climb.
-    ref.read(feedbackEngineProvider).resetRound();
-    _startHints();
-    _speakCountingPrompt();
+    // Every cluster is a correct target, so only help separates a clean
+    // round from a soft one (adaptive-scaffolding.md §Hint Layer).
+    widget.c.finish(gradeRound(helped: (_hints?.hintsUsed ?? 0) > 0));
   }
 
   @override
   Widget build(BuildContext context) {
-    final phaseContent = switch (_phase) {
-      _Phase.intro => KeeperIntroOverlay(
-          dialog: _introDialog,
-          startLabel: "Let's count!",
-          startButtonKey: const ValueKey('long-parade-start-button'),
-          onStart: _onStartFromIntro,
-        ),
-      // The meadow stays up through the transition, which is the point of
-      // the aside — the child can keep looking at what she just counted
-      // while the keeper talks over it.
-      _Phase.counting ||
-      _Phase.celebrating ||
-      _Phase.transition =>
-        _LongParadeLayer(
-          roundIndex: _roundIndex,
-          clusterCount: _currentRound.clusterCount,
-          spriteAsset: _currentRound.spriteAsset,
-          tappedClusters: _tappedClusters,
-          exitedClusters: _exitedClusters,
-          burstCounters: _burstCounters,
-          hintedCluster: _hintedCluster,
-          currentCount: _currentCount,
-          targetCount: _currentRound.totalCreatures,
-          onTapCluster: _tapCluster,
-          onDone: _finishRound,
-          allTapped: _allTapped,
-          inputLocked: _phase != _Phase.counting,
-          replayPrompt: _countingPrompt,
-          replayCueId: 'long-parade:replay-r$_roundIndex',
-        ),
-      _Phase.interstitial => KeeperIntroOverlay(
-          dialog: _finalKeeperLine,
-          startLabel: 'Continue',
-          startButtonKey: const ValueKey('long-parade-interstitial-next'),
-          onStart: widget.onSequenceComplete,
-        ),
-    };
-
-    return Stack(
-      fit: StackFit.expand,
+    final index = widget.c.index;
+    return Row(
       children: [
-        Image.asset(
-          AssetPaths.countingParadeMeadow,
-          fit: BoxFit.cover,
-        ),
-        PlayfieldScaffold(
-          progress: _progress,
-          celebrate: _phase == _Phase.celebrating,
-          child: phaseContent,
-        ),
-        // Outer stack, not inside the layer: the layer's left edge is the
-        // replay-demo shelf and Buddy would collide with it.
-        if (_phase != _Phase.intro && _phase != _Phase.interstitial)
-          const BuddyCompanionCorner(),
-        if (_phase == _Phase.transition)
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: KeeperAside(
-              text: _currentRound.keeperLine,
-              token: _asideToken,
-              onDismissed: _advanceToNextRound,
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class _LongParadeLayer extends StatelessWidget {
-  const _LongParadeLayer({
-    required this.roundIndex,
-    required this.clusterCount,
-    required this.spriteAsset,
-    required this.tappedClusters,
-    required this.exitedClusters,
-    required this.burstCounters,
-    required this.hintedCluster,
-    required this.currentCount,
-    required this.targetCount,
-    required this.onTapCluster,
-    required this.onDone,
-    required this.allTapped,
-    required this.inputLocked,
-    required this.replayPrompt,
-    required this.replayCueId,
-  });
-
-  final int roundIndex;
-  final int clusterCount;
-  final String spriteAsset;
-  final Set<int> tappedClusters;
-  final Set<int> exitedClusters;
-  final Map<int, int> burstCounters;
-
-  /// Cluster the hint ladder wants glowed, or null.
-  final int? hintedCluster;
-
-  final int currentCount;
-  final int targetCount;
-  final ValueChanged<int> onTapCluster;
-  final VoidCallback onDone;
-  final bool allTapped;
-  final bool inputLocked;
-
-  /// Narration the (?) button replays. Same line the runner spoke at
-  /// the start of the round.
-  final String replayPrompt;
-  final String replayCueId;
-
-  // Single creature size inside a cluster. 44 keeps individual sprites
-  // visible without dominating the cluster card.
-  static const double _creatureSize = 44;
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-        child: Row(
-          children: [
-            kReplayDemoShelf(
-              child: ReplayDemoButton(
-                label: replayPrompt,
-                cueId: replayCueId,
+        Expanded(
+          child: Column(
+            children: [
+              CountBadge(
+                value: _tapped.length * 10,
+                target: _round.totalCreatures,
+                size: CountBadgeSize.small,
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                children: [
-                  CountBadge(
-                    value: currentCount,
-                    target: targetCount,
-                    size: CountBadgeSize.small,
-                  ),
-                  const SizedBox(height: 12),
-                  Expanded(
-                    // Late rounds (8–10 clusters) overflow the natural Wrap
-                    // height even with reflow — wrap in a SingleChildScrollView
-                    // so the kid can scroll if their device is small.
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 16,
-                          runSpacing: 16,
-                          children: [
-                            for (var c = 0; c < clusterCount; c++)
-                              _ClusterCard(
-                                key: ValueKey(
-                                  'long-parade-r$roundIndex-cluster-$c',
-                                ),
-                                spriteAsset: spriteAsset,
-                                tapped: tappedClusters.contains(c),
-                                gone: exitedClusters.contains(c),
-                                hinted: hintedCluster == c,
-                                burstCounter: burstCounters[c] ?? 0,
-                                onTap:
-                                    (inputLocked || exitedClusters.contains(c))
-                                        ? null
-                                        : () => onTapCluster(c),
-                              ),
-                          ],
-                        ),
-                      ),
+              const SizedBox(height: 12),
+              Expanded(
+                // The ten-cluster round overflows the natural Wrap height,
+                // so it scrolls on a small device.
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 16,
+                      runSpacing: 16,
+                      children: [
+                        for (var i = 0; i < _round.clusterCount; i++)
+                          _ClusterCard(
+                            key: ValueKey('long-parade-r$index-cluster-$i'),
+                            spriteAsset: _round.species.spriteAsset,
+                            tapped: _tapped.contains(i),
+                            gone: _exited.contains(i),
+                            hinted: _hinted == i,
+                            burstCounter: _bursts[i] ?? 0,
+                            onTap: (!_open || _exited.contains(i))
+                                ? null
+                                : () => _tap(i),
+                          ),
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
-            const SizedBox(width: 24),
-            kContinueArrowShelf(
-              child: allTapped
-                  ? NextArrowButton(
-                      key: const ValueKey('long-parade-done-arrow'),
-                      idleHintEnabled: true,
-                      idleHintText:
-                          'Great counting by tens! Tap the arrow to keep going.',
-                      onPressed: onDone,
-                      label: kLabelDone,
-                    )
-                  : null,
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+        const SizedBox(width: 24),
+        ParadeDoneShelf(
+          arrowKey: const ValueKey('long-parade-done-arrow'),
+          visible: _allTapped && !_done,
+          idleHintText: kLongParadeDoneHint,
+          onDone: _onDone,
+        ),
+      ],
     );
   }
 }
@@ -583,29 +286,12 @@ class _ClusterCard extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // 2 cols × 5 rows of creatures.
-                    for (var row = 0; row < 5; row++)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Image.asset(
-                              spriteAsset,
-                              width: _LongParadeLayer._creatureSize,
-                              height: _LongParadeLayer._creatureSize,
-                              fit: BoxFit.contain,
-                            ),
-                            const SizedBox(width: 6),
-                            Image.asset(
-                              spriteAsset,
-                              width: _LongParadeLayer._creatureSize,
-                              height: _LongParadeLayer._creatureSize,
-                              fit: BoxFit.contain,
-                            ),
-                          ],
-                        ),
-                      ),
+                    TenClusterGrid(
+                      spriteAsset: spriteAsset,
+                      spriteSize: 44,
+                      gap: 6,
+                      rowGap: 2,
+                    ),
                     const SizedBox(height: 6),
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 250),

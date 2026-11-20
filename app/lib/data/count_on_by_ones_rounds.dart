@@ -14,23 +14,19 @@
 // it, and the clip for the old wording turns up as an orphan rather than being
 // silently looked up and missed.
 
-import 'asset_paths.dart';
 import 'number_words.dart';
+import 'parade_species.dart';
 
 class CountOnByOnesRound {
   const CountOnByOnesRound({
     required this.startN,
-    required this.spriteAsset,
-    required this.singular,
-    required this.plural,
+    required this.species,
     required this.keeperLine,
   });
 
   /// Where we pick up counting from — 10, 20, ..., 90.
   final int startN;
-  final String spriteAsset;
-  final String singular;
-  final String plural;
+  final ParadeSpecies species;
   final String keeperLine;
 
   /// Always 10 — we cross one decade per round.
@@ -43,30 +39,22 @@ class CountOnByOnesRound {
 const List<CountOnByOnesRound> kCountOnByOnesRounds = <CountOnByOnesRound>[
   CountOnByOnesRound(
     startN: 10,
-    spriteAsset: AssetPaths.countingParadeFawn,
-    singular: 'fawn',
-    plural: 'fawns',
+    species: kParadeFawn,
     keeperLine: 'Twenty fawns! The dragons are already up at forty.',
   ),
   CountOnByOnesRound(
     startN: 40,
-    spriteAsset: AssetPaths.countingParadeBabyDragon,
-    singular: 'dragon',
-    plural: 'dragons',
+    species: kParadeDragon,
     keeperLine: 'Fifty dragons! Now — the phoenixes are at seventy.',
   ),
   CountOnByOnesRound(
     startN: 70,
-    spriteAsset: AssetPaths.countingParadeBabyPhoenix,
-    singular: 'phoenix',
-    plural: 'phoenixes',
+    species: kParadePhoenix,
     keeperLine: 'Eighty phoenixes! The golden eggs are at ninety.',
   ),
   CountOnByOnesRound(
     startN: 90,
-    spriteAsset: AssetPaths.countingParadeGoldenEgg,
-    singular: 'golden egg',
-    plural: 'golden eggs',
+    species: kParadeGoldenEgg,
     keeperLine: 'One hundred! You counted all the way to one hundred by ones.',
   ),
 ];
@@ -92,7 +80,29 @@ String countOnByOnesAlreadyCountedLine(CountOnByOnesRound round) =>
 /// steps between, and hearing where they land is the whole point of K.CC.1.
 String countOnByOnesPrompt(CountOnByOnesRound round) {
   final end = kSpelledTens[round.finalCount ~/ 10].toLowerCase();
-  final more = kSpelledCounts[round.arrivalsCount].toLowerCase();
-  return 'Here come $more more ${round.plural}! '
+  final more = spellCount(round.arrivalsCount).toLowerCase();
+  return 'Here come $more more ${round.species.plural}! '
       'Touch each one and count by ones up to $end.';
 }
+
+/// The visit's last beat. (The opening is the animated demo, not a keeper
+/// line.)
+const String kCountOnByOnesFinal =
+    'One hundred! Counting by ones got you all the way there. '
+    'Amazing work.';
+
+/// What the Done arrow says when she leaves it waiting.
+const String kCountOnByOnesDoneHint =
+    'Beautifully counted! Tap the arrow to keep going.';
+
+/// The opening demo counts to ten, folds the ten into one group, then lays
+/// the decades out to a hundred. Each count and decade word is the shared
+/// 'Seven.' / 'Seventy.' clip; these are the two sentences around them.
+const String kCountOnByOnesDemoCollapse =
+    'When we count to ten, we get a special new number. '
+    'And the ones start over.';
+const String kCountOnByOnesDemoKickoff = "Let's count all the different tens!";
+
+/// What the demo's Start arrow says when she leaves it waiting.
+const String kCountOnByOnesDemoStartHint =
+    'Tap the arrow when you are ready to count!';

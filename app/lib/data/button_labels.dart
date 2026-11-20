@@ -61,6 +61,10 @@ const String kLabelIveGotThis = "I've got this";
 /// is a clip and a pre-reader learns a button by its sound.
 const String kLabelLetsGo = "Let's go!";
 
+/// Plays a challenge through again from its finale (Tens Parade, the
+/// two-attribute hunt). It was typed inline at both, so it was never recorded.
+const String kLabelAgain = 'Again!';
+
 /// Default on a `NextArrowButton` with no label of its own.
 const String kLabelNext = 'Next';
 
@@ -94,5 +98,6 @@ List<String> spokenButtonLabels() => <String>[
       kLabelNextBang,
       kLabelSanctuary,
       kLabelLetsGo,
+      kLabelAgain,
       for (var i = 0; i < 10; i++) decadeLabel(i),
     ];

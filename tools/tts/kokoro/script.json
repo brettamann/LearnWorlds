@@ -2866,7 +2866,7 @@
       "id": "button-labels",
       "title": "Buttons - the word a control says when she presses it",
       "note": "The single most-heard set of words in the game after the number words: every ReadAloudGate speaks its label on the tap that acts, and the big arrow ends every round in every activity. All of it was in the browser synth voice, because a label is one or two words and the literal sweep only keeps strings that end like a sentence. Read them as a person handing something over - light and quick, no announcing. \"Flat\" and \"Solid\" are answers rather than navigation, so give those two the same even weight you would give a shape name.",
-      "variants": 24,
+      "variants": 25,
       "complete": true,
       "lines": [
         {
@@ -2924,6 +2924,10 @@
         {
           "text": "Let's go!",
           "clipKey": "let-s-go__3f4acf29"
+        },
+        {
+          "text": "Again!",
+          "clipKey": "again__e1a9a64a"
         },
         {
           "text": "10",
@@ -4762,6 +4766,43 @@
       ]
     },
     {
+      "id": "count-out-n-keeper",
+      "title": "Count Out N — the demo and the keeper",
+      "note": "The opening, then the one-time drag demo: \"Watch\", two creatures counted in on the shared number clips, and the hand-off. Then the line over each finished round, which names the number she brought, and the last beat.",
+      "variants": 7,
+      "complete": true,
+      "lines": [
+        {
+          "text": "Sometimes I just need a few creatures, not all of them! I'll ask for a number, and you bring me exactly that many. Ready?",
+          "clipKey": "sometimes-i-just-need-a-few-creatures-not-all-of__37b6260d"
+        },
+        {
+          "text": "Watch — I'll show you. Drag each fawn into the basket.",
+          "clipKey": "watch-i-ll-show-you-drag-each-fawn-into-the-bask__56ec27cc"
+        },
+        {
+          "text": "Now you try!",
+          "clipKey": "now-you-try__3c8418a4"
+        },
+        {
+          "text": "Four fawns! Now I need some gryphons.",
+          "clipKey": "four-fawns-now-i-need-some-gryphons__8b2f64a4"
+        },
+        {
+          "text": "Six gryphons! One more round — the dragons.",
+          "clipKey": "six-gryphons-one-more-round-the-dragons__35b841fc"
+        },
+        {
+          "text": "Eight dragons! You counted out every group.",
+          "clipKey": "eight-dragons-you-counted-out-every-group__fd294be4"
+        },
+        {
+          "text": "Beautifully counted out! Just the number I asked for, every time.",
+          "clipKey": "beautifully-counted-out-just-the-number-i-asked__1b38c9e0"
+        }
+      ]
+    },
+    {
       "id": "count-forward",
       "title": "Count Forward From N — the two-beat opening",
       "note": "The round opens on two lines with the new creatures walking on between them, so read them as a pair. The first settles what is already done — calm, a little final, and the number carries it, because trusting that number instead of starting over at one is the whole skill. The second is the go signal and lands as the creatures arrive: brighten on \"Here come\", then hand it over.",
@@ -4791,6 +4832,39 @@
         {
           "text": "Here come three more! Now touch each new dragon and keep counting.",
           "clipKey": "here-come-three-more-now-touch-each-new-dragon-a__5622a47b"
+        }
+      ]
+    },
+    {
+      "id": "count-forward-keeper",
+      "title": "Count Forward From N — the keeper",
+      "note": "The opening, the line over each finished round, and the last beat. The round lines carry the total she just reached, so land on the number. The arrow nudge is said to a child who has counted everything and not yet pressed Done.",
+      "variants": 6,
+      "complete": true,
+      "lines": [
+        {
+          "text": "Sometimes we don't start at one. We can start at the number we left off! Watch — I count on from there.",
+          "clipKey": "sometimes-we-don-t-start-at-one-we-can-start-at__bf76bc8a"
+        },
+        {
+          "text": "Six fawns! Now some gryphons are catching up.",
+          "clipKey": "six-fawns-now-some-gryphons-are-catching-up__2dbe6133"
+        },
+        {
+          "text": "Eight gryphons! Last one — the dragons.",
+          "clipKey": "eight-gryphons-last-one-the-dragons__95b5afb0"
+        },
+        {
+          "text": "Ten dragons! Beautifully counted on.",
+          "clipKey": "ten-dragons-beautifully-counted-on__b6339b40"
+        },
+        {
+          "text": "You counted all the new creatures! Wonderful work.",
+          "clipKey": "you-counted-all-the-new-creatures-wonderful-work__248bae2e"
+        },
+        {
+          "text": "Nice counting! Tap the arrow to keep going.",
+          "clipKey": "nice-counting-tap-the-arrow-to-keep-going__74f2f34f"
         }
       ]
     },
@@ -4836,6 +4910,51 @@
       ]
     },
     {
+      "id": "count-on-by-ones-keeper",
+      "title": "Count On By Ones — the demo and the keeper",
+      "note": "The demo counts to ten and then by tens to a hundred on the shared number clips; these are the two sentences around those counts, and the nudge on its Start arrow. Then the line over each finished round, the last beat, and the nudge on the Done arrow.",
+      "variants": 9,
+      "complete": true,
+      "lines": [
+        {
+          "text": "When we count to ten, we get a special new number. And the ones start over.",
+          "clipKey": "when-we-count-to-ten-we-get-a-special-new-number__71f69894"
+        },
+        {
+          "text": "Let's count all the different tens!",
+          "clipKey": "let-s-count-all-the-different-tens__5afbdc85"
+        },
+        {
+          "text": "Tap the arrow when you are ready to count!",
+          "clipKey": "tap-the-arrow-when-you-are-ready-to-count__7fb2e60f"
+        },
+        {
+          "text": "Twenty fawns! The dragons are already up at forty.",
+          "clipKey": "twenty-fawns-the-dragons-are-already-up-at-forty__b0669213"
+        },
+        {
+          "text": "Fifty dragons! Now — the phoenixes are at seventy.",
+          "clipKey": "fifty-dragons-now-the-phoenixes-are-at-seventy__b53cc1d7"
+        },
+        {
+          "text": "Eighty phoenixes! The golden eggs are at ninety.",
+          "clipKey": "eighty-phoenixes-the-golden-eggs-are-at-ninety__7fca406f"
+        },
+        {
+          "text": "One hundred! You counted all the way to one hundred by ones.",
+          "clipKey": "one-hundred-you-counted-all-the-way-to-one-hundr__fe1dda5f"
+        },
+        {
+          "text": "One hundred! Counting by ones got you all the way there. Amazing work.",
+          "clipKey": "one-hundred-counting-by-ones-got-you-all-the-way__4c65e8c3"
+        },
+        {
+          "text": "Beautifully counted! Tap the arrow to keep going.",
+          "clipKey": "beautifully-counted-tap-the-arrow-to-keep-going__54892763"
+        }
+      ]
+    },
+    {
       "id": "long-parade",
       "title": "Long Parade — the instruction",
       "note": "One line per creature. No number in it: which ten she is on is what the taps say, not the prompt.",
@@ -4857,6 +4976,43 @@
         {
           "text": "Tap each group of golden eggs — count by tens out loud with me!",
           "clipKey": "tap-each-group-of-golden-eggs-count-by-tens-out__79c97adf"
+        }
+      ]
+    },
+    {
+      "id": "long-parade-keeper",
+      "title": "Long Parade — the keeper",
+      "note": "The opening, the line over each finished round (it names the ten she reached, so land on it), the last beat, and the nudge on the Done arrow.",
+      "variants": 7,
+      "complete": true,
+      "lines": [
+        {
+          "text": "Today's parade is HUGE — but we won't count one by one. Each group is ten. Tap each group and count by tens together!",
+          "clipKey": "today-s-parade-is-huge-but-we-won-t-count-one-by__132297ee"
+        },
+        {
+          "text": "Thirty fawns! Next: more groups of ten — dragons.",
+          "clipKey": "thirty-fawns-next-more-groups-of-ten-dragons__66bcf3a3"
+        },
+        {
+          "text": "Fifty dragons! Phoenix babies are next.",
+          "clipKey": "fifty-dragons-phoenix-babies-are-next__da11696a"
+        },
+        {
+          "text": "Seventy phoenixes! Last group — the golden eggs.",
+          "clipKey": "seventy-phoenixes-last-group-the-golden-eggs__61227246"
+        },
+        {
+          "text": "One hundred! You counted to one hundred by tens — that's amazing.",
+          "clipKey": "one-hundred-you-counted-to-one-hundred-by-tens-t__ab40f1bb"
+        },
+        {
+          "text": "One hundred! Counting by tens carries you all the way there.",
+          "clipKey": "one-hundred-counting-by-tens-carries-you-all-the__c405e03d"
+        },
+        {
+          "text": "Great counting by tens! Tap the arrow to keep going.",
+          "clipKey": "great-counting-by-tens-tap-the-arrow-to-keep-goi__38df920e"
         }
       ]
     },
@@ -5297,8 +5453,8 @@
     {
       "id": "tens-parade-reward",
       "title": "Tens Parade — the hundredth tap",
-      "note": "The payoff for a hundred taps, and the loudest single moment in the game. Two wordings: the run that earns the Cloud Unicorn, and every replay after it. Built by calling the same function the runner calls, so a reworded line cannot leave a stale clip behind.",
-      "variants": 2,
+      "note": "The payoff for a hundred taps, and the loudest single moment in the game. Two wordings: the run that earns the Cloud Unicorn, and a later visit, when she has it and is paid coins instead. Then the line for an \"Again!\" run in the same visit, which pays nothing, and the demo with its Start-arrow nudge. Built by calling the same functions the runner calls, so a reworded line cannot leave a stale clip behind.",
+      "variants": 5,
       "complete": true,
       "lines": [
         {
@@ -5308,6 +5464,18 @@
         {
           "text": "One hundred! You counted every single one. Here are fifty bonus coins — you've earned them.",
           "clipKey": "one-hundred-you-counted-every-single-one-here-ar__eff96edb"
+        },
+        {
+          "text": "One hundred! Counting by ones got you all the way there. Amazing work.",
+          "clipKey": "one-hundred-counting-by-ones-got-you-all-the-way__4c65e8c3"
+        },
+        {
+          "text": "Count the animals with me out loud as they do their parade!",
+          "clipKey": "count-the-animals-with-me-out-loud-as-they-do-th__3f39e42b"
+        },
+        {
+          "text": "Tap the arrow to start the challenge!",
+          "clipKey": "tap-the-arrow-to-start-the-challenge__fe0a2cd2"
         }
       ]
     },
@@ -5431,34 +5599,18 @@
     },
     {
       "id": "parade-reward",
-      "title": "Counting Parade — the coin payout",
-      "note": "The keeper handing over the coins at the end of a visit.",
-      "variants": 6,
+      "title": "Counting Parade — the coin payout, and the Done arrow",
+      "note": "The keeper handing over the coins at the end of a visit. It used to name a total for each possible round count; it says \"some coins\" now, like everywhere else. Then the nudge on the Done arrow, said to a child who has counted everything.",
+      "variants": 2,
       "complete": true,
       "lines": [
         {
-          "text": "Thank you, friend! Here are 15 coins from the Sanctuary.",
-          "clipKey": "thank-you-friend-here-are-15-coins-from-the-sanc__e63a768a"
+          "text": "Thank you, friend! Here are some coins from the Sanctuary.",
+          "clipKey": "thank-you-friend-here-are-some-coins-from-the-sa__52225670"
         },
         {
-          "text": "Thank you, friend! Here are 20 coins from the Sanctuary.",
-          "clipKey": "thank-you-friend-here-are-20-coins-from-the-sanc__96b77cfa"
-        },
-        {
-          "text": "Thank you, friend! Here are 25 coins from the Sanctuary.",
-          "clipKey": "thank-you-friend-here-are-25-coins-from-the-sanc__2f6300f5"
-        },
-        {
-          "text": "Thank you, friend! Here are 30 coins from the Sanctuary.",
-          "clipKey": "thank-you-friend-here-are-30-coins-from-the-sanc__8244c903"
-        },
-        {
-          "text": "Thank you, friend! Here are 35 coins from the Sanctuary.",
-          "clipKey": "thank-you-friend-here-are-35-coins-from-the-sanc__9986d130"
-        },
-        {
-          "text": "Thank you, friend! Here are 40 coins from the Sanctuary.",
-          "clipKey": "thank-you-friend-here-are-40-coins-from-the-sanc__4db16a30"
+          "text": "You counted them all! Tap the arrow to keep going.",
+          "clipKey": "you-counted-them-all-tap-the-arrow-to-keep-going__f6596451"
         }
       ]
     },
@@ -7029,7 +7181,7 @@
       "id": "dart-literals",
       "title": "Lines written directly in Dart",
       "note": "Swept out of lib/ by tool/narration_sources.dart: the sanctuary prologue, const round keeperLines, reward dialog. Interpolated templates are excluded - their variants have to come from the catalog that fills the slot.",
-      "variants": 75,
+      "variants": 43,
       "complete": true,
       "lines": [
         {
@@ -7045,48 +7197,8 @@
           "clipKey": "and-the-last-one__5070d056"
         },
         {
-          "text": "Beautifully counted out! Just the number I asked for, every time.",
-          "clipKey": "beautifully-counted-out-just-the-number-i-asked__1b38c9e0"
-        },
-        {
-          "text": "Beautifully counted! Tap the arrow to keep going.",
-          "clipKey": "beautifully-counted-tap-the-arrow-to-keep-going__54892763"
-        },
-        {
-          "text": "Count the animals with me out loud as they do their parade!",
-          "clipKey": "count-the-animals-with-me-out-loud-as-they-do-th__3f39e42b"
-        },
-        {
-          "text": "Eight dragons! You counted out every group.",
-          "clipKey": "eight-dragons-you-counted-out-every-group__fd294be4"
-        },
-        {
-          "text": "Eight gryphons! Last one — the dragons.",
-          "clipKey": "eight-gryphons-last-one-the-dragons__95b5afb0"
-        },
-        {
-          "text": "Eighty phoenixes! The golden eggs are at ninety.",
-          "clipKey": "eighty-phoenixes-the-golden-eggs-are-at-ninety__7fca406f"
-        },
-        {
-          "text": "Fifty dragons! Now — the phoenixes are at seventy.",
-          "clipKey": "fifty-dragons-now-the-phoenixes-are-at-seventy__b53cc1d7"
-        },
-        {
-          "text": "Fifty dragons! Phoenix babies are next.",
-          "clipKey": "fifty-dragons-phoenix-babies-are-next__da11696a"
-        },
-        {
-          "text": "Four fawns! Now I need some gryphons.",
-          "clipKey": "four-fawns-now-i-need-some-gryphons__8b2f64a4"
-        },
-        {
           "text": "Go ahead and follow me when you're ready!",
           "clipKey": "go-ahead-and-follow-me-when-you-re-ready__007f002f"
-        },
-        {
-          "text": "Great counting by tens! Tap the arrow to keep going.",
-          "clipKey": "great-counting-by-tens-tap-the-arrow-to-keep-goi__38df920e"
         },
         {
           "text": "I found this while you were counting, and it was all by itself! It needs someone to care for it. Keep it with you — maybe it'll hatch some day!",
@@ -7103,10 +7215,6 @@
         {
           "text": "Let's build!",
           "clipKey": "let-s-build__6f22709f"
-        },
-        {
-          "text": "Let's count all the different tens!",
-          "clipKey": "let-s-count-all-the-different-tens__5afbdc85"
         },
         {
           "text": "Let's count!",
@@ -7145,20 +7253,12 @@
           "clipKey": "look-some-plants-in-the-garden-have-grown-into-s__729e98f1"
         },
         {
-          "text": "Nice counting! Tap the arrow to keep going.",
-          "clipKey": "nice-counting-tap-the-arrow-to-keep-going__74f2f34f"
-        },
-        {
           "text": "Nice work!",
           "clipKey": "nice-work__be3361a0"
         },
         {
           "text": "Nicely counted!",
           "clipKey": "nicely-counted__7aa23ab8"
-        },
-        {
-          "text": "Now you try!",
-          "clipKey": "now-you-try__3c8418a4"
         },
         {
           "text": "Now you try! Drag the shapes into the right baskets.",
@@ -7173,48 +7273,12 @@
           "clipKey": "one-flat-shape__5d4200a6"
         },
         {
-          "text": "One hundred! Counting by ones got you all the way there. Amazing work.",
-          "clipKey": "one-hundred-counting-by-ones-got-you-all-the-way__4c65e8c3"
-        },
-        {
-          "text": "One hundred! Counting by tens carries you all the way there.",
-          "clipKey": "one-hundred-counting-by-tens-carries-you-all-the__c405e03d"
-        },
-        {
-          "text": "One hundred! You counted all the way to one hundred by ones.",
-          "clipKey": "one-hundred-you-counted-all-the-way-to-one-hundr__fe1dda5f"
-        },
-        {
-          "text": "One hundred! You counted to one hundred by tens — that's amazing.",
-          "clipKey": "one-hundred-you-counted-to-one-hundred-by-tens-t__ab40f1bb"
-        },
-        {
           "text": "One solid shape!",
           "clipKey": "one-solid-shape__62a3ed48"
         },
         {
-          "text": "Seventy phoenixes! Last group — the golden eggs.",
-          "clipKey": "seventy-phoenixes-last-group-the-golden-eggs__61227246"
-        },
-        {
           "text": "Shapes can group by how many sides they have. Let's put the three-sided ones together, the four-sided ones together, and the ones with five or more sides together.",
           "clipKey": "shapes-can-group-by-how-many-sides-they-have-let__07530d0f"
-        },
-        {
-          "text": "Six fawns! Now some gryphons are catching up.",
-          "clipKey": "six-fawns-now-some-gryphons-are-catching-up__2dbe6133"
-        },
-        {
-          "text": "Six gryphons! One more round — the dragons.",
-          "clipKey": "six-gryphons-one-more-round-the-dragons__35b841fc"
-        },
-        {
-          "text": "Sometimes I just need a few creatures, not all of them! I'll ask for a number, and you bring me exactly that many. Ready?",
-          "clipKey": "sometimes-i-just-need-a-few-creatures-not-all-of__37b6260d"
-        },
-        {
-          "text": "Sometimes we don't start at one. We can start at the number we left off! Watch — I count on from there.",
-          "clipKey": "sometimes-we-don-t-start-at-one-we-can-start-at__bf76bc8a"
         },
         {
           "text": "Sort the shapes — flat or solid?",
@@ -7237,18 +7301,6 @@
           "clipKey": "tap-the-arrow-to-keep-going__5aac5613"
         },
         {
-          "text": "Tap the arrow to start the challenge!",
-          "clipKey": "tap-the-arrow-to-start-the-challenge__fe0a2cd2"
-        },
-        {
-          "text": "Tap the arrow when you are ready to count!",
-          "clipKey": "tap-the-arrow-when-you-are-ready-to-count__7fb2e60f"
-        },
-        {
-          "text": "Ten dragons! Beautifully counted on.",
-          "clipKey": "ten-dragons-beautifully-counted-on__b6339b40"
-        },
-        {
           "text": "That basket is for shapes with five or more sides. Try another!",
           "clipKey": "that-basket-is-for-shapes-with-five-or-more-side__f1d2e7ac"
         },
@@ -7265,10 +7317,6 @@
           "clipKey": "thing-is-it-s-a-lot-for-anyone-to-do__e576fa6b"
         },
         {
-          "text": "Thirty fawns! Next: more groups of ten — dragons.",
-          "clipKey": "thirty-fawns-next-more-groups-of-ten-dragons__66bcf3a3"
-        },
-        {
           "text": "This is a circle! A circle has no sides — it's smooth all the way around.",
           "clipKey": "this-is-a-circle-a-circle-has-no-sides-it-s-smoo__2c8cbd44"
         },
@@ -7277,20 +7325,8 @@
           "clipKey": "today-the-parade-is-huge-don-t-worry-we-can-coun__9c917ef3"
         },
         {
-          "text": "Today's parade is HUGE — but we won't count one by one. Each group is ten. Tap each group and count by tens together!",
-          "clipKey": "today-s-parade-is-huge-but-we-won-t-count-one-by__132297ee"
-        },
-        {
-          "text": "Twenty fawns! The dragons are already up at forty.",
-          "clipKey": "twenty-fawns-the-dragons-are-already-up-at-forty__b0669213"
-        },
-        {
           "text": "Watch — I'll show you how to sort. The flat shapes go in the flat basket, the solid shapes in the solid basket.",
           "clipKey": "watch-i-ll-show-you-how-to-sort-the-flat-shapes__bb8e4219"
-        },
-        {
-          "text": "Watch — drag creatures into the basket!",
-          "clipKey": "watch-drag-creatures-into-the-basket__709c57da"
         },
         {
           "text": "Watch — how to sort flat vs solid!",
@@ -7309,20 +7345,8 @@
           "clipKey": "well-hello-there-adventurer-i-m-haddock__9e017329"
         },
         {
-          "text": "When we count to ten, we get a special new number. And the ones start over.",
-          "clipKey": "when-we-count-to-ten-we-get-a-special-new-number__71f69894"
-        },
-        {
           "text": "Wow! You learned every shape in the garden.",
           "clipKey": "wow-you-learned-every-shape-in-the-garden__dc26985e"
-        },
-        {
-          "text": "You counted all the new creatures! Wonderful work.",
-          "clipKey": "you-counted-all-the-new-creatures-wonderful-work__248bae2e"
-        },
-        {
-          "text": "You counted them all! Tap the arrow to keep going.",
-          "clipKey": "you-counted-them-all-tap-the-arrow-to-keep-going__f6596451"
         },
         {
           "text": "You learned every shape in the garden!",
