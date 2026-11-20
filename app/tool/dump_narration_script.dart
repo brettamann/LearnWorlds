@@ -31,9 +31,11 @@ import 'narration_sources.dart';
 /// through `LessonRuntime`. Leaving it out meant every lesson still opened in
 /// the browser synth voice, which is the first thing anyone hears.
 ///
-/// Every `text` field in those files sits under a `narrationScript` array -
-/// checked across all 22 lessons, 301 occurrences, no exceptions - so the walk
-/// can take them all without guessing which strings are spoken.
+/// Every spoken `text` field in those files sits under a `narrationScript`
+/// array - checked across all 22 lessons, no exceptions - so the walk can take
+/// them all without guessing which strings are spoken. The one other spoken
+/// block is `presentation.keeperIntro` (the keeper's opening line and its
+/// button), collected by key.
 List<String> lessonNarrationLines() {
   final dir = Directory('assets/data/lesson-runtime');
   if (!dir.existsSync()) return const <String>[];
@@ -49,6 +51,20 @@ List<String> lessonNarrationLines() {
     }
     if (node is! Map) return;
     for (final entry in node.entries) {
+      // The keeper's opening line and the button under it, from the lesson's
+      // `presentation` block. They used to be literals in lesson_screen.dart,
+      // which the source sweep picked up; now they are lesson data.
+      if (entry.key == 'keeperIntro' && entry.value is Map) {
+        final intro = entry.value as Map;
+        for (final key in const ['text', 'startLabel']) {
+          final value = intro[key];
+          if (value is String) {
+            final text = narrationTextNormalize(value);
+            if (text.isNotEmpty) seen[text] = text;
+          }
+        }
+        continue;
+      }
       if (inNarrationScript && entry.key == 'text' && entry.value is String) {
         final text = narrationTextNormalize(entry.value as String);
         if (text.isNotEmpty) seen[text] = text;

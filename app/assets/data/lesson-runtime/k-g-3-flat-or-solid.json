@@ -12,6 +12,14 @@
   "totalDurationTargetSec": 60,
   "prerequisites": ["lesson-k-g-2-shape-recognition"],
 
+  "presentation": {
+    "stage": "flat-or-solid",
+    "backdrop": "garden",
+    "keeperIntro": {
+      "text": "Some shapes are flat — like drawings on a page. Others are solid — you can hold them in your hand. Help me sort them into the right baskets!",
+      "startLabel": "Let's sort!"
+    }
+  },
   "phases": {
     "iShow": {
       "durationSec": 25,

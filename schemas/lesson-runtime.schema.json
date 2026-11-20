@@ -5,7 +5,7 @@
   "description": "Machine-actionable lesson data the runtime consumes. Generated from the lesson's design spec in /specs/lessons/<id>.md via the lesson-pipeline (TBD tooling). The markdown spec is the design source of truth; this JSON is the runtime form.",
 
   "type": "object",
-  "required": ["id", "conceptId", "standardCode", "region", "introducingActivity", "narratorVoice", "totalDurationTargetSec", "phases", "libraryEntry"],
+  "required": ["id", "conceptId", "standardCode", "region", "introducingActivity", "narratorVoice", "totalDurationTargetSec", "presentation", "phases", "libraryEntry"],
   "additionalProperties": false,
   "properties": {
     "$schema": { "type": "string" },
@@ -54,6 +54,29 @@
       "items": { "type": "string" }
     },
 
+    "presentation": {
+      "type": "object",
+      "description": "How LessonScreen presents this lesson: the stage it draws, the backdrop, and the keeper's opening line. Read by app/lib/models/lesson_runtime.dart (LessonPresentation).",
+      "required": ["stage", "backdrop", "keeperIntro"],
+      "additionalProperties": false,
+      "properties": {
+        "stage": {
+          "type": "string",
+          "enum": ["fawns", "clusters", "count-on", "habitat", "clearing", "shape-sequence", "flat-or-solid", "sort-by-attribute"],
+          "description": "shape-sequence, flat-or-solid and sort-by-attribute are their own guided practice, so the generic We-Try is skipped for them."
+        },
+        "backdrop": { "type": "string", "enum": ["meadow", "garden"] },
+        "keeperIntro": {
+          "type": "object",
+          "required": ["text", "startLabel"],
+          "additionalProperties": false,
+          "properties": {
+            "text": { "type": "string", "minLength": 1, "description": "Spoken by the keeper before the lesson. Recorded: tool/dump_narration_script.dart collects it." },
+            "startLabel": { "type": "string", "minLength": 1, "description": "The start button's label; spoken on tap." }
+          }
+        }
+      }
+    },
     "phases": {
       "type": "object",
       "required": ["iShow", "weTry", "youDo"],

@@ -45,12 +45,17 @@ const Set<String> _playableActivities = <String>{
 /// Lessons whose body already contains guided practice of its own, and which
 /// therefore hand off straight to You-Do.
 ///
-/// This must stay in step with `_bespokePracticeConcepts` in
-/// `lesson_screen.dart`, and the second test below is what keeps it there: a
-/// concept may only be on this list if its lesson body is genuinely
-/// interactive, because the alternative reading - "this lesson does not need
-/// a We-Try" - is how the phase goes missing again, one lesson at a time.
-const Set<String> _bespokePractice = <String>{'K.G.2', 'K.G.3', 'K.G.4'};
+/// Read from the lessons themselves - a lesson whose `presentation.stage`
+/// owns its practice (`LessonStage.ownsPractice`) - which is exactly what
+/// LessonScreen consults. The second test below keeps it honest: a concept may
+/// only be here if its lesson body is genuinely interactive, because the
+/// alternative reading - "this lesson does not need a We-Try" - is how the
+/// phase goes missing again, one lesson at a time.
+final Set<String> _bespokePractice = <String>{
+  for (final lesson in _allLessons())
+    if (LessonRuntime.fromJson(lesson).presentation.stage.ownsPractice)
+      lesson['conceptId'] as String,
+};
 
 Map<String, dynamic> _read(File f) =>
     jsonDecode(f.readAsStringSync()) as Map<String, dynamic>;

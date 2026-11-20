@@ -132,53 +132,6 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
 
   final LessonTargetRegistry _targets = LessonTargetRegistry();
 
-  /// Concept-specific keeper dialogue. Kept here so every introducing
-  /// activity's keeper line lives in one place. The fawns line is the
-  /// K.CC.4a default — every other concept that uses LessonScreen needs
-  /// its own case so the kid doesn't hear "the fawns wander off" before
-  /// a lesson about clusters or counting on.
-  String _keeperIntroDialog(LessonRuntime? runtime) {
-    switch (runtime?.conceptId) {
-      case 'K.G.2':
-        return 'Look — some plants in the garden have grown into shapes! '
-            "Help me find them all, won't you?";
-      case 'K.G.3':
-        return 'Some shapes are flat — like drawings on a page. Others are '
-            'solid — you can hold them in your hand. Help me sort them into '
-            'the right baskets!';
-      case 'K.G.4':
-        return "Shapes can group by how many sides they have. Let's put "
-            'the three-sided ones together, the four-sided ones together, '
-            'and the ones with five or more sides together.';
-      case 'K.CC.1':
-        return "Today the parade is HUGE. Don't worry — we can count by "
-            'tens! Watch how a big group of ten becomes one easy count.';
-      case 'K.CC.2':
-        return "We don't always start at one. When some are already counted, "
-            'we can keep going from there. Let me show you.';
-      default:
-        return "Oh, thank goodness you're here. The fawns wander off every "
-            'time I blink. Can you help me make sure all three are still '
-            'in the meadow?';
-    }
-  }
-
-  String _keeperIntroStartLabel(LessonRuntime? runtime) {
-    switch (runtime?.conceptId) {
-      case 'K.G.2':
-        return "Let's look!";
-      case 'K.G.3':
-        return "Let's sort!";
-      case 'K.G.4':
-        return "Let's sort!";
-      case 'K.CC.1':
-      case 'K.CC.2':
-        return "Let's count!";
-      default:
-        return "Let's count!";
-    }
-  }
-
   /// Idempotent keeper-intro narration. The post-frame callback in the
   /// FutureBuilder calls this on every rebuild; the flag makes it a no-op
   /// after the first fire.
@@ -216,38 +169,35 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     if (_keeperIntroSpoken) return;
     _keeperIntroSpoken = true;
     ref.narration.say(
-      _keeperIntroDialog(runtime),
+      runtime.presentation.keeperIntro,
       cueId: 'lesson:keeper-intro',
       speaker: kKeeperSpeaker,
       caption: false,
     );
   }
 
-  /// True for lessons whose iShow scene includes painted shapes (K.G.2).
-  /// We use this rather than the conceptId switch so adjacent shape-recog
-  /// lessons get the same treatment without touching this file.
-  bool _isShapeLesson(LessonRuntime runtime) => runtime.iShow.shapes.isNotEmpty;
-
+  /// Where the lesson opens, from the stage it is authored onto.
   void _onKeeperStartPressed() {
     final runtime = _runtime;
     if (runtime == null) return;
-    if (runtime.conceptId == 'K.G.3') {
-      setState(() => _phase = _LessonPhase.flatOrSolidLesson);
-      return;
+    switch (runtime.presentation.stage) {
+      case LessonStage.flatOrSolid:
+        setState(() => _phase = _LessonPhase.flatOrSolidLesson);
+      case LessonStage.sortByAttribute:
+        setState(() => _phase = _LessonPhase.sortByAttributeLesson);
+      case LessonStage.shapeSequence:
+        setState(() {
+          _currentShapeIdx = 0;
+          _phase = _LessonPhase.shapeIntro;
+        });
+      case LessonStage.fawns:
+      case LessonStage.clusters:
+      case LessonStage.countOn:
+      case LessonStage.habitat:
+      case LessonStage.clearing:
+        setState(() => _phase = _LessonPhase.iShow);
+        _scheduleIShow(runtime);
     }
-    if (runtime.conceptId == 'K.G.4') {
-      setState(() => _phase = _LessonPhase.sortByAttributeLesson);
-      return;
-    }
-    if (_isShapeLesson(runtime)) {
-      setState(() {
-        _currentShapeIdx = 0;
-        _phase = _LessonPhase.shapeIntro;
-      });
-      return;
-    }
-    setState(() => _phase = _LessonPhase.iShow);
-    _scheduleIShow(runtime);
   }
 
   void _onFlatOrSolidLessonComplete() {
@@ -337,30 +287,13 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
       ..start();
   }
 
-  /// Lessons whose body already contains its own guided practice, and which
-  /// must therefore not also run the generic We-Try.
-  ///
-  /// K.G.4 has a hand-built one - `kg4_sort_by_attribute_lesson_layer.dart`
-  /// is literally `enum _Beat { iShow, weTry, done }`, halo on the target bin,
-  /// auto-complete on hesitation. K.G.3 ends each pairing with a sort round
-  /// the kid plays, and K.G.2 runs nine intro-then-find rounds. Handing any of
-  /// the three a second practice beat would ask her to do the same thing twice
-  /// in a row and, for K.G.2, would do it after the celebration.
-  ///
-  /// `lesson_wetry_test.dart` pins this set in both directions: a lesson in it
-  /// must have its own interactive body, and every lesson out of it must reach
-  /// the generic phase.
-  static const Set<String> _bespokePracticeConcepts = {
-    'K.G.2',
-    'K.G.3',
-    'K.G.4',
-  };
-
   /// End of the demonstration. Her turn, unless this lesson does its own.
   void _afterIShow() {
     final runtime = _runtime;
     if (runtime == null) return;
-    if (_bespokePracticeConcepts.contains(runtime.conceptId) ||
+    // A stage that is its own guided practice (the shape lessons) must not
+    // also run the generic one: she would do the same thing twice in a row.
+    if (runtime.presentation.stage.ownsPractice ||
         !runtime.weTry.script.hasGate) {
       _goToYouDo();
       return;
@@ -396,18 +329,11 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     super.dispose();
   }
 
-  /// Background asset chosen per concept. Shape Garden gets the garden art;
-  /// Counting Parade (default) keeps the meadow.
-  String _backgroundAsset(LessonRuntime? runtime) {
-    switch (runtime?.conceptId) {
-      case 'K.G.2':
-      case 'K.G.3':
-      case 'K.G.4':
-        return AssetPaths.shapeGardenBackground;
-      default:
-        return AssetPaths.countingParadeMeadow;
-    }
-  }
+  String _backgroundAsset(LessonRuntime? runtime) =>
+      switch (runtime?.presentation.backdrop) {
+        LessonBackdrop.garden => AssetPaths.shapeGardenBackground,
+        LessonBackdrop.meadow || null => AssetPaths.countingParadeMeadow,
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -444,8 +370,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
 
               if (_phase == _LessonPhase.keeperIntro) {
                 return KeeperIntroOverlay(
-                  dialog: _keeperIntroDialog(runtime),
-                  startLabel: _keeperIntroStartLabel(runtime),
+                  dialog: runtime.presentation.keeperIntro,
+                  startLabel: runtime.presentation.startLabel,
                   startButtonKey: const ValueKey('lesson-keeper-start-button'),
                   onStart: _onKeeperStartPressed,
                 );
@@ -503,43 +429,42 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
               }
 
               // Fawn / iShow path — K.CC.4a-style lessons.
-              switch (runtime.conceptId) {
-                case 'K.CC.1':
+              switch (runtime.presentation.stage) {
+                case LessonStage.clusters:
                   return LessonClusterStage(
                     badgeValue: _scene.badgeValue,
                     targets: _targets,
                   );
-                case 'K.CC.2':
+                case LessonStage.countOn:
                   return LessonCountOnStage(
                     badgeValue: _scene.badgeValue,
                     targets: _targets,
                   );
-                case 'K.G.5':
-                case 'K.G.6':
+                case LessonStage.habitat:
                   return HabitatLessonStage(
                     blueprint: kHabitatBlueprints[0],
                     // K.G.6 opens on the frame the kid just laid in K.G.5 -
                     // "the frame is the base, we add shapes on top" - so its
                     // sticks and clay start down rather than as ghosts.
-                    placedCorners: runtime.conceptId == 'K.G.6' &&
+                    placedCorners: runtime.iShow.framePrebuilt &&
                             _phase != _LessonPhase.weTry
                         ? <int>{0, 1, 2}
                         : _scene.placedCorners,
-                    placedEdges: runtime.conceptId == 'K.G.6' &&
+                    placedEdges: runtime.iShow.framePrebuilt &&
                             _phase != _LessonPhase.weTry
                         ? <int>{0, 1, 2}
                         : _scene.placedEdges,
                     placedRoof: _scene.placedRoof,
                     showRoof: _phase == _LessonPhase.weTry
                         ? runtime.weTry.showsRoof
-                        : runtime.conceptId == 'K.G.6',
+                        : runtime.iShow.showsRoof,
                     carrying: _scene.carrying,
                     handVisible: _scene.handVisible,
                     pointerTarget: _scene.handTarget,
                     fawnHome: _scene.fawnHome,
                     targets: _targets,
                   );
-                case 'K.G.1':
+                case LessonStage.clearing:
                   return ClearingLessonStage(
                     landmarkIds: _phase == _LessonPhase.weTry
                         ? runtime.weTry.landmarkIds
@@ -551,11 +476,18 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
                     zoneIds:
                         _phase == _LessonPhase.weTry ? _scene.haloed : const {},
                   );
+                // The three shape stages are drawn by their own phases above
+                // and never reach here.
+                case LessonStage.fawns:
+                case LessonStage.shapeSequence:
+                case LessonStage.flatOrSolid:
+                case LessonStage.sortByAttribute:
+                  break;
               }
-              // Anything that reaches here draws three fawns in a meadow, and
-              // that is right for exactly the counting lessons it was built
-              // for. `lesson_scene_test.dart` holds the line: a lesson whose
-              // scene is not made of creatures must not land here.
+              // Creatures in a meadow, which is right for exactly the counting
+              // lessons it was built for. `lesson_scene_test.dart` holds the
+              // line: a lesson whose scene is not made of creatures must not
+              // land here.
               return LessonFawnStage(
                 sparkled: _scene.sparkled,
                 badgeValue: _scene.badgeValue,

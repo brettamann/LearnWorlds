@@ -96,6 +96,8 @@ class IShowPhase {
     required this.shapes,
     required this.landmarkIds,
     required this.creatureCount,
+    this.framePrebuilt = false,
+    this.showsRoof = false,
     this.background,
     this.musicBed,
   });
@@ -121,6 +123,8 @@ class IShowPhase {
           if (id is String) id,
       ],
       creatureCount: _creatureCount(scene),
+      framePrebuilt: (scene['buildSite'] as Map?)?['completedFrame'] != null,
+      showsRoof: (scene['buildSite'] as Map?)?['phase2GhostOutline'] != null,
       background: scene['background'] as String?,
       musicBed: scene['musicBed'] as String?,
     );
@@ -128,6 +132,13 @@ class IShowPhase {
 
   final int durationSec;
   final List<NarrationCue> narrationScript;
+
+  /// The habitat frame is already standing when the demonstration opens
+  /// (K.G.6 builds on top of the frame she laid in K.G.5).
+  final bool framePrebuilt;
+
+  /// The roof ghost is drawn: this demonstration adds a shape on top.
+  final bool showsRoof;
   final List<AnimationStep> animationSteps;
   final int skipAvailableAfterSec;
 
@@ -273,6 +284,7 @@ class LessonRuntime {
     required this.iShow,
     required this.weTry,
     required this.youDo,
+    required this.presentation,
   });
 
   factory LessonRuntime.fromJson(Map<String, dynamic> json) {
@@ -280,6 +292,9 @@ class LessonRuntime {
     return LessonRuntime(
       id: json['id'] as String,
       conceptId: json['conceptId'] as String,
+      presentation: LessonPresentation.fromJson(
+        json['presentation'] as Map<String, dynamic>,
+      ),
       iShow: IShowPhase.fromJson(phases['iShow'] as Map<String, dynamic>),
       weTry: WeTryPhase.fromJson(phases['weTry'] as Map<String, dynamic>),
       youDo: YouDoPhase.fromJson(phases['youDo'] as Map<String, dynamic>),
@@ -288,6 +303,11 @@ class LessonRuntime {
 
   final String id;
   final String conceptId;
+
+  /// How LessonScreen shows this lesson: which stage, on which backdrop,
+  /// opened with which keeper line.
+  final LessonPresentation presentation;
+
   final IShowPhase iShow;
   final WeTryPhase weTry;
   final YouDoPhase youDo;
@@ -306,4 +326,90 @@ int _creatureCount(Map<String, dynamic> scene) {
     if (value is num) return value.toInt();
   }
   return 3;
+}
+
+/// The stage a lesson is played on.
+enum LessonStage {
+  /// Creatures in a meadow, counted (the default counting lessons).
+  fawns('fawns'),
+
+  /// Groups of ten (K.CC.1).
+  clusters('clusters'),
+
+  /// Counting on from a number already counted (K.CC.2).
+  countOn('count-on'),
+
+  /// The habitat build site (K.G.5, K.G.6).
+  habitat('habitat'),
+
+  /// Buddy and the landmarks of the clearing (K.G.1).
+  clearing('clearing'),
+
+  /// Nine shapes, each introduced then found (K.G.2).
+  shapeSequence('shape-sequence'),
+
+  /// Flat-or-solid pairings and a sort (K.G.3).
+  flatOrSolid('flat-or-solid'),
+
+  /// Sorting by number of sides (K.G.4).
+  sortByAttribute('sort-by-attribute');
+
+  const LessonStage(this.id);
+
+  /// The value authored in the lesson JSON.
+  final String id;
+
+  static LessonStage fromId(String id) => values.firstWhere(
+        (s) => s.id == id,
+        orElse: () => throw FormatException('Unknown lesson stage "$id"'),
+      );
+
+  /// Stages that are their own guided practice, and so must not also run
+  /// the generic We-Try: asking her to do the same thing twice in a row.
+  bool get ownsPractice =>
+      this == shapeSequence || this == flatOrSolid || this == sortByAttribute;
+}
+
+/// The painted backdrop behind a lesson.
+enum LessonBackdrop {
+  meadow('meadow'),
+  garden('garden');
+
+  const LessonBackdrop(this.id);
+  final String id;
+
+  static LessonBackdrop fromId(String id) => values.firstWhere(
+        (b) => b.id == id,
+        orElse: () => throw FormatException('Unknown lesson backdrop "$id"'),
+      );
+}
+
+/// How a lesson is presented. Authored in the lesson JSON; it used to be
+/// four switches on the concept id inside LessonScreen.
+class LessonPresentation {
+  const LessonPresentation({
+    required this.stage,
+    required this.backdrop,
+    required this.keeperIntro,
+    required this.startLabel,
+  });
+
+  factory LessonPresentation.fromJson(Map<String, dynamic> json) {
+    final keeper = json['keeperIntro'] as Map<String, dynamic>;
+    return LessonPresentation(
+      stage: LessonStage.fromId(json['stage'] as String),
+      backdrop: LessonBackdrop.fromId(json['backdrop'] as String),
+      keeperIntro: keeper['text'] as String,
+      startLabel: keeper['startLabel'] as String,
+    );
+  }
+
+  final LessonStage stage;
+  final LessonBackdrop backdrop;
+
+  /// What the keeper says before the lesson starts.
+  final String keeperIntro;
+
+  /// The button under it.
+  final String startLabel;
 }

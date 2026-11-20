@@ -11,6 +11,14 @@
   "narratorVoice": "sanctuary-warm-naturalist",
   "totalDurationTargetSec": 75,
 
+  "presentation": {
+    "stage": "fawns",
+    "backdrop": "meadow",
+    "keeperIntro": {
+      "text": "Oh, thank goodness you're here. The fawns wander off every time I blink. Can you help me make sure all three are still in the meadow?",
+      "startLabel": "Let's count!"
+    }
+  },
   "phases": {
     "iShow": {
       "durationSec": 30,

@@ -11,6 +11,14 @@
   "narratorVoice": "sanctuary-warm-naturalist",
   "totalDurationTargetSec": 60,
 
+  "presentation": {
+    "stage": "shape-sequence",
+    "backdrop": "garden",
+    "keeperIntro": {
+      "text": "Look — some plants in the garden have grown into shapes! Help me find them all, won't you?",
+      "startLabel": "Let's look!"
+    }
+  },
   "phases": {
     "iShow": {
       "durationSec": 22,

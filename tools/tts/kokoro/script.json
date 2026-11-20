@@ -7181,7 +7181,7 @@
       "id": "dart-literals",
       "title": "Lines written directly in Dart",
       "note": "Swept out of lib/ by tool/narration_sources.dart: the sanctuary prologue, const round keeperLines, reward dialog. Interpolated templates are excluded - their variants have to come from the catalog that fills the slot.",
-      "variants": 40,
+      "variants": 30,
       "complete": true,
       "lines": [
         {
@@ -7213,32 +7213,16 @@
           "clipKey": "i-m-in-charge-of-this-mystical-sanctuary__11971eaa"
         },
         {
-          "text": "Let's count!",
-          "clipKey": "let-s-count__679acdbe"
-        },
-        {
           "text": "Let's explore!",
           "clipKey": "let-s-explore__bef8b17e"
-        },
-        {
-          "text": "Let's look!",
-          "clipKey": "let-s-look__288e55aa"
         },
         {
           "text": "Let's sort again. Flat ones in the flat basket.",
           "clipKey": "let-s-sort-again-flat-ones-in-the-flat-basket__1bdf2c85"
         },
         {
-          "text": "Let's sort!",
-          "clipKey": "let-s-sort__2123bf23"
-        },
-        {
           "text": "Look who's next!",
           "clipKey": "look-who-s-next__cc80e728"
-        },
-        {
-          "text": "Look — some plants in the garden have grown into shapes! Help me find them all, won't you?",
-          "clipKey": "look-some-plants-in-the-garden-have-grown-into-s__729e98f1"
         },
         {
           "text": "Nice work!",
@@ -7253,10 +7237,6 @@
           "clipKey": "now-you-try-drag-the-shapes-into-the-right-baske__7040e28b"
         },
         {
-          "text": "Oh, thank goodness you're here. The fawns wander off every time I blink. Can you help me make sure all three are still in the meadow?",
-          "clipKey": "oh-thank-goodness-you-re-here-the-fawns-wander-o__28f7c398"
-        },
-        {
           "text": "One flat shape!",
           "clipKey": "one-flat-shape__5d4200a6"
         },
@@ -7265,16 +7245,8 @@
           "clipKey": "one-solid-shape__62a3ed48"
         },
         {
-          "text": "Shapes can group by how many sides they have. Let's put the three-sided ones together, the four-sided ones together, and the ones with five or more sides together.",
-          "clipKey": "shapes-can-group-by-how-many-sides-they-have-let__07530d0f"
-        },
-        {
           "text": "Sort the shapes — flat or solid?",
           "clipKey": "sort-the-shapes-flat-or-solid__daa6e766"
-        },
-        {
-          "text": "Tap Continue when you're ready to play.",
-          "clipKey": "tap-continue-when-you-re-ready-to-play__82496a36"
         },
         {
           "text": "Tap the arrow to continue!",
@@ -7309,20 +7281,12 @@
           "clipKey": "this-is-a-circle-a-circle-has-no-sides-it-s-smoo__2c8cbd44"
         },
         {
-          "text": "Today the parade is HUGE. Don't worry — we can count by tens! Watch how a big group of ten becomes one easy count.",
-          "clipKey": "today-the-parade-is-huge-don-t-worry-we-can-coun__9c917ef3"
-        },
-        {
           "text": "Watch — I'll show you how to sort. The flat shapes go in the flat basket, the solid shapes in the solid basket.",
           "clipKey": "watch-i-ll-show-you-how-to-sort-the-flat-shapes__bb8e4219"
         },
         {
           "text": "Watch — how to sort flat vs solid!",
           "clipKey": "watch-how-to-sort-flat-vs-solid__d5416019"
-        },
-        {
-          "text": "We don't always start at one. When some are already counted, we can keep going from there. Let me show you.",
-          "clipKey": "we-don-t-always-start-at-one-when-some-are-alrea__af92fe1f"
         },
         {
           "text": "We have all sorts of creatures living here — from this cute little dragon to unicorns, mermaids, and more!",
@@ -7335,10 +7299,6 @@
         {
           "text": "Wow! You learned every shape in the garden.",
           "clipKey": "wow-you-learned-every-shape-in-the-garden__dc26985e"
-        },
-        {
-          "text": "You learned every shape in the garden!",
-          "clipKey": "you-learned-every-shape-in-the-garden__eff20157"
         },
         {
           "text": "You'll be my honorary keeper!",
@@ -7403,7 +7363,7 @@
       "id": "lesson-json",
       "title": "Lesson narration (I Show / We Try)",
       "note": "Authored in data/lesson-runtime/*.json and spoken by LessonRuntime. Not enumerable from narration_script.dart, which only sees what the Dart runners compose.",
-      "variants": 260,
+      "variants": 269,
       "complete": true,
       "lines": [
         {
@@ -7723,8 +7683,20 @@
           "clipKey": "let-s-count-these-fawns-together-watch-how-each__35dbfcad"
         },
         {
+          "text": "Let's count!",
+          "clipKey": "let-s-count__679acdbe"
+        },
+        {
           "text": "Let's group these shapes by how many sides they have.",
           "clipKey": "let-s-group-these-shapes-by-how-many-sides-they__07dedc3e"
+        },
+        {
+          "text": "Let's look!",
+          "clipKey": "let-s-look__288e55aa"
+        },
+        {
+          "text": "Let's sort!",
+          "clipKey": "let-s-sort__2123bf23"
         },
         {
           "text": "Light, soft, smooth. One feather, many words. That's how we describe things.",
@@ -7793,6 +7765,10 @@
         {
           "text": "Look — four ducks and two more makes six. That's the story's answer.",
           "clipKey": "look-four-ducks-and-two-more-makes-six-that-s-th__4d3ae648"
+        },
+        {
+          "text": "Look — some plants in the garden have grown into shapes! Help me find them all, won't you?",
+          "clipKey": "look-some-plants-in-the-garden-have-grown-into-s__729e98f1"
         },
         {
           "text": "Look — the pond already has fish on it.",
@@ -7899,6 +7875,10 @@
           "clipKey": "numbers-can-be-split-lots-of-different-ways-thre__fdf096ab"
         },
         {
+          "text": "Oh, thank goodness you're here. The fawns wander off every time I blink. Can you help me make sure all three are still in the meadow?",
+          "clipKey": "oh-thank-goodness-you-re-here-the-fawns-wander-o__28f7c398"
+        },
+        {
           "text": "One bed.",
           "clipKey": "one-bed__dc500d4e"
         },
@@ -7979,6 +7959,10 @@
           "clipKey": "seven__d45d4f10"
         },
         {
+          "text": "Shapes can group by how many sides they have. Let's put the three-sided ones together, the four-sided ones together, and the ones with five or more sides together.",
+          "clipKey": "shapes-can-group-by-how-many-sides-they-have-let__07530d0f"
+        },
+        {
           "text": "Shapes with the same number of sides go together, no matter their size.",
           "clipKey": "shapes-with-the-same-number-of-sides-go-together__fa2c7a3b"
         },
@@ -8017,6 +8001,10 @@
         {
           "text": "Solid. You can see them from many sides.",
           "clipKey": "solid-you-can-see-them-from-many-sides__347a25a9"
+        },
+        {
+          "text": "Some shapes are flat — like drawings on a page. Others are solid — you can hold them in your hand. Help me sort them into the right baskets!",
+          "clipKey": "some-shapes-are-flat-like-drawings-on-a-page-oth__b1c7ca24"
         },
         {
           "text": "Sort the things, then sort the baskets. That's how we tidy.",
@@ -8211,6 +8199,10 @@
           "clipKey": "three-four-five__7b5bae7f"
         },
         {
+          "text": "Today the parade is HUGE. Don't worry — we can count by tens! Watch how a big group of ten becomes one easy count.",
+          "clipKey": "today-the-parade-is-huge-don-t-worry-we-can-coun__9c917ef3"
+        },
+        {
           "text": "Touch the next fawn. We start from three.",
           "clipKey": "touch-the-next-fawn-we-start-from-three__272b2eac"
         },
@@ -8321,6 +8313,10 @@
         {
           "text": "We can compare weight, too — with a scale.",
           "clipKey": "we-can-compare-weight-too-with-a-scale__0e739109"
+        },
+        {
+          "text": "We don't always start at one. When some are already counted, we can keep going from there. Let me show you.",
+          "clipKey": "we-don-t-always-start-at-one-when-some-are-alrea__af92fe1f"
         },
         {
           "text": "We got to seven fawns, starting from four.",

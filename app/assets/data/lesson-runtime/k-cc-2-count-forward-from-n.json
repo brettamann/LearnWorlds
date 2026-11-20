@@ -14,6 +14,14 @@
     "lesson-k-cc-4a-one-to-one",
     "lesson-k-cc-4b-cardinality"
   ],
+  "presentation": {
+    "stage": "count-on",
+    "backdrop": "meadow",
+    "keeperIntro": {
+      "text": "We don't always start at one. When some are already counted, we can keep going from there. Let me show you.",
+      "startLabel": "Let's count!"
+    }
+  },
   "phases": {
     "iShow": {
       "durationSec": 25,

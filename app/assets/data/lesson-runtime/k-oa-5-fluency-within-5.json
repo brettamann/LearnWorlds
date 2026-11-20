@@ -12,6 +12,14 @@
   "totalDurationTargetSec": 70,
   "prerequisites": ["lesson-k-oa-2-word-problems"],
 
+  "presentation": {
+    "stage": "fawns",
+    "backdrop": "meadow",
+    "keeperIntro": {
+      "text": "Oh, thank goodness you're here. The fawns wander off every time I blink. Can you help me make sure all three are still in the meadow?",
+      "startLabel": "Let's count!"
+    }
+  },
   "phases": {
     "iShow": {
       "durationSec": 25,

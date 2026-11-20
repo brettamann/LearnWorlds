@@ -4388,14 +4388,6 @@
       "seconds": 4.88,
       "format": "mp3"
     },
-    "tap-continue-when-you-re-ready-to-play__82496a36": {
-      "text": "Tap Continue when you're ready to play.",
-      "batch": "dart-literals",
-      "voice": "af_heart",
-      "bytes": 14592,
-      "seconds": 1.77,
-      "format": "mp3"
-    },
     "tap-the-arrow-to-continue__eae09e65": {
       "text": "Tap the arrow to continue!",
       "batch": "dart-literals",
@@ -4650,14 +4642,6 @@
       "voice": "af_heart",
       "bytes": 17472,
       "seconds": 2.12,
-      "format": "mp3"
-    },
-    "you-learned-every-shape-in-the-garden__eff20157": {
-      "text": "You learned every shape in the garden!",
-      "batch": "dart-literals",
-      "voice": "af_heart",
-      "bytes": 14784,
-      "seconds": 1.79,
       "format": "mp3"
     },
     "you-sorted-every-shape-wonderful-work__e8272bf5": {

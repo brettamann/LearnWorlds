@@ -12,6 +12,14 @@
   "totalDurationTargetSec": 65,
   "prerequisites": ["lesson-k-g-2-shape-recognition"],
 
+  "presentation": {
+    "stage": "sort-by-attribute",
+    "backdrop": "garden",
+    "keeperIntro": {
+      "text": "Shapes can group by how many sides they have. Let's put the three-sided ones together, the four-sided ones together, and the ones with five or more sides together.",
+      "startLabel": "Let's sort!"
+    }
+  },
   "phases": {
     "iShow": {
       "durationSec": 25,
