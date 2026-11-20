@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'activities/activity_launch.dart';
+import 'navigation/routes.dart';
 import 'ui/screens/activity_screen.dart';
 import 'ui/screens/character_creator_screen.dart';
 import 'ui/screens/collection_screen.dart';
@@ -73,63 +75,60 @@ class CritMathApp extends ConsumerWidget {
 
 final _appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: Routes.home,
     routes: <RouteBase>[
       GoRoute(
-        path: '/',
+        path: Routes.home,
         builder: (context, state) => const HomeMapScreen(),
       ),
       GoRoute(
-        path: '/sanctuary',
+        path: Routes.sanctuary,
         builder: (context, state) => const SanctuaryMapScreen(),
       ),
       GoRoute(
-        path: '/sanctuary/cutscene',
+        path: Routes.sanctuaryCutscene,
         builder: (context, state) => const SanctuaryCutsceneScreen(),
       ),
       GoRoute(
-        path: '/activity/:id',
+        path: Routes.activityPattern,
         builder: (context, state) => ActivityScreen(
           activityId: state.pathParameters['id']!,
-          launchExtra: state.extra is Map<String, dynamic>
-              ? state.extra as Map<String, dynamic>
+          launch: state.extra is ActivityLaunch
+              ? state.extra! as ActivityLaunch
+              : const ActivityLaunch(),
+        ),
+      ),
+      GoRoute(
+        path: Routes.lessonPattern,
+        builder: (context, state) => LessonScreen(
+          lessonId: state.pathParameters['id']!,
+          subModeOverride: state.extra is LessonLaunch
+              ? (state.extra! as LessonLaunch).subModeId
               : null,
         ),
       ),
       GoRoute(
-        path: '/lesson/:id',
-        builder: (context, state) {
-          final extra = state.extra is Map<String, dynamic>
-              ? state.extra as Map<String, dynamic>
-              : null;
-          return LessonScreen(
-            lessonId: state.pathParameters['id']!,
-            subModeOverride: extra?['subMode'] as String?,
-          );
-        },
-      ),
-      GoRoute(
-        path: '/settings',
+        path: Routes.settings,
         builder: (context, state) => const SettingsScreen(),
       ),
       GoRoute(
-        path: '/home/character-creator',
+        path: Routes.characterCreator,
         builder: (context, state) => const CharacterCreatorScreen(),
       ),
       // Same screen, storefront face. A separate route rather than a flag on
       // the creator so the shop is linkable and the back arrow behaves.
       GoRoute(
-        path: '/home/buddy-shop',
+        path: Routes.buddyShop,
         builder: (context, state) => const CharacterCreatorScreen(
           mode: BuddyScreenMode.shop,
         ),
       ),
       GoRoute(
-        path: '/collection',
+        path: Routes.collection,
         builder: (context, state) => const CollectionScreen(),
       ),
       GoRoute(
-        path: '/reward/k-mystery-egg-gift',
+        path: Routes.eggGift,
         builder: (context, state) => const RewardGiftScreen(),
       ),
     ],

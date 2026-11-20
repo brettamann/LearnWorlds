@@ -129,6 +129,17 @@ class Activity {
   SubMode get defaultSubMode =>
       subModes.firstWhere((m) => m.isDefault, orElse: () => subModes.first);
 
+  /// The sub-mode with [id], or null if this activity has none.
+  SubMode? subModeById(String id) =>
+      subModes.where((m) => m.id == id).firstOrNull;
+
+  /// The concept a round of [subMode] teaches first: its own first primary
+  /// concept, else the activity's first.
+  String entryConceptIdFor(SubMode? subMode) =>
+      subMode != null && subMode.primaryConcepts.isNotEmpty
+          ? subMode.primaryConcepts.first
+          : concepts.first.conceptId;
+
   /// The sub-mode one step simpler than [subModeId], for a child who is
   /// struggling at the simplest layer of it - step two of the staggered
   /// demotion in specs/shared/adaptive-scaffolding.md, once there is no CPA

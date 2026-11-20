@@ -1,40 +1,19 @@
-// Which activities have a runner behind them today.
+// Which activities can be played today.
 //
-// This existed only as the if-chain in `activity_screen.dart`, which meant
-// nothing else could ask the question — and the Sanctuary map badly needed to
-// ask it. The map draws eleven lesson nodes in a fixed path and reveals each
-// one when the node before it is *completed*; a node is completed when all its
-// sub-modes are, which needs a runner. Node 3 is Ten-Frame Pond, which has
-// none. So the path stopped dead at the third node, and Build-a-Habitat and
-// Where's Buddy — both finished, both narrated, both with clips rendered —
-// were unreachable in ordinary play. Two of the four built activities, walled
-// off behind one that was never built, which is a fair part of why the game
-// felt repetitive.
+// The Sanctuary map needs to ask this: it reveals each node when the one
+// before it is completed, and a node with no runner can never be completed.
+// Such a node is drawn asleep and skipped over rather than walling off the
+// path (see sanctuary_sequence.dart).
 //
-// Keeping this list honest matters more than it looks: `activity_screen.dart`
-// falls through to a line of English on a blank screen, which to a pre-reader
-// is indistinguishable from the app breaking. `test/sanctuary_path_test.dart`
-// checks this set against what that screen actually dispatches, so the two
-// cannot drift.
+// An activity is playable exactly when it has a runner registered in
+// `kActivityRunners`, so this set cannot drift from what ActivityScreen can
+// actually open.
+
+import '../activities/activity_ids.dart';
+import '../activities/activity_runners.dart';
 
 /// Activity ids that can be played end to end right now.
-///
-/// Add an id here in the same change that adds its runner — the map reads this
-/// to decide which nodes are awake, so a runner nobody lists stays invisible,
-/// and an id listed with no runner sends a child to a dead end.
-const Set<String> kPlayableActivities = <String>{
-  'counting-parade',
-  'shape-garden',
-  'wheres-buddy',
-  'build-a-habitat',
-  'ten-frame-pond',
-  'care-pantry',
-  'scribes-tower',
-  'storytellers-pond',
-  'caretakers-bench',
-  'picnic-baskets',
-  'fluency-within-5',
-};
+Set<String> get kPlayableActivities => kActivityRunners.keys.toSet();
 
 /// Tests only: stand in for [kPlayableActivities].
 ///
@@ -52,20 +31,16 @@ bool isActivityPlayable(String activityId) =>
 /// The Sanctuary as it was before its other seven places were built. What the
 /// asleep-node tests pretend the world is.
 const Set<String> kFourActivitySanctuary = <String>{
-  'counting-parade',
-  'shape-garden',
-  'wheres-buddy',
-  'build-a-habitat',
+  ActivityIds.countingParade,
+  ActivityIds.shapeGarden,
+  ActivityIds.wheresBuddy,
+  ActivityIds.buildAHabitat,
 };
 
-/// A readable name for an activity the registry has never heard of.
-///
-/// Four of the eleven Sanctuary nodes (`care-pantry`, `caretakers-bench`,
-/// `picnic-baskets`, `fluency-within-5`) have a spec and a place on the map but
-/// no entry in `data/activity-registry/kindergarten.json`, so the map had
-/// nothing to put on their banners and printed the raw id. A parchment scroll
-/// in the middle of a storybook map reading "care-pantry" is the sort of thing
-/// that only ever gets noticed by the person who wrote it.
+/// A readable name for an activity the registry has not given a name for -
+/// one that is on the map but not yet registered, or any node while the
+/// registry is still loading. A parchment scroll on a storybook map reading
+/// "care-pantry" is the sort of thing only the person who wrote it notices.
 String placeholderActivityName(String activityId) => activityId
     .split('-')
     .map(

@@ -1,58 +1,47 @@
-// ActivityScreen — hosts an ActivityRunner for the requested activity.
-// Sprint 1 only knows Counting Parade; other activities fall back to the
-// "coming soon" placeholder. M8 wires round resolution through the
-// MasteryEngine + reward engine.
+// ActivityScreen — hosts the runner for the requested activity (looked up in
+// kActivityRunners), and owns what happens when a sub-mode is finished:
+// progress, the egg, and where "Next!" goes.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../activities/activity_launch.dart';
+import '../../activities/activity_runners.dart';
 import '../../data/button_labels.dart';
 import '../../data/sanctuary_sequence.dart';
 import '../../data/warm_lines.dart';
 import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../engines/scaffolding/next_sub_mode.dart';
-import '../../engines/scaffolding/scaffold_decision.dart';
-import '../../engines/scaffolding/scaffold_engine.dart';
 import '../../models/activity.dart';
 import '../../models/reward_track.dart';
+import '../../navigation/routes.dart';
+import '../../navigation/sub_mode_launcher.dart';
 import '../../providers/app_providers.dart';
 import '../../providers/exploration_provider.dart';
 import '../../providers/progress_provider.dart';
 import '../../providers/reward_progress_provider.dart';
 import '../../providers/save_provider.dart';
 import '../../providers/sub_mode_progress_provider.dart';
-import '../widgets/build_a_habitat_runner.dart';
 import '../widgets/caption_overlay.dart';
 import '../widgets/card_reveal_overlay.dart';
-import '../widgets/care_pantry_runner.dart';
-import '../widgets/caretakers_bench_runner.dart';
 import '../widgets/coin_fly_layer.dart';
 import '../widgets/coin_hud.dart';
-import '../widgets/counting_parade_runner.dart';
-import '../widgets/fluency_runner.dart';
 import '../widgets/glitter_burst.dart';
 import '../widgets/next_arrow_button.dart';
-import '../widgets/picnic_baskets_runner.dart';
-import '../widgets/scribes_tower_runner.dart';
-import '../widgets/shape_garden_runner.dart';
-import '../widgets/storytellers_pond_runner.dart';
-import '../widgets/ten_frame_pond_runner.dart';
-import '../widgets/wheres_buddy_runner.dart';
 
 class ActivityScreen extends ConsumerWidget {
   const ActivityScreen({
     super.key,
     required this.activityId,
-    this.launchExtra,
+    this.launch = const ActivityLaunch(),
   });
 
   final String activityId;
 
-  /// Optional payload from the LessonScreen handoff: subMode + round params.
-  /// Null when the kid taps the activity tile directly (no lesson needed).
-  final Map<String, dynamic>? launchExtra;
+  /// Which sub-mode to play and whether a lesson handed off into it.
+  final ActivityLaunch launch;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -68,7 +57,7 @@ class ActivityScreen extends ConsumerWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           tooltip: 'Back to the Sanctuary',
-          onPressed: () => context.go('/sanctuary'),
+          onPressed: () => context.go(Routes.sanctuary),
         ),
         actions: const [
           // The wallet has been paying out since sprint 1 with nowhere to show
@@ -85,127 +74,25 @@ class ActivityScreen extends ConsumerWidget {
           registry.when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (err, stack) => Center(child: Text('Error: $err')),
-            data: (data) {
-              if (activityId == 'counting-parade') {
-                final subMode =
-                    (launchExtra?['subMode'] as String?) ?? 'count-the-parade';
-                return CountingParadeRunner(
-                  // The lesson screen already played the keeper intro before
-                  // the iShow; don't replay it on the round.
-                  skipIntro: launchExtra?['fromLesson'] != null,
-                  subMode: subMode,
-                  // Lesson JSON has always carried a roundParameters block and
-                  // LessonScreen has always routed it here; until now nothing
-                  // read it, so authored content couldn't shape a round.
-                  roundParameters:
-                      launchExtra?['roundParameters'] as Map<String, dynamic>?,
-                  onSequenceComplete: () => _onSuccess(context, ref),
+            data: (registry) {
+              final activity = registry.byIdOrNull(activityId);
+              final builder = kActivityRunners[activityId];
+              if (activity == null || builder == null) {
+                // A developer-only landing. The Sanctuary map draws a node
+                // with no runner as asleep and answers a tap out loud instead
+                // of routing here, because a sentence in English on a blank
+                // screen is, to the person this game is for, the app having
+                // crashed. The only way in is Settings → "Launch a lesson".
+                return Center(
+                  child: Text('Activity "$activityId" is not built yet.'),
                 );
               }
-              if (activityId == 'shape-garden') {
-                // Lesson hand-off passes its `youDo.subMode` here so the
-                // runner can dispatch to the right body (find-shape for
-                // K.G.2 vs flat-or-solid for K.G.3). On a direct tap from
-                // the Sanctuary map there's no lesson context — default
-                // to the K.G.2 find-shape sub-mode.
-                final subMode =
-                    (launchExtra?['subMode'] as String?) ?? 'find-shape';
-                return ShapeGardenRunner(
-                  skipIntro: launchExtra?['fromLesson'] != null,
-                  subMode: subMode,
+              return builder(
+                RunnerArgs(
+                  subModeId: launch.subModeFor(activity),
+                  launch: launch,
                   onSequenceComplete: () => _onSuccess(context, ref),
-                );
-              }
-              if (activityId == 'wheres-buddy') {
-                // K.G.1 has two playable sub-modes: place-mode (drag the
-                // Buddy to a relative position) and find-mode (tap where
-                // the Buddy is hiding). Default to the registry's
-                // declared default (`find-mode`) on a direct tap.
-                final subMode = (launchExtra?['subMode'] as String?) ??
-                    kWheresBuddySubModeFindMode;
-                return WheresBuddyRunner(
-                  skipIntro: launchExtra?['fromLesson'] != null,
-                  subMode: subMode,
-                  onSequenceComplete: () => _onSuccess(context, ref),
-                );
-              }
-              if (activityId == 'build-a-habitat') {
-                // K.G.5 (sticks + clay) runs as Phase 1 inside the
-                // round; K.G.6 (compose) runs as Phase 2 of the same
-                // round. The sub-mode picks how rich the build is —
-                // simple-shelter (triangle + 1 piece), creature-home
-                // (all three blueprints), grand-habitat (pentagon
-                // challenge), or frame-only (skip Phase 2).
-                final subMode = (launchExtra?['subMode'] as String?) ??
-                    kBuildAHabitatSubModeSimpleShelter;
-                return BuildAHabitatRunner(
-                  skipIntro: launchExtra?['fromLesson'] != null,
-                  subMode: subMode,
-                  onSequenceComplete: () => _onSuccess(context, ref),
-                );
-              }
-              if (activityId == 'ten-frame-pond') {
-                return TenFramePondRunner(
-                  skipIntro: launchExtra?['fromLesson'] != null,
-                  subMode:
-                      (launchExtra?['subMode'] as String?) ?? 'fill-to-target',
-                  onSequenceComplete: () => _onSuccess(context, ref),
-                );
-              }
-              if (activityId == 'care-pantry') {
-                return CarePantryRunner(
-                  skipIntro: launchExtra?['fromLesson'] != null,
-                  subMode:
-                      (launchExtra?['subMode'] as String?) ?? 'simple-pantry',
-                  onSequenceComplete: () => _onSuccess(context, ref),
-                );
-              }
-              if (activityId == 'scribes-tower') {
-                return ScribesTowerRunner(
-                  skipIntro: launchExtra?['fromLesson'] != null,
-                  subMode:
-                      (launchExtra?['subMode'] as String?) ?? 'trace-numeral',
-                  onSequenceComplete: () => _onSuccess(context, ref),
-                );
-              }
-              if (activityId == 'storytellers-pond') {
-                return StorytellersPondRunner(
-                  skipIntro: launchExtra?['fromLesson'] != null,
-                  subMode: (launchExtra?['subMode'] as String?) ?? 'add-to',
-                  onSequenceComplete: () => _onSuccess(context, ref),
-                );
-              }
-              if (activityId == 'caretakers-bench') {
-                return CaretakersBenchRunner(
-                  skipIntro: launchExtra?['fromLesson'] != null,
-                  subMode: (launchExtra?['subMode'] as String?) ??
-                      'describe-attributes',
-                  onSequenceComplete: () => _onSuccess(context, ref),
-                );
-              }
-              if (activityId == 'picnic-baskets') {
-                return PicnicBasketsRunner(
-                  skipIntro: launchExtra?['fromLesson'] != null,
-                  subMode:
-                      (launchExtra?['subMode'] as String?) ?? 'match-by-line',
-                  onSequenceComplete: () => _onSuccess(context, ref),
-                );
-              }
-              if (activityId == 'fluency-within-5') {
-                return FluencyRunner(
-                  skipIntro: launchExtra?['fromLesson'] != null,
-                  subMode: (launchExtra?['subMode'] as String?) ?? 'casual',
-                  onSequenceComplete: () => _onSuccess(context, ref),
-                );
-              }
-              // A developer-only landing now. The Sanctuary map draws a node
-              // with no runner behind it as asleep and answers a tap out loud
-              // instead of routing here (see kPlayableActivities), because a
-              // sentence in English on a blank screen is, to the person this
-              // game is for, indistinguishable from the app having crashed.
-              // The only way in is Settings → "Launch a specific lesson".
-              return Center(
-                child: Text('Activity "$activityId" lands in a later sprint.'),
+                ),
               );
             },
           ),
@@ -252,7 +139,7 @@ class ActivityScreen extends ConsumerWidget {
     final isFirstEggMoment = stageBefore == 0 && stageAfter >= 1;
 
     if (isFirstEggMoment) {
-      context.go('/reward/k-mystery-egg-gift');
+      context.go(Routes.eggGift);
       return;
     }
     // Auto-advance: if more non-challenge sub-modes remain for this
@@ -285,12 +172,9 @@ class ActivityScreen extends ConsumerWidget {
     final registry = ref.read(activityRegistryProvider).valueOrNull;
     final activity = registry?.byIdOrNull(activityId);
     if (activity == null) return null;
-    final playedId = (launchExtra?['subMode'] as String?) ??
-        _defaultSubModeForActivity(activityId);
-    final played = activity.subModes.where((m) => m.id == playedId).firstOrNull;
-    final conceptId = played != null && played.primaryConcepts.isNotEmpty
-        ? played.primaryConcepts.first
-        : activity.concepts.first.conceptId;
+    final playedId = launch.subModeFor(activity);
+    final conceptId =
+        activity.entryConceptIdFor(activity.subModeById(playedId));
     return nextSubModeAfter(
       activity: activity,
       playedId: playedId,
@@ -300,60 +184,20 @@ class ActivityScreen extends ConsumerWidget {
     );
   }
 
-  /// Routes into the next sub-mode through the same ScaffoldEngine
-  /// decision the Sanctuary picker uses — first-time picks land on the
-  /// lesson, subsequent picks proceed straight to the activity round.
+  /// Opens the next sub-mode the same way the Sanctuary picker does - see
+  /// `sub_mode_launcher.dart`.
   void _routeToNextSubMode(
     BuildContext context,
     WidgetRef ref,
     SubMode subMode,
   ) {
-    final registry = ref.read(activityRegistryProvider).valueOrNull;
-    final concepts = ref.read(conceptRegistryProvider).valueOrNull;
-    if (registry == null || concepts == null) {
-      context.go('/sanctuary');
-      return;
-    }
-    final activity = registry.byIdOrNull(activityId);
+    final activity =
+        ref.read(activityRegistryProvider).valueOrNull?.byIdOrNull(activityId);
     if (activity == null) {
-      context.go('/sanctuary');
+      context.go(Routes.sanctuary);
       return;
     }
-    // Sub-modes with their own animated intro skip ScaffoldEngine —
-    // letting it fire the introducing-concept's lesson on top would
-    // stack the wrong demo in front of the runner's own one. Mirrors
-    // the same short-circuit in sanctuary_map_screen `_routeForSubMode`.
-    if (subMode.ownsIntro) {
-      context.go(
-        '/activity/${activity.id}',
-        extra: <String, dynamic>{'subMode': subMode.id},
-      );
-      return;
-    }
-    const engine = ScaffoldEngine();
-    final entryConceptId = subMode.primaryConcepts.isNotEmpty
-        ? subMode.primaryConcepts.first
-        : activity.concepts.first.conceptId;
-    final concept = concepts.byId(entryConceptId);
-    final state =
-        ref.read(kidProgressProvider.notifier).getOrCreate(concept.id);
-    final decision = engine.decide(
-      activity: activity,
-      concept: concept,
-      state: state,
-    );
-    switch (decision) {
-      case PlayLesson(:final lessonId):
-        context.go(
-          '/lesson/$lessonId',
-          extra: <String, dynamic>{'subMode': subMode.id},
-        );
-      case ProceedAtLayer():
-        context.go(
-          '/activity/${activity.id}',
-          extra: <String, dynamic>{'subMode': subMode.id},
-        );
-    }
+    launchSubMode(context, ref, activity: activity, subMode: subMode);
   }
 
   /// Records the just-cleared sub-mode and — when every non-challenge
@@ -363,8 +207,10 @@ class ActivityScreen extends ConsumerWidget {
   /// so the kid only meets Haddock-with-egg after finishing the full
   /// counting curriculum, not just the first sub-mode.
   void _markActivityCompleted(WidgetRef ref) {
-    final subMode = (launchExtra?['subMode'] as String?) ??
-        _defaultSubModeForActivity(activityId);
+    final activity =
+        ref.read(activityRegistryProvider).valueOrNull?.byIdOrNull(activityId);
+    final subMode = launch.subModeId ?? activity?.defaultSubMode.id;
+    if (subMode == null) return;
     ref.read(subModeProgressProvider.notifier).markCompleted(
           activityId: activityId,
           subModeId: subMode,
@@ -411,37 +257,6 @@ class ActivityScreen extends ConsumerWidget {
       if (!completed.contains(subMode.id)) return false;
     }
     return true;
-  }
-
-  /// Sensible per-activity default sub-mode when the kid arrived without
-  /// a `subMode` in `launchExtra` (e.g. via a direct route in dev tools).
-  static String _defaultSubModeForActivity(String activityId) {
-    switch (activityId) {
-      case 'counting-parade':
-        return 'count-the-parade';
-      case 'shape-garden':
-        return 'find-shape';
-      case 'wheres-buddy':
-        return 'find-mode';
-      case 'build-a-habitat':
-        return 'simple-shelter';
-      case 'ten-frame-pond':
-        return 'fill-to-target';
-      case 'care-pantry':
-        return 'simple-pantry';
-      case 'scribes-tower':
-        return 'trace-numeral';
-      case 'storytellers-pond':
-        return 'add-to';
-      case 'caretakers-bench':
-        return 'describe-attributes';
-      case 'picnic-baskets':
-        return 'match-by-line';
-      case 'fluency-within-5':
-        return 'casual';
-      default:
-        return 'default';
-    }
   }
 
   /// The beat at the end of a sub-mode — the one blocking celebration
@@ -510,7 +325,7 @@ class ActivityScreen extends ConsumerWidget {
           if (hasNext) {
             _routeToNextSubMode(context, ref, nextSubMode);
           } else {
-            GoRouter.of(context).go('/sanctuary');
+            GoRouter.of(context).go(Routes.sanctuary);
           }
         },
       ),

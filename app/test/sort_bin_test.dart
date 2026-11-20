@@ -17,6 +17,7 @@
 
 import 'dart:io';
 
+import 'package:critmath/activities/activity_launch.dart';
 import 'package:critmath/data/narration_script.dart';
 import 'package:critmath/data/sort_attribute_words.dart';
 import 'package:critmath/engines/narration/narration_cue_log.dart';
@@ -28,6 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'support/harness.dart';
 
 void main() {
@@ -151,9 +153,7 @@ void main() {
         container,
         const ActivityScreen(
           activityId: 'shape-garden',
-          launchExtra: <String, dynamic>{
-            'subMode': 'sort-by-attribute',
-          },
+          launch: ActivityLaunch(subModeId: 'sort-by-attribute'),
         ),
       );
       Future<void> settle() async {
@@ -203,9 +203,7 @@ void main() {
         container,
         const ActivityScreen(
           activityId: 'shape-garden',
-          launchExtra: <String, dynamic>{
-            'subMode': 'sort-by-attribute',
-          },
+          launch: ActivityLaunch(subModeId: 'sort-by-attribute'),
         ),
       );
       Future<void> settle() async {

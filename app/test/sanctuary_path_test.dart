@@ -15,11 +15,11 @@
 // still drawn — specs/shared/map-screens.md is explicit that unbuilt content
 // stays on the map so the region has a shape — they are simply not a wall.
 
-import 'dart:io';
-
+import 'package:critmath/activities/activity_runners.dart';
 import 'package:critmath/data/playable_activities.dart';
 import 'package:critmath/data/sanctuary_sequence.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import 'support/fixtures.dart';
 
 /// Everything up to and including [activityId], as the save would look after
@@ -131,22 +131,12 @@ void main() {
   });
 
   group('the playable set', () {
-    test('matches what the activity screen actually dispatches', () {
-      // A drifted list is worse than no list: an id here with no runner sends
-      // a child to a line of English on a blank screen, which she cannot read
-      // and cannot tell apart from the app breaking.
-      final source =
-          File('lib/ui/screens/activity_screen.dart').readAsStringSync();
-      final dispatched = RegExp("activityId == '([a-z0-9-]+)'")
-          .allMatches(source)
-          .map((m) => m.group(1)!)
-          .toSet();
-      expect(
-        dispatched,
-        isNotEmpty,
-        reason: 'the lint is reading no source',
-      );
-      expect(kPlayableActivities, dispatched);
+    test('is exactly the activities with a runner', () {
+      // A drifted list is worse than no list: an id with no runner sends a
+      // child to a line of English on a blank screen. The set is now derived
+      // from the runner registry, so this pins that it still is.
+      expect(kPlayableActivities, kActivityRunners.keys.toSet());
+      expect(kPlayableActivities, isNotEmpty);
     });
 
     test('every playable id is a real registered activity', () {

@@ -37,15 +37,14 @@ import '../../data/sanctuary_sequence.dart';
 import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
-import '../../engines/scaffolding/scaffold_decision.dart';
-import '../../engines/scaffolding/scaffold_engine.dart';
 import '../../models/activity.dart';
 import '../../models/decor_placement.dart';
 import '../../models/reward_track.dart';
+import '../../navigation/routes.dart';
+import '../../navigation/sub_mode_launcher.dart';
 import '../../providers/app_providers.dart';
 import '../../providers/exploration_provider.dart';
 import '../../providers/map_anchors_provider.dart';
-import '../../providers/progress_provider.dart';
 import '../../providers/sanctuary_decor_provider.dart';
 import '../../providers/save_provider.dart';
 import '../../providers/sub_mode_progress_provider.dart';
@@ -114,7 +113,7 @@ class _SanctuaryMapScreenState extends ConsumerState<SanctuaryMapScreen> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             tooltip: 'Back to the island',
-            onPressed: () => context.go('/'),
+            onPressed: () => context.go(Routes.home),
           ),
         ),
         body: SafeArea(
@@ -143,7 +142,7 @@ class _SanctuaryMapScreenState extends ConsumerState<SanctuaryMapScreen> {
                               decorating: _decorating,
                               placements: ref.watch(sanctuaryDecorProvider),
                               onCutsceneTap: () =>
-                                  context.go('/sanctuary/cutscene'),
+                                  context.go(Routes.sanctuaryCutscene),
                               onDecorMoved: _onDecorMoved,
                               onDecorTapped: (p) {
                                 final item = decorItemById(p.decorId);
@@ -181,17 +180,17 @@ class _SanctuaryMapScreenState extends ConsumerState<SanctuaryMapScreen> {
                         MapRailButton(
                           icon: Icons.style,
                           caption: kRailCardsLabel,
-                          onPressed: () => context.go('/collection'),
+                          onPressed: () => context.go(Routes.collection),
                         ),
                         MapRailButton(
                           icon: Icons.storefront,
                           caption: kRailShopLabel,
-                          onPressed: () => context.go('/home/buddy-shop'),
+                          onPressed: () => context.go(Routes.buddyShop),
                         ),
                         MapRailButton(
                           icon: Icons.settings,
                           caption: kRailSettingsLabel,
-                          onPressed: () => context.go('/settings'),
+                          onPressed: () => context.go(Routes.settings),
                         ),
                       ],
                     ),
@@ -301,7 +300,7 @@ class _SanctuaryMapScreenState extends ConsumerState<SanctuaryMapScreen> {
   ) async {
     final concepts = ref.read(conceptRegistryProvider).valueOrNull;
     if (concepts == null) {
-      context.go('/activity/${activity.id}');
+      context.goActivity(activity.id);
       return;
     }
 
@@ -359,7 +358,7 @@ class _SanctuaryMapScreenState extends ConsumerState<SanctuaryMapScreen> {
     }
     if (entries.isEmpty) {
       // No registered sub-modes — fall back to the activity tile.
-      context.go('/activity/${activity.id}');
+      context.goActivity(activity.id);
       return;
     }
 
@@ -380,73 +379,7 @@ class _SanctuaryMapScreenState extends ConsumerState<SanctuaryMapScreen> {
           entries.firstWhere((e) => e.subMode.id == pickedId).subMode;
     }
 
-    _routeForSubMode(
-      context,
-      ref,
-      activity: activity,
-      subMode: chosenSubMode,
-    );
-  }
-
-  /// Dispatches the chosen sub-mode through ScaffoldEngine — first-time
-  /// taps land on the lesson, subsequent taps proceed straight to the
-  /// activity round with the right `subMode` in `launchExtra`.
-  void _routeForSubMode(
-    BuildContext context,
-    WidgetRef ref, {
-    required Activity activity,
-    required SubMode subMode,
-  }) {
-    // Two cases never play the introducing-concept lesson:
-    //   - `isChallenge` — optional final check after every regular
-    //     sub-mode is done; the runner has its own brief demo.
-    //   - `ownsIntro` — the sub-mode's runner plays its own animated
-    //     lesson at intro time (e.g. count-on-by-ones decade demo), so
-    //     letting ScaffoldEngine fire the concept's lesson on top would
-    //     stack the wrong demo in front of it.
-    if (subMode.isChallenge || subMode.ownsIntro) {
-      context.go(
-        '/activity/${activity.id}',
-        extra: <String, dynamic>{'subMode': subMode.id},
-      );
-      return;
-    }
-    final concepts = ref.read(conceptRegistryProvider).valueOrNull;
-    if (concepts == null) {
-      context.go(
-        '/activity/${activity.id}',
-        extra: <String, dynamic>{'subMode': subMode.id},
-      );
-      return;
-    }
-    const engine = ScaffoldEngine();
-    final entryConceptId = subMode.primaryConcepts.isNotEmpty
-        ? subMode.primaryConcepts.first
-        : activity.concepts.first.conceptId;
-    final concept = concepts.byId(entryConceptId);
-    final state =
-        ref.read(kidProgressProvider.notifier).getOrCreate(concept.id);
-    final decision = engine.decide(
-      activity: activity,
-      concept: concept,
-      state: state,
-    );
-    switch (decision) {
-      case PlayLesson(:final lessonId):
-        // Pass the picked sub-mode through so the lesson hands off into
-        // the activity at that sub-mode rather than the lesson's own
-        // youDo.subMode (which can differ — e.g. the K.CC.1 lesson is
-        // shared across long-parade and count-on-by-ones in the chain).
-        context.go(
-          '/lesson/$lessonId',
-          extra: <String, dynamic>{'subMode': subMode.id},
-        );
-      case ProceedAtLayer():
-        context.go(
-          '/activity/${activity.id}',
-          extra: <String, dynamic>{'subMode': subMode.id},
-        );
-    }
+    launchSubMode(context, ref, activity: activity, subMode: chosenSubMode);
   }
 }
 

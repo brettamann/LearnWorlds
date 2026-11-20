@@ -23,6 +23,7 @@
 // non-zero flex but incoming height constraints are unbounded` on every frame
 // it was on screen since it was written, and this file was green throughout.
 
+import 'package:critmath/activities/activity_launch.dart';
 import 'package:critmath/data/playable_activities.dart';
 import 'package:critmath/providers/session_provider.dart';
 import 'package:critmath/ui/screens/activity_screen.dart';
@@ -84,7 +85,7 @@ void main() {
       container,
       ActivityScreen(
         activityId: activityId,
-        launchExtra: <String, dynamic>{'subMode': subModeId},
+        launch: ActivityLaunch(subModeId: subModeId),
       ),
     );
     // Explicit frames rather than pumpAndSettle: every playfield carries a

@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../activities/activity_launch.dart';
 import '../../data/asset_paths.dart';
 import '../../data/build_a_habitat_blueprints.dart';
 import '../../data/button_labels.dart';
@@ -33,6 +34,7 @@ import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../models/lesson_runtime.dart';
 import '../../models/we_try_script.dart';
+import '../../navigation/routes.dart';
 import '../../platform/sfx_engine.dart';
 import '../../theme/app_decor.dart';
 import '../../ui/common/count_badge.dart';
@@ -1042,13 +1044,13 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     if (runtime == null) return;
     ref.narration.clear();
     final subMode = widget.subModeOverride ?? runtime.youDo.subMode;
-    context.go(
-      '/activity/${runtime.youDo.activityId}',
-      extra: {
-        'fromLesson': widget.lessonId,
-        'subMode': subMode,
-        'roundParameters': runtime.youDo.roundParameters,
-      },
+    context.goActivity(
+      runtime.youDo.activityId,
+      ActivityLaunch(
+        subModeId: subMode,
+        fromLessonId: widget.lessonId,
+        roundParameters: runtime.youDo.roundParameters,
+      ),
     );
   }
 
@@ -1267,7 +1269,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
               child: RoundBackButton(
                 onPressed: () {
                   ref.narration.clear();
-                  context.go('/sanctuary');
+                  context.go(Routes.sanctuary);
                 },
               ),
             ),
