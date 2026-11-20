@@ -3931,12 +3931,113 @@
       ]
     },
     {
-      "id": "sort-attribute",
-      "title": "Shape Garden — sort by attribute",
-      "note": "The round prompt, the basket labels (read aloud when a basket is tapped), and the wrong-basket line.",
+      "id": "garden-flat-or-solid",
+      "title": "Shape Garden - flat or solid",
+      "note": "The keeper opening and closing the sorting visit, and the round itself: a shape named as it lands in the right basket (\"Cube - solid!\"), and the gentle redirect when it does not. Flat and solid are the words being taught, so give them weight.",
       "variants": 22,
       "complete": true,
       "lines": [
+        {
+          "text": "Some shapes are flat — like drawings on a page. Others are solid — you can hold them in your hand. Help me sort them into the right baskets!",
+          "clipKey": "some-shapes-are-flat-like-drawings-on-a-page-oth__b1c7ca24"
+        },
+        {
+          "text": "Wonderful sorting! Try another round.",
+          "clipKey": "wonderful-sorting-try-another-round__323d1e08"
+        },
+        {
+          "text": "You're getting the hang of it. One more.",
+          "clipKey": "you-re-getting-the-hang-of-it-one-more__79c31a66"
+        },
+        {
+          "text": "Lovely! Let me bring out a few more shapes.",
+          "clipKey": "lovely-let-me-bring-out-a-few-more-shapes__1250c020"
+        },
+        {
+          "text": "Almost done — one last basket-round!",
+          "clipKey": "almost-done-one-last-basket-round__908df413"
+        },
+        {
+          "text": "You sorted every shape! Wonderful work.",
+          "clipKey": "you-sorted-every-shape-wonderful-work__e8272bf5"
+        },
+        {
+          "text": "You sorted every shape! Here are some coins for your help.",
+          "clipKey": "you-sorted-every-shape-here-are-some-coins-for-y__40b4d6cd"
+        },
+        {
+          "text": "Sort the shapes! Flat ones in the flat basket. Solid ones in the solid basket.",
+          "clipKey": "sort-the-shapes-flat-ones-in-the-flat-basket-sol__22f1685f"
+        },
+        {
+          "text": "Nicely done! You sorted them all.",
+          "clipKey": "nicely-done-you-sorted-them-all__e08d1df1"
+        },
+        {
+          "text": "Circle — flat!",
+          "clipKey": "circle-flat__660bdfe9"
+        },
+        {
+          "text": "Square — flat!",
+          "clipKey": "square-flat__f517714e"
+        },
+        {
+          "text": "Cube — solid!",
+          "clipKey": "cube-solid__8cc0fbe8"
+        },
+        {
+          "text": "Sphere — solid!",
+          "clipKey": "sphere-solid__ac5f1c00"
+        },
+        {
+          "text": "Triangle — flat!",
+          "clipKey": "triangle-flat__2756e745"
+        },
+        {
+          "text": "Rectangle — flat!",
+          "clipKey": "rectangle-flat__ae507d66"
+        },
+        {
+          "text": "Cylinder — solid!",
+          "clipKey": "cylinder-solid__7a19d635"
+        },
+        {
+          "text": "Pentagon — flat!",
+          "clipKey": "pentagon-flat__b679cfd9"
+        },
+        {
+          "text": "Hexagon — flat!",
+          "clipKey": "hexagon-flat__0282cba3"
+        },
+        {
+          "text": "Pyramid — solid!",
+          "clipKey": "pyramid-solid__abbedccd"
+        },
+        {
+          "text": "Cone — solid!",
+          "clipKey": "cone-solid__332b42ba"
+        },
+        {
+          "text": "That's flat, not solid. Try the other basket.",
+          "clipKey": "that-s-flat-not-solid-try-the-other-basket__49af6d1d"
+        },
+        {
+          "text": "That's solid, not flat. Try the other basket.",
+          "clipKey": "that-s-solid-not-flat-try-the-other-basket__1d9c111d"
+        }
+      ]
+    },
+    {
+      "id": "sort-attribute",
+      "title": "Shape Garden — sort by attribute",
+      "note": "The keeper opening the visit, the round prompt, the basket labels (read aloud when a basket is tapped, and as a shape lands in one), the wrong-basket line, and the keeper over the sorted baskets.",
+      "variants": 27,
+      "complete": true,
+      "lines": [
+        {
+          "text": "Let's group the shapes! I'll tell you what to sort by — the number of sides, the size, or whether they have curves or corners. Drop each shape into the basket that matches.",
+          "clipKey": "let-s-group-the-shapes-i-ll-tell-you-what-to-sor__52f1774b"
+        },
         {
           "text": "Sort by number of sides. Drop each shape in the right basket!",
           "clipKey": "sort-by-number-of-sides-drop-each-shape-in-the-r__d534a64c"
@@ -4024,6 +4125,22 @@
         {
           "text": "Close! Have another look. Sort by curves or corners.",
           "clipKey": "close-have-another-look-sort-by-curves-or-corner__2fde342c"
+        },
+        {
+          "text": "Sides sorted! Triangles, squares + rectangles, pentagons + hexagons.",
+          "clipKey": "sides-sorted-triangles-squares-rectangles-pentag__4e3eded8"
+        },
+        {
+          "text": "Big to one side, small to the other — perfect.",
+          "clipKey": "big-to-one-side-small-to-the-other-perfect__b4ae6caf"
+        },
+        {
+          "text": "Round things together, pointy things together. That's grouping by curves.",
+          "clipKey": "round-things-together-pointy-things-together-tha__b6fa1b1f"
+        },
+        {
+          "text": "Every shape sorted! You can group things by all kinds of differences.",
+          "clipKey": "every-shape-sorted-you-can-group-things-by-all-k__347782bc"
         }
       ]
     },
@@ -5195,12 +5312,48 @@
       ]
     },
     {
-      "id": "two-attribute-miss",
-      "title": "Two-attribute hunt — the wrong-tap line",
-      "note": "One shape matched but not both. The warm line rotates.",
-      "variants": 4,
+      "id": "two-attribute-hunt",
+      "title": "Two-attribute hunt - the Shape Garden challenge",
+      "note": "The opt-in challenge, so a little more energy than the garden. The demonstration is four beats over a hand pointing at the board; lean on BOTH, which is the whole idea. The wrong-tap line is one shape that matched on one thing but not the other, and its warm line rotates.",
+      "variants": 17,
       "complete": true,
       "lines": [
+        {
+          "text": "Ready for the big sort? Each round names TWO things at once — tap every shape that matches BOTH. Get them all and earn 50 bonus coins!",
+          "clipKey": "ready-for-the-big-sort-each-round-names-two-thin__536bacbe"
+        },
+        {
+          "text": "Watch me. Each round needs both things at the same time.",
+          "clipKey": "watch-me-each-round-needs-both-things-at-the-sam__411e8ecd"
+        },
+        {
+          "text": "This square is green AND has four sides — both. Yes!",
+          "clipKey": "this-square-is-green-and-has-four-sides-both-yes__05f7c12b"
+        },
+        {
+          "text": "This triangle is green, but it has three sides — only one match. Not both.",
+          "clipKey": "this-triangle-is-green-but-it-has-three-sides-on__bf2d285d"
+        },
+        {
+          "text": "Your turn. Find every shape that matches BOTH!",
+          "clipKey": "your-turn-find-every-shape-that-matches-both__a1c68360"
+        },
+        {
+          "text": "Find every shape that is green and has four sides. Tap each one!",
+          "clipKey": "find-every-shape-that-is-green-and-has-four-side__6f7b78e6"
+        },
+        {
+          "text": "Find every shape that is round and big.",
+          "clipKey": "find-every-shape-that-is-round-and-big__6f42f3e2"
+        },
+        {
+          "text": "Find every shape that has corners and is yellow.",
+          "clipKey": "find-every-shape-that-has-corners-and-is-yellow__2ce999f8"
+        },
+        {
+          "text": "Yes! Both.",
+          "clipKey": "yes-both__96017ce8"
+        },
         {
           "text": "That's not both. Not that one. Look again.",
           "clipKey": "that-s-not-both-not-that-one-look-again__b8bd1083"
@@ -5216,6 +5369,22 @@
         {
           "text": "That's not both. Close! Have another look.",
           "clipKey": "that-s-not-both-close-have-another-look__7636164b"
+        },
+        {
+          "text": "Two green shapes with four sides — you spotted both!",
+          "clipKey": "two-green-shapes-with-four-sides-you-spotted-bot__1ee0335a"
+        },
+        {
+          "text": "Two big round things — both found!",
+          "clipKey": "two-big-round-things-both-found__b53a94fc"
+        },
+        {
+          "text": "Yellow with corners — sharp eye!",
+          "clipKey": "yellow-with-corners-sharp-eye__986dc81d"
+        },
+        {
+          "text": "All three rounds cleared! Two-attribute hunt is no match for you. Here are 50 bonus coins.",
+          "clipKey": "all-three-rounds-cleared-two-attribute-hunt-is-n__b1e2c42a"
         }
       ]
     },
@@ -6860,16 +7029,12 @@
       "id": "dart-literals",
       "title": "Lines written directly in Dart",
       "note": "Swept out of lib/ by tool/narration_sources.dart: the sanctuary prologue, const round keeperLines, reward dialog. Interpolated templates are excluded - their variants have to come from the catalog that fills the slot.",
-      "variants": 99,
+      "variants": 75,
       "complete": true,
       "lines": [
         {
           "text": "A new friend!",
           "clipKey": "a-new-friend__9e77f4a9"
-        },
-        {
-          "text": "Almost done — one last basket-round!",
-          "clipKey": "almost-done-one-last-basket-round__908df413"
         },
         {
           "text": "And another!",
@@ -6888,10 +7053,6 @@
           "clipKey": "beautifully-counted-tap-the-arrow-to-keep-going__54892763"
         },
         {
-          "text": "Big to one side, small to the other — perfect.",
-          "clipKey": "big-to-one-side-small-to-the-other-perfect__b4ae6caf"
-        },
-        {
           "text": "Count the animals with me out loud as they do their parade!",
           "clipKey": "count-the-animals-with-me-out-loud-as-they-do-th__3f39e42b"
         },
@@ -6908,28 +7069,12 @@
           "clipKey": "eighty-phoenixes-the-golden-eggs-are-at-ninety__7fca406f"
         },
         {
-          "text": "Every shape sorted! You can group things by all kinds of differences.",
-          "clipKey": "every-shape-sorted-you-can-group-things-by-all-k__347782bc"
-        },
-        {
           "text": "Fifty dragons! Now — the phoenixes are at seventy.",
           "clipKey": "fifty-dragons-now-the-phoenixes-are-at-seventy__b53cc1d7"
         },
         {
           "text": "Fifty dragons! Phoenix babies are next.",
           "clipKey": "fifty-dragons-phoenix-babies-are-next__da11696a"
-        },
-        {
-          "text": "Find every shape that has corners and is yellow.",
-          "clipKey": "find-every-shape-that-has-corners-and-is-yellow__2ce999f8"
-        },
-        {
-          "text": "Find every shape that is green and has four sides. Tap each one!",
-          "clipKey": "find-every-shape-that-is-green-and-has-four-side__6f7b78e6"
-        },
-        {
-          "text": "Find every shape that is round and big.",
-          "clipKey": "find-every-shape-that-is-round-and-big__6f42f3e2"
         },
         {
           "text": "Four fawns! Now I need some gryphons.",
@@ -6972,10 +7117,6 @@
           "clipKey": "let-s-explore__bef8b17e"
         },
         {
-          "text": "Let's group the shapes! I'll tell you what to sort by — the number of sides, the size, or whether they have curves or corners. Drop each shape into the basket that matches.",
-          "clipKey": "let-s-group-the-shapes-i-ll-tell-you-what-to-sor__52f1774b"
-        },
-        {
           "text": "Let's hunt!",
           "clipKey": "let-s-hunt__41002558"
         },
@@ -7004,10 +7145,6 @@
           "clipKey": "look-some-plants-in-the-garden-have-grown-into-s__729e98f1"
         },
         {
-          "text": "Lovely! Let me bring out a few more shapes.",
-          "clipKey": "lovely-let-me-bring-out-a-few-more-shapes__1250c020"
-        },
-        {
           "text": "Nice counting! Tap the arrow to keep going.",
           "clipKey": "nice-counting-tap-the-arrow-to-keep-going__74f2f34f"
         },
@@ -7018,10 +7155,6 @@
         {
           "text": "Nicely counted!",
           "clipKey": "nicely-counted__7aa23ab8"
-        },
-        {
-          "text": "Nicely done! You sorted them all.",
-          "clipKey": "nicely-done-you-sorted-them-all__e08d1df1"
         },
         {
           "text": "Now you try!",
@@ -7060,10 +7193,6 @@
           "clipKey": "one-solid-shape__62a3ed48"
         },
         {
-          "text": "Round things together, pointy things together. That's grouping by curves.",
-          "clipKey": "round-things-together-pointy-things-together-tha__b6fa1b1f"
-        },
-        {
           "text": "Seventy phoenixes! Last group — the golden eggs.",
           "clipKey": "seventy-phoenixes-last-group-the-golden-eggs__61227246"
         },
@@ -7072,20 +7201,12 @@
           "clipKey": "shapes-can-group-by-how-many-sides-they-have-let__07530d0f"
         },
         {
-          "text": "Sides sorted! Triangles, squares + rectangles, pentagons + hexagons.",
-          "clipKey": "sides-sorted-triangles-squares-rectangles-pentag__4e3eded8"
-        },
-        {
           "text": "Six fawns! Now some gryphons are catching up.",
           "clipKey": "six-fawns-now-some-gryphons-are-catching-up__2dbe6133"
         },
         {
           "text": "Six gryphons! One more round — the dragons.",
           "clipKey": "six-gryphons-one-more-round-the-dragons__35b841fc"
-        },
-        {
-          "text": "Some shapes are flat — like drawings on a page. Others are solid — you can hold them in your hand. Help me sort them into the right baskets!",
-          "clipKey": "some-shapes-are-flat-like-drawings-on-a-page-oth__b1c7ca24"
         },
         {
           "text": "Sometimes I just need a few creatures, not all of them! I'll ask for a number, and you bring me exactly that many. Ready?",
@@ -7098,10 +7219,6 @@
         {
           "text": "Sort the shapes — flat or solid?",
           "clipKey": "sort-the-shapes-flat-or-solid__daa6e766"
-        },
-        {
-          "text": "Sort the shapes! Flat ones in the flat basket. Solid ones in the solid basket.",
-          "clipKey": "sort-the-shapes-flat-ones-in-the-flat-basket-sol__22f1685f"
         },
         {
           "text": "Tap Continue when you're ready to play.",
@@ -7156,14 +7273,6 @@
           "clipKey": "this-is-a-circle-a-circle-has-no-sides-it-s-smoo__2c8cbd44"
         },
         {
-          "text": "This square is green AND has four sides — both. Yes!",
-          "clipKey": "this-square-is-green-and-has-four-sides-both-yes__05f7c12b"
-        },
-        {
-          "text": "This triangle is green, but it has three sides — only one match. Not both.",
-          "clipKey": "this-triangle-is-green-but-it-has-three-sides-on__bf2d285d"
-        },
-        {
           "text": "Today the parade is HUGE. Don't worry — we can count by tens! Watch how a big group of ten becomes one easy count.",
           "clipKey": "today-the-parade-is-huge-don-t-worry-we-can-coun__9c917ef3"
         },
@@ -7174,18 +7283,6 @@
         {
           "text": "Twenty fawns! The dragons are already up at forty.",
           "clipKey": "twenty-fawns-the-dragons-are-already-up-at-forty__b0669213"
-        },
-        {
-          "text": "Two big round things — both found!",
-          "clipKey": "two-big-round-things-both-found__b53a94fc"
-        },
-        {
-          "text": "Two green shapes with four sides — you spotted both!",
-          "clipKey": "two-green-shapes-with-four-sides-you-spotted-bot__1ee0335a"
-        },
-        {
-          "text": "Watch me. Each round needs both things at the same time.",
-          "clipKey": "watch-me-each-round-needs-both-things-at-the-sam__411e8ecd"
         },
         {
           "text": "Watch — I'll show you how to sort. The flat shapes go in the flat basket, the solid shapes in the solid basket.",
@@ -7216,20 +7313,8 @@
           "clipKey": "when-we-count-to-ten-we-get-a-special-new-number__71f69894"
         },
         {
-          "text": "Wonderful sorting! Try another round.",
-          "clipKey": "wonderful-sorting-try-another-round__323d1e08"
-        },
-        {
           "text": "Wow! You learned every shape in the garden.",
           "clipKey": "wow-you-learned-every-shape-in-the-garden__dc26985e"
-        },
-        {
-          "text": "Yellow with corners — sharp eye!",
-          "clipKey": "yellow-with-corners-sharp-eye__986dc81d"
-        },
-        {
-          "text": "Yes! Both.",
-          "clipKey": "yes-both__96017ce8"
         },
         {
           "text": "You counted all the new creatures! Wonderful work.",
@@ -7244,20 +7329,8 @@
           "clipKey": "you-learned-every-shape-in-the-garden__eff20157"
         },
         {
-          "text": "You sorted every shape! Wonderful work.",
-          "clipKey": "you-sorted-every-shape-wonderful-work__e8272bf5"
-        },
-        {
           "text": "You'll be my honorary keeper!",
           "clipKey": "you-ll-be-my-honorary-keeper__d9755fff"
-        },
-        {
-          "text": "You're getting the hang of it. One more.",
-          "clipKey": "you-re-getting-the-hang-of-it-one-more__79c31a66"
-        },
-        {
-          "text": "Your turn. Find every shape that matches BOTH!",
-          "clipKey": "your-turn-find-every-shape-that-matches-both__a1c68360"
         }
       ]
     },

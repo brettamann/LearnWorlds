@@ -15958,6 +15958,134 @@
       "bytes": 14400,
       "seconds": 1.74,
       "format": "mp3"
+    },
+    "you-sorted-every-shape-here-are-some-coins-for-y__40b4d6cd": {
+      "text": "You sorted every shape! Here are some coins for your help.",
+      "batch": "garden-flat-or-solid",
+      "voice": "af_heart",
+      "bytes": 24000,
+      "seconds": 2.93,
+      "format": "mp3"
+    },
+    "circle-flat__660bdfe9": {
+      "text": "Circle — flat!",
+      "batch": "garden-flat-or-solid",
+      "voice": "af_heart",
+      "bytes": 8064,
+      "seconds": 0.94,
+      "format": "mp3"
+    },
+    "square-flat__f517714e": {
+      "text": "Square — flat!",
+      "batch": "garden-flat-or-solid",
+      "voice": "af_heart",
+      "bytes": 7488,
+      "seconds": 0.88,
+      "format": "mp3"
+    },
+    "cube-solid__8cc0fbe8": {
+      "text": "Cube — solid!",
+      "batch": "garden-flat-or-solid",
+      "voice": "af_heart",
+      "bytes": 7680,
+      "seconds": 0.9,
+      "format": "mp3"
+    },
+    "sphere-solid__ac5f1c00": {
+      "text": "Sphere — solid!",
+      "batch": "garden-flat-or-solid",
+      "voice": "af_heart",
+      "bytes": 8064,
+      "seconds": 0.96,
+      "format": "mp3"
+    },
+    "triangle-flat__2756e745": {
+      "text": "Triangle — flat!",
+      "batch": "garden-flat-or-solid",
+      "voice": "af_heart",
+      "bytes": 9216,
+      "seconds": 1.1,
+      "format": "mp3"
+    },
+    "rectangle-flat__ae507d66": {
+      "text": "Rectangle — flat!",
+      "batch": "garden-flat-or-solid",
+      "voice": "af_heart",
+      "bytes": 9600,
+      "seconds": 1.14,
+      "format": "mp3"
+    },
+    "cylinder-solid__7a19d635": {
+      "text": "Cylinder — solid!",
+      "batch": "garden-flat-or-solid",
+      "voice": "af_heart",
+      "bytes": 9216,
+      "seconds": 1.08,
+      "format": "mp3"
+    },
+    "pentagon-flat__b679cfd9": {
+      "text": "Pentagon — flat!",
+      "batch": "garden-flat-or-solid",
+      "voice": "af_heart",
+      "bytes": 9408,
+      "seconds": 1.12,
+      "format": "mp3"
+    },
+    "hexagon-flat__0282cba3": {
+      "text": "Hexagon — flat!",
+      "batch": "garden-flat-or-solid",
+      "voice": "af_heart",
+      "bytes": 8832,
+      "seconds": 1.04,
+      "format": "mp3"
+    },
+    "pyramid-solid__abbedccd": {
+      "text": "Pyramid — solid!",
+      "batch": "garden-flat-or-solid",
+      "voice": "af_heart",
+      "bytes": 9024,
+      "seconds": 1.06,
+      "format": "mp3"
+    },
+    "cone-solid__332b42ba": {
+      "text": "Cone — solid!",
+      "batch": "garden-flat-or-solid",
+      "voice": "af_heart",
+      "bytes": 7488,
+      "seconds": 0.88,
+      "format": "mp3"
+    },
+    "that-s-flat-not-solid-try-the-other-basket__49af6d1d": {
+      "text": "That's flat, not solid. Try the other basket.",
+      "batch": "garden-flat-or-solid",
+      "voice": "af_heart",
+      "bytes": 21504,
+      "seconds": 2.62,
+      "format": "mp3"
+    },
+    "that-s-solid-not-flat-try-the-other-basket__1d9c111d": {
+      "text": "That's solid, not flat. Try the other basket.",
+      "batch": "garden-flat-or-solid",
+      "voice": "af_heart",
+      "bytes": 21120,
+      "seconds": 2.57,
+      "format": "mp3"
+    },
+    "ready-for-the-big-sort-each-round-names-two-thin__536bacbe": {
+      "text": "Ready for the big sort? Each round names TWO things at once — tap every shape that matches BOTH. Get them all and earn 50 bonus coins!",
+      "batch": "two-attribute-hunt",
+      "voice": "af_heart",
+      "bytes": 67008,
+      "seconds": 8.33,
+      "format": "mp3"
+    },
+    "all-three-rounds-cleared-two-attribute-hunt-is-n__b1e2c42a": {
+      "text": "All three rounds cleared! Two-attribute hunt is no match for you. Here are 50 bonus coins.",
+      "batch": "two-attribute-hunt",
+      "voice": "af_heart",
+      "bytes": 44736,
+      "seconds": 5.54,
+      "format": "mp3"
     }
   }
 }

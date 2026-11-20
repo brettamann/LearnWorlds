@@ -85,6 +85,10 @@ Map<String, Widget> playfields() => <String, Widget>{
         onSequenceComplete: () {},
         skipIntro: true,
       ),
+      'shape-garden-flat-or-solid': ShapeGardenSortingRunner(
+        onSequenceComplete: () {},
+        skipIntro: true,
+      ),
       'shape-garden-sort': ShapeGardenSortByAttributeRunner(
         onSequenceComplete: () {},
         skipIntro: true,

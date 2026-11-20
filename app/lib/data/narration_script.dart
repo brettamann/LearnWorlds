@@ -39,6 +39,7 @@ import 'count_forward_from_n_rounds.dart';
 import 'count_on_by_ones_rounds.dart';
 import 'count_out_n_rounds.dart';
 import 'creature_card_catalog.dart';
+import 'flat_or_solid_shapes.dart';
 import 'fluency_words.dart';
 import 'habitat_words.dart';
 import 'long_parade_rounds.dart';
@@ -55,6 +56,7 @@ import 'storytellers_pond_words.dart';
 import 'sub_mode_picker_data.dart';
 import 'ten_frame_words.dart';
 import 'tens_parade_words.dart';
+import 'two_attribute_hunt_rounds.dart';
 import 'warm_lines.dart';
 import 'wheres_buddy_words.dart';
 
@@ -286,16 +288,30 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
       ),
 
       ScriptBatch(
+        id: 'garden-flat-or-solid',
+        title: 'Shape Garden - flat or solid',
+        note: 'The keeper opening and closing the sorting visit, and the '
+            'round itself: a shape named as it lands in the right basket '
+            '("Cube - solid!"), and the gentle redirect when it does not. '
+            'Flat and solid are the words being taught, so give them weight.',
+        lines: gardenSortingScriptLines(),
+      ),
+      ScriptBatch(
         id: 'sort-attribute',
         title: 'Shape Garden — sort by attribute',
-        note: 'The round prompt, the basket labels (read aloud when a basket '
-            'is tapped), and the wrong-basket line.',
+        note: 'The keeper opening the visit, the round prompt, the basket '
+            'labels (read aloud when a basket is tapped, and as a shape lands '
+            'in one), the wrong-basket line, and the keeper over the sorted '
+            'baskets.',
         lines: <String>[
+          kSortAttributeIntro,
           for (final id in kSortAttributeWords.keys) sortAttributePrompt(id),
           for (final label in kSortBinLabels.values) label,
           for (var n = 0; n < 4; n++)
-            for (final word in kSortAttributeWords.values)
-              '${warmMissLine(n)} Sort by $word.',
+            for (final id in kSortAttributeWords.keys)
+              sortAttributeMissLine(n, id),
+          for (final r in kSortAttributeRounds) r.keeperLine,
+          kSortAttributeFinal,
         ],
       ),
 
@@ -522,12 +538,14 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
 
       // ---- Two-attribute hunt -------------------------------------
       ScriptBatch(
-        id: 'two-attribute-miss',
-        title: 'Two-attribute hunt — the wrong-tap line',
-        note: 'One shape matched but not both. The warm line rotates.',
-        lines: <String>[
-          for (var n = 0; n < 4; n++) "That's not both. ${warmMissLine(n)}",
-        ],
+        id: 'two-attribute-hunt',
+        title: 'Two-attribute hunt - the Shape Garden challenge',
+        note: 'The opt-in challenge, so a little more energy than the garden. '
+            'The demonstration is four beats over a hand pointing at the '
+            'board; lean on BOTH, which is the whole idea. The wrong-tap line '
+            'is one shape that matched on one thing but not the other, and '
+            'its warm line rotates.',
+        lines: twoAttributeHuntScriptLines(),
       ),
 
       ScriptBatch(

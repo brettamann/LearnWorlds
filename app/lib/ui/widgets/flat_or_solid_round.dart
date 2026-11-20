@@ -26,8 +26,11 @@ import '../../data/button_labels.dart';
 import '../../data/flat_or_solid_shapes.dart';
 import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/narration/narration_player.dart';
+import '../../engines/scaffolding/hint_ladder.dart';
 import '../../theme/app_decor.dart';
+import '../common/target_hint.dart';
 import 'glitter_burst.dart';
+import 'touch_here_halo.dart';
 
 /// Narration style for a per-shape correct drop.
 ///
@@ -47,10 +50,11 @@ class FlatOrSolidRound extends ConsumerStatefulWidget {
     required this.cueIdPrefix,
     this.onMiss,
     this.headerPrompt = 'Sort the shapes — flat or solid?',
-    this.spokenPrompt =
-        'Sort the shapes! Flat ones in the flat basket. Solid ones in the solid basket.',
+    this.spokenPrompt = kFlatOrSolidPrompt,
     this.shapeSize = 110,
     this.narrationStyle = FlatOrSolidNarrationStyle.shapeName,
+    this.idleHelp = false,
+    this.onHelped,
   });
 
   /// Shapes to sort this round. The widget treats them as a stable pool —
@@ -81,6 +85,15 @@ class FlatOrSolidRound extends ConsumerStatefulWidget {
   /// Per-drop narration mode. See `FlatOrSolidNarrationStyle`.
   final FlatOrSolidNarrationStyle narrationStyle;
 
+  /// Runs the hint ladder: ring the next shape, then ring it and chime, then
+  /// sort it for her. Off for the K.G.3 lesson, whose We-Try owns its help;
+  /// on for Shape Garden, where a stuck child otherwise heard nothing at all.
+  final bool idleHelp;
+
+  /// Fires when the ladder points or demonstrates, so the host can grade the
+  /// round as helped.
+  final VoidCallback? onHelped;
+
   @override
   ConsumerState<FlatOrSolidRound> createState() => _FlatOrSolidRoundState();
 }
@@ -98,6 +111,10 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
   bool _promptSpoken = false;
   bool _completed = false;
   Timer? _completionTimer;
+  HintLadder? _hints;
+
+  /// The shape the ladder is ringing, if any.
+  String? _ringed;
 
   static const List<String> _kSpelled = <String>[
     'Zero',
@@ -117,9 +134,35 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
       n >= 0 && n < _kSpelled.length ? _kSpelled[n] : n.toString();
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.idleHelp) _hints = HintLadder(onLevel: _onHint)..start();
+  }
+
+  @override
   void dispose() {
     _completionTimer?.cancel();
+    _hints?.dispose();
     super.dispose();
+  }
+
+  void _onHint(HintLevel level) {
+    if (!mounted || _completed) return;
+    final next =
+        widget.shapes.where((s) => !_sortedIds.contains(s.id)).firstOrNull;
+    if (next == null) return;
+    if (level == HintLevel.point || level == HintLevel.demonstrate) {
+      widget.onHelped?.call();
+    }
+    answerTargetHint(
+      level,
+      ring: () => setState(() => _ringed = next.id),
+      chime: ref.read(feedbackEngineProvider).hint,
+      say: (line) =>
+          ref.narration.say(line, cueId: '${widget.cueIdPrefix}:hint'),
+      demonstrate: () =>
+          _handleDrop(next, binIsFlat: next.isFlat, fromHint: true),
+    );
   }
 
   void _maybeSpeakPrompt() {
@@ -129,9 +172,15 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
         .say(widget.spokenPrompt, cueId: '${widget.cueIdPrefix}:prompt');
   }
 
-  void _handleDrop(FlatOrSolidShape shape, {required bool binIsFlat}) {
+  void _handleDrop(
+    FlatOrSolidShape shape, {
+    required bool binIsFlat,
+    bool fromHint = false,
+  }) {
     if (_completed) return;
     if (_sortedIds.contains(shape.id)) return;
+    if (!fromHint) _hints?.poke();
+    if (_ringed == shape.id) _ringed = null;
     final correct = shape.isFlat == binIsFlat;
     if (correct) {
       setState(() {
@@ -145,8 +194,7 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
         }
       });
       final hitText = switch (widget.narrationStyle) {
-        FlatOrSolidNarrationStyle.shapeName =>
-          '${_capitalize(shape.displayName)} — ${binIsFlat ? 'flat' : 'solid'}!',
+        FlatOrSolidNarrationStyle.shapeName => flatOrSolidHitLine(shape),
         FlatOrSolidNarrationStyle.count => () {
             final n = binIsFlat ? _flatCount : _solidCount;
             final side = binIsFlat ? 'flat' : 'solid';
@@ -155,12 +203,18 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
           }(),
       };
       ref.read(feedbackEngineProvider).correct();
-      ref.narration
-          .say(hitText, cueId: '${widget.cueIdPrefix}:hit-${shape.id}');
+      // Queued when the ladder sorted it, so it follows the "watch me" line
+      // rather than cutting it off.
+      ref.narration.say(
+        hitText,
+        cueId: '${widget.cueIdPrefix}:hit-${shape.id}',
+        queue: fromHint,
+      );
       if (_sortedIds.length == widget.shapes.length) {
         _completed = true;
+        _hints?.pause();
         ref.narration.say(
-          'Nicely done! You sorted them all.',
+          kFlatOrSolidDoneLine,
           cueId: '${widget.cueIdPrefix}:done',
         );
         _completionTimer = Timer(const Duration(milliseconds: 1800), () {
@@ -174,17 +228,12 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
       // kid anything at all. Keep the bounce; add the half it was missing.
       ref.read(feedbackEngineProvider).wrong();
       widget.onMiss?.call();
-      final correctSide = shape.isFlat ? 'flat' : 'solid';
-      final wrongSide = binIsFlat ? 'flat' : 'solid';
       ref.narration.say(
-        "That's $correctSide, not $wrongSide. Try the other basket.",
-        cueId: '${widget.cueIdPrefix}:miss-${shape.id}-$wrongSide',
+        flatOrSolidMissLine(shapeIsFlat: shape.isFlat),
+        cueId: '${widget.cueIdPrefix}:miss-${shape.id}',
       );
     }
   }
-
-  String _capitalize(String s) =>
-      s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
 
   @override
   Widget build(BuildContext context) {
@@ -240,6 +289,7 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
                       _DraggableShape(
                         shape: s,
                         size: widget.shapeSize,
+                        ringed: _ringed == s.id,
                       ),
                   ],
                 ),
@@ -281,10 +331,15 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
 }
 
 class _DraggableShape extends StatelessWidget {
-  const _DraggableShape({required this.shape, required this.size});
+  const _DraggableShape({
+    required this.shape,
+    required this.size,
+    this.ringed = false,
+  });
 
   final FlatOrSolidShape shape;
   final double size;
+  final bool ringed;
 
   @override
   Widget build(BuildContext context) {
@@ -307,7 +362,15 @@ class _DraggableShape extends StatelessWidget {
         ),
       ),
       childWhenDragging: SizedBox(width: size, height: size),
-      child: sprite,
+      child: ringed
+          ? Stack(
+              clipBehavior: Clip.none,
+              children: [
+                sprite,
+                const Positioned.fill(child: TouchHereRing()),
+              ],
+            )
+          : sprite,
     );
   }
 }

@@ -279,3 +279,131 @@ FlatOrSolidShape solidShapeFromPairing(FlatSolidPairing p, int instance) {
     isFlat: false,
   );
 }
+
+// ---------------------------------------------------------------------------
+// What a flat-or-solid round says
+// ---------------------------------------------------------------------------
+//
+// FlatOrSolidRound (the K.G.3 lesson's you-do beat and the Shape Garden
+// sorting sub-mode) builds its lines here, so the narration script can list
+// exactly what the round says rather than restating the templates.
+
+/// The round's opening instruction, unless the host gives its own.
+const String kFlatOrSolidPrompt =
+    'Sort the shapes! Flat ones in the flat basket. Solid ones in the solid '
+    'basket.';
+
+/// Said as the last shape lands.
+const String kFlatOrSolidDoneLine = 'Nicely done! You sorted them all.';
+
+/// Said when [shape] lands in the right basket: "Triangle — flat!".
+String flatOrSolidHitLine(FlatOrSolidShape shape) {
+  final name = shape.displayName;
+  final capitalized =
+      name.isEmpty ? name : name[0].toUpperCase() + name.substring(1);
+  return '$capitalized — ${shape.isFlat ? 'flat' : 'solid'}!';
+}
+
+/// Said when a shape is dropped in the wrong basket.
+String flatOrSolidMissLine({required bool shapeIsFlat}) {
+  final correctSide = shapeIsFlat ? 'flat' : 'solid';
+  final wrongSide = shapeIsFlat ? 'solid' : 'flat';
+  return "That's $correctSide, not $wrongSide. Try the other basket.";
+}
+
+// ---------------------------------------------------------------------------
+// Shape Garden's flat-or-solid sub-mode
+// ---------------------------------------------------------------------------
+
+/// One sorting round's shape mix, and what the keeper says over it once it
+/// is sorted.
+class GardenSortingRound {
+  const GardenSortingRound({
+    required this.flatCount,
+    required this.solidCount,
+    required this.keeperLine,
+  });
+
+  final int flatCount;
+  final int solidCount;
+
+  /// What the keeper says over the finished baskets, setting up the next.
+  final String keeperLine;
+}
+
+const List<GardenSortingRound> kGardenSortingRounds = <GardenSortingRound>[
+  GardenSortingRound(
+    flatCount: 2,
+    solidCount: 2,
+    keeperLine: 'Wonderful sorting! Try another round.',
+  ),
+  GardenSortingRound(
+    flatCount: 2,
+    solidCount: 2,
+    keeperLine: "You're getting the hang of it. One more.",
+  ),
+  GardenSortingRound(
+    flatCount: 3,
+    solidCount: 2,
+    keeperLine: 'Lovely! Let me bring out a few more shapes.',
+  ),
+  GardenSortingRound(
+    flatCount: 2,
+    solidCount: 3,
+    keeperLine: 'Almost done — one last basket-round!',
+  ),
+  GardenSortingRound(
+    flatCount: 3,
+    solidCount: 3,
+    keeperLine: 'You sorted every shape! Wonderful work.',
+  ),
+];
+
+/// The shapes for sorting round [round]: `flatCount + solidCount` drawn from
+/// the two pools with a round-keyed offset, so each round shows a different
+/// mix without surprise repeats.
+List<FlatOrSolidShape> gardenSortingShapes(int round) {
+  final r = kGardenSortingRounds[round];
+  return <FlatOrSolidShape>[
+    for (var i = 0; i < r.flatCount; i++)
+      kFlatShapes[(round * 2 + i) % kFlatShapes.length],
+    for (var i = 0; i < r.solidCount; i++)
+      kSolidShapes[(round + i) % kSolidShapes.length],
+  ];
+}
+
+/// The banner over the round: "Round 2 of 5 — flat or solid?".
+String gardenSortingHeader(int round) =>
+    'Round ${round + 1} of ${kGardenSortingRounds.length} — flat or solid?';
+
+const String kGardenSortingIntro =
+    'Some shapes are flat — like drawings on a page. Others are solid '
+    '— you can hold them in your hand. Help me sort them into the right '
+    'baskets!';
+
+const String kGardenSortingStartLabel = "Let's sort!";
+
+/// The visit's last beat. It used to name the clean-round total (25), which
+/// overstated the payout whenever a round needed help; like every other
+/// place, it says "some coins".
+const String kGardenSortingFinal =
+    'You sorted every shape! Here are some coins for your help.';
+
+/// Every line a garden sorting visit can say: the shell's, and the round's.
+List<String> gardenSortingScriptLines() {
+  final shapes = <FlatOrSolidShape>{
+    for (var i = 0; i < kGardenSortingRounds.length; i++)
+      ...gardenSortingShapes(i),
+  };
+  return <String>[
+    kGardenSortingIntro,
+    for (final r in kGardenSortingRounds) r.keeperLine,
+    kGardenSortingFinal,
+    kFlatOrSolidPrompt,
+    kFlatOrSolidDoneLine,
+    for (final line in <String>{for (final s in shapes) flatOrSolidHitLine(s)})
+      line,
+    flatOrSolidMissLine(shapeIsFlat: true),
+    flatOrSolidMissLine(shapeIsFlat: false),
+  ];
+}

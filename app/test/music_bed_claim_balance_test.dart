@@ -104,6 +104,8 @@ void main() {
     final total = _libSources()
         .map((f) => _callsTo(f.readAsStringSync(), 'startMusicBed'))
         .fold<int>(0, (a, b) => a + b);
-    expect(total, greaterThan(10), reason: 'the lint is reading no source');
+    // Most claims now live in SanctuaryRoundShell rather than in each
+    // runner, so the bar is 'finds any', not a count.
+    expect(total, greaterThan(0), reason: 'the lint is reading no source');
   });
 }
