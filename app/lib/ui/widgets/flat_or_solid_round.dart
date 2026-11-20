@@ -47,8 +47,7 @@ class FlatOrSolidRound extends ConsumerStatefulWidget {
     required this.cueIdPrefix,
     this.onMiss,
     this.headerPrompt = 'Sort the shapes — flat or solid?',
-    this.spokenPrompt =
-        'Sort the shapes! Flat ones in the flat basket. Solid ones in the solid basket.',
+    this.spokenPrompt = kFlatOrSolidPrompt,
     this.shapeSize = 110,
     this.narrationStyle = FlatOrSolidNarrationStyle.shapeName,
   });
@@ -145,8 +144,7 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
         }
       });
       final hitText = switch (widget.narrationStyle) {
-        FlatOrSolidNarrationStyle.shapeName =>
-          '${_capitalize(shape.displayName)} — ${binIsFlat ? 'flat' : 'solid'}!',
+        FlatOrSolidNarrationStyle.shapeName => flatOrSolidHitLine(shape),
         FlatOrSolidNarrationStyle.count => () {
             final n = binIsFlat ? _flatCount : _solidCount;
             final side = binIsFlat ? 'flat' : 'solid';
@@ -160,7 +158,7 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
       if (_sortedIds.length == widget.shapes.length) {
         _completed = true;
         ref.narration.say(
-          'Nicely done! You sorted them all.',
+          kFlatOrSolidDoneLine,
           cueId: '${widget.cueIdPrefix}:done',
         );
         _completionTimer = Timer(const Duration(milliseconds: 1800), () {
@@ -174,17 +172,12 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
       // kid anything at all. Keep the bounce; add the half it was missing.
       ref.read(feedbackEngineProvider).wrong();
       widget.onMiss?.call();
-      final correctSide = shape.isFlat ? 'flat' : 'solid';
-      final wrongSide = binIsFlat ? 'flat' : 'solid';
       ref.narration.say(
-        "That's $correctSide, not $wrongSide. Try the other basket.",
-        cueId: '${widget.cueIdPrefix}:miss-${shape.id}-$wrongSide',
+        flatOrSolidMissLine(shapeIsFlat: shape.isFlat),
+        cueId: '${widget.cueIdPrefix}:miss-${shape.id}',
       );
     }
   }
-
-  String _capitalize(String s) =>
-      s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
 
   @override
   Widget build(BuildContext context) {

@@ -3931,6 +3931,103 @@
       ]
     },
     {
+      "id": "garden-flat-or-solid",
+      "title": "Shape Garden - flat or solid",
+      "note": "The keeper opening and closing the sorting visit, and the round itself: a shape named as it lands in the right basket (\"Cube - solid!\"), and the gentle redirect when it does not. Flat and solid are the words being taught, so give them weight.",
+      "variants": 22,
+      "complete": true,
+      "lines": [
+        {
+          "text": "Some shapes are flat — like drawings on a page. Others are solid — you can hold them in your hand. Help me sort them into the right baskets!",
+          "clipKey": "some-shapes-are-flat-like-drawings-on-a-page-oth__b1c7ca24"
+        },
+        {
+          "text": "Wonderful sorting! Try another round.",
+          "clipKey": "wonderful-sorting-try-another-round__323d1e08"
+        },
+        {
+          "text": "You're getting the hang of it. One more.",
+          "clipKey": "you-re-getting-the-hang-of-it-one-more__79c31a66"
+        },
+        {
+          "text": "Lovely! Let me bring out a few more shapes.",
+          "clipKey": "lovely-let-me-bring-out-a-few-more-shapes__1250c020"
+        },
+        {
+          "text": "Almost done — one last basket-round!",
+          "clipKey": "almost-done-one-last-basket-round__908df413"
+        },
+        {
+          "text": "You sorted every shape! Wonderful work.",
+          "clipKey": "you-sorted-every-shape-wonderful-work__e8272bf5"
+        },
+        {
+          "text": "You sorted every shape! Here are 25 coins for your help.",
+          "clipKey": "you-sorted-every-shape-here-are-25-coins-for-you__65ffe8ce"
+        },
+        {
+          "text": "Sort the shapes! Flat ones in the flat basket. Solid ones in the solid basket.",
+          "clipKey": "sort-the-shapes-flat-ones-in-the-flat-basket-sol__22f1685f"
+        },
+        {
+          "text": "Nicely done! You sorted them all.",
+          "clipKey": "nicely-done-you-sorted-them-all__e08d1df1"
+        },
+        {
+          "text": "Circle — flat!",
+          "clipKey": "circle-flat__660bdfe9"
+        },
+        {
+          "text": "Square — flat!",
+          "clipKey": "square-flat__f517714e"
+        },
+        {
+          "text": "Cube — solid!",
+          "clipKey": "cube-solid__8cc0fbe8"
+        },
+        {
+          "text": "Sphere — solid!",
+          "clipKey": "sphere-solid__ac5f1c00"
+        },
+        {
+          "text": "Triangle — flat!",
+          "clipKey": "triangle-flat__2756e745"
+        },
+        {
+          "text": "Rectangle — flat!",
+          "clipKey": "rectangle-flat__ae507d66"
+        },
+        {
+          "text": "Cylinder — solid!",
+          "clipKey": "cylinder-solid__7a19d635"
+        },
+        {
+          "text": "Pentagon — flat!",
+          "clipKey": "pentagon-flat__b679cfd9"
+        },
+        {
+          "text": "Hexagon — flat!",
+          "clipKey": "hexagon-flat__0282cba3"
+        },
+        {
+          "text": "Pyramid — solid!",
+          "clipKey": "pyramid-solid__abbedccd"
+        },
+        {
+          "text": "Cone — solid!",
+          "clipKey": "cone-solid__332b42ba"
+        },
+        {
+          "text": "That's flat, not solid. Try the other basket.",
+          "clipKey": "that-s-flat-not-solid-try-the-other-basket__49af6d1d"
+        },
+        {
+          "text": "That's solid, not flat. Try the other basket.",
+          "clipKey": "that-s-solid-not-flat-try-the-other-basket__1d9c111d"
+        }
+      ]
+    },
+    {
       "id": "sort-attribute",
       "title": "Shape Garden — sort by attribute",
       "note": "The round prompt, the basket labels (read aloud when a basket is tapped), and the wrong-basket line.",
@@ -6726,7 +6823,7 @@
       "id": "dart-literals",
       "title": "Lines written directly in Dart",
       "note": "Swept out of lib/ by tool/narration_sources.dart: the sanctuary prologue, const round keeperLines, reward dialog. Interpolated templates are excluded - their variants have to come from the catalog that fills the slot.",
-      "variants": 123,
+      "variants": 115,
       "complete": true,
       "lines": [
         {
@@ -6752,10 +6849,6 @@
         {
           "text": "Above! Right where I asked.",
           "clipKey": "above-right-where-i-asked__b91fc6f3"
-        },
-        {
-          "text": "Almost done — one last basket-round!",
-          "clipKey": "almost-done-one-last-basket-round__908df413"
         },
         {
           "text": "And another!",
@@ -6942,10 +7035,6 @@
           "clipKey": "look-some-plants-in-the-garden-have-grown-into-s__729e98f1"
         },
         {
-          "text": "Lovely! Let me bring out a few more shapes.",
-          "clipKey": "lovely-let-me-bring-out-a-few-more-shapes__1250c020"
-        },
-        {
           "text": "Nice counting! Tap the arrow to keep going.",
           "clipKey": "nice-counting-tap-the-arrow-to-keep-going__74f2f34f"
         },
@@ -6956,10 +7045,6 @@
         {
           "text": "Nicely counted!",
           "clipKey": "nicely-counted__7aa23ab8"
-        },
-        {
-          "text": "Nicely done! You sorted them all.",
-          "clipKey": "nicely-done-you-sorted-them-all__e08d1df1"
         },
         {
           "text": "Now raise the habitat — tap each ghost shape to drop the matching piece in place.",
@@ -7038,10 +7123,6 @@
           "clipKey": "six-gryphons-one-more-round-the-dragons__35b841fc"
         },
         {
-          "text": "Some shapes are flat — like drawings on a page. Others are solid — you can hold them in your hand. Help me sort them into the right baskets!",
-          "clipKey": "some-shapes-are-flat-like-drawings-on-a-page-oth__b1c7ca24"
-        },
-        {
           "text": "Sometimes I just need a few creatures, not all of them! I'll ask for a number, and you bring me exactly that many. Ready?",
           "clipKey": "sometimes-i-just-need-a-few-creatures-not-all-of__37b6260d"
         },
@@ -7052,10 +7133,6 @@
         {
           "text": "Sort the shapes — flat or solid?",
           "clipKey": "sort-the-shapes-flat-or-solid__daa6e766"
-        },
-        {
-          "text": "Sort the shapes! Flat ones in the flat basket. Solid ones in the solid basket.",
-          "clipKey": "sort-the-shapes-flat-ones-in-the-flat-basket-sol__22f1685f"
         },
         {
           "text": "Tap Continue when you're ready to play.",
@@ -7174,10 +7251,6 @@
           "clipKey": "when-we-count-to-ten-we-get-a-special-new-number__71f69894"
         },
         {
-          "text": "Wonderful sorting! Try another round.",
-          "clipKey": "wonderful-sorting-try-another-round__323d1e08"
-        },
-        {
           "text": "Wow! You learned every shape in the garden.",
           "clipKey": "wow-you-learned-every-shape-in-the-garden__dc26985e"
         },
@@ -7206,16 +7279,8 @@
           "clipKey": "you-learned-every-shape-in-the-garden__eff20157"
         },
         {
-          "text": "You sorted every shape! Wonderful work.",
-          "clipKey": "you-sorted-every-shape-wonderful-work__e8272bf5"
-        },
-        {
           "text": "You'll be my honorary keeper!",
           "clipKey": "you-ll-be-my-honorary-keeper__d9755fff"
-        },
-        {
-          "text": "You're getting the hang of it. One more.",
-          "clipKey": "you-re-getting-the-hang-of-it-one-more__79c31a66"
         },
         {
           "text": "Your turn. Find every shape that matches BOTH!",

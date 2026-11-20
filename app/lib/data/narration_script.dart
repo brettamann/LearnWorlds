@@ -39,6 +39,7 @@ import 'count_forward_from_n_rounds.dart';
 import 'count_on_by_ones_rounds.dart';
 import 'count_out_n_rounds.dart';
 import 'creature_card_catalog.dart';
+import 'flat_or_solid_shapes.dart';
 import 'fluency_words.dart';
 import 'habitat_words.dart';
 import 'long_parade_rounds.dart';
@@ -285,6 +286,15 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
         ],
       ),
 
+      ScriptBatch(
+        id: 'garden-flat-or-solid',
+        title: 'Shape Garden - flat or solid',
+        note: 'The keeper opening and closing the sorting visit, and the '
+            'round itself: a shape named as it lands in the right basket '
+            '("Cube - solid!"), and the gentle redirect when it does not. '
+            'Flat and solid are the words being taught, so give them weight.',
+        lines: gardenSortingScriptLines(),
+      ),
       ScriptBatch(
         id: 'sort-attribute',
         title: 'Shape Garden — sort by attribute',
