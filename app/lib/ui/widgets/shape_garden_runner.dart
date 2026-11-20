@@ -47,6 +47,7 @@ import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../platform/sfx_engine.dart';
+import '../common/target_hint.dart';
 import 'flat_or_solid_round.dart';
 import 'keeper_aside.dart';
 import 'keeper_intro_overlay.dart';
@@ -209,21 +210,14 @@ class _GardenFindRoundBodyState extends ConsumerState<GardenFindRoundBody> {
     if (!mounted || !_open) return;
     final next = _nextTarget;
     if (next == null) return;
-    final feedback = ref.read(feedbackEngineProvider);
-    switch (level) {
-      case HintLevel.none:
-        return;
-      case HintLevel.highlight:
-        setState(() => _hintedId = next.id);
-      case HintLevel.point:
-        setState(() => _hintedId = next.id);
-        feedback.hint();
-        widget.c.say(warmHintLine(2), replay: false);
-      case HintLevel.demonstrate:
-        feedback.hint();
-        widget.c.say('This one is a $_singular.', replay: false);
-        _onTap(next, fromHint: true);
-    }
+    answerTargetHint(
+      level,
+      ring: () => setState(() => _hintedId = next.id),
+      chime: ref.read(feedbackEngineProvider).hint,
+      say: (line) => widget.c.say(line, replay: false),
+      demonstrateLine: 'This one is a $_singular.',
+      demonstrate: () => _onTap(next, fromHint: true),
+    );
   }
 
   void _onTap(ShapeFindPlacement p, {bool fromHint = false}) {

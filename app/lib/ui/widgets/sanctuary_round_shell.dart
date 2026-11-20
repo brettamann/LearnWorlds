@@ -54,8 +54,11 @@ class RoundContext {
     required this.showDemo,
     required this.say,
     required this.finish,
+    this.grade = _noGrade,
     this.layer = CpaLayer.concrete,
   });
+
+  static void _noGrade(String conceptId, RoundResult result) {}
 
   /// Zero-based round number within this visit.
   final int index;
@@ -84,6 +87,12 @@ class RoundContext {
 
   /// Report the round done. Safe to call once; later calls are ignored.
   final void Function(RoundResult result) finish;
+
+  /// Grade one more concept now, on top of the one [finish] grades. For a
+  /// round that teaches two things in two phases (Build-a-Habitat's frame is
+  /// K.G.5, the shape inside it K.G.6): each phase is graded as it ends, and
+  /// pays like a round. Does nothing when the shell's `gradeRounds` is off.
+  final void Function(String conceptId, RoundResult result) grade;
 
   /// Where she is on the concrete-pictorial-abstract ladder for this round's
   /// concept, read once as the round opens.
@@ -147,6 +156,11 @@ class SanctuaryRoundShell extends ConsumerStatefulWidget {
     this.musicBed = kDefaultMusicBed,
     this.showBuddy = true,
     this.buddyFacing = BuddyFacing.right,
+    this.celebrationHold = const Duration(milliseconds: 1400),
+    this.gradeRounds = true,
+    this.introBuilder,
+    this.finaleBuilder,
+    this.onFinale,
   });
 
   final String activityId;
@@ -177,6 +191,26 @@ class SanctuaryRoundShell extends ConsumerStatefulWidget {
   /// Some mechanics put their own character in Buddy's corner.
   final bool showBuddy;
   final BuddyFacing buddyFacing;
+
+  /// The beat between a round finishing and the keeper speaking over it -
+  /// long enough to see the finished board and hear the round's last line.
+  final Duration celebrationHold;
+
+  /// False for a visit whose rounds are not graded at all: no mastery, no
+  /// per-round coins (a challenge that pays one bonus at the end instead).
+  final bool gradeRounds;
+
+  /// Replaces the keeper's intro overlay - for an activity that opens with
+  /// its own animated demo. Call `start` when it is done. The shell does not
+  /// speak [introLine] when this is given; the builder owns the opening.
+  final Widget Function(BuildContext context, VoidCallback start)? introBuilder;
+
+  /// Replaces the finale overlay. Call `done` to end the visit. [finalLine]
+  /// is still spoken.
+  final Widget Function(BuildContext context, VoidCallback done)? finaleBuilder;
+
+  /// Fired once, as the finale appears (e.g. to pay a challenge's bonus).
+  final VoidCallback? onFinale;
 
   @override
   ConsumerState<SanctuaryRoundShell> createState() =>
@@ -211,7 +245,9 @@ class _SanctuaryRoundShellState extends ConsumerState<SanctuaryRoundShell> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       ref.read(feedbackEngineProvider).resetRound();
-      if (_phase == _ShellPhase.intro) _speakIntro();
+      if (_phase == _ShellPhase.intro && widget.introBuilder == null) {
+        _speakIntro();
+      }
     });
   }
 
@@ -261,11 +297,7 @@ class _SanctuaryRoundShellState extends ConsumerState<SanctuaryRoundShell> {
       return;
     }
     _finishedThisRound = true;
-    ref.read(roundCoordinatorProvider).resolveRound(
-          activityId: widget.activityId,
-          conceptId: widget.conceptIdFor(_round),
-          result: result,
-        );
+    _grade(widget.conceptIdFor(_round), result);
     setState(() {
       _completed += 1;
       _phase = _ShellPhase.celebrating;
@@ -278,10 +310,11 @@ class _SanctuaryRoundShellState extends ConsumerState<SanctuaryRoundShell> {
     }
     // A beat to see the finished board, and for the round's own last line -
     // "Seven!" - to land before the keeper speaks over it.
-    _beat = Timer(const Duration(milliseconds: 1400), () {
+    _beat = Timer(widget.celebrationHold, () {
       if (!mounted) return;
       if (_isLastRound) {
         setState(() => _phase = _ShellPhase.finale);
+        widget.onFinale?.call();
         ref.narration.say(
           widget.finalLine,
           cueId: '${widget.activityId}:finale',
@@ -305,6 +338,15 @@ class _SanctuaryRoundShellState extends ConsumerState<SanctuaryRoundShell> {
     });
   }
 
+  void _grade(String conceptId, RoundResult result) {
+    if (!mounted || !widget.gradeRounds) return;
+    ref.read(roundCoordinatorProvider).resolveRound(
+          activityId: widget.activityId,
+          conceptId: conceptId,
+          result: result,
+        );
+  }
+
   /// Fired by the keeper aside retiring itself, not by a button.
   void _nextRound() {
     if (!mounted || _phase != _ShellPhase.transition) return;
@@ -322,6 +364,10 @@ class _SanctuaryRoundShellState extends ConsumerState<SanctuaryRoundShell> {
   Widget build(BuildContext context) {
     final Widget content;
     switch (_phase) {
+      case _ShellPhase.intro when widget.introBuilder != null:
+        content = widget.introBuilder!(context, _start);
+      case _ShellPhase.finale when widget.finaleBuilder != null:
+        content = widget.finaleBuilder!(context, widget.onSequenceComplete);
       case _ShellPhase.intro:
         content = KeeperIntroOverlay(
           dialog: widget.introLine,
@@ -366,6 +412,7 @@ class _SanctuaryRoundShellState extends ConsumerState<SanctuaryRoundShell> {
                           showDemo: _round == 0 && !widget.skipIntro,
                           say: _say,
                           finish: _finish,
+                          grade: _grade,
                           layer: _layer,
                         ),
                       ),
