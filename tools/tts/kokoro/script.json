@@ -4753,6 +4753,43 @@
       ]
     },
     {
+      "id": "long-parade-keeper",
+      "title": "Long Parade — the keeper",
+      "note": "The opening, the line over each finished round (it names the ten she reached, so land on it), the last beat, and the nudge on the Done arrow.",
+      "variants": 7,
+      "complete": true,
+      "lines": [
+        {
+          "text": "Today's parade is HUGE — but we won't count one by one. Each group is ten. Tap each group and count by tens together!",
+          "clipKey": "today-s-parade-is-huge-but-we-won-t-count-one-by__132297ee"
+        },
+        {
+          "text": "Thirty fawns! Next: more groups of ten — dragons.",
+          "clipKey": "thirty-fawns-next-more-groups-of-ten-dragons__66bcf3a3"
+        },
+        {
+          "text": "Fifty dragons! Phoenix babies are next.",
+          "clipKey": "fifty-dragons-phoenix-babies-are-next__da11696a"
+        },
+        {
+          "text": "Seventy phoenixes! Last group — the golden eggs.",
+          "clipKey": "seventy-phoenixes-last-group-the-golden-eggs__61227246"
+        },
+        {
+          "text": "One hundred! You counted to one hundred by tens — that's amazing.",
+          "clipKey": "one-hundred-you-counted-to-one-hundred-by-tens-t__ab40f1bb"
+        },
+        {
+          "text": "One hundred! Counting by tens carries you all the way there.",
+          "clipKey": "one-hundred-counting-by-tens-carries-you-all-the__c405e03d"
+        },
+        {
+          "text": "Great counting by tens! Tap the arrow to keep going.",
+          "clipKey": "great-counting-by-tens-tap-the-arrow-to-keep-goi__38df920e"
+        }
+      ]
+    },
+    {
       "id": "habitat-build",
       "title": "Build-a-Habitat — the build instruction",
       "note": "Three steps in one breath, so keep it moving and let the habitat name land at the end - that is the part she is being asked to care about.",
@@ -6804,7 +6841,7 @@
       "id": "dart-literals",
       "title": "Lines written directly in Dart",
       "note": "Swept out of lib/ by tool/narration_sources.dart: the sanctuary prologue, const round keeperLines, reward dialog. Interpolated templates are excluded - their variants have to come from the catalog that fills the slot.",
-      "variants": 108,
+      "variants": 101,
       "complete": true,
       "lines": [
         {
@@ -6896,10 +6933,6 @@
           "clipKey": "every-shape-sorted-you-can-group-things-by-all-k__347782bc"
         },
         {
-          "text": "Fifty dragons! Phoenix babies are next.",
-          "clipKey": "fifty-dragons-phoenix-babies-are-next__da11696a"
-        },
-        {
           "text": "Find every shape that has corners and is yellow.",
           "clipKey": "find-every-shape-that-has-corners-and-is-yellow__2ce999f8"
         },
@@ -6918,10 +6951,6 @@
         {
           "text": "Go ahead and follow me when you're ready!",
           "clipKey": "go-ahead-and-follow-me-when-you-re-ready__007f002f"
-        },
-        {
-          "text": "Great counting by tens! Tap the arrow to keep going.",
-          "clipKey": "great-counting-by-tens-tap-the-arrow-to-keep-goi__38df920e"
         },
         {
           "text": "Halfway between the two. Well done.",
@@ -7036,14 +7065,6 @@
           "clipKey": "one-flat-shape__5d4200a6"
         },
         {
-          "text": "One hundred! Counting by tens carries you all the way there.",
-          "clipKey": "one-hundred-counting-by-tens-carries-you-all-the__c405e03d"
-        },
-        {
-          "text": "One hundred! You counted to one hundred by tens — that's amazing.",
-          "clipKey": "one-hundred-you-counted-to-one-hundred-by-tens-t__ab40f1bb"
-        },
-        {
           "text": "One solid shape!",
           "clipKey": "one-solid-shape__62a3ed48"
         },
@@ -7062,10 +7083,6 @@
         {
           "text": "Round things together, pointy things together. That's grouping by curves.",
           "clipKey": "round-things-together-pointy-things-together-tha__b6fa1b1f"
-        },
-        {
-          "text": "Seventy phoenixes! Last group — the golden eggs.",
-          "clipKey": "seventy-phoenixes-last-group-the-golden-eggs__61227246"
         },
         {
           "text": "Shapes can group by how many sides they have. Let's put the three-sided ones together, the four-sided ones together, and the ones with five or more sides together.",
@@ -7136,10 +7153,6 @@
           "clipKey": "thing-is-it-s-a-lot-for-anyone-to-do__e576fa6b"
         },
         {
-          "text": "Thirty fawns! Next: more groups of ten — dragons.",
-          "clipKey": "thirty-fawns-next-more-groups-of-ten-dragons__66bcf3a3"
-        },
-        {
           "text": "This is a circle! A circle has no sides — it's smooth all the way around.",
           "clipKey": "this-is-a-circle-a-circle-has-no-sides-it-s-smoo__2c8cbd44"
         },
@@ -7154,10 +7167,6 @@
         {
           "text": "Today the parade is HUGE. Don't worry — we can count by tens! Watch how a big group of ten becomes one easy count.",
           "clipKey": "today-the-parade-is-huge-don-t-worry-we-can-coun__9c917ef3"
-        },
-        {
-          "text": "Today's parade is HUGE — but we won't count one by one. Each group is ten. Tap each group and count by tens together!",
-          "clipKey": "today-s-parade-is-huge-but-we-won-t-count-one-by__132297ee"
         },
         {
           "text": "Two big round things — both found!",

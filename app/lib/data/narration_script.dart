@@ -444,6 +444,19 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
             longParadeCountingPrompt(round),
         ],
       ),
+      ScriptBatch(
+        id: 'long-parade-keeper',
+        title: 'Long Parade — the keeper',
+        note: 'The opening, the line over each finished round (it names the '
+            'ten she reached, so land on it), the last beat, and the nudge on '
+            'the Done arrow.',
+        lines: <String>[
+          kLongParadeIntro,
+          for (final round in kLongParadeRounds) round.keeperLine,
+          kLongParadeFinal,
+          kLongParadeDoneHint,
+        ],
+      ),
 
       // ---- Build-a-Habitat ----------------------------------------
       ScriptBatch(
