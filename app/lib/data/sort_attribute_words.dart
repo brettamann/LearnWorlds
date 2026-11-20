@@ -19,6 +19,7 @@
 // the line would quietly revert to the synth voice.
 
 import 'asset_paths.dart';
+import 'warm_lines.dart';
 
 /// Round attribute id -> the words spoken in "Sort by <word>."
 const Map<String, String> kSortAttributeWords = <String, String>{
@@ -122,3 +123,212 @@ const Map<String, List<SortBinExemplar>> kSortBinExemplars =
 String sortAttributePrompt(String attributeId) =>
     'Sort by ${kSortAttributeWords[attributeId] ?? attributeId}. '
     'Drop each shape in the right basket!';
+
+// ---------------------------------------------------------------------------
+// The rounds
+// ---------------------------------------------------------------------------
+
+/// One shape to sort: its sprite, and the basket it belongs in this round.
+class SortItem {
+  const SortItem({
+    required this.id,
+    required this.kind,
+    required this.variant,
+    required this.targetBinId,
+    this.isLarge = false,
+  });
+
+  final String id;
+
+  /// Canonical shape kind (`triangle`, `square`, ...).
+  final String kind;
+  final String variant;
+
+  /// The basket this item belongs in for its round's attribute.
+  final String targetBinId;
+
+  /// Drawn at the "big" size. Only the size round uses it.
+  final bool isLarge;
+
+  String get asset => AssetPaths.shapeGarden2dSprite(kind, variant);
+}
+
+/// One round of sorting by a single attribute.
+class SortRound {
+  const SortRound({
+    required this.attribute,
+    required this.binIds,
+    required this.items,
+    required this.keeperLine,
+  });
+
+  /// A key of [kSortAttributeWords].
+  final String attribute;
+
+  /// Keys of [kSortBinLabels], left to right.
+  final List<String> binIds;
+  final List<SortItem> items;
+
+  /// What the keeper says over the sorted baskets.
+  final String keeperLine;
+
+  /// Words spoken in "Sort by <word>."
+  String get attributeWord => kSortAttributeWords[attribute] ?? attribute;
+}
+
+/// Three rounds, each sorting by a different attribute K.G.4 names.
+const List<SortRound> kSortAttributeRounds = <SortRound>[
+  // Number of sides. Mirrors the lesson runtime.
+  SortRound(
+    attribute: 'sides',
+    binIds: <String>['3-sides', '4-sides', '5plus-sides'],
+    items: <SortItem>[
+      SortItem(
+        id: 'tri-1',
+        kind: 'triangle',
+        variant: 'yellow',
+        targetBinId: '3-sides',
+      ),
+      SortItem(
+        id: 'tri-2',
+        kind: 'triangle',
+        variant: 'leaf',
+        targetBinId: '3-sides',
+      ),
+      SortItem(
+        id: 'sq-1',
+        kind: 'square',
+        variant: 'green',
+        targetBinId: '4-sides',
+      ),
+      SortItem(
+        id: 'rect-1',
+        kind: 'rectangle',
+        variant: 'stone',
+        targetBinId: '4-sides',
+      ),
+      SortItem(
+        id: 'pent-1',
+        kind: 'pentagon',
+        variant: 'starfruit',
+        targetBinId: '5plus-sides',
+      ),
+      SortItem(
+        id: 'hex-1',
+        kind: 'hexagon',
+        variant: 'honeycomb',
+        targetBinId: '5plus-sides',
+      ),
+    ],
+    keeperLine:
+        'Sides sorted! Triangles, squares + rectangles, pentagons + hexagons.',
+  ),
+  // Size: big vs small.
+  SortRound(
+    attribute: 'size',
+    binIds: <String>['small', 'big'],
+    items: <SortItem>[
+      SortItem(
+        id: 'small-circle',
+        kind: 'circle',
+        variant: 'sunflower',
+        targetBinId: 'small',
+      ),
+      SortItem(
+        id: 'small-square',
+        kind: 'square',
+        variant: 'gray',
+        targetBinId: 'small',
+      ),
+      SortItem(
+        id: 'small-tri',
+        kind: 'triangle',
+        variant: 'petal',
+        targetBinId: 'small',
+      ),
+      SortItem(
+        id: 'big-circle',
+        kind: 'circle',
+        variant: 'daisy',
+        targetBinId: 'big',
+        isLarge: true,
+      ),
+      SortItem(
+        id: 'big-rect',
+        kind: 'rectangle',
+        variant: 'wood',
+        targetBinId: 'big',
+        isLarge: true,
+      ),
+      SortItem(
+        id: 'big-hex',
+        kind: 'hexagon',
+        variant: 'terracotta',
+        targetBinId: 'big',
+        isLarge: true,
+      ),
+    ],
+    keeperLine: 'Big to one side, small to the other — perfect.',
+  ),
+  // Curves vs corners: round vs pointy.
+  SortRound(
+    attribute: 'curves',
+    binIds: <String>['round', 'pointy'],
+    items: <SortItem>[
+      SortItem(
+        id: 'round-1',
+        kind: 'circle',
+        variant: 'sunflower',
+        targetBinId: 'round',
+      ),
+      SortItem(
+        id: 'round-2',
+        kind: 'semicircle_half',
+        variant: 'green',
+        targetBinId: 'round',
+      ),
+      SortItem(
+        id: 'round-3',
+        kind: 'semicircle_quarter',
+        variant: 'brown',
+        targetBinId: 'round',
+      ),
+      SortItem(
+        id: 'pointy-1',
+        kind: 'triangle',
+        variant: 'yellow',
+        targetBinId: 'pointy',
+      ),
+      SortItem(
+        id: 'pointy-2',
+        kind: 'pentagon',
+        variant: 'starfruit',
+        targetBinId: 'pointy',
+      ),
+      SortItem(
+        id: 'pointy-3',
+        kind: 'hexagon',
+        variant: 'honeycomb',
+        targetBinId: 'pointy',
+      ),
+    ],
+    keeperLine: 'Round things together, pointy things together. '
+        "That's grouping by curves.",
+  ),
+];
+
+const String kSortAttributeIntro =
+    "Let's group the shapes! I'll tell you what to sort by — the "
+    'number of sides, the size, or whether they have curves or '
+    'corners. Drop each shape into the basket that matches.';
+
+const String kSortAttributeStartLabel = "Let's sort!";
+
+const String kSortAttributeFinal =
+    'Every shape sorted! You can group things by all kinds of '
+    'differences.';
+
+/// The [n]th wrong-basket line of a round: a rotating warm line, then the
+/// attribute again.
+String sortAttributeMissLine(int n, String attributeId) => '${warmMissLine(n)} '
+    'Sort by ${kSortAttributeWords[attributeId] ?? attributeId}.';

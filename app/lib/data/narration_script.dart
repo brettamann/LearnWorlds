@@ -298,14 +298,19 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
       ScriptBatch(
         id: 'sort-attribute',
         title: 'Shape Garden — sort by attribute',
-        note: 'The round prompt, the basket labels (read aloud when a basket '
-            'is tapped), and the wrong-basket line.',
+        note: 'The keeper opening the visit, the round prompt, the basket '
+            'labels (read aloud when a basket is tapped, and as a shape lands '
+            'in one), the wrong-basket line, and the keeper over the sorted '
+            'baskets.',
         lines: <String>[
+          kSortAttributeIntro,
           for (final id in kSortAttributeWords.keys) sortAttributePrompt(id),
           for (final label in kSortBinLabels.values) label,
           for (var n = 0; n < 4; n++)
-            for (final word in kSortAttributeWords.values)
-              '${warmMissLine(n)} Sort by $word.',
+            for (final id in kSortAttributeWords.keys)
+              sortAttributeMissLine(n, id),
+          for (final r in kSortAttributeRounds) r.keeperLine,
+          kSortAttributeFinal,
         ],
       ),
 

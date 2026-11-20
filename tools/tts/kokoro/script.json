@@ -4030,10 +4030,14 @@
     {
       "id": "sort-attribute",
       "title": "Shape Garden — sort by attribute",
-      "note": "The round prompt, the basket labels (read aloud when a basket is tapped), and the wrong-basket line.",
-      "variants": 22,
+      "note": "The keeper opening the visit, the round prompt, the basket labels (read aloud when a basket is tapped, and as a shape lands in one), the wrong-basket line, and the keeper over the sorted baskets.",
+      "variants": 27,
       "complete": true,
       "lines": [
+        {
+          "text": "Let's group the shapes! I'll tell you what to sort by — the number of sides, the size, or whether they have curves or corners. Drop each shape into the basket that matches.",
+          "clipKey": "let-s-group-the-shapes-i-ll-tell-you-what-to-sor__52f1774b"
+        },
         {
           "text": "Sort by number of sides. Drop each shape in the right basket!",
           "clipKey": "sort-by-number-of-sides-drop-each-shape-in-the-r__d534a64c"
@@ -4121,6 +4125,22 @@
         {
           "text": "Close! Have another look. Sort by curves or corners.",
           "clipKey": "close-have-another-look-sort-by-curves-or-corner__2fde342c"
+        },
+        {
+          "text": "Sides sorted! Triangles, squares + rectangles, pentagons + hexagons.",
+          "clipKey": "sides-sorted-triangles-squares-rectangles-pentag__4e3eded8"
+        },
+        {
+          "text": "Big to one side, small to the other — perfect.",
+          "clipKey": "big-to-one-side-small-to-the-other-perfect__b4ae6caf"
+        },
+        {
+          "text": "Round things together, pointy things together. That's grouping by curves.",
+          "clipKey": "round-things-together-pointy-things-together-tha__b6fa1b1f"
+        },
+        {
+          "text": "Every shape sorted! You can group things by all kinds of differences.",
+          "clipKey": "every-shape-sorted-you-can-group-things-by-all-k__347782bc"
         }
       ]
     },
@@ -6823,7 +6843,7 @@
       "id": "dart-literals",
       "title": "Lines written directly in Dart",
       "note": "Swept out of lib/ by tool/narration_sources.dart: the sanctuary prologue, const round keeperLines, reward dialog. Interpolated templates are excluded - their variants have to come from the catalog that fills the slot.",
-      "variants": 115,
+      "variants": 110,
       "complete": true,
       "lines": [
         {
@@ -6883,10 +6903,6 @@
           "clipKey": "between-the-pond-and-the-rocks-exactly__788c34b3"
         },
         {
-          "text": "Big to one side, small to the other — perfect.",
-          "clipKey": "big-to-one-side-small-to-the-other-perfect__b4ae6caf"
-        },
-        {
           "text": "Clay corner.",
           "clipKey": "clay-corner__a035ce31"
         },
@@ -6917,10 +6933,6 @@
         {
           "text": "Every position found! You really know your above, below, and beside.",
           "clipKey": "every-position-found-you-really-know-your-above__dc1d5efd"
-        },
-        {
-          "text": "Every shape sorted! You can group things by all kinds of differences.",
-          "clipKey": "every-shape-sorted-you-can-group-things-by-all-k__347782bc"
         },
         {
           "text": "Fifty dragons! Now — the phoenixes are at seventy.",
@@ -7001,10 +7013,6 @@
         {
           "text": "Let's explore!",
           "clipKey": "let-s-explore__bef8b17e"
-        },
-        {
-          "text": "Let's group the shapes! I'll tell you what to sort by — the number of sides, the size, or whether they have curves or corners. Drop each shape into the basket that matches.",
-          "clipKey": "let-s-group-the-shapes-i-ll-tell-you-what-to-sor__52f1774b"
         },
         {
           "text": "Let's hunt!",
@@ -7099,20 +7107,12 @@
           "clipKey": "right-next-to-the-tree__895b3167"
         },
         {
-          "text": "Round things together, pointy things together. That's grouping by curves.",
-          "clipKey": "round-things-together-pointy-things-together-tha__b6fa1b1f"
-        },
-        {
           "text": "Seventy phoenixes! Last group — the golden eggs.",
           "clipKey": "seventy-phoenixes-last-group-the-golden-eggs__61227246"
         },
         {
           "text": "Shapes can group by how many sides they have. Let's put the three-sided ones together, the four-sided ones together, and the ones with five or more sides together.",
           "clipKey": "shapes-can-group-by-how-many-sides-they-have-let__07530d0f"
-        },
-        {
-          "text": "Sides sorted! Triangles, squares + rectangles, pentagons + hexagons.",
-          "clipKey": "sides-sorted-triangles-squares-rectangles-pentag__4e3eded8"
         },
         {
           "text": "Six fawns! Now some gryphons are catching up.",
