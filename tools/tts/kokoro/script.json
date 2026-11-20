@@ -4576,6 +4576,43 @@
       ]
     },
     {
+      "id": "count-out-n-keeper",
+      "title": "Count Out N — the demo and the keeper",
+      "note": "The opening, then the one-time drag demo: \"Watch\", two creatures counted in on the shared number clips, and the hand-off. Then the line over each finished round, which names the number she brought, and the last beat.",
+      "variants": 7,
+      "complete": true,
+      "lines": [
+        {
+          "text": "Sometimes I just need a few creatures, not all of them! I'll ask for a number, and you bring me exactly that many. Ready?",
+          "clipKey": "sometimes-i-just-need-a-few-creatures-not-all-of__37b6260d"
+        },
+        {
+          "text": "Watch — I'll show you. Drag each fawn into the basket.",
+          "clipKey": "watch-i-ll-show-you-drag-each-fawn-into-the-bask__56ec27cc"
+        },
+        {
+          "text": "Now you try!",
+          "clipKey": "now-you-try__3c8418a4"
+        },
+        {
+          "text": "Four fawns! Now I need some gryphons.",
+          "clipKey": "four-fawns-now-i-need-some-gryphons__8b2f64a4"
+        },
+        {
+          "text": "Six gryphons! One more round — the dragons.",
+          "clipKey": "six-gryphons-one-more-round-the-dragons__35b841fc"
+        },
+        {
+          "text": "Eight dragons! You counted out every group.",
+          "clipKey": "eight-dragons-you-counted-out-every-group__fd294be4"
+        },
+        {
+          "text": "Beautifully counted out! Just the number I asked for, every time.",
+          "clipKey": "beautifully-counted-out-just-the-number-i-asked__1b38c9e0"
+        }
+      ]
+    },
+    {
       "id": "count-forward",
       "title": "Count Forward From N — the two-beat opening",
       "note": "The round opens on two lines with the new creatures walking on between them, so read them as a pair. The first settles what is already done — calm, a little final, and the number carries it, because trusting that number instead of starting over at one is the whole skill. The second is the go signal and lands as the creatures arrive: brighten on \"Here come\", then hand it over.",
@@ -6841,7 +6878,7 @@
       "id": "dart-literals",
       "title": "Lines written directly in Dart",
       "note": "Swept out of lib/ by tool/narration_sources.dart: the sanctuary prologue, const round keeperLines, reward dialog. Interpolated templates are excluded - their variants have to come from the catalog that fills the slot.",
-      "variants": 101,
+      "variants": 94,
       "complete": true,
       "lines": [
         {
@@ -6881,10 +6918,6 @@
           "clipKey": "and-the-last-one__5070d056"
         },
         {
-          "text": "Beautifully counted out! Just the number I asked for, every time.",
-          "clipKey": "beautifully-counted-out-just-the-number-i-asked__1b38c9e0"
-        },
-        {
           "text": "Behind the cottage. Sneaky!",
           "clipKey": "behind-the-cottage-sneaky__b1d4c3c5"
         },
@@ -6913,10 +6946,6 @@
           "clipKey": "count-the-animals-with-me-out-loud-as-they-do-th__3f39e42b"
         },
         {
-          "text": "Eight dragons! You counted out every group.",
-          "clipKey": "eight-dragons-you-counted-out-every-group__fd294be4"
-        },
-        {
           "text": "Every habitat is built! The Sanctuary feels cosy and safe.",
           "clipKey": "every-habitat-is-built-the-sanctuary-feels-cosy__0a0ca2aa"
         },
@@ -6943,10 +6972,6 @@
         {
           "text": "Find every shape that is round and big.",
           "clipKey": "find-every-shape-that-is-round-and-big__6f42f3e2"
-        },
-        {
-          "text": "Four fawns! Now I need some gryphons.",
-          "clipKey": "four-fawns-now-i-need-some-gryphons__8b2f64a4"
         },
         {
           "text": "Go ahead and follow me when you're ready!",
@@ -7049,10 +7074,6 @@
           "clipKey": "now-raise-the-habitat-tap-each-ghost-shape-to-dr__935d42f9"
         },
         {
-          "text": "Now you try!",
-          "clipKey": "now-you-try__3c8418a4"
-        },
-        {
           "text": "Now you try! Drag the shapes into the right baskets.",
           "clipKey": "now-you-try-drag-the-shapes-into-the-right-baske__7040e28b"
         },
@@ -7093,16 +7114,8 @@
           "clipKey": "sides-sorted-triangles-squares-rectangles-pentag__4e3eded8"
         },
         {
-          "text": "Six gryphons! One more round — the dragons.",
-          "clipKey": "six-gryphons-one-more-round-the-dragons__35b841fc"
-        },
-        {
           "text": "Some shapes are flat — like drawings on a page. Others are solid — you can hold them in your hand. Help me sort them into the right baskets!",
           "clipKey": "some-shapes-are-flat-like-drawings-on-a-page-oth__b1c7ca24"
-        },
-        {
-          "text": "Sometimes I just need a few creatures, not all of them! I'll ask for a number, and you bring me exactly that many. Ready?",
-          "clipKey": "sometimes-i-just-need-a-few-creatures-not-all-of__37b6260d"
         },
         {
           "text": "Sort the shapes — flat or solid?",
@@ -7183,10 +7196,6 @@
         {
           "text": "Watch — I'll show you how to sort. The flat shapes go in the flat basket, the solid shapes in the solid basket.",
           "clipKey": "watch-i-ll-show-you-how-to-sort-the-flat-shapes__bb8e4219"
-        },
-        {
-          "text": "Watch — drag creatures into the basket!",
-          "clipKey": "watch-drag-creatures-into-the-basket__709c57da"
         },
         {
           "text": "Watch — how to sort flat vs solid!",

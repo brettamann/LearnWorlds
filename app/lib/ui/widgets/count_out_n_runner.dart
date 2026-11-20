@@ -1,57 +1,32 @@
 // CountOutNRunner — K.CC.5 "count out N" sub-mode of the Counting Parade.
-// Each round: the keeper asks for N creatures ("Give me four fawns!"); a
+// Each round: the keeper asks for N creatures ("Bring me four fawns."); a
 // pool of ~8 creatures sits at the top; the kid drags exactly N into the
 // keeper's basket at the bottom. Each correct drop ticks the counter and
 // the narrator says "one… two… three…" so the kid hears cardinality.
 //
 // Three rounds: ask for 4, then 6, then 8. Different creature each round
-// for visual variety. Each round resolves through RoundCoordinator with
-// conceptId K.CC.5; `onSequenceComplete` fires after the final
-// interstitial.
-
-import 'dart:async';
+// for visual variety. The lifecycle is SanctuaryRoundShell's; the first round
+// of a visit that did not come from a lesson opens with a short drag demo on
+// the real board (`c.showDemo`).
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../activities/activity_ids.dart';
-import '../../coordinators/round_coordinator.dart';
 import '../../data/asset_paths.dart';
 import '../../data/count_out_n_rounds.dart';
-import '../../data/number_words.dart';
-import '../../data/sfx_catalog.dart';
-import '../../data/warm_lines.dart';
 import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/mastery/round_outcome.dart';
-import '../../engines/narration/narration_line.dart';
-import '../../engines/narration/narration_player.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
-import '../../platform/sfx_engine.dart';
 import '../../theme/app_decor.dart';
+import '../common/target_hint.dart';
 import '../common/timer_scope.dart';
-import 'buddy_companion.dart';
 import 'glitter_burst.dart';
-import 'keeper_aside.dart';
-import 'keeper_intro_overlay.dart';
 import 'lesson_hand_pointer.dart';
-import 'playfield_scaffold.dart';
-import 'replay_demo_button.dart';
+import 'parade_pieces.dart';
+import 'sanctuary_round_shell.dart';
 
-enum _Phase {
-  intro,
-  demo,
-  counting,
-
-  /// Keeper speaks over the live meadow and advances the round herself.
-  transition,
-
-  celebrating,
-
-  /// Final beat only — the reward payoff, which is meant to interrupt.
-  interstitial,
-}
-
-class CountOutNRunner extends ConsumerStatefulWidget {
+class CountOutNRunner extends StatelessWidget {
   const CountOutNRunner({
     super.key,
     required this.onSequenceComplete,
@@ -62,364 +37,188 @@ class CountOutNRunner extends ConsumerStatefulWidget {
   final bool skipIntro;
 
   @override
-  ConsumerState<CountOutNRunner> createState() => _CountOutNRunnerState();
+  Widget build(BuildContext context) {
+    return SanctuaryRoundShell(
+      activityId: ActivityIds.countingParade,
+      roundCount: kCountOutNRounds.length,
+      conceptIdFor: (_) => 'K.CC.5',
+      introLine: kCountOutNIntro,
+      keeperLineFor: (i) => kCountOutNRounds[i].keeperLine,
+      finalLine: kCountOutNFinal,
+      skipIntro: skipIntro,
+      celebrationHold: const Duration(seconds: 1),
+      onSequenceComplete: onSequenceComplete,
+      background: Image.asset(
+        AssetPaths.countingParadeMeadow,
+        fit: BoxFit.cover,
+      ),
+      roundBuilder: (context, c) => CountOutRoundBody(c: c),
+    );
+  }
 }
 
-class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
-  late _Phase _phase = widget.skipIntro ? _Phase.counting : _Phase.intro;
-  int _roundIndex = 0;
-  int _completedRounds = 0;
-  Set<int> _placedIndices = <int>{};
-  // Per-creature drop offsets for drags the kid released *somewhere on
-  // screen but not in the basket*. We leave them at the drop site instead
-  // of snapping back so kids who can't hold a touch / mouse aren't
-  // punished. Cleared on round advance.
-  Map<int, Offset> _strayPositions = <int, Offset>{};
-  int _basketBurstCounter = 0;
-  Timer? _celebrationTimer;
-  bool _promptSpoken = false;
+/// One round: drag exactly the number asked for into the basket.
+class CountOutRoundBody extends ConsumerStatefulWidget {
+  const CountOutRoundBody({super.key, required this.c});
 
-  // Demo runs once, before the first round. After that the kid already
-  // knows the drag mechanic.
-  bool _demoShown = false;
+  final RoundContext c;
 
-  /// Bumped to (re)present the between-round keeper aside.
-  int _asideToken = 0;
+  @override
+  ConsumerState<CountOutRoundBody> createState() => _CountOutRoundBodyState();
+}
+
+class _CountOutRoundBodyState extends ConsumerState<CountOutRoundBody> {
+  late final CountOutNRound _round = kCountOutNRounds[widget.c.index];
+  final Set<int> _placed = <int>{};
+
+  /// Drop offsets for drags she released somewhere on the board but not in
+  /// the basket. They stay where they landed instead of snapping back, so a
+  /// kid who cannot hold a drag is not punished for it.
+  final Map<int, Offset> _strays = <int, Offset>{};
+  int _basketBurst = 0;
 
   /// Drags attempted after the basket already held enough. This is the only
   /// wrong answer the round has, and it is what makes the round gradeable.
   int _overCapDrops = 0;
   int _missRotation = 0;
-
-  /// Pool creature the hint ladder is glowing, if any.
-  int? _hintedIndex;
-
+  int? _hinted;
   HintLadder? _hints;
+  bool _done = false;
 
-  /// Read eagerly — `ref.read` is illegal once dispose() has begun.
-  SfxEngine? _sfxForDispose;
+  /// True while the one-time drag demo is playing, before her first round.
+  late bool _demoing = widget.c.showDemo;
 
-  CountOutNRound get _currentRound => kCountOutNRounds[_roundIndex];
-  bool get _isLastRound => _roundIndex == kCountOutNRounds.length - 1;
-  double get _progress => _completedRounds / kCountOutNRounds.length;
-  int get _placedCount => _placedIndices.length;
-  bool get _targetReached => _placedCount >= _currentRound.targetN;
-
-  String get _introDialog =>
-      "Sometimes I just need a few creatures, not all of them! I'll ask for "
-      'a number, and you bring me exactly that many. Ready?';
-
-  String get _basketPrompt => countOutNBasketPrompt(_currentRound);
-
-  String get _finalKeeperLine =>
-      'Beautifully counted out! Just the number I asked for, every time.';
-
-  String get _overCapLine => countOutNOverCapLine(_currentRound, _missRotation);
+  bool get _open => !_done && !_demoing && !widget.c.locked;
+  bool get _targetReached => _placed.length >= _round.targetN;
 
   @override
   void initState() {
     super.initState();
-    _sfxForDispose = ref.read(sfxEngineProvider);
-    // Claimed here, not in the post-frame callback below: the release in
-    // dispose() is unconditional, so the claim has to be too, or a teardown
-    // before the first frame gives back a claim it never took. See
-    // SfxEngine.releaseMusicBed for what that costs.
-    unawaited(_sfxForDispose!.startMusicBed(kDefaultMusicBed));
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      ref.read(feedbackEngineProvider).resetRound();
-      if (_phase == _Phase.intro) {
-        _speakIntro();
-      } else {
-        _startHints();
-        _speakBasketPromptOnce();
-      }
+      if (mounted && !_demoing) _begin();
     });
   }
 
   @override
   void dispose() {
     _hints?.dispose();
-    _celebrationTimer?.cancel();
-    final sfx = _sfxForDispose;
-    if (sfx != null) sfx.releaseMusicBed();
     super.dispose();
   }
 
-  void _startHints() {
-    _hints?.dispose();
-    _hints = HintLadder(onLevel: _onHintLevel)..start();
-  }
-
-  void _onHintLevel(HintLevel level) {
-    if (!mounted || _phase != _Phase.counting) return;
-    final next = _nextAvailable();
-    if (next == null) return;
-    final feedback = ref.read(feedbackEngineProvider);
-    switch (level) {
-      case HintLevel.none:
-        return;
-      case HintLevel.highlight:
-        setState(() => _hintedIndex = next);
-      case HintLevel.point:
-        setState(() => _hintedIndex = next);
-        feedback.hint();
-        ref.narration
-            .say(warmHintLine(2), cueId: 'count-out:r$_roundIndex:hint-point');
-      case HintLevel.demonstrate:
-        // Do one for her. The drag is the hard part of this mechanic, so the
-        // demonstration completes the whole gesture rather than just pointing
-        // harder at it.
-        feedback.hint();
-        ref.narration
-            .say(warmHintLine(3), cueId: 'count-out:r$_roundIndex:hint-demo');
-        _onCreatureDropped(next, fromHint: true);
-    }
-  }
-
-  int? _nextAvailable() {
-    for (var i = 0; i < _currentRound.poolSize; i++) {
-      if (!_placedIndices.contains(i)) return i;
-    }
-    return null;
-  }
-
-  void _speakIntro() {
-    ref.narration.say(
-      _introDialog,
-      cueId: 'count-out:intro',
-      speaker: kKeeperSpeaker,
-      caption: false,
-    );
-  }
-
-  void _speakBasketPromptOnce() {
-    if (_promptSpoken) return;
-    _promptSpoken = true;
-    ref.narration.say(_basketPrompt, cueId: 'count-out:r$_roundIndex:prompt');
-  }
-
-  void _onStartFromIntro() {
-    if (!_demoShown) {
-      setState(() => _phase = _Phase.demo);
-      return;
-    }
-    setState(() => _phase = _Phase.counting);
-    _promptSpoken = false;
-    _startHints();
-    _speakBasketPromptOnce();
+  void _begin() {
+    widget.c.say(countOutNBasketPrompt(_round));
+    _hints = HintLadder(onLevel: _onHint)..start();
   }
 
   void _onDemoComplete() {
     if (!mounted) return;
-    setState(() {
-      _demoShown = true;
-      _phase = _Phase.counting;
-      _promptSpoken = false;
-    });
-    _startHints();
-    _speakBasketPromptOnce();
+    setState(() => _demoing = false);
+    _begin();
   }
 
-  void _onCreatureDropped(int idx, {bool fromHint = false}) {
-    if (_phase != _Phase.counting) return;
-    if (_placedIndices.contains(idx)) return;
+  int? get _nextAvailable {
+    for (var i = 0; i < _round.poolSize; i++) {
+      if (!_placed.contains(i)) return i;
+    }
+    return null;
+  }
+
+  void _onHint(HintLevel level) {
+    if (!mounted || !_open) return;
+    final next = _nextAvailable;
+    if (next == null) return;
+    answerTargetHint(
+      level,
+      ring: () => setState(() => _hinted = next),
+      chime: ref.read(feedbackEngineProvider).hint,
+      say: (line) => widget.c.say(line, replay: false),
+      // The drag is the hard part of this mechanic, so the demonstration
+      // completes the whole gesture rather than just pointing harder at it.
+      demonstrate: () => _onDropped(next, fromHint: true),
+    );
+  }
+
+  void _onDropped(int idx, {bool fromHint = false}) {
+    if (!_open || _placed.contains(idx)) return;
     if (_targetReached) {
-      // Over-cap. This is the wrong answer for "count out N" — bringing more
-      // than asked is exactly the error the standard is about — so it now
-      // registers as one: soft thud, Buddy tilts, and it counts against the
-      // round. The drop is still refused rather than punished.
+      // Over-cap. Bringing more than asked is exactly the error K.CC.5 is
+      // about, so it registers as one: soft thud, Buddy tilts, and it counts
+      // against the round. The drop is still refused rather than punished.
       setState(() {
         _overCapDrops += 1;
         _missRotation += 1;
       });
       _hints?.poke();
       ref.read(feedbackEngineProvider).wrong();
-      ref.narration.say(
-        _overCapLine,
-        cueId: 'count-out:r$_roundIndex:overcap-$_overCapDrops',
+      widget.c.say(
+        countOutNOverCapLine(_round, _missRotation),
+        replay: false,
       );
       return;
     }
     setState(() {
-      _placedIndices.add(idx);
-      _strayPositions.remove(idx);
-      _basketBurstCounter += 1;
-      _hintedIndex = null;
+      _placed.add(idx);
+      _strays.remove(idx);
+      _basketBurst += 1;
+      _hinted = null;
     });
     if (!fromHint) _hints?.poke();
     // One note per creature in the basket, so filling it to four *sounds*
     // like counting to four.
-    ref.read(feedbackEngineProvider).countStep(_placedCount);
-    final spoken = _placedCount < kSpelledCounts.length
-        ? kSpelledCounts[_placedCount]
-        : _placedCount.toString();
-    // Queued, not spoken, when the ladder did this tap. `speak` cuts off
-    // whatever is in flight, and what is in flight at that moment is the
-    // demonstration's own explanation - the one line in the round that
-    // says why. See HintLadder.
-    final say = ref.narration;
-    final line = NarrationLine(
-      text: '$spoken.',
-      cueId: 'count-out:r$_roundIndex:place-$_placedCount',
+    countAloud(
+      widget.c.say,
+      ref.read(feedbackEngineProvider),
+      step: _placed.length,
+      value: _placed.length,
+      fromHint: fromHint,
     );
-    if (fromHint) {
-      say.enqueue(line);
-    } else {
-      say.speak(line);
-    }
-    if (_placedCount >= _currentRound.targetN) {
-      _finishRound();
-    }
+    if (_targetReached) _finish();
   }
 
-  void _finishRound() {
+  void _finish() {
+    _done = true;
     _hints?.pause();
-
-    // Three over-cap drags means she was not tracking the target at all —
-    // that is a genuine miss and the mastery ladder should see it. One or two,
-    // or a demonstration, resolves soft: she got there, with help.
-    final hintsUsed = _hints?.hintsUsed ?? 0;
-    final result = gradeRound(misses: _overCapDrops, helped: hintsUsed > 0);
-    ref.read(roundCoordinatorProvider).resolveRound(
-          activityId: ActivityIds.countingParade,
-          conceptId: 'K.CC.5',
-          result: result,
-        );
-    setState(() {
-      _completedRounds += 1;
-      _phase = _Phase.celebrating;
-    });
-
-    final feedback = ref.read(feedbackEngineProvider);
-    if (_isLastRound) {
-      feedback.celebrate();
-      _celebrationTimer = Timer(const Duration(seconds: 1), () {
-        if (!mounted) return;
-        setState(() => _phase = _Phase.interstitial);
-        ref.narration.say(
-          _finalKeeperLine,
-          cueId: 'count-out:r$_roundIndex:interstitial',
-          speaker: kKeeperSpeaker,
-          caption: false,
-        );
-      });
-      return;
-    }
-
-    feedback.roundPass();
-    _celebrationTimer = Timer(const Duration(seconds: 1), () {
-      if (!mounted) return;
-      setState(() {
-        _phase = _Phase.transition;
-        _asideToken += 1;
-      });
-      ref.narration.say(
-        _currentRound.keeperLine,
-        cueId: 'count-out:r$_roundIndex:interstitial',
-        speaker: kKeeperSpeaker,
-        caption: false,
-      );
-    });
+    // Three over-cap drags means she was not tracking the target at all -
+    // a genuine miss the mastery ladder should see. One or two, or a
+    // demonstration, resolves soft: she got there, with help.
+    widget.c.finish(
+      gradeRound(
+        misses: _overCapDrops,
+        helped: (_hints?.hintsUsed ?? 0) > 0,
+      ),
+    );
   }
 
-  /// Fired by the keeper aside retiring itself, not by a button.
-  void _advanceToNextRound() {
-    if (!mounted || _phase != _Phase.transition) return;
-    setState(() {
-      _roundIndex += 1;
-      _placedIndices = <int>{};
-      _strayPositions = <int, Offset>{};
-      _basketBurstCounter = 0;
-      _promptSpoken = false;
-      _overCapDrops = 0;
-      _missRotation = 0;
-      _hintedIndex = null;
-      _phase = _Phase.counting;
-    });
-    ref.read(feedbackEngineProvider).resetRound();
-    _startHints();
-    _speakBasketPromptOnce();
-  }
-
-  /// Records a drag that ended somewhere on the layer but NOT in the
-  /// basket and NOT off-screen. The creature stays at that position
-  /// until the kid picks it up again or the round ends.
-  void _onStrayDrop(int idx, Offset localOffset) {
-    if (_phase != _Phase.counting) return;
-    if (_placedIndices.contains(idx)) return;
-    setState(() => _strayPositions[idx] = localOffset);
+  /// A drag that ended on the board but not in the basket. The creature stays
+  /// there until she picks it up again or the round ends.
+  void _onStrayDrop(int idx, Offset local) {
+    if (!_open || _placed.contains(idx)) return;
+    setState(() => _strays[idx] = local);
   }
 
   @override
   Widget build(BuildContext context) {
-    final phaseContent = switch (_phase) {
-      _Phase.intro => KeeperIntroOverlay(
-          dialog: _introDialog,
-          startLabel: "Let's count!",
-          startButtonKey: const ValueKey('count-out-start-button'),
-          onStart: _onStartFromIntro,
-        ),
-      _Phase.demo => _CountOutDemo(
-          spriteAsset: _currentRound.species.spriteAsset,
-          singular: _currentRound.species.singular,
-          onComplete: _onDemoComplete,
-        ),
-      _Phase.counting ||
-      _Phase.celebrating ||
-      _Phase.transition =>
-        _CountOutLayer(
-          roundIndex: _roundIndex,
-          targetN: _currentRound.targetN,
-          poolSize: _currentRound.poolSize,
-          spriteAsset: _currentRound.species.spriteAsset,
-          plural: _currentRound.species.plural,
-          placedIndices: _placedIndices,
-          strayPositions: _strayPositions,
-          basketBurstCounter: _basketBurstCounter,
-          hintedIndex: _hintedIndex,
-          onDropped: _onCreatureDropped,
-          onStrayDrop: _onStrayDrop,
-          inputLocked: _phase != _Phase.counting,
-          replayPrompt: _basketPrompt,
-          replayCueId: 'count-out:replay-r$_roundIndex',
-        ),
-      _Phase.interstitial => KeeperIntroOverlay(
-          dialog: _finalKeeperLine,
-          startLabel: 'Continue',
-          startButtonKey: const ValueKey('count-out-interstitial-next'),
-          onStart: widget.onSequenceComplete,
-        ),
-    };
-
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Image.asset(
-          AssetPaths.countingParadeMeadow,
-          fit: BoxFit.cover,
-        ),
-        PlayfieldScaffold(
-          progress: _progress,
-          celebrate: _phase == _Phase.celebrating,
-          child: phaseContent,
-        ),
-        if (_phase != _Phase.intro &&
-            _phase != _Phase.demo &&
-            _phase != _Phase.interstitial)
-          const BuddyCompanionCorner(),
-        if (_phase == _Phase.transition)
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: KeeperAside(
-              text: _currentRound.keeperLine,
-              token: _asideToken,
-              onDismissed: _advanceToNextRound,
-            ),
-          ),
-      ],
+    if (_demoing) {
+      return _CountOutDemo(
+        spriteAsset: _round.species.spriteAsset,
+        line: countOutNDemoLine(_round),
+        say: widget.c.say,
+        onComplete: _onDemoComplete,
+      );
+    }
+    return _CountOutLayer(
+      roundIndex: widget.c.index,
+      targetN: _round.targetN,
+      poolSize: _round.poolSize,
+      spriteAsset: _round.species.spriteAsset,
+      plural: _round.species.plural,
+      placedIndices: _placed,
+      strayPositions: _strays,
+      basketBurstCounter: _basketBurst,
+      hintedIndex: _hinted,
+      onDropped: _onDropped,
+      onStrayDrop: _onStrayDrop,
+      inputLocked: !_open,
     );
   }
 }
@@ -438,8 +237,6 @@ class _CountOutLayer extends StatelessWidget {
     required this.onDropped,
     required this.onStrayDrop,
     required this.inputLocked,
-    required this.replayPrompt,
-    required this.replayCueId,
   });
 
   final int roundIndex;
@@ -457,11 +254,6 @@ class _CountOutLayer extends StatelessWidget {
   final ValueChanged<int> onDropped;
   final void Function(int idx, Offset localOffset) onStrayDrop;
   final bool inputLocked;
-
-  /// Narration the (?) button replays. Same line the runner spoke at
-  /// the start of the round.
-  final String replayPrompt;
-  final String replayCueId;
 
   static const double _spriteSize = 84;
   // Grid layout for the initial pool slots — 5 columns × N rows packed
@@ -484,123 +276,103 @@ class _CountOutLayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 8, 8, 16),
-        child: Row(
-          children: [
-            kReplayDemoShelf(
-              child: ReplayDemoButton(
-                label: replayPrompt,
-                cueId: replayCueId,
-              ),
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 10,
+          ),
+          decoration: AppDecor.card(radius: 18, shadow: AppShadows.soft),
+          child: Text(
+            'Bring me $targetN $plural!',
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              color: Colors.black87,
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
-                    ),
-                    decoration:
-                        AppDecor.card(radius: 18, shadow: AppShadows.soft),
-                    child: Text(
-                      'Bring me $targetN $plural!',
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  // Pool + basket live in a single Stack so creatures can be
-                  // dropped anywhere on the layer and stay there.
-                  Expanded(
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        final w = constraints.maxWidth;
-                        final h = constraints.maxHeight;
-                        final poolH = h * _poolHeightFraction;
-                        final basketTop = h * _basketTopFraction;
-                        return Builder(
-                          builder: (stackContext) {
-                            return Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                // Basket — DragTarget sits at the bottom, taking
-                                // the rest of the layer width. Drops anywhere
-                                // inside this rectangle count toward the round.
-                                Positioned(
-                                  left: 0,
-                                  right: 0,
-                                  top: basketTop,
-                                  bottom: 0,
-                                  child: _Basket(
-                                    roundIndex: roundIndex,
-                                    targetN: targetN,
-                                    spriteAsset: spriteAsset,
-                                    placedIndices: placedIndices,
-                                    basketBurstCounter: basketBurstCounter,
-                                    inputLocked: inputLocked,
-                                    onDropped: onDropped,
-                                  ),
-                                ),
-                                // Pool creatures — drawn over the basket so they
-                                // can be picked up from any position, including
-                                // strays that landed in the basket zone.
-                                for (var i = 0; i < poolSize; i++)
-                                  if (!placedIndices.contains(i))
-                                    _PoolCreature(
-                                      key: ValueKey(
-                                        'count-out-r$roundIndex-pool-$i',
-                                      ),
-                                      index: i,
-                                      spriteAsset: spriteAsset,
-                                      position: strayPositions[i] ??
-                                          _slotFor(i, w, poolH),
-                                      spriteSize: _spriteSize,
-                                      inputLocked: inputLocked,
-                                      hinted: hintedIndex == i,
-                                      onStrayDrop: (dropOffset) {
-                                        final box = stackContext
-                                            .findRenderObject() as RenderBox?;
-                                        if (box == null) return;
-                                        final local =
-                                            box.globalToLocal(dropOffset);
-                                        // Snap-back zone: ≥ 1/3 of the sprite
-                                        // has gone past a stack edge. Anywhere
-                                        // else, leave the creature where it
-                                        // landed (the user's request — kids
-                                        // can't reliably hold a finger / drag).
-                                        const minX = -_spriteSize / 3;
-                                        final maxX = w - _spriteSize * 2 / 3;
-                                        const minY = -_spriteSize / 3;
-                                        final maxY = h - _spriteSize * 2 / 3;
-                                        if (local.dx < minX ||
-                                            local.dx > maxX ||
-                                            local.dy < minY ||
-                                            local.dy > maxY) {
-                                          return;
-                                        }
-                                        onStrayDrop(i, local);
-                                      },
-                                    ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
+        const SizedBox(height: 12),
+        // Pool + basket live in a single Stack so creatures can be
+        // dropped anywhere on the layer and stay there.
+        Expanded(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final w = constraints.maxWidth;
+              final h = constraints.maxHeight;
+              final poolH = h * _poolHeightFraction;
+              final basketTop = h * _basketTopFraction;
+              return Builder(
+                builder: (stackContext) {
+                  return Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      // Basket — DragTarget sits at the bottom, taking
+                      // the rest of the layer width. Drops anywhere
+                      // inside this rectangle count toward the round.
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        top: basketTop,
+                        bottom: 0,
+                        child: _Basket(
+                          roundIndex: roundIndex,
+                          targetN: targetN,
+                          spriteAsset: spriteAsset,
+                          placedIndices: placedIndices,
+                          basketBurstCounter: basketBurstCounter,
+                          inputLocked: inputLocked,
+                          onDropped: onDropped,
+                        ),
+                      ),
+                      // Pool creatures — drawn over the basket so they
+                      // can be picked up from any position, including
+                      // strays that landed in the basket zone.
+                      for (var i = 0; i < poolSize; i++)
+                        if (!placedIndices.contains(i))
+                          _PoolCreature(
+                            key: ValueKey(
+                              'count-out-r$roundIndex-pool-$i',
+                            ),
+                            index: i,
+                            spriteAsset: spriteAsset,
+                            position:
+                                strayPositions[i] ?? _slotFor(i, w, poolH),
+                            spriteSize: _spriteSize,
+                            inputLocked: inputLocked,
+                            hinted: hintedIndex == i,
+                            onStrayDrop: (dropOffset) {
+                              final box =
+                                  stackContext.findRenderObject() as RenderBox?;
+                              if (box == null) return;
+                              final local = box.globalToLocal(dropOffset);
+                              // Snap-back zone: ≥ 1/3 of the sprite
+                              // has gone past a stack edge. Anywhere
+                              // else, leave the creature where it
+                              // landed (the user's request — kids
+                              // can't reliably hold a finger / drag).
+                              const minX = -_spriteSize / 3;
+                              final maxX = w - _spriteSize * 2 / 3;
+                              const minY = -_spriteSize / 3;
+                              final maxY = h - _spriteSize * 2 / 3;
+                              if (local.dx < minX ||
+                                  local.dx > maxX ||
+                                  local.dy < minY ||
+                                  local.dy > maxY) {
+                                return;
+                              }
+                              onStrayDrop(i, local);
+                            },
+                          ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
@@ -837,22 +609,26 @@ class _PoolCreature extends StatelessWidget {
 // try!"). Plays once per session before the kid takes input.
 // ============================================================================
 
-class _CountOutDemo extends ConsumerStatefulWidget {
+class _CountOutDemo extends StatefulWidget {
   const _CountOutDemo({
     required this.spriteAsset,
-    required this.singular,
+    required this.line,
+    required this.say,
     required this.onComplete,
   });
 
   final String spriteAsset;
-  final String singular;
+
+  /// "Watch - I'll show you..."
+  final String line;
+  final SayLine say;
   final VoidCallback onComplete;
 
   @override
-  ConsumerState<_CountOutDemo> createState() => _CountOutDemoState();
+  State<_CountOutDemo> createState() => _CountOutDemoState();
 }
 
-class _CountOutDemoState extends ConsumerState<_CountOutDemo>
+class _CountOutDemoState extends State<_CountOutDemo>
     with TimerScope<_CountOutDemo> {
   static const double _spriteSize = 84;
   static const double _handSize = 96;
@@ -886,10 +662,7 @@ class _CountOutDemoState extends ConsumerState<_CountOutDemo>
   void _scheduleTimeline() {
     // 0.0s — narrate the intro.
     afterMs(200, () {
-      ref.narration.say(
-        "Watch — I'll show you. Drag each ${widget.singular} into the basket.",
-        cueId: 'count-out:demo:intro',
-      );
+      widget.say(widget.line, replay: false);
     });
     // 1.0s — hand appears at slot 0.
     afterMs(1000, () {
@@ -917,7 +690,7 @@ class _CountOutDemoState extends ConsumerState<_CountOutDemo>
         _basketBurst += 1;
         _pokeCounter += 1;
       });
-      ref.narration.say('One.', cueId: 'count-out:demo:one');
+      widget.say('One.', replay: false);
     });
     // 4.3s — hand glides to slot 1.
     afterMs(4300, () {
@@ -940,12 +713,12 @@ class _CountOutDemoState extends ConsumerState<_CountOutDemo>
         _basketBurst += 1;
         _pokeCounter += 1;
       });
-      ref.narration.say('Two.', cueId: 'count-out:demo:two');
+      widget.say('Two.', replay: false);
     });
     // 7.8s — wrap up + hand off.
     afterMs(7800, () {
       setState(() => _pointerVisible = false);
-      ref.narration.say('Now you try!', cueId: 'count-out:demo:handoff');
+      widget.say(kCountOutNDemoHandoff, replay: false);
     });
     afterMs(9200, widget.onComplete);
   }

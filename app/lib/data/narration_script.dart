@@ -366,6 +366,21 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
               countOutNOverCapLine(round, r),
         ],
       ),
+      ScriptBatch(
+        id: 'count-out-n-keeper',
+        title: 'Count Out N — the demo and the keeper',
+        note: 'The opening, then the one-time drag demo: "Watch", two '
+            'creatures counted in on the shared number clips, and the hand-'
+            'off. Then the line over each finished round, which names the '
+            'number she brought, and the last beat.',
+        lines: <String>[
+          kCountOutNIntro,
+          countOutNDemoLine(kCountOutNRounds.first),
+          kCountOutNDemoHandoff,
+          for (final round in kCountOutNRounds) round.keeperLine,
+          kCountOutNFinal,
+        ],
+      ),
 
       // ---- Count Forward From N -----------------------------------
       ScriptBatch(

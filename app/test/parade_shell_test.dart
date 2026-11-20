@@ -6,6 +6,7 @@ import 'package:critmath/providers/session_provider.dart';
 import 'package:critmath/providers/wallet_provider.dart';
 import 'package:critmath/ui/widgets/count_forward_from_n_runner.dart';
 import 'package:critmath/ui/widgets/count_on_by_ones_runner.dart';
+import 'package:critmath/ui/widgets/count_out_n_runner.dart';
 import 'package:critmath/ui/widgets/keeper_intro_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -85,6 +86,32 @@ void main() {
         find.byKey(const ValueKey('count-on-ones-r0-arrival-0')),
         findsOneWidget,
       );
+      await unmountAndDrain(tester);
+    });
+  });
+
+  group('count out n', () {
+    testWidgets('the drag demo plays once, after the intro', (tester) async {
+      await _pump(tester, CountOutNRunner(onSequenceComplete: () {}));
+      await _tapKey(tester, 'counting-parade-start-button');
+      expect(
+        find.byKey(const ValueKey('count-out-r0-pool-0')),
+        findsNothing,
+        reason: 'the demo is on the board before she can drag anything',
+      );
+      for (var i = 0; i < 10; i++) {
+        await tester.pump(const Duration(seconds: 1));
+      }
+      expect(find.byKey(const ValueKey('count-out-r0-pool-0')), findsOneWidget);
+      await unmountAndDrain(tester);
+    });
+
+    testWidgets('a lesson hand-off goes straight to the board', (tester) async {
+      await _pump(
+        tester,
+        CountOutNRunner(skipIntro: true, onSequenceComplete: () {}),
+      );
+      expect(find.byKey(const ValueKey('count-out-r0-pool-0')), findsOneWidget);
       await unmountAndDrain(tester);
     });
   });
