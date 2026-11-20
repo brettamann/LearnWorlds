@@ -101,9 +101,20 @@ void main() {
   test('the lint can actually see a claim', () {
     // A path typo or a rename would make both tests above pass by finding
     // nothing at all, which is the usual way a source lint dies.
-    final total = _libSources()
-        .map((f) => _callsTo(f.readAsStringSync(), 'startMusicBed'))
-        .fold<int>(0, (a, b) => a + b);
-    expect(total, greaterThan(10), reason: 'the lint is reading no source');
+    //
+    // It used to ask for more than ten claims, which stopped being a fixed
+    // point once the runners moved onto SanctuaryRoundShell and their claims
+    // became its one. So it asks for the claims it must be able to see: the
+    // shell's, and the lesson screen's.
+    final claimers = <String>{
+      for (final f in _libSources())
+        if (_callsTo(f.readAsStringSync(), 'startMusicBed') > 0)
+          f.uri.pathSegments.last,
+    };
+    expect(
+      claimers,
+      containsAll(<String>['sanctuary_round_shell.dart', 'lesson_screen.dart']),
+      reason: 'the lint is reading no source',
+    );
   });
 }

@@ -5280,34 +5280,18 @@
     },
     {
       "id": "parade-reward",
-      "title": "Counting Parade — the coin payout",
-      "note": "The keeper handing over the coins at the end of a visit.",
-      "variants": 6,
+      "title": "Counting Parade — the coin payout, and the Done arrow",
+      "note": "The keeper handing over the coins at the end of a visit. It used to name a total for each possible round count; it says \"some coins\" now, like everywhere else. Then the nudge on the Done arrow, said to a child who has counted everything.",
+      "variants": 2,
       "complete": true,
       "lines": [
         {
-          "text": "Thank you, friend! Here are 15 coins from the Sanctuary.",
-          "clipKey": "thank-you-friend-here-are-15-coins-from-the-sanc__e63a768a"
+          "text": "Thank you, friend! Here are some coins from the Sanctuary.",
+          "clipKey": "thank-you-friend-here-are-some-coins-from-the-sa__52225670"
         },
         {
-          "text": "Thank you, friend! Here are 20 coins from the Sanctuary.",
-          "clipKey": "thank-you-friend-here-are-20-coins-from-the-sanc__96b77cfa"
-        },
-        {
-          "text": "Thank you, friend! Here are 25 coins from the Sanctuary.",
-          "clipKey": "thank-you-friend-here-are-25-coins-from-the-sanc__2f6300f5"
-        },
-        {
-          "text": "Thank you, friend! Here are 30 coins from the Sanctuary.",
-          "clipKey": "thank-you-friend-here-are-30-coins-from-the-sanc__8244c903"
-        },
-        {
-          "text": "Thank you, friend! Here are 35 coins from the Sanctuary.",
-          "clipKey": "thank-you-friend-here-are-35-coins-from-the-sanc__9986d130"
-        },
-        {
-          "text": "Thank you, friend! Here are 40 coins from the Sanctuary.",
-          "clipKey": "thank-you-friend-here-are-40-coins-from-the-sanc__4db16a30"
+          "text": "You counted them all! Tap the arrow to keep going.",
+          "clipKey": "you-counted-them-all-tap-the-arrow-to-keep-going__f6596451"
         }
       ]
     },
@@ -6878,7 +6862,7 @@
       "id": "dart-literals",
       "title": "Lines written directly in Dart",
       "note": "Swept out of lib/ by tool/narration_sources.dart: the sanctuary prologue, const round keeperLines, reward dialog. Interpolated templates are excluded - their variants have to come from the catalog that fills the slot.",
-      "variants": 94,
+      "variants": 93,
       "complete": true,
       "lines": [
         {
@@ -7228,10 +7212,6 @@
         {
           "text": "Yes! Both.",
           "clipKey": "yes-both__96017ce8"
-        },
-        {
-          "text": "You counted them all! Tap the arrow to keep going.",
-          "clipKey": "you-counted-them-all-tap-the-arrow-to-keep-going__f6596451"
         },
         {
           "text": "You found the middle again. Buddy is impressed.",

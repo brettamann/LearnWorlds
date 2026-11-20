@@ -29,7 +29,6 @@
 import '../activities/activity_ids.dart';
 import '../activities/sub_mode_ids.dart';
 import '../engines/activity_runner/round_plan.dart';
-import '../engines/mastery/round_outcome.dart';
 import '../models/reward_track.dart';
 import '../platform/narration_clip_key.dart';
 import 'button_labels.dart';
@@ -90,10 +89,6 @@ class ScriptBatch {
   /// un-recorded remainder stays on system TTS by design.
   bool get isComplete => variants == lines.length;
 }
-
-/// Coin totals the parade reward line can report: one per plausible round
-/// count, at the clean-round rate RoundCoordinator pays.
-const List<int> _kRewardRoundCounts = <int>[3, 4, 5, 6, 7, 8];
 
 /// Every batch, most-heard first. Recording strictly down this list means the
 /// game gets warmer fastest per minute at the microphone.
@@ -577,14 +572,14 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
           for (final s in kParadeSpecies) paradeCountingPrompt(s),
         ],
       ),
-      ScriptBatch(
+      const ScriptBatch(
         id: 'parade-reward',
-        title: 'Counting Parade — the coin payout',
-        note: 'The keeper handing over the coins at the end of a visit.',
-        lines: <String>[
-          for (final rounds in _kRewardRoundCounts)
-            paradeRewardLine(rounds * kCoinsForCleanRound),
-        ],
+        title: 'Counting Parade — the coin payout, and the Done arrow',
+        note: 'The keeper handing over the coins at the end of a visit. It '
+            'used to name a total for each possible round count; it says '
+            '"some coins" now, like everywhere else. Then the nudge on the '
+            'Done arrow, said to a child who has counted everything.',
+        lines: <String>[kParadeRewardLine, kParadeDoneHint],
       ),
       ScriptBatch(
         id: 'parade-final',

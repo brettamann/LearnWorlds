@@ -196,10 +196,19 @@ String paradeIntroDialog({
 String paradeCountingPrompt(ParadeSpecies species) =>
     'Touch each ${species.singular} — and count out loud with me!';
 
-/// Reward line after the final celebration. Names the coin total so the kid
-/// hears a concrete result rather than watching a number change.
-String paradeRewardLine(int coins) =>
-    'Thank you, friend! Here are $coins coins from the Sanctuary.';
+/// The keeper's last line of a visit, as she hands over the coins.
+///
+/// It used to name a total - rounds x the clean-round rate - which overstated
+/// the payout whenever a round needed help, and could only be recorded for the
+/// six round counts someone remembered to enumerate. Every other activity says
+/// "some coins"; so does this one.
+const String kParadeRewardLine =
+    'Thank you, friend! Here are some coins from the Sanctuary.';
+
+/// What the Done arrow says when she has counted everything and left it
+/// waiting.
+const String kParadeDoneHint =
+    'You counted them all! Tap the arrow to keep going.';
 
 /// "a" or "an" for [word].
 ///

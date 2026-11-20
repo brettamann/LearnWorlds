@@ -34,6 +34,18 @@ void main() {
     await tester.pump(const Duration(seconds: 3));
   }
 
+  /// Let the keeper's aside over the finished round play and retire itself,
+  /// which advances to the next round.
+  ///
+  /// Frame by frame rather than one long pump: the aside goes up a beat after
+  /// Done (the shell's celebration hold, which is zero here), so it is not on
+  /// screen until the next frame, and its own reading-time clock starts then.
+  Future<void> letAsideRun(WidgetTester tester) async {
+    for (var i = 0; i < 9; i++) {
+      await tester.pump(const Duration(milliseconds: 500));
+    }
+  }
+
   /// Tap away the card that names the round's creature.
   ///
   /// Every round now opens with one: a pre-reader had no way to learn what she
@@ -121,8 +133,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('parade-done-arrow')));
     await tester.pump();
     // Let the non-blocking keeper aside run its course and advance the round.
-    await tester.pump(const Duration(seconds: 4));
-    await tester.pump(const Duration(milliseconds: 400));
+    await letAsideRun(tester);
     await skipSpeciesCard(tester);
 
     expect(find.text('0 / 5'), findsOneWidget);
@@ -156,8 +167,7 @@ void main() {
     }
     await tester.tap(find.byKey(const ValueKey('parade-done-arrow')));
     await tester.pump();
-    await tester.pump(const Duration(seconds: 4));
-    await tester.pump(const Duration(milliseconds: 400));
+    await letAsideRun(tester);
     await skipSpeciesCard(tester);
 
     final decor = find.byWidgetPredicate(

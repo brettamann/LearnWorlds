@@ -2,11 +2,17 @@
 // one kept, and the bugs the hand-copied lifecycles had.
 
 import 'package:critmath/data/count_forward_from_n_rounds.dart';
+import 'package:critmath/data/parade_species.dart';
+import 'package:critmath/engines/narration/narration_cue_log.dart';
+import 'package:critmath/engines/narration/narration_player.dart';
+import 'package:critmath/platform/narration_clip_key.dart';
 import 'package:critmath/providers/session_provider.dart';
 import 'package:critmath/providers/wallet_provider.dart';
 import 'package:critmath/ui/widgets/count_forward_from_n_runner.dart';
 import 'package:critmath/ui/widgets/count_on_by_ones_runner.dart';
 import 'package:critmath/ui/widgets/count_out_n_runner.dart';
+import 'package:critmath/ui/widgets/counting_parade_runner.dart';
+import 'package:critmath/ui/widgets/keeper_aside.dart';
 import 'package:critmath/ui/widgets/keeper_intro_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -112,6 +118,67 @@ void main() {
         CountOutNRunner(skipIntro: true, onSequenceComplete: () {}),
       );
       expect(find.byKey(const ValueKey('count-out-r0-pool-0')), findsOneWidget);
+      await unmountAndDrain(tester);
+    });
+  });
+
+  group('count the parade', () {
+    Future<ProviderContainer> countRound(
+      WidgetTester tester,
+      List<int> counts,
+    ) async {
+      final c = await _pump(
+        tester,
+        CountingParadeRunner(
+          skipIntro: true,
+          onSequenceComplete: () {},
+          roundParameters: <String, dynamic>{
+            'counts': counts,
+            'species': 'fawn',
+          },
+        ),
+      );
+      await tester.tapAt(
+        tester.getCenter(find.byKey(const ValueKey('parade-species-card'))),
+      );
+      await tester.pump();
+      for (var i = 0; i < counts.first; i++) {
+        await _tapKey(tester, 'fawn-$i');
+      }
+      await _tapKey(tester, 'parade-done-arrow');
+      return c;
+    }
+
+    testWidgets('the keeper waits for the last count instead of cutting it off',
+        (tester) async {
+      final c = await countRound(tester, const <int>[3, 5]);
+      // No hold between rounds: the aside is up a frame later...
+      await tester.pump(const Duration(milliseconds: 16));
+      await tester.pump();
+      expect(find.byType(KeeperAside), findsOneWidget);
+      // ...and her line is queued behind "Three.", not spoken over it.
+      expect(c.read(narrationPlayerProvider.notifier).queuedCount, 1);
+      await unmountAndDrain(tester);
+    });
+
+    testWidgets('the last beat holds two seconds, then says "some coins"',
+        (tester) async {
+      // It used to announce rounds x 5 coins, whatever was actually paid.
+      final c = await countRound(tester, const <int>[3]);
+      await tester.pump(const Duration(milliseconds: 1900));
+      expect(
+        find.byKey(const ValueKey('counting-parade-finale-next')),
+        findsNothing,
+      );
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(
+        find.byKey(const ValueKey('counting-parade-finale-next')),
+        findsOneWidget,
+      );
+      await tester.pump(const Duration(seconds: 2));
+      final said = c.read(narrationCueLogProvider).keys;
+      expect(said, contains(narrationTextNormalize(kParadeRewardLine)));
+      expect(said.where(RegExp(r'Here are \d+ coins').hasMatch), isEmpty);
       await unmountAndDrain(tester);
     });
   });
