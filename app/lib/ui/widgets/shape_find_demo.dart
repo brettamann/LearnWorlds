@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/asset_paths.dart';
+import '../../data/shape_garden_rounds.dart';
 import '../../data/shape_words.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../theme/app_decor.dart';
@@ -163,7 +164,7 @@ class _ShapeFindDemoState extends ConsumerState<ShapeFindDemo>
     });
 
     const hitLines = <String>[
-      "There's one!",
+      kShapeFoundLine,
       'And another!',
       'And the last one!',
     ];

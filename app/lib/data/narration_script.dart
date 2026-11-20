@@ -48,6 +48,7 @@ import 'parade_species.dart';
 import 'picnic_baskets_words.dart';
 import 'sanctuary_decor_catalog.dart';
 import 'scribes_tower_words.dart';
+import 'shape_garden_rounds.dart';
 import 'shape_words.dart';
 import 'sort_attribute_words.dart';
 import 'storytellers_pond_words.dart';
@@ -264,6 +265,10 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
             'This one is a ${kShapeDisplayName[kind]}.',
           for (final kind in kShapeKinds)
             'Tap all the ${kShapeDisplayPlural[kind]}.',
+          kShapeFoundLine,
+          kGardenIntro,
+          kGardenFinal,
+          for (final r in kGardenRounds) r.keeperLine,
         ],
       ),
       ScriptBatch(

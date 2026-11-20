@@ -87,6 +87,11 @@ List<String> _decorPool() => <String>[
       AssetPaths.shapeGardenWateringCan,
     ];
 
+/// The scatter seed for round [round] of a hunt for [kind]: each round of a
+/// shape lays out differently, and each (kind, round) pair is reproducible.
+int shapeFindSeed(String kind, int round) =>
+    kind.hashCode ^ (round + 1) * 0x9E3779B1;
+
 /// Builds a one-round scatter of placements. The whole thing is
 /// seedable — pass the same `seed` and the layout is identical.
 List<ShapeFindPlacement> buildShapeFindPlacements({

@@ -3656,7 +3656,7 @@
       "id": "shape-target",
       "title": "Shape Garden — naming and asking for a shape",
       "note": "Spoken as each find-round opens, and when a shape is introduced. Two lines per shape kind.",
-      "variants": 18,
+      "variants": 29,
       "complete": true,
       "lines": [
         {
@@ -3730,6 +3730,50 @@
         {
           "text": "Tap all the quarter circles.",
           "clipKey": "tap-all-the-quarter-circles__ddbb89d7"
+        },
+        {
+          "text": "There's one!",
+          "clipKey": "there-s-one__c6b2084a"
+        },
+        {
+          "text": "Look — some plants in the garden have grown into shapes! Help me find them all, won't you? We'll start with the circles.",
+          "clipKey": "look-some-plants-in-the-garden-have-grown-into-s__38d603d4"
+        },
+        {
+          "text": "You found every shape in the garden! Here are some coins for your help.",
+          "clipKey": "you-found-every-shape-in-the-garden-here-are-som__d6f927ed"
+        },
+        {
+          "text": "Wonderful! All the circles. Now find the triangles.",
+          "clipKey": "wonderful-all-the-circles-now-find-the-triangles__fb2de5b0"
+        },
+        {
+          "text": "Nice work! Let's find the squares next.",
+          "clipKey": "nice-work-let-s-find-the-squares-next__fe731314"
+        },
+        {
+          "text": "Great squares! How about the rectangles?",
+          "clipKey": "great-squares-how-about-the-rectangles__9245f58e"
+        },
+        {
+          "text": "Lovely! Let's hunt some pentagons.",
+          "clipKey": "lovely-let-s-hunt-some-pentagons__5a47d172"
+        },
+        {
+          "text": "Pentagons found! Now the hexagons.",
+          "clipKey": "pentagons-found-now-the-hexagons__4f35c3eb"
+        },
+        {
+          "text": "Excellent! Let's spot the right triangles.",
+          "clipKey": "excellent-let-s-spot-the-right-triangles__43e68905"
+        },
+        {
+          "text": "You got them! One more — half circles.",
+          "clipKey": "you-got-them-one-more-half-circles__a3af46c8"
+        },
+        {
+          "text": "You found every shape in the garden! That's amazing.",
+          "clipKey": "you-found-every-shape-in-the-garden-that-s-amazi__38b2d23c"
         }
       ]
     },
@@ -6682,7 +6726,7 @@
       "id": "dart-literals",
       "title": "Lines written directly in Dart",
       "note": "Swept out of lib/ by tool/narration_sources.dart: the sanctuary prologue, const round keeperLines, reward dialog. Interpolated templates are excluded - their variants have to come from the catalog that fills the slot.",
-      "variants": 133,
+      "variants": 123,
       "complete": true,
       "lines": [
         {
@@ -6786,10 +6830,6 @@
           "clipKey": "every-shape-sorted-you-can-group-things-by-all-k__347782bc"
         },
         {
-          "text": "Excellent! Let's spot the right triangles.",
-          "clipKey": "excellent-let-s-spot-the-right-triangles__43e68905"
-        },
-        {
           "text": "Fifty dragons! Now — the phoenixes are at seventy.",
           "clipKey": "fifty-dragons-now-the-phoenixes-are-at-seventy__b53cc1d7"
         },
@@ -6820,10 +6860,6 @@
         {
           "text": "Great counting by tens! Tap the arrow to keep going.",
           "clipKey": "great-counting-by-tens-tap-the-arrow-to-keep-goi__38df920e"
-        },
-        {
-          "text": "Great squares! How about the rectangles?",
-          "clipKey": "great-squares-how-about-the-rectangles__9245f58e"
         },
         {
           "text": "Halfway between the two. Well done.",
@@ -6906,16 +6942,8 @@
           "clipKey": "look-some-plants-in-the-garden-have-grown-into-s__729e98f1"
         },
         {
-          "text": "Look — some plants in the garden have grown into shapes! Help me find them all, won't you? We'll start with the circles.",
-          "clipKey": "look-some-plants-in-the-garden-have-grown-into-s__38d603d4"
-        },
-        {
           "text": "Lovely! Let me bring out a few more shapes.",
           "clipKey": "lovely-let-me-bring-out-a-few-more-shapes__1250c020"
-        },
-        {
-          "text": "Lovely! Let's hunt some pentagons.",
-          "clipKey": "lovely-let-s-hunt-some-pentagons__5a47d172"
         },
         {
           "text": "Nice counting! Tap the arrow to keep going.",
@@ -6924,10 +6952,6 @@
         {
           "text": "Nice work!",
           "clipKey": "nice-work__be3361a0"
-        },
-        {
-          "text": "Nice work! Let's find the squares next.",
-          "clipKey": "nice-work-let-s-find-the-squares-next__fe731314"
         },
         {
           "text": "Nicely counted!",
@@ -6976,10 +7000,6 @@
         {
           "text": "One solid shape!",
           "clipKey": "one-solid-shape__62a3ed48"
-        },
-        {
-          "text": "Pentagons found! Now the hexagons.",
-          "clipKey": "pentagons-found-now-the-hexagons__4f35c3eb"
         },
         {
           "text": "Place clay in both corners first, then the stick.",
@@ -7082,10 +7102,6 @@
           "clipKey": "the-buddy-loves-to-play-hide-and-seek-i-ll-tell__0ff64e76"
         },
         {
-          "text": "There's one!",
-          "clipKey": "there-s-one__c6b2084a"
-        },
-        {
           "text": "Thing is, it's a lot for anyone to do.",
           "clipKey": "thing-is-it-s-a-lot-for-anyone-to-do__e576fa6b"
         },
@@ -7162,10 +7178,6 @@
           "clipKey": "wonderful-sorting-try-another-round__323d1e08"
         },
         {
-          "text": "Wonderful! All the circles. Now find the triangles.",
-          "clipKey": "wonderful-all-the-circles-now-find-the-triangles__fb2de5b0"
-        },
-        {
           "text": "Wow! You learned every shape in the garden.",
           "clipKey": "wow-you-learned-every-shape-in-the-garden__dc26985e"
         },
@@ -7186,16 +7198,8 @@
           "clipKey": "you-counted-them-all-tap-the-arrow-to-keep-going__f6596451"
         },
         {
-          "text": "You found every shape in the garden! That's amazing.",
-          "clipKey": "you-found-every-shape-in-the-garden-that-s-amazi__38b2d23c"
-        },
-        {
           "text": "You found the middle again. Buddy is impressed.",
           "clipKey": "you-found-the-middle-again-buddy-is-impressed__dee6fa94"
-        },
-        {
-          "text": "You got them! One more — half circles.",
-          "clipKey": "you-got-them-one-more-half-circles__a3af46c8"
         },
         {
           "text": "You learned every shape in the garden!",

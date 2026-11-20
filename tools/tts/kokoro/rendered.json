@@ -15910,6 +15910,14 @@
       "bytes": 10560,
       "seconds": 1.27,
       "format": "mp3"
+    },
+    "you-found-every-shape-in-the-garden-here-are-som__d6f927ed": {
+      "text": "You found every shape in the garden! Here are some coins for your help.",
+      "batch": "shape-target",
+      "voice": "af_heart",
+      "bytes": 29184,
+      "seconds": 3.6,
+      "format": "mp3"
     }
   }
 }

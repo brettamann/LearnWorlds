@@ -5,7 +5,7 @@
 // invariance message in another form).
 //
 // Targets pop a glitter burst on correct tap; distractors play a gentle
-// "That's a {kind} — try again, find the {targetPlural}" line so wrong
+// "try again, find the {targetPlural}" line so wrong
 // taps are framed as more practice, never as punishment. When every target
 // is tapped, the runner waits a short celebratory beat then fires
 // `onComplete` so the LessonScreen can advance to the next shape's intro.
@@ -21,14 +21,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/shape_find_placements.dart';
+import '../../data/shape_garden_rounds.dart';
 import '../../data/shape_words.dart';
 import '../../data/warm_lines.dart';
 import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/narration/narration_player.dart';
-import '../../theme/app_decor.dart';
-import 'animated_shape.dart';
-import 'answer_feedback.dart';
-import 'glitter_burst.dart';
+import 'shape_scatter_board.dart';
 
 /// Re-export of the variant table for callers that previously imported it
 /// from this file. The canonical home is `shape_find_placements.dart`.
@@ -70,11 +68,6 @@ class ShapeFindRound extends ConsumerStatefulWidget {
 class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
   static const int _targetCount = 3;
   static const int _distractorCount = 4;
-  // Sprites are ~50% larger than the intro layer's pose for find-rounds
-  // so a kid taps comfortably with a fingertip and the shape outline
-  // reads clearly at a glance.
-  static const double _spriteSize = 144;
-  static const double _spriteSizeDecor = 120;
 
   List<ShapeFindPlacement> _placements = const <ShapeFindPlacement>[];
   Set<String> _tappedIds = <String>{};
@@ -112,7 +105,7 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
     return buildShapeFindPlacements(
       targetKind: widget.targetKind,
       distractorKindPool: widget.previousKinds,
-      seed: widget.targetKind.hashCode ^ (roundIndex + 1) * 0x9E3779B1,
+      seed: shapeFindSeed(widget.targetKind, roundIndex),
       targetCount: _targetCount,
       distractorCount: _distractorCount,
     );
@@ -185,14 +178,15 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
         }
       } else {
         ref.narration.say(
-          "There's one!",
+          kShapeFoundLine,
           cueId: 'find:${widget.targetKind}:r$_currentRound:hit-${p.id}',
         );
       }
     } else {
-      // Wrong tap — gentle redirect. Decor gets "that's a butterfly, not a
-      // shape"; another shape kind gets "that's a {kind}". Naming what she
-      // actually tapped is the useful half; only the follow-up rotates.
+      // Wrong tap: a gentle redirect. It used to open by naming what she
+      // tapped ("That's a frog."), which made hundreds of sentences no voice
+      // could record; Shape Garden dropped that long ago and this copy never
+      // caught up. The shape she tapped is under her finger.
       setState(() {
         _wrongTokens = <String, int>{
           ..._wrongTokens,
@@ -200,24 +194,13 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
         };
       });
       ref.read(feedbackEngineProvider).wrong();
-      final wrongName = p.isDecor
-          ? _decorName(p.assetPath)
-          : (kShapeDisplayName[p.kind] ?? p.kind);
       _missRotation += 1;
       ref.narration.say(
-        "That's a $wrongName. ${warmMissLine(_missRotation)} "
-        'Find the $_targetPlural.',
+        '${warmMissLine(_missRotation)} Find the $_targetPlural.',
         cueId:
             'find:${widget.targetKind}:r$_currentRound:miss-${p.id}-$_missRotation',
       );
     }
-  }
-
-  String _decorName(String assetPath) {
-    if (assetPath.contains('butterfly')) return 'butterfly';
-    if (assetPath.contains('frog')) return 'frog';
-    if (assetPath.contains('watering-can')) return 'watering can';
-    return 'thing';
   }
 
   @override
@@ -230,122 +213,15 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
       _maybeSpeakPrompt();
     });
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final w = constraints.maxWidth;
-        final h = constraints.maxHeight;
-        return Stack(
-          clipBehavior: Clip.hardEdge,
-          children: [
-            // Header banner at the top so the kid can also *see* the
-            // prompt — accessibility for the audio-supported flow.
-            Positioned(
-              top: 8,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
-                  decoration:
-                      AppDecor.card(radius: 18, shadow: AppShadows.soft),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Tap all the $_targetPlural!',
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.amber.shade100,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          'Round ${_currentRound + 1} of ${widget.roundsPerShape}',
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black87,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            for (final p in _placements)
-              Positioned(
-                left: p.center.dx * w -
-                    (p.isDecor ? _spriteSizeDecor : _spriteSize) / 2,
-                top: p.center.dy * h -
-                    (p.isDecor ? _spriteSizeDecor : _spriteSize) / 2 +
-                    24,
-                width: p.isDecor ? _spriteSizeDecor : _spriteSize,
-                height: p.isDecor ? _spriteSizeDecor : _spriteSize,
-                child: GestureDetector(
-                  key: ValueKey(
-                    'find-${widget.targetKind}-r$_currentRound-${p.id}',
-                  ),
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => _handleTap(p),
-                  // Burst is drawn separately below, so only the wrong
-                  // reaction is wanted here.
-                  child: AnswerFeedback(
-                    wrongToken: _wrongTokens[p.id] ?? 0,
-                    child: p.isDecor
-                        ? Image.asset(
-                            p.assetPath,
-                            fit: BoxFit.contain,
-                          )
-                        : AnimatedShape(
-                            spriteAsset: p.assetPath,
-                            active: _tappedIds.contains(p.id),
-                            pose: ShapePose(
-                              rotationDegrees: p.rotationDegrees,
-                            ),
-                            size: _spriteSize,
-                          ),
-                  ),
-                ),
-              ),
-            for (final entry in _burstCounters.entries)
-              if (entry.value > 0)
-                Builder(
-                  builder: (_) {
-                    final placement = _placements.firstWhere(
-                      (p) => p.id == entry.key,
-                    );
-                    final size =
-                        placement.isDecor ? _spriteSizeDecor : _spriteSize;
-                    return Positioned(
-                      left: placement.center.dx * w - size / 2 - 22,
-                      top: placement.center.dy * h - size / 2 + 24 - 22,
-                      width: size + 44,
-                      height: size + 44,
-                      child: GlitterBurst(
-                        key: ValueKey(
-                          'find-burst-r$_currentRound-${entry.key}-${entry.value}',
-                        ),
-                      ),
-                    );
-                  },
-                ),
-          ],
-        );
-      },
+    return ShapeScatterBoard(
+      keyPrefix: 'find-${widget.targetKind}-r$_currentRound',
+      targetPlural: _targetPlural,
+      roundLabel: 'Round ${_currentRound + 1} of ${widget.roundsPerShape}',
+      placements: _placements,
+      tappedIds: _tappedIds,
+      burstCounters: _burstCounters,
+      wrongTokens: _wrongTokens,
+      onTap: _handleTap,
     );
   }
 }
