@@ -8,7 +8,7 @@
       "displayName": "Counting Parade",
       "region": "sanctuary",
       "grade": "K",
-      "status": "ready-to-build",
+      "status": "built",
       "specRef": "specs/activities/kindergarten/counting-parade.md",
       "lastUpdated": "2026-05-30",
       "concepts": [
@@ -252,7 +252,7 @@
       "displayName": "Shape Garden",
       "region": "sanctuary",
       "grade": "K",
-      "status": "ready-to-build",
+      "status": "built",
       "specRef": "specs/activities/kindergarten/shape-garden.md",
       "lastUpdated": "2026-05-30",
       "concepts": [
@@ -347,7 +347,7 @@
       "displayName": "Build-a-Habitat",
       "region": "sanctuary",
       "grade": "K",
-      "status": "ready-to-build",
+      "status": "built",
       "specRef": "specs/activities/kindergarten/build-a-habitat.md",
       "lastUpdated": "2026-05-30",
       "concepts": [
@@ -527,7 +527,7 @@
       "displayName": "Where's Buddy?",
       "region": "sanctuary",
       "grade": "K",
-      "status": "ready-to-build",
+      "status": "built",
       "specRef": "specs/activities/kindergarten/wheres-buddy.md",
       "lastUpdated": "2026-05-30",
       "concepts": [

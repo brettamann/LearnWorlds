@@ -38,4 +38,12 @@ void main() {
       expect(kSubModeIdsByActivity[json['id']], ids, reason: '${json['id']}');
     }
   });
+
+  test('an activity is marked built exactly when it has a runner', () {
+    final built = <String>{
+      for (final a in activityRegistryJson()['activities'] as List<dynamic>)
+        if ((a as Map<String, dynamic>)['status'] == 'built') a['id'] as String,
+    };
+    expect(built, kActivityRunners.keys.toSet());
+  });
 }

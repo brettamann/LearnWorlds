@@ -197,12 +197,20 @@ one should too:
 - **Numbers come with their quantity** - `NumberCard` / `NumberChoiceRow`
   draw a mini ten-frame of dots under the numeral. Turn the dots off only
   where reading the numeral is the point.
-- **Wire it in five places**: the registry
-  (`assets/data/activity-registry/`), `kPlayableActivities`, the
-  dispatch and default in `activity_screen.dart`, `sub_mode_picker_data.dart`
-  (a distinct picture per option), and `playfields()` in
-  `playfield_caption_band_test.dart`, which enrols it in the caption-band,
-  tap-size, idle-help, Buddy-corner and play-through guards at once.
+- **Wire it in**:
+  1. the registry (`assets/data/activity-registry/`), with `status: built`;
+  2. its id in `ActivityIds` and its sub-mode ids in `sub_mode_ids.dart`
+     (`activity_ids_test.dart` fails until both match the registry);
+  3. its node in `sanctuary_sequence.dart`;
+  4. its runner in `kActivityRunners` (`lib/activities/activity_runners.dart`)
+     - that alone makes it playable, and its default sub-mode comes from the
+     registry's `isDefault`;
+  5. `sub_mode_picker_data.dart` (a distinct picture per option); and
+  6. `playfields()` in `playfield_caption_band_test.dart`, which enrols it in
+     the caption-band, tap-size, idle-help, Buddy-corner and play-through
+     guards at once.
+  Open it from code with `context.goActivity(id, ActivityLaunch(...))` or
+  `launchSubMode(...)`, never a hand-built path.
 - **Give it a creature card** (`creature_card_catalog.dart`), so a passed
   round there can find one.
 - **Author a pool, not a list.** A visit picks its rounds from a pool a few
