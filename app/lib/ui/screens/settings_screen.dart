@@ -24,8 +24,10 @@ import '../../data/dev_advance.dart';
 import '../../data/sfx_catalog.dart';
 import '../../engines/narration/narration_cue_log.dart';
 import '../../engines/narration/narration_export.dart';
+import '../../navigation/routes.dart';
 import '../../platform/narration_audio.dart';
 import '../../platform/sfx_engine.dart';
+import '../../providers/app_providers.dart';
 import '../../providers/audio_settings_provider.dart';
 import '../../providers/read_aloud_settings_provider.dart';
 import '../../providers/save_provider.dart';
@@ -51,7 +53,7 @@ class SettingsScreen extends ConsumerWidget {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             tooltip: 'Back to the island',
-            onPressed: () => context.go('/'),
+            onPressed: () => context.go(Routes.home),
           ),
         ),
         body: SafeArea(
@@ -316,11 +318,12 @@ class SettingsScreen extends ConsumerWidget {
     );
     if (picked == null) return;
     if (!context.mounted) return;
-    context.go('/lesson/$picked');
+    context.goLesson(picked);
   }
 
   Future<void> _openJumpPicker(BuildContext context, WidgetRef ref) async {
-    final options = devAdvanceOptions();
+    final options =
+        devAdvanceOptions(ref.read(activityRegistryProvider).valueOrNull);
     final picked = await showModalBottomSheet<DevAdvanceOption>(
       context: context,
       isScrollControlled: true,
@@ -390,7 +393,7 @@ class SettingsScreen extends ConsumerWidget {
         ),
       ),
     );
-    context.go('/sanctuary');
+    context.go(Routes.sanctuary);
   }
 
   Future<void> _confirmReset(BuildContext context, WidgetRef ref) async {

@@ -26,6 +26,7 @@ import '../../data/button_labels.dart';
 import '../../data/sfx_catalog.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
+import '../../navigation/routes.dart';
 import '../../platform/sfx_engine.dart';
 import '../../theme/app_decor.dart';
 import '../widgets/next_arrow_button.dart';
@@ -87,7 +88,7 @@ class _RewardGiftScreenState extends ConsumerState<RewardGiftScreen> {
 
   void _onContinue() {
     ref.narration.clear();
-    context.go('/sanctuary');
+    context.go(Routes.sanctuary);
   }
 
   @override

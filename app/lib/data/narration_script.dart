@@ -26,6 +26,7 @@
 //     career, and the export says so rather than letting you find out at line
 //     three hundred.
 
+import '../activities/activity_ids.dart';
 import '../engines/activity_runner/round_plan.dart';
 import '../engines/mastery/round_outcome.dart';
 import '../models/reward_track.dart';
@@ -97,7 +98,7 @@ const List<int> _kRewardRoundCounts = <int>[3, 4, 5, 6, 7, 8];
 List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
       // ---- Ten-Frame Pond ----------------------------------------
       ScriptBatch(
-        id: 'ten-frame-pond',
+        id: ActivityIds.tenFramePond,
         title: 'Ten-Frame Pond - frogs on lily pads',
         note:
             'Every line the pond says, generated from the same round plans the '
@@ -108,7 +109,7 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
       ),
       // ---- Care Pantry ------------------------------------------
       ScriptBatch(
-        id: 'care-pantry',
+        id: ActivityIds.carePantry,
         title: 'Care Pantry - putting the food away',
         note: 'A tidy-up, not a test. The put-away prompts are an invitation; '
             'the counted lines ("Four acorns.") close a crate, so let them '
@@ -117,7 +118,7 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
       ),
       // ---- Scribe's Tower ----------------------------------------
       ScriptBatch(
-        id: 'scribes-tower',
+        id: ActivityIds.scribesTower,
         title: "Scribe's Tower - writing numbers",
         note: 'Unhurried and encouraging; she is tracing with a finger and '
             'will be concentrating. The done lines celebrate the number she '
@@ -126,7 +127,7 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
       ),
       // ---- Storyteller's Pond -------------------------------------
       ScriptBatch(
-        id: 'storytellers-pond',
+        id: ActivityIds.storytellersPond,
         title: "Storyteller's Pond - the turtle's stories",
         note: 'Told, not read out: these are tiny stories for a five-year-old '
             'at dusk. Warm and a little slow, with a small pause before the '
@@ -136,7 +137,7 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
       ),
       // ---- Caretaker's Bench -------------------------------------
       ScriptBatch(
-        id: 'caretakers-bench',
+        id: ActivityIds.caretakersBench,
         title: "Caretaker's Bench - weighing and measuring",
         note: 'Curious and careful, like a naturalist at a workbench. The '
             'attribute words - heavy, light, long, short, heavier, lighter - '
@@ -145,7 +146,7 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
       ),
       // ---- Picnic Baskets ----------------------------------------
       ScriptBatch(
-        id: 'picnic-baskets',
+        id: ActivityIds.picnicBaskets,
         title: 'Picnic Baskets - who has more',
         note: 'A picnic - relaxed and cheerful. The done lines settle a '
             'small friendly argument between a unicorn and a dragon, so they '
@@ -154,7 +155,7 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
       ),
       // ---- Fluency Within 5 --------------------------------------
       ScriptBatch(
-        id: 'fluency-within-5',
+        id: ActivityIds.fluencyWithin5,
         title: 'Fluency Within 5 - quick puzzles with Buddy',
         note: 'Brisk and light, like a friendly game rather than a quiz. '
             'Questions end on a lifted "?"; the answers are said with a '

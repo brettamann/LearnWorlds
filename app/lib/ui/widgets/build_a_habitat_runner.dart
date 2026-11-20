@@ -32,6 +32,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../activities/activity_ids.dart';
 import '../../coordinators/round_coordinator.dart';
 import '../../data/asset_paths.dart';
 import '../../data/build_a_habitat_blueprints.dart';
@@ -346,7 +347,7 @@ class _BuildAHabitatRunnerState extends ConsumerState<BuildAHabitatRunner> {
     final hintsUsed = _hints?.hintsUsed ?? 0;
     final result = gradeRound(misses: _outOfOrderTaps, helped: hintsUsed > 0);
     ref.read(roundCoordinatorProvider).resolveRound(
-          activityId: 'build-a-habitat',
+          activityId: ActivityIds.buildAHabitat,
           conceptId: 'K.G.5',
           result: result,
         );
@@ -391,7 +392,7 @@ class _BuildAHabitatRunnerState extends ConsumerState<BuildAHabitatRunner> {
     // game having placed a piece for her.
     _hints?.pause();
     ref.read(roundCoordinatorProvider).resolveRound(
-          activityId: 'build-a-habitat',
+          activityId: ActivityIds.buildAHabitat,
           conceptId: 'K.G.6',
           result: gradeRound(helped: (_hints?.hintsUsed ?? 0) > 0),
         );

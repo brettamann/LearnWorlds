@@ -39,6 +39,7 @@ import 'package:go_router/go_router.dart';
 import '../../data/buddy_shop_catalog.dart';
 import '../../engines/feedback/feedback_engine.dart';
 import '../../models/buddy_appearance.dart';
+import '../../navigation/routes.dart';
 import '../../providers/buddy_appearance_provider.dart';
 import '../../providers/buddy_wardrobe_provider.dart';
 import '../../providers/save_provider.dart';
@@ -125,7 +126,7 @@ class _CharacterCreatorScreenState
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             tooltip: 'Back to the island',
-            onPressed: () => context.go('/'),
+            onPressed: () => context.go(Routes.home),
           ),
           actions: [
             if (_isShop)
@@ -137,7 +138,7 @@ class _CharacterCreatorScreenState
               IconButton(
                 tooltip: 'Buddy Shop',
                 icon: const Icon(Icons.storefront),
-                onPressed: () => context.go('/home/buddy-shop'),
+                onPressed: () => context.go(Routes.buddyShop),
               ),
           ],
         ),
@@ -458,7 +459,7 @@ class _SwatchGridState extends ConsumerState<_SwatchGrid> {
           key: const ValueKey('swatch-shop'),
           onTap: () {
             ref.read(feedbackEngineProvider).uiTap();
-            context.go('/home/buddy-shop');
+            context.go(Routes.buddyShop);
           },
         ),
       );

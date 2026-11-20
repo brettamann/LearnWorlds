@@ -10,6 +10,7 @@
 //
 // See specs/shared/reward-tracks.md.
 
+import '../activities/activity_ids.dart';
 import '../data/asset_paths.dart';
 
 /// How "alive" the sprite feels in its corner. Drives the idle wiggle.
@@ -234,14 +235,14 @@ final RewardTrack kMysteryEggTrack = RewardTrack(
   // `egg_can_hatch_test.dart` pins both ends.
   eventsPerStage: 4,
   stageGrants: const {
-    'counting-parade': 1,
-    'care-pantry': 2,
-    'scribes-tower': 3,
-    'storytellers-pond': 4,
-    'wheres-buddy': 5,
-    'caretakers-bench': 6,
-    'picnic-baskets': 7,
-    'fluency-within-5': 8,
+    ActivityIds.countingParade: 1,
+    ActivityIds.carePantry: 2,
+    ActivityIds.scribesTower: 3,
+    ActivityIds.storytellersPond: 4,
+    ActivityIds.wheresBuddy: 5,
+    ActivityIds.caretakersBench: 6,
+    ActivityIds.picnicBaskets: 7,
+    ActivityIds.fluencyWithin5: 8,
   },
   completeStage: const RewardStage(
     spriteAsset: AssetPaths.kMysteryEggComplete,

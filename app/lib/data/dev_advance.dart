@@ -26,6 +26,8 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/activity_registry.dart';
+import '../data/playable_activities.dart';
 import '../engines/mastery/round_outcome.dart';
 import '../models/reward_track.dart';
 import '../providers/app_providers.dart';
@@ -66,22 +68,9 @@ class DevAdvanceOption {
 }
 
 /// Builds the picker list — every non-cutscene Sanctuary entry in order.
-/// Display names use a tiny hardcoded map so the picker doesn't need to
-/// wait on the activity registry future at open time.
-List<DevAdvanceOption> devAdvanceOptions() {
-  const displayNames = <String, String>{
-    'counting-parade': 'Counting Parade',
-    'shape-garden': 'Shape Garden',
-    'ten-frame-pond': 'Ten-Frame Pond',
-    'build-a-habitat': 'Build-a-Habitat',
-    'care-pantry': 'Care Pantry',
-    'scribes-tower': "Scribe's Tower",
-    'storytellers-pond': "Storyteller's Pond",
-    'wheres-buddy': "Where's Buddy?",
-    'caretakers-bench': "Caretaker's Bench",
-    'picnic-baskets': 'Picnic Baskets',
-    'fluency-within-5': 'Fluency Within 5',
-  };
+/// Names come from [registry]; a node it does not name (or a registry not yet
+/// loaded) gets a readable name made from its id.
+List<DevAdvanceOption> devAdvanceOptions(ActivityRegistry? registry) {
   final out = <DevAdvanceOption>[];
   for (var i = 0; i < kSanctuarySequence.length; i++) {
     final code = kSanctuarySequence[i];
@@ -91,7 +80,8 @@ List<DevAdvanceOption> devAdvanceOptions() {
       DevAdvanceOption(
         code: code,
         activityId: activityId,
-        displayName: displayNames[activityId] ?? activityId,
+        displayName: registry?.byIdOrNull(activityId)?.displayName ??
+            placeholderActivityName(activityId),
         sequenceIndex: i,
       ),
     );

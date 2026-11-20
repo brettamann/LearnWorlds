@@ -16,6 +16,7 @@ import 'package:go_router/go_router.dart';
 import '../../data/asset_paths.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
+import '../../navigation/routes.dart';
 import '../../providers/exploration_provider.dart';
 import '../../providers/save_provider.dart';
 import '../../theme/app_decor.dart';
@@ -78,7 +79,7 @@ class _SanctuaryCutsceneScreenState
     ref.narration.clear();
     ref.read(explorationProvider.notifier).markCompleted(kSanctuaryKickoffCode);
     ref.read(saveCoordinatorProvider).persist();
-    context.go('/sanctuary');
+    context.go(Routes.sanctuary);
   }
 
   @override
@@ -154,7 +155,7 @@ class _SanctuaryCutsceneScreenState
                 child: RoundBackButton(
                   onPressed: () {
                     ref.narration.clear();
-                    context.go('/sanctuary');
+                    context.go(Routes.sanctuary);
                   },
                 ),
               ),

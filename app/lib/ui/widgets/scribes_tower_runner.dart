@@ -18,6 +18,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../activities/activity_ids.dart';
 import '../../data/asset_paths.dart';
 import '../../data/number_words.dart';
 import '../../data/scribes_tower_words.dart';
@@ -54,7 +55,7 @@ class ScribesTowerRunner extends ConsumerWidget {
       seed: ref.watch(sessionIdProvider).hashCode,
     );
     return SanctuaryRoundShell(
-      activityId: 'scribes-tower',
+      activityId: ActivityIds.scribesTower,
       roundCount: rounds.length,
       conceptIdFor: (_) => 'K.CC.3',
       introLine: kScribeIntro,

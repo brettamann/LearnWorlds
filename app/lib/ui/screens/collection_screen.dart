@@ -18,6 +18,7 @@ import 'package:go_router/go_router.dart';
 import '../../data/creature_card_catalog.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
+import '../../navigation/routes.dart';
 import '../../providers/collection_provider.dart';
 import '../../theme/app_colors.dart';
 import '../widgets/music_bed_scope.dart';
@@ -40,7 +41,7 @@ class CollectionScreen extends ConsumerWidget {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             tooltip: 'Back to the Sanctuary',
-            onPressed: () => context.go('/sanctuary'),
+            onPressed: () => context.go(Routes.sanctuary),
           ),
           actions: [
             Padding(

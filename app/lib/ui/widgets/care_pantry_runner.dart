@@ -22,6 +22,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../activities/activity_ids.dart';
 import '../../data/asset_paths.dart';
 import '../../data/care_pantry_words.dart';
 import '../../data/number_words.dart';
@@ -59,7 +60,7 @@ class CarePantryRunner extends ConsumerWidget {
       seed: roundSeed(ref.watch(sessionIdProvider), subMode),
     );
     return SanctuaryRoundShell(
-      activityId: 'care-pantry',
+      activityId: ActivityIds.carePantry,
       roundCount: rounds.length,
       conceptIdFor: (_) => 'K.MD.3',
       introLine: kPantryIntro,

@@ -37,6 +37,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../activities/activity_ids.dart';
 import '../../coordinators/round_coordinator.dart';
 import '../../data/asset_paths.dart';
 import '../../data/button_labels.dart';
@@ -546,7 +547,7 @@ class _WheresBuddyBodyState extends ConsumerState<_WheresBuddyBody> {
       failAt: _kDemonstrateAfter,
     );
     ref.read(roundCoordinatorProvider).resolveRound(
-          activityId: 'wheres-buddy',
+          activityId: ActivityIds.wheresBuddy,
           conceptId: 'K.G.1',
           result: result,
         );

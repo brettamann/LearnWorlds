@@ -14,6 +14,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../activities/activity_ids.dart';
 import '../../coordinators/round_coordinator.dart';
 import '../../data/asset_paths.dart';
 import '../../data/count_out_n_rounds.dart';
@@ -281,7 +282,7 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
     final hintsUsed = _hints?.hintsUsed ?? 0;
     final result = gradeRound(misses: _overCapDrops, helped: hintsUsed > 0);
     ref.read(roundCoordinatorProvider).resolveRound(
-          activityId: 'counting-parade',
+          activityId: ActivityIds.countingParade,
           conceptId: 'K.CC.5',
           result: result,
         );

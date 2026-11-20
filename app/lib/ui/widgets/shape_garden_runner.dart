@@ -31,6 +31,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../activities/activity_ids.dart';
 import '../../coordinators/round_coordinator.dart';
 import '../../data/asset_paths.dart';
 import '../../data/flat_or_solid_shapes.dart';
@@ -455,7 +456,7 @@ class _ShapeGardenRunnerState extends ConsumerState<ShapeGardenFindingRunner> {
     final hintsUsed = _hints?.hintsUsed ?? 0;
     final result = gradeRound(misses: _wrongTaps, helped: hintsUsed > 0);
     ref.read(roundCoordinatorProvider).resolveRound(
-          activityId: 'shape-garden',
+          activityId: ActivityIds.shapeGarden,
           conceptId: 'K.G.2',
           result: result,
         );
@@ -912,7 +913,7 @@ class _ShapeGardenSortingRunnerState
     // miss of the flat/solid distinction, not a slip.
     final result = gradeRound(misses: _wrongDrops);
     ref.read(roundCoordinatorProvider).resolveRound(
-          activityId: 'shape-garden',
+          activityId: ActivityIds.shapeGarden,
           conceptId: 'K.G.3',
           result: result,
         );

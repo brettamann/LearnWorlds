@@ -28,6 +28,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../activities/activity_ids.dart';
 import '../../data/asset_paths.dart';
 import '../../data/number_words.dart';
 import '../../data/round_pick.dart';
@@ -80,7 +81,7 @@ class _TenFramePondRunnerState extends ConsumerState<TenFramePondRunner> {
   @override
   Widget build(BuildContext context) {
     return SanctuaryRoundShell(
-      activityId: 'ten-frame-pond',
+      activityId: ActivityIds.tenFramePond,
       roundCount: _rounds.length,
       conceptIdFor: (_) => _concept,
       introLine: kPondIntro,

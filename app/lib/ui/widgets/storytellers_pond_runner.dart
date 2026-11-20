@@ -29,6 +29,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../activities/activity_ids.dart';
 import '../../data/asset_paths.dart';
 import '../../data/button_labels.dart';
 import '../../data/number_words.dart';
@@ -69,7 +70,7 @@ class StorytellersPondRunner extends ConsumerWidget {
       seed: roundSeed(ref.watch(sessionIdProvider), subMode),
     );
     return SanctuaryRoundShell(
-      activityId: 'storytellers-pond',
+      activityId: ActivityIds.storytellersPond,
       roundCount: stories.length,
       conceptIdFor: (_) => 'K.OA.2',
       introLine: kStoryIntro,

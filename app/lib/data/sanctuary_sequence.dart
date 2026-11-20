@@ -7,6 +7,7 @@
 // the rectangle positions in `sanctuary_map_screen.dart` need to change —
 // these codes + activity ids stay valid.
 
+import '../activities/activity_ids.dart';
 import 'playable_activities.dart';
 
 /// Magenta-anchor sequence codes in path order (`#FF00F0`..`#FF00FB`).
@@ -34,17 +35,17 @@ const int kSanctuaryCutsceneCode = 0xF0;
 /// `data/activity-registry/kindergarten.json`. F0 is the cutscene and has
 /// no activity id.
 const Map<int, String> kSanctuaryActivityByCode = {
-  0xF1: 'counting-parade',
-  0xF2: 'shape-garden',
-  0xF3: 'ten-frame-pond',
-  0xF4: 'build-a-habitat',
-  0xF5: 'care-pantry',
-  0xF6: 'scribes-tower',
-  0xF7: 'storytellers-pond',
-  0xF8: 'wheres-buddy',
-  0xF9: 'caretakers-bench',
-  0xFA: 'picnic-baskets',
-  0xFB: 'fluency-within-5',
+  0xF1: ActivityIds.countingParade,
+  0xF2: ActivityIds.shapeGarden,
+  0xF3: ActivityIds.tenFramePond,
+  0xF4: ActivityIds.buildAHabitat,
+  0xF5: ActivityIds.carePantry,
+  0xF6: ActivityIds.scribesTower,
+  0xF7: ActivityIds.storytellersPond,
+  0xF8: ActivityIds.wheresBuddy,
+  0xF9: ActivityIds.caretakersBench,
+  0xFA: ActivityIds.picnicBaskets,
+  0xFB: ActivityIds.fluencyWithin5,
 };
 
 /// Inverse of [kSanctuaryActivityByCode]. Lazily computed so it stays in

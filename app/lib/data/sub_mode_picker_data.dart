@@ -50,6 +50,7 @@
 // sayable, and in a five-year-old's vocabulary — every one of them goes
 // through the recording pipeline.
 
+import '../activities/activity_ids.dart';
 import 'asset_paths.dart';
 
 /// How a picker card draws itself.
@@ -159,7 +160,7 @@ class SubModePickerOption {
 /// sub-modes whose runtime hasn't shipped yet.
 final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
     <String, Map<String, SubModePickerOption>>{
-  'shape-garden': <String, SubModePickerOption>{
+  ActivityIds.shapeGarden: <String, SubModePickerOption>{
     'find-shape': SubModePickerOption(
       label: 'Find the shape',
       symbol:
@@ -184,7 +185,7 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
       ),
     ),
   },
-  'ten-frame-pond': <String, SubModePickerOption>{
+  ActivityIds.tenFramePond: <String, SubModePickerOption>{
     'fill-to-target': const SubModePickerOption(
       label: 'Fill the lily pads',
       symbol: PickerSprite(AssetPaths.tenFrameFrogGreen),
@@ -232,7 +233,7 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
       symbol: PickerSprite(AssetPaths.tenFrameFrogWaving),
     ),
   },
-  'care-pantry': <String, SubModePickerOption>{
+  ActivityIds.carePantry: <String, SubModePickerOption>{
     'simple-pantry': const SubModePickerOption(
       label: 'Tidy the pantry',
       symbol: PickerSprite(AssetPaths.carePantryAcorn),
@@ -265,7 +266,7 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
       ]),
     ),
   },
-  'scribes-tower': <String, SubModePickerOption>{
+  ActivityIds.scribesTower: <String, SubModePickerOption>{
     'trace-numeral': const SubModePickerOption(
       label: 'Trace a number',
       symbol: PickerSprite(AssetPaths.countingParadeFireflySprite),
@@ -302,7 +303,7 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
       symbol: PickerSprite(AssetPaths.countingParadeMoonlightOwl),
     ),
   },
-  'storytellers-pond': <String, SubModePickerOption>{
+  ActivityIds.storytellersPond: <String, SubModePickerOption>{
     'add-to': const SubModePickerOption(
       label: 'More are coming',
       symbol: PickerSprite(AssetPaths.storytellersDuckling),
@@ -350,7 +351,7 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
       symbol: PickerSprite(AssetPaths.countingParadeStarTurtle),
     ),
   },
-  'caretakers-bench': <String, SubModePickerOption>{
+  ActivityIds.caretakersBench: <String, SubModePickerOption>{
     'describe-attributes': const SubModePickerOption(
       label: 'Heavy or light',
       symbol: PickerScene(<PickerSceneLayer>[
@@ -377,7 +378,7 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
       symbol: PickerSprite(AssetPaths.caretakersLeaf),
     ),
   },
-  'picnic-baskets': <String, SubModePickerOption>{
+  ActivityIds.picnicBaskets: <String, SubModePickerOption>{
     'match-by-line': const SubModePickerOption(
       label: 'Find a partner',
       symbol: PickerSprite(AssetPaths.picnicBasket),
@@ -408,7 +409,7 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
       symbol: PickerSprite(AssetPaths.countingParadeBabyCentaur),
     ),
   },
-  'fluency-within-5': <String, SubModePickerOption>{
+  ActivityIds.fluencyWithin5: <String, SubModePickerOption>{
     'casual': const SubModePickerOption(
       label: 'Quick puzzles',
       symbol: PickerScene(<PickerSceneLayer>[
@@ -426,7 +427,7 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
       symbol: PickerSprite(AssetPaths.countingParadeSunbeamStag),
     ),
   },
-  'counting-parade': <String, SubModePickerOption>{
+  ActivityIds.countingParade: <String, SubModePickerOption>{
     'count-the-parade': const SubModePickerOption(
       label: 'Count the parade',
       symbol: PickerSprite(AssetPaths.countingParadeFawn),
@@ -456,7 +457,7 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
       symbol: PickerSprite(AssetPaths.countingParadeBabyDragon),
     ),
   },
-  'wheres-buddy': <String, SubModePickerOption>{
+  ActivityIds.wheresBuddy: <String, SubModePickerOption>{
     // K.G.1. Each card is the round in miniature, drawn with the landmark
     // sprites the playfield uses and with the kid's own Buddy — so what she
     // is choosing between is the *arrangement*, which is exactly what the
@@ -521,7 +522,7 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
       ]),
     ),
   },
-  'build-a-habitat': <String, SubModePickerOption>{
+  ActivityIds.buildAHabitat: <String, SubModePickerOption>{
     // K.G.5 + K.G.6 — build the frame with clay and sticks, then raise the
     // habitat with 3D pieces. The card draws the finished build straight from
     // the blueprint the sub-mode runs, so the three cards differ by the thing

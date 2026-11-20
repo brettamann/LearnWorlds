@@ -33,6 +33,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../activities/activity_ids.dart';
 import '../../coordinators/round_coordinator.dart';
 import '../../data/asset_paths.dart';
 import '../../data/button_labels.dart';
@@ -590,7 +591,7 @@ class _CountingParadeRunnerState extends ConsumerState<CountTheParadeRunner> {
     final result = gradeRound(misses: _wrongTaps, helped: hintsUsed > 0);
 
     ref.read(roundCoordinatorProvider).resolveRound(
-          activityId: 'counting-parade',
+          activityId: ActivityIds.countingParade,
           conceptId: 'K.CC.4a',
           result: result,
         );

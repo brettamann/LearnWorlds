@@ -23,6 +23,7 @@
 // round_coordinator.dart), which is close enough in shape and needs no
 // runtime catalog loader.
 
+import '../activities/activity_ids.dart';
 import 'asset_paths.dart';
 import 'parade_species.dart';
 
@@ -77,8 +78,6 @@ class CreatureCard {
   final CardSource source;
 }
 
-const String kCountingParadeActivityId = 'counting-parade';
-
 /// The card the Tens Parade challenge grants. Named here rather than written
 /// as a literal in the runner so that a typo is a compile error rather than a
 /// card that silently never arrives.
@@ -92,7 +91,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: 'fawn',
     spriteAsset: AssetPaths.countingParadeFawn,
     rarity: CardRarity.common,
-    activityId: kCountingParadeActivityId,
+    activityId: ActivityIds.countingParade,
   ),
   CreatureCard(
     id: 'creature-card-baby-gryphon',
@@ -100,7 +99,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: 'gryphon',
     spriteAsset: AssetPaths.countingParadeBabyGryphon,
     rarity: CardRarity.uncommon,
-    activityId: kCountingParadeActivityId,
+    activityId: ActivityIds.countingParade,
   ),
   CreatureCard(
     id: 'creature-card-baby-dragon',
@@ -108,7 +107,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: 'dragon',
     spriteAsset: AssetPaths.countingParadeBabyDragon,
     rarity: CardRarity.uncommon,
-    activityId: kCountingParadeActivityId,
+    activityId: ActivityIds.countingParade,
   ),
   CreatureCard(
     id: 'creature-card-baby-unicorn',
@@ -116,7 +115,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: 'unicorn',
     spriteAsset: AssetPaths.countingParadeBabyUnicorn,
     rarity: CardRarity.uncommon,
-    activityId: kCountingParadeActivityId,
+    activityId: ActivityIds.countingParade,
   ),
   CreatureCard(
     id: 'creature-card-baby-phoenix',
@@ -124,7 +123,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: 'phoenix',
     spriteAsset: AssetPaths.countingParadeBabyPhoenix,
     rarity: CardRarity.rare,
-    activityId: kCountingParadeActivityId,
+    activityId: ActivityIds.countingParade,
   ),
   CreatureCard(
     id: 'creature-card-baby-centaur',
@@ -132,7 +131,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: 'centaur',
     spriteAsset: AssetPaths.countingParadeBabyCentaur,
     rarity: CardRarity.uncommon,
-    activityId: kCountingParadeActivityId,
+    activityId: ActivityIds.countingParade,
   ),
   CreatureCard(
     id: 'creature-card-baby-toucan',
@@ -140,7 +139,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: 'toucan',
     spriteAsset: AssetPaths.countingParadeBabyToucan,
     rarity: CardRarity.common,
-    activityId: kCountingParadeActivityId,
+    activityId: ActivityIds.countingParade,
   ),
   CreatureCard(
     id: 'creature-card-golden-egg',
@@ -148,7 +147,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: 'golden-egg',
     spriteAsset: AssetPaths.countingParadeGoldenEgg,
     rarity: CardRarity.rare,
-    activityId: kCountingParadeActivityId,
+    activityId: ActivityIds.countingParade,
   ),
   // ---- The rest of the set -------------------------------------------
   // `sanctuary-creature-cards-set` is authored as 24 cards and ran as nine for
@@ -180,7 +179,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: null,
     spriteAsset: AssetPaths.countingParadeMossBunny,
     rarity: CardRarity.common,
-    activityId: 'shape-garden',
+    activityId: ActivityIds.shapeGarden,
   ),
   CreatureCard(
     id: 'creature-card-acorn-squirrel',
@@ -188,7 +187,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: null,
     spriteAsset: AssetPaths.countingParadeAcornSquirrel,
     rarity: CardRarity.common,
-    activityId: 'care-pantry',
+    activityId: ActivityIds.carePantry,
   ),
   CreatureCard(
     id: 'creature-card-berry-hedgehog',
@@ -196,7 +195,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: null,
     spriteAsset: AssetPaths.countingParadeBerryHedgehog,
     rarity: CardRarity.common,
-    activityId: 'picnic-baskets',
+    activityId: ActivityIds.picnicBaskets,
   ),
   CreatureCard(
     id: 'creature-card-meadow-frog',
@@ -204,7 +203,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: null,
     spriteAsset: AssetPaths.countingParadeMeadowFrog,
     rarity: CardRarity.common,
-    activityId: 'ten-frame-pond',
+    activityId: ActivityIds.tenFramePond,
   ),
   CreatureCard(
     id: 'creature-card-star-turtle',
@@ -212,7 +211,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: null,
     spriteAsset: AssetPaths.countingParadeStarTurtle,
     rarity: CardRarity.common,
-    activityId: 'storytellers-pond',
+    activityId: ActivityIds.storytellersPond,
   ),
   CreatureCard(
     id: 'creature-card-honey-cub',
@@ -220,7 +219,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: null,
     spriteAsset: AssetPaths.countingParadeHoneyCub,
     rarity: CardRarity.common,
-    activityId: 'picnic-baskets',
+    activityId: ActivityIds.picnicBaskets,
   ),
   CreatureCard(
     id: 'creature-card-pebble-mouse',
@@ -228,7 +227,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: null,
     spriteAsset: AssetPaths.countingParadePebbleMouse,
     rarity: CardRarity.common,
-    activityId: 'caretakers-bench',
+    activityId: ActivityIds.caretakersBench,
   ),
   CreatureCard(
     id: 'creature-card-firefly-sprite',
@@ -236,7 +235,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: null,
     spriteAsset: AssetPaths.countingParadeFireflySprite,
     rarity: CardRarity.common,
-    activityId: 'scribes-tower',
+    activityId: ActivityIds.scribesTower,
   ),
   CreatureCard(
     id: 'creature-card-baby-pegasus',
@@ -244,7 +243,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: null,
     spriteAsset: AssetPaths.countingParadeBabyPegasus,
     rarity: CardRarity.uncommon,
-    activityId: 'build-a-habitat',
+    activityId: ActivityIds.buildAHabitat,
   ),
   CreatureCard(
     id: 'creature-card-crystal-deer',
@@ -252,7 +251,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: null,
     spriteAsset: AssetPaths.countingParadeCrystalDeer,
     rarity: CardRarity.uncommon,
-    activityId: 'build-a-habitat',
+    activityId: ActivityIds.buildAHabitat,
   ),
   CreatureCard(
     id: 'creature-card-lantern-moth',
@@ -260,7 +259,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: null,
     spriteAsset: AssetPaths.countingParadeLanternMoth,
     rarity: CardRarity.uncommon,
-    activityId: 'scribes-tower',
+    activityId: ActivityIds.scribesTower,
   ),
   CreatureCard(
     id: 'creature-card-snow-fox',
@@ -268,7 +267,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: null,
     spriteAsset: AssetPaths.countingParadeSnowFox,
     rarity: CardRarity.uncommon,
-    activityId: 'wheres-buddy',
+    activityId: ActivityIds.wheresBuddy,
   ),
   CreatureCard(
     id: 'creature-card-rainbow-chameleon',
@@ -276,7 +275,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: null,
     spriteAsset: AssetPaths.countingParadeRainbowChameleon,
     rarity: CardRarity.uncommon,
-    activityId: 'wheres-buddy',
+    activityId: ActivityIds.wheresBuddy,
   ),
   CreatureCard(
     id: 'creature-card-moonlight-owl',
@@ -284,7 +283,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: null,
     spriteAsset: AssetPaths.countingParadeMoonlightOwl,
     rarity: CardRarity.rare,
-    activityId: 'fluency-within-5',
+    activityId: ActivityIds.fluencyWithin5,
   ),
   CreatureCard(
     id: 'creature-card-sunbeam-stag',
@@ -292,7 +291,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: null,
     spriteAsset: AssetPaths.countingParadeSunbeamStag,
     rarity: CardRarity.rare,
-    activityId: 'shape-garden',
+    activityId: ActivityIds.shapeGarden,
   ),
   // The ninth member of `sanctuary-creature-cards-set`, and the only one the
   // parade cast does not supply - hence the null speciesId the field's own
@@ -308,7 +307,7 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
     speciesId: null,
     spriteAsset: AssetPaths.countingParadeCloudUnicorn,
     rarity: CardRarity.rare,
-    activityId: kCountingParadeActivityId,
+    activityId: ActivityIds.countingParade,
     source: CardSource.challenge,
   ),
 ];

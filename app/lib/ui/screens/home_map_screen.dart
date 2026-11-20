@@ -20,6 +20,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../data/asset_paths.dart';
 import '../../data/map_labels.dart';
+import '../../navigation/routes.dart';
 import '../widgets/coin_hud.dart';
 import '../widgets/map_screen.dart';
 import '../widgets/map_side_rail.dart';
@@ -48,7 +49,7 @@ class HomeMapScreen extends ConsumerWidget {
             MapRailButton(
               icon: Icons.settings,
               caption: kRailSettingsLabel,
-              onPressed: () => context.go('/settings'),
+              onPressed: () => context.go(Routes.settings),
             ),
           ],
         ),
@@ -78,7 +79,7 @@ class HomeMapScreen extends ConsumerWidget {
             // Home hosts the Buddy character creator — picked here as the
             // first usable inhabitant of the Hub before furniture / avatar
             // work lands.
-            onTap: () => context.go('/home/character-creator'),
+            onTap: () => context.go(Routes.characterCreator),
           ),
           MapRegion(
             shape: MapRegionShape.circle,
@@ -101,7 +102,7 @@ class HomeMapScreen extends ConsumerWidget {
             id: 'mystic-sanctuary',
             label: kMysticSanctuaryRegionLabel,
             rect: const Rect.fromLTWH(0.678, 0.624, 0.162, 0.199),
-            onTap: () => context.go('/sanctuary'),
+            onTap: () => context.go(Routes.sanctuary),
           ),
         ],
       ),

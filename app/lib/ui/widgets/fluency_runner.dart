@@ -21,6 +21,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../activities/activity_ids.dart';
 import '../../data/asset_paths.dart';
 import '../../data/fluency_words.dart';
 import '../../data/sfx_catalog.dart';
@@ -54,7 +55,7 @@ class FluencyRunner extends ConsumerWidget {
       seed: ref.watch(sessionIdProvider).hashCode,
     );
     return SanctuaryRoundShell(
-      activityId: 'fluency-within-5',
+      activityId: ActivityIds.fluencyWithin5,
       roundCount: rounds.length,
       conceptIdFor: (_) => 'K.OA.5',
       introLine: kFluencyIntro,

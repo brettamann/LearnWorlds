@@ -24,6 +24,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../activities/activity_ids.dart';
 import '../../data/asset_paths.dart';
 import '../../data/caretakers_bench_words.dart';
 import '../../data/round_pick.dart';
@@ -59,7 +60,7 @@ class CaretakersBenchRunner extends ConsumerWidget {
       seed: roundSeed(ref.watch(sessionIdProvider), subMode),
     );
     return SanctuaryRoundShell(
-      activityId: 'caretakers-bench',
+      activityId: ActivityIds.caretakersBench,
       roundCount: rounds.length,
       conceptIdFor: (i) => subMode == kBenchSubDescribe ? 'K.MD.1' : 'K.MD.2',
       introLine: kBenchIntro,
