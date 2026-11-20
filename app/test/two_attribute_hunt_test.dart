@@ -23,8 +23,15 @@ import 'dart:io';
 
 import 'package:critmath/data/asset_paths.dart';
 import 'package:critmath/data/shape_colors.dart';
+import 'package:critmath/data/two_attribute_hunt_rounds.dart';
+import 'package:critmath/providers/wallet_provider.dart';
 import 'package:critmath/ui/widgets/two_attribute_hunt_runner.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'support/harness.dart';
 
 /// Colour words that could appear in a prompt, longest first so that a
 /// hypothetical "light green" is not read as "green".
@@ -38,6 +45,29 @@ String? _colorAsked(HuntRound round) {
     if (prompt.contains(word)) return word;
   }
   return null;
+}
+
+/// Taps every match on each board in turn, letting the celebration and the
+/// keeper aside run between them, until the finale's buttons are up.
+Future<void> _playAllRounds(WidgetTester tester) async {
+  for (final round in kTwoAttributeHuntRounds) {
+    final first = find.byKey(ValueKey('2attr-shape-${round.matches.first}'));
+    for (var i = 0; i < 30 && first.evaluate().isEmpty; i++) {
+      await tester.pump(const Duration(seconds: 1));
+    }
+    for (final id in round.matches) {
+      await tester.tap(
+        find.byKey(ValueKey('2attr-shape-$id')),
+        warnIfMissed: false,
+      );
+      await tester.pump(const Duration(milliseconds: 200));
+    }
+  }
+  final finale = find.byKey(const ValueKey('2attr-repeat'));
+  for (var i = 0; i < 30 && finale.evaluate().isEmpty; i++) {
+    await tester.pump(const Duration(seconds: 1));
+  }
+  expect(finale, findsOneWidget, reason: 'never reached the finale');
 }
 
 void main() {
@@ -129,5 +159,46 @@ void main() {
         }
       });
     }
+  });
+
+  testWidgets('the bonus is paid once per visit, however often she plays again',
+      (tester) async {
+    // "Again!" used to go through the same Continue that paid the bonus, so
+    // every replay of the challenge paid another 50 coins.
+    SharedPreferences.setMockInitialValues({});
+    useViewSize(tester);
+    final container = testContainer(sessionId: 'two-attr-bonus');
+    addTearDown(container.dispose);
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          home: Scaffold(
+            body: TwoAttributeHuntRunner(
+              onSequenceComplete: () {},
+              skipIntro: true,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await _playAllRounds(tester);
+    expect(container.read(walletProvider), kTwoAttributeHuntBonus);
+
+    for (var replay = 0; replay < 2; replay++) {
+      await tester.tap(find.byKey(const ValueKey('2attr-repeat')));
+      await tester.pump();
+      await _playAllRounds(tester);
+      expect(
+        container.read(walletProvider),
+        kTwoAttributeHuntBonus,
+        reason: 'replay ${replay + 1} paid the bonus again',
+      );
+      // And the replay's finale does not promise coins it is not paying.
+      expect(find.text(kTwoAttributeHuntReward), findsNothing);
+    }
+
+    await unmountAndDrain(tester);
   });
 }

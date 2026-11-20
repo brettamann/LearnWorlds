@@ -56,6 +56,7 @@ import 'storytellers_pond_words.dart';
 import 'sub_mode_picker_data.dart';
 import 'ten_frame_words.dart';
 import 'tens_parade_words.dart';
+import 'two_attribute_hunt_rounds.dart';
 import 'warm_lines.dart';
 import 'wheres_buddy_words.dart';
 
@@ -517,12 +518,14 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
 
       // ---- Two-attribute hunt -------------------------------------
       ScriptBatch(
-        id: 'two-attribute-miss',
-        title: 'Two-attribute hunt — the wrong-tap line',
-        note: 'One shape matched but not both. The warm line rotates.',
-        lines: <String>[
-          for (var n = 0; n < 4; n++) "That's not both. ${warmMissLine(n)}",
-        ],
+        id: 'two-attribute-hunt',
+        title: 'Two-attribute hunt - the Shape Garden challenge',
+        note: 'The opt-in challenge, so a little more energy than the garden. '
+            'The demonstration is four beats over a hand pointing at the '
+            'board; lean on BOTH, which is the whole idea. The wrong-tap line '
+            'is one shape that matched on one thing but not the other, and '
+            'its warm line rotates.',
+        lines: twoAttributeHuntScriptLines(),
       ),
 
       ScriptBatch(

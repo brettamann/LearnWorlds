@@ -5178,12 +5178,48 @@
       ]
     },
     {
-      "id": "two-attribute-miss",
-      "title": "Two-attribute hunt — the wrong-tap line",
-      "note": "One shape matched but not both. The warm line rotates.",
-      "variants": 4,
+      "id": "two-attribute-hunt",
+      "title": "Two-attribute hunt - the Shape Garden challenge",
+      "note": "The opt-in challenge, so a little more energy than the garden. The demonstration is four beats over a hand pointing at the board; lean on BOTH, which is the whole idea. The wrong-tap line is one shape that matched on one thing but not the other, and its warm line rotates.",
+      "variants": 17,
       "complete": true,
       "lines": [
+        {
+          "text": "Ready for the big sort? Each round names TWO things at once — tap every shape that matches BOTH. Get them all and earn 50 bonus coins!",
+          "clipKey": "ready-for-the-big-sort-each-round-names-two-thin__536bacbe"
+        },
+        {
+          "text": "Watch me. Each round needs both things at the same time.",
+          "clipKey": "watch-me-each-round-needs-both-things-at-the-sam__411e8ecd"
+        },
+        {
+          "text": "This square is green AND has four sides — both. Yes!",
+          "clipKey": "this-square-is-green-and-has-four-sides-both-yes__05f7c12b"
+        },
+        {
+          "text": "This triangle is green, but it has three sides — only one match. Not both.",
+          "clipKey": "this-triangle-is-green-but-it-has-three-sides-on__bf2d285d"
+        },
+        {
+          "text": "Your turn. Find every shape that matches BOTH!",
+          "clipKey": "your-turn-find-every-shape-that-matches-both__a1c68360"
+        },
+        {
+          "text": "Find every shape that is green and has four sides. Tap each one!",
+          "clipKey": "find-every-shape-that-is-green-and-has-four-side__6f7b78e6"
+        },
+        {
+          "text": "Find every shape that is round and big.",
+          "clipKey": "find-every-shape-that-is-round-and-big__6f42f3e2"
+        },
+        {
+          "text": "Find every shape that has corners and is yellow.",
+          "clipKey": "find-every-shape-that-has-corners-and-is-yellow__2ce999f8"
+        },
+        {
+          "text": "Yes! Both.",
+          "clipKey": "yes-both__96017ce8"
+        },
         {
           "text": "That's not both. Not that one. Look again.",
           "clipKey": "that-s-not-both-not-that-one-look-again__b8bd1083"
@@ -5199,6 +5235,22 @@
         {
           "text": "That's not both. Close! Have another look.",
           "clipKey": "that-s-not-both-close-have-another-look__7636164b"
+        },
+        {
+          "text": "Two green shapes with four sides — you spotted both!",
+          "clipKey": "two-green-shapes-with-four-sides-you-spotted-bot__1ee0335a"
+        },
+        {
+          "text": "Two big round things — both found!",
+          "clipKey": "two-big-round-things-both-found__b53a94fc"
+        },
+        {
+          "text": "Yellow with corners — sharp eye!",
+          "clipKey": "yellow-with-corners-sharp-eye__986dc81d"
+        },
+        {
+          "text": "All three rounds cleared! Two-attribute hunt is no match for you. Here are 50 bonus coins.",
+          "clipKey": "all-three-rounds-cleared-two-attribute-hunt-is-n__b1e2c42a"
         }
       ]
     },
@@ -6843,7 +6895,7 @@
       "id": "dart-literals",
       "title": "Lines written directly in Dart",
       "note": "Swept out of lib/ by tool/narration_sources.dart: the sanctuary prologue, const round keeperLines, reward dialog. Interpolated templates are excluded - their variants have to come from the catalog that fills the slot.",
-      "variants": 110,
+      "variants": 99,
       "complete": true,
       "lines": [
         {
@@ -6941,18 +6993,6 @@
         {
           "text": "Fifty dragons! Phoenix babies are next.",
           "clipKey": "fifty-dragons-phoenix-babies-are-next__da11696a"
-        },
-        {
-          "text": "Find every shape that has corners and is yellow.",
-          "clipKey": "find-every-shape-that-has-corners-and-is-yellow__2ce999f8"
-        },
-        {
-          "text": "Find every shape that is green and has four sides. Tap each one!",
-          "clipKey": "find-every-shape-that-is-green-and-has-four-side__6f7b78e6"
-        },
-        {
-          "text": "Find every shape that is round and big.",
-          "clipKey": "find-every-shape-that-is-round-and-big__6f42f3e2"
         },
         {
           "text": "Four fawns! Now I need some gryphons.",
@@ -7191,14 +7231,6 @@
           "clipKey": "this-is-a-circle-a-circle-has-no-sides-it-s-smoo__2c8cbd44"
         },
         {
-          "text": "This square is green AND has four sides — both. Yes!",
-          "clipKey": "this-square-is-green-and-has-four-sides-both-yes__05f7c12b"
-        },
-        {
-          "text": "This triangle is green, but it has three sides — only one match. Not both.",
-          "clipKey": "this-triangle-is-green-but-it-has-three-sides-on__bf2d285d"
-        },
-        {
           "text": "Today the parade is HUGE. Don't worry — we can count by tens! Watch how a big group of ten becomes one easy count.",
           "clipKey": "today-the-parade-is-huge-don-t-worry-we-can-coun__9c917ef3"
         },
@@ -7209,18 +7241,6 @@
         {
           "text": "Twenty fawns! The dragons are already up at forty.",
           "clipKey": "twenty-fawns-the-dragons-are-already-up-at-forty__b0669213"
-        },
-        {
-          "text": "Two big round things — both found!",
-          "clipKey": "two-big-round-things-both-found__b53a94fc"
-        },
-        {
-          "text": "Two green shapes with four sides — you spotted both!",
-          "clipKey": "two-green-shapes-with-four-sides-you-spotted-bot__1ee0335a"
-        },
-        {
-          "text": "Watch me. Each round needs both things at the same time.",
-          "clipKey": "watch-me-each-round-needs-both-things-at-the-sam__411e8ecd"
         },
         {
           "text": "Watch — I'll show you how to sort. The flat shapes go in the flat basket, the solid shapes in the solid basket.",
@@ -7255,14 +7275,6 @@
           "clipKey": "wow-you-learned-every-shape-in-the-garden__dc26985e"
         },
         {
-          "text": "Yellow with corners — sharp eye!",
-          "clipKey": "yellow-with-corners-sharp-eye__986dc81d"
-        },
-        {
-          "text": "Yes! Both.",
-          "clipKey": "yes-both__96017ce8"
-        },
-        {
           "text": "You counted all the new creatures! Wonderful work.",
           "clipKey": "you-counted-all-the-new-creatures-wonderful-work__248bae2e"
         },
@@ -7281,10 +7293,6 @@
         {
           "text": "You'll be my honorary keeper!",
           "clipKey": "you-ll-be-my-honorary-keeper__d9755fff"
-        },
-        {
-          "text": "Your turn. Find every shape that matches BOTH!",
-          "clipKey": "your-turn-find-every-shape-that-matches-both__a1c68360"
         }
       ]
     },

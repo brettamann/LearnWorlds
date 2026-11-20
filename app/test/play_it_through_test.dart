@@ -54,6 +54,7 @@ const List<String> _tapPrefixes = <String>[
   'scribe-fly',
   'garden-r',
   'sort-bin-',
+  '2attr-shape-',
 ];
 
 Future<ProviderContainer> _mount(WidgetTester tester, String key) async {

@@ -306,7 +306,8 @@ class _SanctuaryRoundShellState extends ConsumerState<SanctuaryRoundShell> {
     if (_isLastRound) {
       feedback.celebrate();
     } else {
-      feedback.roundPass();
+      // No coin clink on a visit that pays nothing per round.
+      feedback.roundPass(payout: widget.gradeRounds);
     }
     // A beat to see the finished board, and for the round's own last line -
     // "Seven!" - to land before the keeper speaks over it.
