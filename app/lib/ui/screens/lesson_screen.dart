@@ -37,6 +37,7 @@ import '../../models/we_try_script.dart';
 import '../../navigation/routes.dart';
 import '../../platform/sfx_engine.dart';
 import '../../ui/common/round_back_button.dart';
+import '../lesson/lesson_scene.dart';
 import '../lesson/lesson_stages.dart';
 import '../widgets/caption_overlay.dart';
 import '../widgets/clearing_lesson_stage.dart';
@@ -51,7 +52,6 @@ import '../widgets/shape_find_demo.dart';
 import '../widgets/shape_find_round.dart';
 import '../widgets/shape_intro_layer.dart';
 import '../widgets/we_try_halo.dart';
-import '../widgets/wheres_buddy_landmark_sprite.dart';
 
 /// Order the K.G.2 lesson introduces shapes in. Simple → complex; circles
 /// first (no sides, easiest), then the polygon ladder, then the imperfect
@@ -122,15 +122,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   // Per-shape sequence cursor (K.G.2 only). Indexes kShapeIntroSequence.
   int _currentShapeIdx = 0;
 
-  // Generic iShow scene state — used by the K.CC.4a fawn stage. Untouched
-  // by the shape sequence.
-  final Set<String> _sparkled = <String>{};
-  int? _badgeValue; // null = hidden
-  bool _pointerVisible = false;
-
-  /// K.G.1 only: the place the narrator is naming, and where Buddy stands.
-  String? _facingLandmarkId;
-  ClearingSpot? _buddySpot;
+  /// What the stage shows, and the rules for moving it. Driven by the I-Show
+  /// timeline and the We-Try beats; observed here.
+  final LessonScene _scene = LessonScene();
 
   /// We-Try interpreter state: how far down the compiled beat list we are,
   /// whether we are waiting on her, and how the last gate resolved (which
@@ -148,25 +142,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   /// The hand walking through targets the content asked the system to finish.
   final List<Timer> _weTryDemoTimers = <Timer>[];
 
-  /// What is lit right now, in scene-target ids. The halo is drawn over the
-  /// stage at the rect the stage registered, so this is also what a touch is
-  /// tested against — one source for "where to touch" and "did she".
-  final Set<String> _haloed = <String>{};
   final LessonTargetRegistry _targets = LessonTargetRegistry();
-
-  /// K.G.5 / K.G.6: which pieces of the shelter are down, and what the demo
-  /// hand is carrying to the frame.
-  final Set<int> _placedCorners = <int>{};
-  final Set<int> _placedEdges = <int>{};
-  final Set<int> _placedRoof = <int>{};
-  HabitatCarry _carrying = HabitatCarry.none;
-  bool _handVisible = false;
-  Offset? _handTarget;
-  bool _fawnHome = false;
-  String? _pointerTargetId;
-  bool _handAtTarget = false;
-  int _pokeCounter = 0;
-  final Map<String, int> _burstCounters = <String, int>{};
 
   /// Concept-specific keeper dialogue. Kept here so every introducing
   /// activity's keeper line lives in one place. The fawns line is the
@@ -225,6 +201,11 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     super.initState();
     _sfxForDispose = ref.read(sfxEngineProvider);
     _future = const LessonLoader().load(widget.lessonId);
+    _scene.addListener(_onSceneChanged);
+  }
+
+  void _onSceneChanged() {
+    if (mounted) setState(() {});
   }
 
   /// Claim the scene's bed as soon as the lesson has loaded.
@@ -352,7 +333,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
       _timers.add(
         Timer(Duration(seconds: at), () {
           if (!mounted) return;
-          _applyAnimationStep(step);
+          _scene.apply(step);
         }),
       );
     }
@@ -366,7 +347,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
         .toList();
     for (var i = 1; i < touches.length; i++) {
       final touch = touches[i];
-      final targetId = _resolveTargetId(touch.params['target']);
+      final targetId = LessonScene.resolveTargetId(touch.params['target']);
       if (targetId == null) continue;
       final touchAtMs = _parseSeconds(touch.at) * 1000;
       final preGlideAtMs = touchAtMs - handPointerGlideDuration.inMilliseconds;
@@ -374,10 +355,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
       _timers.add(
         Timer(Duration(milliseconds: preGlideAtMs), () {
           if (!mounted) return;
-          setState(() {
-            _pointerTargetId = targetId;
-            _handAtTarget = true;
-          });
+          _scene.aimAt(targetId);
         }),
       );
     }
@@ -398,151 +376,6 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
       }),
     );
   }
-
-  /// Resolves a JSON `target` / `position` value into a scene target id.
-  /// Strips the `left-of-` prefix that some `pointer-appear` steps use.
-  String? _resolveTargetId(Object? raw) {
-    if (raw is! String) return null;
-    final stripped = raw.startsWith('left-of-') ? raw.substring(8) : raw;
-    return stripped.isEmpty ? null : stripped;
-  }
-
-  void _applyAnimationStep(AnimationStep step) {
-    setState(() {
-      switch (step.action) {
-        // ---- K.G.1 clearing steps -------------------------------------
-        // Authored since the lesson was written and read by nothing, which is
-        // why K.G.1 fell through to three fawns.
-        case 'buddy-turn-toward':
-          final t = step.params['target'];
-          if (t is String) _facingLandmarkId = t;
-        case 'pointer-move-buddy':
-          final position = step.params['position'];
-          final landmark = step.params['landmark'];
-          if (position is String && landmark is String) {
-            _buddySpot = ClearingSpot(
-              landmarkId: landmark,
-              positionId: position,
-            );
-            _facingLandmarkId = landmark;
-            _pointerVisible = true;
-          }
-        case 'buddy-return-to-center':
-          _buddySpot = null;
-          _facingLandmarkId = null;
-        // ---- K.G.5 / K.G.6 build steps --------------------------------
-        case 'pointer-pickup-from-pool':
-          final kind = step.params['itemType'];
-          _carrying = switch (kind) {
-            'clay-ball' => HabitatCarry.clay,
-            'stick' => HabitatCarry.stick,
-            _ => HabitatCarry.roofPiece,
-          };
-          _handTarget = null;
-          _handVisible = true;
-        case 'pointer-place':
-        case 'pointer-place-clay':
-        case 'pointer-place-stick':
-          _placeHabitatPiece(step);
-        case 'ghost-outline-fade-out':
-          // The ghost is only drawn where a piece is missing, so the piece
-          // landing is the fade. Nothing to do, and saying so beats a silent
-          // default that reads as "unhandled".
-          break;
-        case 'fawn-walk-toward-habitat':
-        case 'fawn-enter-habitat':
-          _fawnHome = true;
-          _carrying = HabitatCarry.none;
-          _handVisible = false;
-        case 'frame-solidify-with-lift-stinger':
-          // The build is finished; the demonstrator's hand comes off it so
-          // the last thing she looks at is the frame she is about to make.
-          _handVisible = false;
-          _carrying = HabitatCarry.none;
-        // `directional-arrow` is authored and deliberately not drawn. The
-        // glide from centre stage to the spot already carries the direction,
-        // and it carries it from the same vector the round will use - an arrow
-        // drawn separately is a second statement of the same fact that can
-        // disagree with the first.
-        case 'pointer-appear':
-          _pointerVisible = true;
-          _handAtTarget = false;
-          final t = _resolveTargetId(step.params['position']) ??
-              _resolveTargetId(step.params['target']);
-          if (t != null) _pointerTargetId = t;
-        case 'pointer-touch':
-          _pointerVisible = true;
-          _handAtTarget = true;
-          final t = _resolveTargetId(step.params['target']);
-          if (t != null) _pointerTargetId = t;
-          _pokeCounter++;
-        case 'pointer-fade-out':
-          _pointerVisible = false;
-          _handAtTarget = false;
-          _pointerTargetId = null;
-          _handVisible = false;
-        case 'sparkle':
-          final t = _resolveTargetId(step.params['target']);
-          if (t != null) {
-            _sparkled.add(t);
-            _burstCounters[t] = (_burstCounters[t] ?? 0) + 1;
-          }
-        case 'count-badge-show':
-        case 'count-badge-update':
-          final v = step.params['value'];
-          if (v is num) _badgeValue = v.toInt();
-        default:
-          break;
-      }
-    });
-  }
-
-  /// Puts the carried piece on the target the step names.
-  ///
-  /// Targets are `vertex-N`, `edge-N` and the phase-2 ghost, which map one to
-  /// one onto the blueprint's corners, edges and roof — so the lesson places
-  /// pieces at exactly the spots the round will ask her to fill.
-  void _placeHabitatPiece(AnimationStep step) {
-    final target = step.params['target'];
-    final blueprint = kHabitatBlueprints[0];
-    if (target is String && target.startsWith('vertex-')) {
-      final i = (int.tryParse(target.substring(7)) ?? 1) - 1;
-      if (i >= 0 && i < blueprint.corners.length) _placedCorners.add(i);
-      _handTarget = _habitatCornerSpot(i);
-    } else if (target is String && target.startsWith('edge-')) {
-      final i = (int.tryParse(target.substring(5)) ?? 1) - 1;
-      if (i >= 0 && i < blueprint.edges.length) _placedEdges.add(i);
-      _handTarget = _habitatEdgeSpot(i);
-    } else {
-      // The phase-2 ghost. Only ever one piece in this blueprint.
-      _placedRoof.add(0);
-      _handTarget = _habitatRoofSpot();
-    }
-    _carrying = HabitatCarry.none;
-  }
-
-  /// Blueprint coordinates are normalized to the *build site*, which occupies
-  /// a sub-rectangle of the stage; the hand is positioned in stage space, so
-  /// each spot has to be mapped back out through that rectangle.
-  Offset _habitatStageSpot(Offset inBlueprintSpace) => Offset(
-        kHabitatSiteRect.left + inBlueprintSpace.dx * kHabitatSiteRect.width,
-        kHabitatSiteRect.top + inBlueprintSpace.dy * kHabitatSiteRect.height,
-      );
-
-  Offset _habitatCornerSpot(int i) =>
-      _habitatStageSpot(kHabitatBlueprints[0].corners[i]);
-
-  Offset _habitatEdgeSpot(int i) {
-    final pair = kHabitatBlueprints[0].edges[i];
-    final a = kHabitatBlueprints[0].corners[pair[0]];
-    final b = kHabitatBlueprints[0].corners[pair[1]];
-    return _habitatStageSpot(
-      Offset((a.dx + b.dx) / 2, (a.dy + b.dy) / 2),
-    );
-  }
-
-  Offset _habitatRoofSpot() =>
-      _habitatStageSpot(kHabitatBlueprints[0].roof.first.position);
 
   int _parseSeconds(String at) {
     final trimmed = at.endsWith('s') ? at.substring(0, at.length - 1) : at;
@@ -574,7 +407,6 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   //     owed the rest of her lesson anyway.
 
   void _startWeTry(LessonRuntime runtime) {
-    final weTry = runtime.weTry;
     setState(() {
       _phase = _LessonPhase.weTry;
       _continueEnabled = false;
@@ -584,46 +416,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
       _weTryUrgent = false;
       _weTryGate = null;
       _weTryWaiting = false;
-      _haloed
-        ..clear()
-        ..addAll(<String>[
-          if (weTry.initialGlowTarget != null) weTry.initialGlowTarget!,
-        ]);
-      // The demo hand belongs to the demonstrator. During her turn she is the
-      // hand, and leaving it on screen tells her to watch something that is
-      // waiting on her instead.
-      _pointerVisible = false;
-      _handVisible = false;
-      _handAtTarget = false;
-      _pointerTargetId = null;
-      // Her turn starts from a clean scene. The I-Show leaves every creature
-      // it counted lit, and opening the We-Try on top of that asks her to
-      // touch the first fawn while three of them are already glowing - so the
-      // halo, the one thing on screen telling her where to go, is competing
-      // with the leftovers of a demonstration that is over.
-      _sparkled.clear();
-      _burstCounters.clear();
-      _badgeValue = null;
-      _buddySpot = null;
-      _facingLandmarkId = null;
-      _fawnHome = false;
-      _carrying = HabitatCarry.none;
-      _handTarget = null;
-      // The build site is whatever this phase's own scene declares, not
-      // whatever the demonstration finished with.
-      _placedCorners.clear();
-      _placedEdges.clear();
-      _placedRoof.clear();
-      if (weTry.framePrebuilt) {
-        final blueprint = kHabitatBlueprints[0];
-        for (var i = 0; i < blueprint.corners.length; i++) {
-          _placedCorners.add(i);
-        }
-        for (var i = 0; i < blueprint.edges.length; i++) {
-          _placedEdges.add(i);
-        }
-      }
     });
+    _scene.resetForWeTry(runtime.weTry);
     _runWeTryBeat();
   }
 
@@ -695,12 +489,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
       // content spell it out keeps the choreography readable and, more to the
       // point, keeps it correct after she has placed a piece in an order the
       // author did not predict.
-      final lit = named.isNotEmpty ? named : _nextUnplacedFramePiece(beat);
-      setState(() {
-        _haloed
-          ..clear()
-          ..addAll(lit);
-      });
+      _scene.halo(
+        named.isNotEmpty ? named : _scene.nextUnplacedFramePiece(beat.action),
+      );
       return;
     }
     // `pointer-auto-*` is the system finishing what she started - the content
@@ -716,106 +507,17 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     // says "watch me" - the I-Show uses it for exactly this - so the takeover
     // uses it too, one target at a time, at the authored pace.
     if (beat.action.startsWith('pointer-auto')) {
-      setState(() {
-        _haloed.clear();
-        _autoCompleteFrame(beat.action);
-      });
+      _scene.autoCompleteFrame(beat.action);
       _walkTheHand(named, beat.params);
       return;
     }
     if (beat.action == 'frame-solidify') {
-      setState(_autoCompleteEverything);
+      _scene.completeFrame();
       return;
     }
-    _applyAnimationStep(
+    _scene.apply(
       AnimationStep(at: '0s', action: beat.action, params: beat.params),
     );
-  }
-
-  /// Puts the scene into the state the prompt asked for.
-  ///
-  /// "Put the Buddy above the star fountain" is answered by the Buddy being
-  /// above the star fountain. Without this the phase asks her for something,
-  /// she touches the ring, and nothing moves - which reads as the touch not
-  /// having registered, and is the single most likely way this whole phase
-  /// gets abandoned by a five-year-old.
-  ///
-  /// It runs on a miss too, and that is what the content means by "correct
-  /// steers; incorrect corrects": the corrective line names the right place
-  /// out loud, and then the right place is shown. Neither outcome asks her to
-  /// go again.
-  void _settleWeTryTargets(List<String> targets) {
-    for (final id in targets) {
-      final zone = parseClearingZone(id);
-      if (zone != null) {
-        _buddySpot = ClearingSpot(
-          landmarkId: zone.landmarkId,
-          positionId: zone.positionId,
-        );
-        _facingLandmarkId = zone.landmarkId;
-        continue;
-      }
-      // Habitat targets name a piece of the frame; the piece going down is
-      // what "she placed it" looks like.
-      final place = AnimationStep(
-        at: '0s',
-        action: 'pointer-place',
-        params: <String, dynamic>{'target': id},
-      );
-      _placeHabitatPiece(place);
-    }
-  }
-
-  /// The lowest-numbered piece of the frame that is not down yet.
-  ///
-  /// The habitat choreography says `halo-pulse-next-vertex` and
-  /// `halo-pulse-next-triangle` - a relative instruction, because the author
-  /// could not know which corner the kid would take first.
-  List<String> _nextUnplacedFramePiece(WeTryDo beat) {
-    final blueprint = kHabitatBlueprints[0];
-    if (beat.action.contains('vertex')) {
-      for (var i = 0; i < blueprint.corners.length; i++) {
-        if (!_placedCorners.contains(i)) return ['vertex-${i + 1}'];
-      }
-    }
-    if (beat.action.contains('edge') || beat.action.contains('stick')) {
-      for (var i = 0; i < blueprint.edges.length; i++) {
-        if (!_placedEdges.contains(i)) return ['edge-${i + 1}'];
-      }
-    }
-    return const <String>[];
-  }
-
-  /// "The system completes the rest", which fourteen lessons ask for by name.
-  ///
-  /// Without this the habitat We-Try takes her two taps and then leaves a
-  /// triangle with one corner and one stick on it while the narrator says the
-  /// frame is finished.
-  void _autoCompleteFrame(String action) {
-    final blueprint = kHabitatBlueprints[0];
-    if (action.contains('clay') || action.contains('vertex')) {
-      for (var i = 0; i < blueprint.corners.length; i++) {
-        _placedCorners.add(i);
-      }
-    }
-    if (action.contains('stick') || action.contains('edge')) {
-      for (var i = 0; i < blueprint.edges.length; i++) {
-        _placedEdges.add(i);
-      }
-    }
-  }
-
-  /// The frame stands. Every piece down, the hand off it.
-  void _autoCompleteEverything() {
-    final blueprint = kHabitatBlueprints[0];
-    for (var i = 0; i < blueprint.corners.length; i++) {
-      _placedCorners.add(i);
-    }
-    for (var i = 0; i < blueprint.edges.length; i++) {
-      _placedEdges.add(i);
-    }
-    _handVisible = false;
-    _carrying = HabitatCarry.none;
   }
 
   /// Touch each of [targets] in turn, with the hand visible, at the pace the
@@ -841,34 +543,18 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
       // that reads as somebody doing it.
       _weTryDemoTimers.add(
         Timer(spacing * i, () {
-          if (!mounted) return;
-          setState(() {
-            _pointerVisible = true;
-            _pointerTargetId = id;
-            _handAtTarget = false;
-          });
+          if (mounted) _scene.reachFor(id);
         }),
       );
       _weTryDemoTimers.add(
         Timer(spacing * i + spacing * 0.55, () {
-          if (!mounted) return;
-          setState(() {
-            _handAtTarget = true;
-            _pokeCounter++;
-            _sparkled.add(id);
-            _burstCounters[id] = (_burstCounters[id] ?? 0) + 1;
-          });
+          if (mounted) _scene.touch(id);
         }),
       );
     }
     _weTryDemoTimers.add(
       Timer(spacing * targets.length, () {
-        if (!mounted) return;
-        setState(() {
-          _pointerVisible = false;
-          _handAtTarget = false;
-          _pointerTargetId = null;
-        });
+        if (mounted) _scene.handAway();
       }),
     );
   }
@@ -885,12 +571,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
       _weTryGate = gate;
       _weTryWaiting = true;
       _weTryUrgent = false;
-      if (gate.targets.isNotEmpty) {
-        _haloed
-          ..clear()
-          ..addAll(gate.targets);
-      }
     });
+    if (gate.targets.isNotEmpty) _scene.halo(gate.targets);
     // The same three rungs as everywhere else: `adaptive-scaffolding.md` says
     // highlight, then a word, then demonstration, and `HintLadder` runs that
     // ladder in every round. The We-Try used to do something different and
@@ -936,7 +618,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   /// step by construction: she cannot be told she missed something the screen
   /// never showed her.
   List<String> _weTryTargets(WeTryGate gate) =>
-      gate.targets.isNotEmpty ? gate.targets : _haloed.toList();
+      gate.targets.isNotEmpty ? gate.targets : _scene.haloed.toList();
 
   /// A touch anywhere on the stage while a gate is open.
   void _onWeTryTouch(Offset globalPosition) {
@@ -960,15 +642,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
       _weTryGate = null;
       _weTryUrgent = false;
       _weTryLastPassed = passed;
-      _haloed.clear();
-      if (byHer) {
-        for (final id in settling) {
-          _sparkled.add(id);
-          _burstCounters[id] = (_burstCounters[id] ?? 0) + 1;
-        }
-      }
-      _settleWeTryTargets(settling);
     });
+    _scene.settleGate(settling, byHer: byHer);
 
     if (byHer) {
       // The same warm pop whether or not she landed on the target, and never
@@ -1065,6 +740,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     // SfxEngine counts claims, so releasing without claiming would give away
     // the next screen's music instead.
     if (_musicClaimed) _sfxForDispose?.releaseMusicBed();
+    _scene.dispose();
     super.dispose();
   }
 
@@ -1178,12 +854,12 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
               switch (runtime.conceptId) {
                 case 'K.CC.1':
                   return LessonClusterStage(
-                    badgeValue: _badgeValue,
+                    badgeValue: _scene.badgeValue,
                     targets: _targets,
                   );
                 case 'K.CC.2':
                   return LessonCountOnStage(
-                    badgeValue: _badgeValue,
+                    badgeValue: _scene.badgeValue,
                     targets: _targets,
                   );
                 case 'K.G.5':
@@ -1196,19 +872,19 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
                     placedCorners: runtime.conceptId == 'K.G.6' &&
                             _phase != _LessonPhase.weTry
                         ? <int>{0, 1, 2}
-                        : _placedCorners,
+                        : _scene.placedCorners,
                     placedEdges: runtime.conceptId == 'K.G.6' &&
                             _phase != _LessonPhase.weTry
                         ? <int>{0, 1, 2}
-                        : _placedEdges,
-                    placedRoof: _placedRoof,
+                        : _scene.placedEdges,
+                    placedRoof: _scene.placedRoof,
                     showRoof: _phase == _LessonPhase.weTry
                         ? runtime.weTry.showsRoof
                         : runtime.conceptId == 'K.G.6',
-                    carrying: _carrying,
-                    handVisible: _handVisible,
-                    pointerTarget: _handTarget,
-                    fawnHome: _fawnHome,
+                    carrying: _scene.carrying,
+                    handVisible: _scene.handVisible,
+                    pointerTarget: _scene.handTarget,
+                    fawnHome: _scene.fawnHome,
                     targets: _targets,
                   );
                 case 'K.G.1':
@@ -1216,11 +892,12 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
                     landmarkIds: _phase == _LessonPhase.weTry
                         ? runtime.weTry.landmarkIds
                         : runtime.iShow.landmarkIds,
-                    facingLandmarkId: _facingLandmarkId,
-                    spot: _buddySpot,
-                    pointerVisible: _pointerVisible,
+                    facingLandmarkId: _scene.facingLandmarkId,
+                    spot: _scene.buddySpot,
+                    pointerVisible: _scene.pointerVisible,
                     targets: _targets,
-                    zoneIds: _phase == _LessonPhase.weTry ? _haloed : const {},
+                    zoneIds:
+                        _phase == _LessonPhase.weTry ? _scene.haloed : const {},
                   );
               }
               // Anything that reaches here draws three fawns in a meadow, and
@@ -1228,13 +905,13 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
               // for. `lesson_scene_test.dart` holds the line: a lesson whose
               // scene is not made of creatures must not land here.
               return LessonFawnStage(
-                sparkled: _sparkled,
-                badgeValue: _badgeValue,
-                pointerVisible: _pointerVisible,
-                pointerTargetId: _pointerTargetId,
-                handAtTarget: _handAtTarget,
-                pokeCounter: _pokeCounter,
-                burstCounters: _burstCounters,
+                sparkled: _scene.sparkled,
+                badgeValue: _scene.badgeValue,
+                pointerVisible: _scene.pointerVisible,
+                pointerTargetId: _scene.pointerTargetId,
+                handAtTarget: _scene.handAtTarget,
+                pokeCounter: _scene.pokeCounter,
+                burstCounters: _scene.burstCounters,
                 count: _phase == _LessonPhase.weTry
                     ? runtime.weTry.creatureCount
                     : runtime.iShow.creatureCount,
@@ -1250,7 +927,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
               child: WeTryHaloLayer(
                 key: const ValueKey('we-try-layer'),
                 registry: _targets,
-                targets: _haloed,
+                targets: _scene.haloed,
                 urgent: _weTryUrgent,
                 onTouch: _weTryWaiting ? _onWeTryTouch : null,
               ),
