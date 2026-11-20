@@ -309,8 +309,18 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
         lines: <String>[
           for (final position in kWheresBuddyPrepositions.values)
             for (final landmark in kWheresBuddyLandmarkNames.values)
-              'Here — Buddy is $position $landmark. Right there.',
+              wheresBuddyRestate(preposition: position, landmark: landmark),
         ],
+      ),
+
+      ScriptBatch(
+        id: 'wheres-buddy-keeper',
+        title: "Where's Buddy — the keeper",
+        note: 'The opening for each sub-mode, the line over each finished '
+            'clearing, and the last beat of a visit. Warm and a little proud '
+            'of her; the position word in each round line is the one she '
+            'just got right.',
+        lines: wheresBuddyKeeperScriptLines(),
       ),
 
       ScriptBatch(

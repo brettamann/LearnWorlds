@@ -4181,6 +4181,75 @@
       ]
     },
     {
+      "id": "wheres-buddy-keeper",
+      "title": "Where's Buddy — the keeper",
+      "note": "The opening for each sub-mode, the line over each finished clearing, and the last beat of a visit. Warm and a little proud of her; the position word in each round line is the one she just got right.",
+      "variants": 15,
+      "complete": true,
+      "lines": [
+        {
+          "text": "The Buddy loves to play hide-and-seek. I'll tell you where they are hiding — tap the right spot!",
+          "clipKey": "the-buddy-loves-to-play-hide-and-seek-i-ll-tell__0ff64e76"
+        },
+        {
+          "text": "I'll tell you where the Buddy should go. Drag the Buddy next to, above, or behind the things in the meadow.",
+          "clipKey": "i-ll-tell-you-where-the-buddy-should-go-drag-the__0e001e60"
+        },
+        {
+          "text": "Here is a tricky one. I will name two things, and you put Buddy right in the middle of them.",
+          "clipKey": "here-is-a-tricky-one-i-will-name-two-things-and__1abaa39c"
+        },
+        {
+          "text": "Every position found! You really know your above, below, and beside.",
+          "clipKey": "every-position-found-you-really-know-your-above__dc1d5efd"
+        },
+        {
+          "text": "Every middle found. Between is a hard one, and you have it.",
+          "clipKey": "every-middle-found-between-is-a-hard-one-and-you__e500caac"
+        },
+        {
+          "text": "Above! Right where I asked.",
+          "clipKey": "above-right-where-i-asked__b91fc6f3"
+        },
+        {
+          "text": "Below the mushroom — perfect.",
+          "clipKey": "below-the-mushroom-perfect__10a42db8"
+        },
+        {
+          "text": "Right next to the tree!",
+          "clipKey": "right-next-to-the-tree__895b3167"
+        },
+        {
+          "text": "Behind the cottage. Sneaky!",
+          "clipKey": "behind-the-cottage-sneaky__b1d4c3c5"
+        },
+        {
+          "text": "In front of the rocks. Nice spot.",
+          "clipKey": "in-front-of-the-rocks-nice-spot__007b71aa"
+        },
+        {
+          "text": "Beside the pond — you got it.",
+          "clipKey": "beside-the-pond-you-got-it__c06c4419"
+        },
+        {
+          "text": "Right in the middle. That is what between means!",
+          "clipKey": "right-in-the-middle-that-is-what-between-means__e3f44df2"
+        },
+        {
+          "text": "Between the pond and the rocks. Exactly.",
+          "clipKey": "between-the-pond-and-the-rocks-exactly__788c34b3"
+        },
+        {
+          "text": "Halfway between the two. Well done.",
+          "clipKey": "halfway-between-the-two-well-done__09eb785e"
+        },
+        {
+          "text": "You found the middle again. Buddy is impressed.",
+          "clipKey": "you-found-the-middle-again-buddy-is-impressed__dee6fa94"
+        }
+      ]
+    },
+    {
       "id": "wheres-buddy-prompt",
       "title": "Where's Buddy — the instruction",
       "note": "Every position against every landmark, in both modes: one asks her to put Buddy somewhere, the other to say where Buddy is. Nothing on screen says this, so the line is the whole task. Keep the preposition clear - above and below are the point.",
@@ -6726,7 +6795,7 @@
       "id": "dart-literals",
       "title": "Lines written directly in Dart",
       "note": "Swept out of lib/ by tool/narration_sources.dart: the sanctuary prologue, const round keeperLines, reward dialog. Interpolated templates are excluded - their variants have to come from the catalog that fills the slot.",
-      "variants": 123,
+      "variants": 108,
       "complete": true,
       "lines": [
         {
@@ -6750,10 +6819,6 @@
           "clipKey": "a-unicorn-gazebo-five-sides-and-a-starlit-dome-o__eb0535d7"
         },
         {
-          "text": "Above! Right where I asked.",
-          "clipKey": "above-right-where-i-asked__b91fc6f3"
-        },
-        {
           "text": "Almost done — one last basket-round!",
           "clipKey": "almost-done-one-last-basket-round__908df413"
         },
@@ -6772,22 +6837,6 @@
         {
           "text": "Beautifully counted! Tap the arrow to keep going.",
           "clipKey": "beautifully-counted-tap-the-arrow-to-keep-going__54892763"
-        },
-        {
-          "text": "Behind the cottage. Sneaky!",
-          "clipKey": "behind-the-cottage-sneaky__b1d4c3c5"
-        },
-        {
-          "text": "Below the mushroom — perfect.",
-          "clipKey": "below-the-mushroom-perfect__10a42db8"
-        },
-        {
-          "text": "Beside the pond — you got it.",
-          "clipKey": "beside-the-pond-you-got-it__c06c4419"
-        },
-        {
-          "text": "Between the pond and the rocks. Exactly.",
-          "clipKey": "between-the-pond-and-the-rocks-exactly__788c34b3"
         },
         {
           "text": "Big to one side, small to the other — perfect.",
@@ -6816,14 +6865,6 @@
         {
           "text": "Every habitat is built! The Sanctuary feels cosy and safe.",
           "clipKey": "every-habitat-is-built-the-sanctuary-feels-cosy__0a0ca2aa"
-        },
-        {
-          "text": "Every middle found. Between is a hard one, and you have it.",
-          "clipKey": "every-middle-found-between-is-a-hard-one-and-you__e500caac"
-        },
-        {
-          "text": "Every position found! You really know your above, below, and beside.",
-          "clipKey": "every-position-found-you-really-know-your-above__dc1d5efd"
         },
         {
           "text": "Every shape sorted! You can group things by all kinds of differences.",
@@ -6862,14 +6903,6 @@
           "clipKey": "great-counting-by-tens-tap-the-arrow-to-keep-goi__38df920e"
         },
         {
-          "text": "Halfway between the two. Well done.",
-          "clipKey": "halfway-between-the-two-well-done__09eb785e"
-        },
-        {
-          "text": "Here is a tricky one. I will name two things, and you put Buddy right in the middle of them.",
-          "clipKey": "here-is-a-tricky-one-i-will-name-two-things-and__1abaa39c"
-        },
-        {
           "text": "I found this while you were counting, and it was all by itself! It needs someone to care for it. Keep it with you — maybe it'll hatch some day!",
           "clipKey": "i-found-this-while-you-were-counting-and-it-was__ea19768d"
         },
@@ -6878,16 +6911,8 @@
           "clipKey": "i-need-your-help-around-the-various-parts-of-the__0c625a7d"
         },
         {
-          "text": "I'll tell you where the Buddy should go. Drag the Buddy next to, above, or behind the things in the meadow.",
-          "clipKey": "i-ll-tell-you-where-the-buddy-should-go-drag-the__0e001e60"
-        },
-        {
           "text": "I'm in charge of this mystical sanctuary.",
           "clipKey": "i-m-in-charge-of-this-mystical-sanctuary__11971eaa"
-        },
-        {
-          "text": "In front of the rocks. Nice spot.",
-          "clipKey": "in-front-of-the-rocks-nice-spot__007b71aa"
         },
         {
           "text": "Let's build a habitat together! Clay balls go in the corners, sticks go along the sides — then we add shapes on top to make the roof. Ready? Let's start.",
@@ -7006,14 +7031,6 @@
           "clipKey": "place-clay-in-both-corners-first-then-the-stick__7a80e73b"
         },
         {
-          "text": "Right in the middle. That is what between means!",
-          "clipKey": "right-in-the-middle-that-is-what-between-means__e3f44df2"
-        },
-        {
-          "text": "Right next to the tree!",
-          "clipKey": "right-next-to-the-tree__895b3167"
-        },
-        {
           "text": "Round things together, pointy things together. That's grouping by curves.",
           "clipKey": "round-things-together-pointy-things-together-tha__b6fa1b1f"
         },
@@ -7096,10 +7113,6 @@
         {
           "text": "That basket is for shapes with three sides. Try another!",
           "clipKey": "that-basket-is-for-shapes-with-three-sides-try-a__db096be4"
-        },
-        {
-          "text": "The Buddy loves to play hide-and-seek. I'll tell you where they are hiding — tap the right spot!",
-          "clipKey": "the-buddy-loves-to-play-hide-and-seek-i-ll-tell__0ff64e76"
         },
         {
           "text": "Thing is, it's a lot for anyone to do.",
@@ -7196,10 +7209,6 @@
         {
           "text": "You counted them all! Tap the arrow to keep going.",
           "clipKey": "you-counted-them-all-tap-the-arrow-to-keep-going__f6596451"
-        },
-        {
-          "text": "You found the middle again. Buddy is impressed.",
-          "clipKey": "you-found-the-middle-again-buddy-is-impressed__dee6fa94"
         },
         {
           "text": "You learned every shape in the garden!",

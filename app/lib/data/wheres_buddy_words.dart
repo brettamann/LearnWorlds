@@ -11,6 +11,11 @@
 // getters rather than repeating them, so the two cannot drift. A duplicated
 // word list would fail silently: the clip would be rendered under the old
 // wording and the game would speak the new one in the synth voice.
+//
+// The rounds and the keeper's lines live here too, so the recording script
+// enumerates exactly what the runner plays.
+
+import '../activities/sub_mode_ids.dart';
 
 /// Landmark id -> the words the narrator uses for it.
 /// Landmark id -> the words the narrator says for it.
@@ -88,12 +93,11 @@ const String kWheresBuddyBetween = 'between';
 /// across it, so the midpoint lands in open grass rather than on top of a
 /// third landmark — a target sitting on the mushroom would teach "put Buddy on
 /// the mushroom", which is the wrong answer to a question about between-ness.
-/// The pairing is checked in `wheres_buddy_relational_test.dart`.
-const List<(String, String)> kWheresBuddyRelationalPairs = <(String, String)>[
-  ('hollow-tree', 'mushroom'),
-  ('pond', 'rock-cluster'),
-  ('fountain', 'cottage'),
-  ('rock-cluster', 'hollow-tree'),
+/// The pairing is checked in `wheres_buddy_relational_test.dart`. Read off
+/// [kWheresBuddyRelationalRounds], so the two cannot disagree.
+final List<(String, String)> kWheresBuddyRelationalPairs = <(String, String)>[
+  for (final r in kWheresBuddyRelationalRounds)
+    (r.landmarkId, r.secondLandmarkId!),
 ];
 
 /// "Put Buddy between the hollow tree and the giant mushroom."
@@ -117,3 +121,184 @@ String wheresBuddyRelationalRestate(String landmarkIdA, String landmarkIdB) =>
     'Here — right in the middle, $kWheresBuddyBetween '
     '${kWheresBuddyLandmarkNames[landmarkIdA]} and '
     '${kWheresBuddyLandmarkNames[landmarkIdB]}.';
+
+/// "Here — Buddy is above the pond. Right there."
+///
+/// What the narrator says after three wrong attempts, while the zone glows -
+/// wheres-buddy.md mandates it.
+String wheresBuddyRestate({
+  required String preposition,
+  required String landmark,
+}) =>
+    'Here — Buddy is $preposition $landmark. Right there.';
+
+/// One round.
+///
+/// Ordinarily one landmark and one position word; the six rounds rotate the
+/// six K.G.1 prepositions across the clearing. The challenge instead names
+/// *two* landmarks and no position word, and the target becomes the point
+/// between them.
+class WheresBuddyRound {
+  const WheresBuddyRound({
+    required this.landmarkId,
+    required this.keeperLine,
+    this.positionId,
+    this.secondLandmarkId,
+  });
+
+  final String landmarkId;
+
+  /// Null on a relational round: "between" is not an offset from anything, so
+  /// there is no vector to apply and no single preposition to speak.
+  final String? positionId;
+
+  /// The other end of a relational round, or null for the ordinary ones.
+  final String? secondLandmarkId;
+
+  /// What the keeper says over the finished clearing.
+  final String keeperLine;
+
+  bool get isRelational => secondLandmarkId != null;
+}
+
+const List<WheresBuddyRound> kWheresBuddyRounds = <WheresBuddyRound>[
+  WheresBuddyRound(
+    landmarkId: 'fountain',
+    positionId: 'above',
+    keeperLine: 'Above! Right where I asked.',
+  ),
+  WheresBuddyRound(
+    landmarkId: 'mushroom',
+    positionId: 'below',
+    keeperLine: 'Below the mushroom — perfect.',
+  ),
+  WheresBuddyRound(
+    landmarkId: 'hollow-tree',
+    positionId: 'next-to',
+    keeperLine: 'Right next to the tree!',
+  ),
+  WheresBuddyRound(
+    landmarkId: 'cottage',
+    positionId: 'behind',
+    keeperLine: 'Behind the cottage. Sneaky!',
+  ),
+  WheresBuddyRound(
+    landmarkId: 'rock-cluster',
+    positionId: 'in-front-of',
+    keeperLine: 'In front of the rocks. Nice spot.',
+  ),
+  WheresBuddyRound(
+    landmarkId: 'pond',
+    positionId: 'beside',
+    keeperLine: 'Beside the pond — you got it.',
+  ),
+];
+
+/// The challenge: four rounds, each naming two landmarks.
+const List<WheresBuddyRound> kWheresBuddyRelationalRounds = <WheresBuddyRound>[
+  WheresBuddyRound(
+    landmarkId: 'hollow-tree',
+    secondLandmarkId: 'mushroom',
+    keeperLine: 'Right in the middle. That is what between means!',
+  ),
+  WheresBuddyRound(
+    landmarkId: 'pond',
+    secondLandmarkId: 'rock-cluster',
+    keeperLine: 'Between the pond and the rocks. Exactly.',
+  ),
+  WheresBuddyRound(
+    landmarkId: 'fountain',
+    secondLandmarkId: 'cottage',
+    keeperLine: 'Halfway between the two. Well done.',
+  ),
+  WheresBuddyRound(
+    landmarkId: 'rock-cluster',
+    secondLandmarkId: 'hollow-tree',
+    keeperLine: 'You found the middle again. Buddy is impressed.',
+  ),
+];
+
+/// How many of the six words a single sitting plays.
+const int kWheresBuddyRoundsPerSitting = 4;
+
+/// The sub-mode a launch actually plays. place-mode for anything
+/// unrecognised: dragging Buddy somewhere is the safer thing to hand a child
+/// than a mode she cannot finish.
+String wheresBuddyMode(String subMode) => switch (subMode) {
+      WheresBuddyModes.findMode => WheresBuddyModes.findMode,
+      WheresBuddyModes.relationalMode => WheresBuddyModes.relationalMode,
+      _ => WheresBuddyModes.placeMode,
+    };
+
+/// The rounds this sub-mode plays, offset by mode.
+///
+/// find-mode takes words 0-3, place-mode takes 2-5. Both modes still teach
+/// four prepositions, all six are covered across the activity, and a kid who
+/// plays both doesn't get the same six-item list twice in a row - which was
+/// a large part of why the activity felt like a worksheet.
+List<WheresBuddyRound> wheresBuddyRoundsFor(String subMode) {
+  final mode = wheresBuddyMode(subMode);
+  if (mode == WheresBuddyModes.relationalMode) {
+    return kWheresBuddyRelationalRounds;
+  }
+  final offset = mode == WheresBuddyModes.findMode
+      ? 0
+      : kWheresBuddyRounds.length - kWheresBuddyRoundsPerSitting;
+  return kWheresBuddyRounds.sublist(
+    offset,
+    offset + kWheresBuddyRoundsPerSitting,
+  );
+}
+
+String _prepositionOf(WheresBuddyRound r) =>
+    kWheresBuddyPrepositions[r.positionId ?? 'above'] ??
+    r.positionId ??
+    'above';
+
+String _landmarkOf(String id) => kWheresBuddyLandmarkNames[id] ?? id;
+
+/// The round's instruction - the whole task, since nothing on screen says it.
+String wheresBuddyRoundPrompt(WheresBuddyRound r, {required bool placing}) =>
+    r.isRelational
+        ? wheresBuddyRelationalPrompt(r.landmarkId, r.secondLandmarkId!)
+        : wheresBuddyPrompt(
+            preposition: _prepositionOf(r),
+            landmark: _landmarkOf(r.landmarkId),
+            placing: placing,
+          );
+
+/// What the narrator says while showing her the answer.
+String wheresBuddyRoundRestate(WheresBuddyRound r) => r.isRelational
+    ? wheresBuddyRelationalRestate(r.landmarkId, r.secondLandmarkId!)
+    : wheresBuddyRestate(
+        preposition: _prepositionOf(r),
+        landmark: _landmarkOf(r.landmarkId),
+      );
+
+String wheresBuddyIntro(String subMode) => switch (wheresBuddyMode(subMode)) {
+      WheresBuddyModes.findMode =>
+        "The Buddy loves to play hide-and-seek. I'll tell you "
+            'where they are hiding — tap the right spot!',
+      WheresBuddyModes.relationalMode =>
+        'Here is a tricky one. I will name two things, and you put '
+            'Buddy right in the middle of them.',
+      _ => "I'll tell you where the Buddy should go. Drag the "
+          'Buddy next to, above, or behind the things in the meadow.',
+    };
+
+String wheresBuddyFinal(String subMode) =>
+    wheresBuddyMode(subMode) == WheresBuddyModes.relationalMode
+        ? 'Every middle found. Between is a hard one, and you have it.'
+        : 'Every position found! You really know your above, below, and '
+            'beside.';
+
+const String kWheresBuddyStartLabel = "Let's play!";
+
+/// Every keeper line the activity can say, for the recording script.
+List<String> wheresBuddyKeeperScriptLines() => <String>[
+      for (final mode in WheresBuddyModes.all) wheresBuddyIntro(mode),
+      wheresBuddyFinal(WheresBuddyModes.placeMode),
+      wheresBuddyFinal(WheresBuddyModes.relationalMode),
+      for (final r in kWheresBuddyRounds) r.keeperLine,
+      for (final r in kWheresBuddyRelationalRounds) r.keeperLine,
+    ];
