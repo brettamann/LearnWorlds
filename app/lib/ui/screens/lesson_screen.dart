@@ -28,24 +28,23 @@ import '../../data/build_a_habitat_blueprints.dart';
 import '../../data/button_labels.dart';
 import '../../data/lesson_loader.dart';
 import '../../data/sfx_catalog.dart';
-import '../../data/warm_lines.dart';
 import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../models/lesson_runtime.dart';
-import '../../models/we_try_script.dart';
 import '../../navigation/routes.dart';
 import '../../platform/sfx_engine.dart';
 import '../../ui/common/round_back_button.dart';
+import '../lesson/ishow_timeline.dart';
 import '../lesson/lesson_scene.dart';
 import '../lesson/lesson_stages.dart';
+import '../lesson/we_try_runner.dart';
 import '../widgets/caption_overlay.dart';
 import '../widgets/clearing_lesson_stage.dart';
 import '../widgets/habitat_lesson_stage.dart';
 import '../widgets/keeper_intro_overlay.dart';
 import '../widgets/kg3_flat_or_solid_lesson_layer.dart';
 import '../widgets/kg4_sort_by_attribute_lesson_layer.dart';
-import '../widgets/lesson_hand_pointer.dart';
 import '../widgets/lesson_target_registry.dart';
 import '../widgets/next_arrow_button.dart';
 import '../widgets/shape_find_demo.dart';
@@ -109,7 +108,6 @@ enum _LessonPhase {
 
 class _LessonScreenState extends ConsumerState<LessonScreen> {
   Future<LessonRuntime>? _future;
-  final List<Timer> _timers = [];
   bool _continueEnabled = false;
   bool _skipEnabled = false;
   LessonRuntime? _runtime;
@@ -126,21 +124,11 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   /// timeline and the We-Try beats; observed here.
   final LessonScene _scene = LessonScene();
 
-  /// We-Try interpreter state: how far down the compiled beat list we are,
-  /// whether we are waiting on her, and how the last gate resolved (which
-  /// selects the `on-correct` / `on-incorrect` beats below it).
-  int _weTryCursor = 0;
-  bool _weTryWaiting = false;
-  bool _weTryLastPassed = true;
-  bool _weTryUrgent = false;
-  WeTryGate? _weTryGate;
-  Timer? _weTryBeatTimer;
-  Timer? _weTryHesitationTimer;
-  Timer? _weTryNudgeTimer;
-  Timer? _weTryRescueTimer;
+  /// The I-Show's clock, while it runs.
+  IShowTimeline? _iShow;
 
-  /// The hand walking through targets the content asked the system to finish.
-  final List<Timer> _weTryDemoTimers = <Timer>[];
+  /// The We-Try's interpreter, while it runs.
+  WeTryRunner? _weTry;
 
   final LessonTargetRegistry _targets = LessonTargetRegistry();
 
@@ -312,371 +300,41 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   }
 
   void _scheduleIShow(LessonRuntime runtime) {
-    final player = ref.narration;
-
-    // Narration cues.
-    for (final cue in runtime.iShow.narrationScript) {
-      final at = _parseSeconds(cue.at);
-      _timers.add(
-        Timer(Duration(seconds: at), () {
-          if (!mounted) return;
-          player.speak(
-            NarrationLine(text: cue.text, cueId: 'ishow:${cue.at}'),
-          );
-        }),
-      );
-    }
-
-    // Animation steps.
-    for (final step in runtime.iShow.animationSteps) {
-      final at = _parseSeconds(step.at);
-      _timers.add(
-        Timer(Duration(seconds: at), () {
-          if (!mounted) return;
-          _scene.apply(step);
-        }),
-      );
-    }
-
-    // Pre-glide the hand to each `pointer-touch` target so the poke +
-    // sparkle + narration land in sync at the touch moment. The first
-    // touch is arranged by the upstream `pointer-appear` step (or starts
-    // mid-screen if there isn't one); we only need 2nd onward.
-    final touches = runtime.iShow.animationSteps
-        .where((s) => s.action == 'pointer-touch')
-        .toList();
-    for (var i = 1; i < touches.length; i++) {
-      final touch = touches[i];
-      final targetId = LessonScene.resolveTargetId(touch.params['target']);
-      if (targetId == null) continue;
-      final touchAtMs = _parseSeconds(touch.at) * 1000;
-      final preGlideAtMs = touchAtMs - handPointerGlideDuration.inMilliseconds;
-      if (preGlideAtMs <= 0) continue;
-      _timers.add(
-        Timer(Duration(milliseconds: preGlideAtMs), () {
-          if (!mounted) return;
-          _scene.aimAt(targetId);
-        }),
-      );
-    }
-
-    final skipAt = runtime.iShow.skipAvailableAfterSec;
-    if (skipAt > 0) {
-      _timers.add(
-        Timer(Duration(seconds: skipAt), () {
-          if (!mounted) return;
-          setState(() => _skipEnabled = true);
-        }),
-      );
-    }
-    _timers.add(
-      Timer(Duration(seconds: runtime.iShow.durationSec), () {
-        if (!mounted) return;
-        setState(() => _continueEnabled = true);
-      }),
-    );
+    _iShow?.dispose();
+    _iShow = IShowTimeline(
+      show: runtime.iShow,
+      scene: _scene,
+      say: (text, cueId) => ref.narration.say(text, cueId: cueId),
+      onSkipAvailable: () {
+        if (mounted) setState(() => _skipEnabled = true);
+      },
+      onContinueAvailable: () {
+        if (mounted) setState(() => _continueEnabled = true);
+      },
+    )..start();
   }
 
-  int _parseSeconds(String at) {
-    final trimmed = at.endsWith('s') ? at.substring(0, at.length - 1) : at;
-    return int.tryParse(trimmed) ?? 0;
-  }
-
-  // ==========================================================================
-  // We-Try - the middle third
-  // ==========================================================================
-  //
-  // The phase cannot be failed. Every lesson's `passCondition` says so in its
-  // own words ("any tap passes", "even one drag is enough; system completes
-  // the rest"), so her touch is never graded: it chooses which of two warm
-  // lines she hears, and the demonstration carries on either way. What the
-  // phase is actually for is the touch itself - an I-Show she watched and a
-  // You-Do she is graded on, with nothing in between, is the gap this closes.
-  //
-  // Two rules that are not in the authored data, both there to keep the screen
-  // from ever going quiet on her:
-  //
-  //   * No beat starts before the previous line has finished speaking.
-  //     `NarrationPlayer.enqueue` holds two and silently drops the rest, so a
-  //     run of narration beats 0.5s apart would lose most of itself - and the
-  //     lines it loses are the ones answering what she just did.
-  //   * A gate always resolves. The authored hesitation rule re-lights the
-  //     target at 5s, and whether or not it says `auto-complete`, the step
-  //     completes itself at twice that. "Highlight and keep waiting" has no
-  //     floor, and a five-year-old who has decided not to touch this one is
-  //     owed the rest of her lesson anyway.
-
+  /// Her turn: guided practice, run by WeTryRunner.
   void _startWeTry(LessonRuntime runtime) {
+    _iShow?.dispose();
+    _iShow = null;
     setState(() {
       _phase = _LessonPhase.weTry;
       _continueEnabled = false;
       _skipEnabled = false;
-      _weTryCursor = 0;
-      _weTryLastPassed = true;
-      _weTryUrgent = false;
-      _weTryGate = null;
-      _weTryWaiting = false;
     });
-    _scene.resetForWeTry(runtime.weTry);
-    _runWeTryBeat();
-  }
-
-  /// Runs the beat at the cursor, then schedules the next.
-  void _runWeTryBeat() {
-    if (!mounted || _phase != _LessonPhase.weTry) return;
-    final script = _runtime?.weTry.script;
-    if (script == null) return;
-
-    // Skip beats belonging to the outcome the last gate did not have.
-    while (_weTryCursor < script.beats.length) {
-      final candidate = script.beats[_weTryCursor];
-      final matches = switch (candidate.when) {
-        WeTryWhen.always => true,
-        WeTryWhen.onPass => _weTryLastPassed,
-        WeTryWhen.onFail => !_weTryLastPassed,
-      };
-      if (matches) break;
-      _weTryCursor++;
-    }
-    if (_weTryCursor >= script.beats.length) {
-      _finishWeTry();
-      return;
-    }
-
-    final beat = script.beats[_weTryCursor++];
-    var settle = Duration.zero;
-
-    switch (beat) {
-      case WeTryEnd():
-        _finishWeTry();
-        return;
-      case WeTryGate():
-        _openWeTryGate(beat);
-        return;
-      case WeTrySay():
-        ref.narration.say(beat.text, cueId: 'wetry:${beat.cueId}');
-        settle = narrationSpokenEstimate(beat.text);
-      case WeTryDo():
-        _applyWeTryAction(beat);
-    }
-    _scheduleNextWeTryBeat(settle);
-  }
-
-  /// The next beat waits for its authored gap or for the current line to
-  /// finish, whichever is longer.
-  void _scheduleNextWeTryBeat(Duration settle) {
-    final script = _runtime!.weTry.script;
-    final next = script.beats.length > _weTryCursor
-        ? script.beats[_weTryCursor].delay
-        : Duration.zero;
-    _weTryBeatTimer?.cancel();
-    _weTryBeatTimer = Timer(next > settle ? next : settle, _runWeTryBeat);
-  }
-
-  /// Scene changes during We-Try. Halo actions are handled here because the
-  /// halo is this phase's own affordance; everything else goes to the same
-  /// applier the I-Show uses, so a lesson does not have to author its scene
-  /// twice to have it move in both phases.
-  void _applyWeTryAction(WeTryDo beat) {
-    final named = <String>[
-      if (beat.params['target'] is String) beat.params['target'] as String,
-      for (final t in beat.params['targets'] as List<dynamic>? ?? const [])
-        if (t is String) t,
-    ];
-    if (beat.action.startsWith('halo')) {
-      // `halo-pulse-next-vertex` and friends name no target: "next" is
-      // whatever is still missing. Resolving that here rather than making the
-      // content spell it out keeps the choreography readable and, more to the
-      // point, keeps it correct after she has placed a piece in an order the
-      // author did not predict.
-      _scene.halo(
-        named.isNotEmpty ? named : _scene.nextUnplacedFramePiece(beat.action),
-      );
-      return;
-    }
-    // `pointer-auto-*` is the system finishing what she started - the content
-    // asks for it by name in nine lessons ("system completes the rest"). The
-    // halo comes off with it: nothing is being asked of her while it runs.
-    //
-    // It has to be something she can *watch*. This used to light every named
-    // target at once, in one frame, with no hand and without honouring the
-    // `spacingSec` the content asks for - so from the player's side two fawns
-    // she had been told to touch lit up by themselves and the lesson moved
-    // on. That was the first thing reported from a real session, and the word
-    // for it was "jarring". The demonstrator's hand is already how this game
-    // says "watch me" - the I-Show uses it for exactly this - so the takeover
-    // uses it too, one target at a time, at the authored pace.
-    if (beat.action.startsWith('pointer-auto')) {
-      _scene.autoCompleteFrame(beat.action);
-      _walkTheHand(named, beat.params);
-      return;
-    }
-    if (beat.action == 'frame-solidify') {
-      _scene.completeFrame();
-      return;
-    }
-    _scene.apply(
-      AnimationStep(at: '0s', action: beat.action, params: beat.params),
-    );
-  }
-
-  /// Touch each of [targets] in turn, with the hand visible, at the pace the
-  /// content asked for.
-  ///
-  /// Nothing here waits on her, so it schedules rather than gating: the beat
-  /// after this one is already timed off the narration, and a walk that ran
-  /// longer than its own line would collide with it. Anything past the time
-  /// the content allowed is dropped rather than rushed - which is why the
-  /// spacing is clamped rather than trusted.
-  void _walkTheHand(List<String> targets, Map<String, dynamic> params) {
-    _cancelWeTryDemo();
-    if (targets.isEmpty) return;
-    final spacing = Duration(
-      milliseconds: (((params['spacingSec'] as num?)?.toDouble() ?? 0.9) * 1000)
-          .round()
-          .clamp(400, 2000),
-    );
-    for (var i = 0; i < targets.length; i++) {
-      final id = targets[i];
-      // Reach for it, then touch it. Two beats rather than one because the
-      // hand animates between the two positions, and the movement is the part
-      // that reads as somebody doing it.
-      _weTryDemoTimers.add(
-        Timer(spacing * i, () {
-          if (mounted) _scene.reachFor(id);
-        }),
-      );
-      _weTryDemoTimers.add(
-        Timer(spacing * i + spacing * 0.55, () {
-          if (mounted) _scene.touch(id);
-        }),
-      );
-    }
-    _weTryDemoTimers.add(
-      Timer(spacing * targets.length, () {
-        if (mounted) _scene.handAway();
-      }),
-    );
-  }
-
-  void _cancelWeTryDemo() {
-    for (final t in _weTryDemoTimers) {
-      t.cancel();
-    }
-    _weTryDemoTimers.clear();
-  }
-
-  void _openWeTryGate(WeTryGate gate) {
-    setState(() {
-      _weTryGate = gate;
-      _weTryWaiting = true;
-      _weTryUrgent = false;
-    });
-    if (gate.targets.isNotEmpty) _scene.halo(gate.targets);
-    // The same three rungs as everywhere else: `adaptive-scaffolding.md` says
-    // highlight, then a word, then demonstration, and `HintLadder` runs that
-    // ladder in every round. The We-Try used to do something different and
-    // much sharper - the `auto-complete` rule resolved the gate outright at
-    // the threshold, so five seconds of a five-year-old looking at the screen
-    // ended her turn without a word and without anything visibly happening.
-    // Five seconds is a long time to an adult watching and no time at all to
-    // a child deciding which fawn is the first one.
-    //
-    // What the rule's two spellings now choose is what the *last* rung does:
-    // `auto-complete` finishes the step with the hand, `highlight-target`
-    // resolves it quietly and moves the halo on. Neither of them fires before
-    // she has had the highlight and the nudge.
-    final rule = _runtime!.weTry.script.hesitation;
-    _weTryHesitationTimer?.cancel();
-    _weTryHesitationTimer = Timer(rule.after, () {
-      if (!mounted || !_weTryWaiting) return;
-      setState(() => _weTryUrgent = true);
-    });
-    _weTryNudgeTimer?.cancel();
-    _weTryNudgeTimer = Timer(rule.after * 2, () {
-      if (!mounted || !_weTryWaiting) return;
-      ref.read(feedbackEngineProvider).hint();
-      ref.narration.say(warmHintLine(2), cueId: 'we-try:hesitation-nudge');
-    });
-    _weTryRescueTimer?.cancel();
-    _weTryRescueTimer = Timer(rule.after * 3, () {
-      if (!mounted || !_weTryWaiting) return;
-      final gate = _weTryGate;
-      if (rule.autoCompletes && gate != null) {
-        _walkTheHand(_weTryTargets(gate).take(1).toList(), const {});
-      }
-      _resolveWeTryGate(passed: true, byHer: false);
-    });
-  }
-
-  /// What her touch was about.
-  ///
-  /// Most gates name a target. The habitat ones name only a gesture
-  /// ("drag-clay-to-vertex", any vertex acceptable) because the author did not
-  /// want to fix an order - so the thing she was asked about is the thing that
-  /// was lit when she was asked. Reading it off the halo also keeps the two in
-  /// step by construction: she cannot be told she missed something the screen
-  /// never showed her.
-  List<String> _weTryTargets(WeTryGate gate) =>
-      gate.targets.isNotEmpty ? gate.targets : _scene.haloed.toList();
-
-  /// A touch anywhere on the stage while a gate is open.
-  void _onWeTryTouch(Offset globalPosition) {
-    final gate = _weTryGate;
-    if (!_weTryWaiting || gate == null) return;
-    _resolveWeTryGate(
-      passed: _targets.hits(_weTryTargets(gate), globalPosition),
-      byHer: true,
-    );
-  }
-
-  void _resolveWeTryGate({required bool passed, required bool byHer}) {
-    final gate = _weTryGate;
-    if (gate == null) return;
-    _weTryHesitationTimer?.cancel();
-    _weTryNudgeTimer?.cancel();
-    _weTryRescueTimer?.cancel();
-    final settling = _weTryTargets(gate);
-    setState(() {
-      _weTryWaiting = false;
-      _weTryGate = null;
-      _weTryUrgent = false;
-      _weTryLastPassed = passed;
-    });
-    _scene.settleGate(settling, byHer: byHer);
-
-    if (byHer) {
-      // The same warm pop whether or not she landed on the target, and never
-      // `FeedbackEngine.wrong()`. A touch that went somewhere else is not a
-      // wrong answer here - the phase has none - and answering it with the
-      // sound the You-Do uses for a miss would teach her it was one. The
-      // corrective line is the correction, and it names the right place
-      // rather than asking her again.
-      ref.read(feedbackEngineProvider).correct();
-    }
-
-    var settle = Duration.zero;
-    // Falling back across the pair rather than saying nothing. Several lessons
-    // author only a passCue, because their passCondition has no failure in it
-    // ("any drag onto a valid target passes") - and a beat that answers her
-    // touch with silence is the exact thing this phase exists to stop.
-    final line = passed
-        ? (gate.passText ?? gate.failText)
-        : (gate.failText ?? gate.passText);
-    if (line != null) {
-      ref.narration.say(line, cueId: 'wetry:gate');
-      settle = narrationSpokenEstimate(line);
-    }
-    _scheduleNextWeTryBeat(settle);
-  }
-
-  void _finishWeTry() {
-    _weTryBeatTimer?.cancel();
-    _weTryHesitationTimer?.cancel();
-    _weTryNudgeTimer?.cancel();
-    _weTryRescueTimer?.cancel();
-    _cancelWeTryDemo();
-    _goToYouDo();
+    final feedback = ref.read(feedbackEngineProvider);
+    _weTry = WeTryRunner(
+      phase: runtime.weTry,
+      scene: _scene,
+      say: (text, cueId) => ref.narration.say(text, cueId: cueId),
+      chime: feedback.hint,
+      pop: feedback.correct,
+      hits: _targets.hits,
+      onFinished: _goToYouDo,
+    )
+      ..addListener(_onSceneChanged)
+      ..start();
   }
 
   /// Lessons whose body already contains its own guided practice, and which
@@ -727,14 +385,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
 
   @override
   void dispose() {
-    for (final t in _timers) {
-      t.cancel();
-    }
-    _weTryBeatTimer?.cancel();
-    _weTryHesitationTimer?.cancel();
-    _weTryNudgeTimer?.cancel();
-    _weTryRescueTimer?.cancel();
-    _cancelWeTryDemo();
+    _iShow?.dispose();
+    _weTry?.dispose();
     // Only if it was actually claimed. The claim happens from build(), once a
     // runtime has loaded, so a lesson closed before that never took one — and
     // SfxEngine counts claims, so releasing without claiming would give away
@@ -928,8 +580,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
                 key: const ValueKey('we-try-layer'),
                 registry: _targets,
                 targets: _scene.haloed,
-                urgent: _weTryUrgent,
-                onTouch: _weTryWaiting ? _onWeTryTouch : null,
+                urgent: _weTry?.urgent ?? false,
+                onTouch: (_weTry?.waiting ?? false) ? _weTry!.touch : null,
               ),
             ),
           const CaptionOverlay(),
