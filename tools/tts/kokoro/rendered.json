@@ -15918,6 +15918,46 @@
       "bytes": 29184,
       "seconds": 3.6,
       "format": "mp3"
+    },
+    "stick__5510e66b": {
+      "text": "Stick.",
+      "batch": "habitat-lines",
+      "voice": "af_heart",
+      "bytes": 5184,
+      "seconds": 0.58,
+      "format": "mp3"
+    },
+    "a-cube-it-goes-on-top__4bfe26f4": {
+      "text": "A cube. It goes on top.",
+      "batch": "habitat-lines",
+      "voice": "af_heart",
+      "bytes": 12480,
+      "seconds": 1.5,
+      "format": "mp3"
+    },
+    "a-cone-it-goes-on-top__06dc100e": {
+      "text": "A cone. It goes on top.",
+      "batch": "habitat-lines",
+      "voice": "af_heart",
+      "bytes": 12672,
+      "seconds": 1.54,
+      "format": "mp3"
+    },
+    "a-sphere-it-goes-on-top__02db8b04": {
+      "text": "A sphere. It goes on top.",
+      "batch": "habitat-lines",
+      "voice": "af_heart",
+      "bytes": 13056,
+      "seconds": 1.56,
+      "format": "mp3"
+    },
+    "a-cylinder-it-goes-on-top__944c70a5": {
+      "text": "A cylinder. It goes on top.",
+      "batch": "habitat-lines",
+      "voice": "af_heart",
+      "bytes": 14400,
+      "seconds": 1.74,
+      "format": "mp3"
     }
   }
 }
