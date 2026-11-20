@@ -36,17 +36,6 @@ class RoundCoordinator {
   final math.Random _random;
   static const _engine = MasteryEngine();
 
-  /// Coins per round, by outcome (per project-bootstrap §rewards).
-  ///
-  /// Note that even a failure pays. A five-year-old must never watch the coin
-  /// counter fail to move — specs/shared/adaptive-scaffolding.md is emphatic
-  /// that this system is "never punitive", and a zero payout is a punishment
-  /// whatever we call it. The gap between 5 and 1 is enough to make clean
-  /// rounds feel better without making a hard one feel like a loss.
-  static const _coinsPerRoundPass = 5;
-  static const _coinsPerSoftPass = 3;
-  static const _coinsPerFailure = 1;
-
   void resolveRound({
     required String activityId,
     required String conceptId,
@@ -65,12 +54,7 @@ class RoundCoordinator {
     );
     final next = _engine.apply(state, outcome);
     progress.put(next);
-    final coins = switch (result) {
-      RoundResult.success => _coinsPerRoundPass,
-      RoundResult.softSuccess => _coinsPerSoftPass,
-      RoundResult.failure => _coinsPerFailure,
-    };
-    _ref.read(walletProvider.notifier).award(coins);
+    _ref.read(walletProvider.notifier).award(coinsFor(result));
     // A failed round still pays coins but never drops a card: the coin floor
     // exists so the counter never freezes, while a card is a find, and finding
     // something for getting it wrong would make the find mean nothing.

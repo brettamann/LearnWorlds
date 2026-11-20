@@ -232,7 +232,7 @@ class _SanctuaryRoundShellState extends ConsumerState<SanctuaryRoundShell> {
           NarrationLine(
             text: widget.introLine,
             cueId: '${widget.activityId}:intro',
-            speaker: 'sanctuary-keeper-mystic',
+            speaker: kKeeperSpeaker,
           ),
         );
   }
@@ -287,7 +287,7 @@ class _SanctuaryRoundShellState extends ConsumerState<SanctuaryRoundShell> {
               NarrationLine(
                 text: widget.finalLine,
                 cueId: '${widget.activityId}:finale',
-                speaker: 'sanctuary-keeper-mystic',
+                speaker: kKeeperSpeaker,
               ),
               caption: false,
             );
@@ -301,7 +301,7 @@ class _SanctuaryRoundShellState extends ConsumerState<SanctuaryRoundShell> {
             NarrationLine(
               text: widget.keeperLineFor(_round),
               cueId: '${widget.activityId}:r$_round:aside',
-              speaker: 'sanctuary-keeper-mystic',
+              speaker: kKeeperSpeaker,
             ),
             caption: false,
           );

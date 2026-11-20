@@ -498,7 +498,7 @@ class _PondRoundBodyState extends ConsumerState<PondRoundBody> {
     if (_r.twoColors) widget.onSplit(green);
     widget.c.say(pondDoneLine(_r, green: green), replay: false, queue: true);
     final helped = (_hints?.hintsUsed ?? 0) > 0 || _sameWayTries > 0;
-    widget.c.finish(helped ? RoundResult.softSuccess : RoundResult.success);
+    widget.c.finish(gradeRound(helped: helped));
   }
 
   // ---- the challenge: how many? --------------------------------------------
@@ -526,11 +526,8 @@ class _PondRoundBodyState extends ConsumerState<PondRoundBody> {
     });
     feedback.correct();
     widget.c.say(pondDoneLine(_r), replay: false);
-    final result = _misses >= 3
-        ? RoundResult.failure
-        : (_misses == 0 && (_hints?.hintsUsed ?? 0) == 0
-            ? RoundResult.success
-            : RoundResult.softSuccess);
+    final result =
+        gradeRound(misses: _misses, helped: (_hints?.hintsUsed ?? 0) > 0);
     widget.c.finish(result);
   }
 

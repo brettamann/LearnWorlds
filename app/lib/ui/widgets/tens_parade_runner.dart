@@ -150,7 +150,7 @@ class _TensParadeRunnerState extends ConsumerState<TensParadeRunner> {
           NarrationLine(
             text: _rewardDialog,
             cueId: 'tens-parade:reward',
-            speaker: 'sanctuary-keeper-mystic',
+            speaker: kKeeperSpeaker,
           ),
         );
   }

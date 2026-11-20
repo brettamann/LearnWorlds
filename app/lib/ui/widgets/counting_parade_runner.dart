@@ -128,12 +128,6 @@ const Duration _kBuddyWalk = Duration(milliseconds: 850);
 /// the keeper interstitial appears with the reward message.
 const Duration _kFinalCelebrationHold = Duration(seconds: 2);
 
-/// Mirrors `RoundCoordinator._coinsPerRoundPass`. The final reward line
-/// reports `_coinsPerRound * rounds.length` total coins; the
-/// constant lives here too so the wording stays in sync if either side
-/// changes. (Both sides should land in a shared reward config later.)
-const int _coinsPerRound = 5;
-
 /// Sub-modes the Counting Parade activity supports.
 const String kCountingParadeSubModeCountTheParade = 'count-the-parade';
 const String kCountingParadeSubModeCountForwardFromN = 'count-forward-from-n';
@@ -307,7 +301,7 @@ class _CountingParadeRunnerState extends ConsumerState<CountTheParadeRunner> {
   /// Reward line spoken by the keeper after the final celebration. Reports
   /// the total coins earned this visit so the kid hears the concrete result.
   String get _finalKeeperLine =>
-      paradeRewardLine(_rounds.length * _coinsPerRound);
+      paradeRewardLine(_rounds.length * kCoinsForCleanRound);
 
   /// The between-round line. Generated rather than authored per-species,
   /// because a shuffled order can't use a hardcoded "now the gryphons".
@@ -499,7 +493,7 @@ class _CountingParadeRunnerState extends ConsumerState<CountTheParadeRunner> {
           NarrationLine(
             text: _introDialog,
             cueId: 'parade:intro',
-            speaker: 'sanctuary-keeper-mystic',
+            speaker: kKeeperSpeaker,
           ),
         );
   }
@@ -523,7 +517,7 @@ class _CountingParadeRunnerState extends ConsumerState<CountTheParadeRunner> {
           NarrationLine(
             text: paradeSpeciesIntroLine(_currentCreature),
             cueId: 'parade:species-intro-r$_roundIndex',
-            speaker: 'sanctuary-keeper-mystic',
+            speaker: kKeeperSpeaker,
           ),
         );
     // Held long enough to outlast the spoken line rather than the read — the
@@ -605,11 +599,7 @@ class _CountingParadeRunnerState extends ConsumerState<CountTheParadeRunner> {
     // adaptive-scaffolding.md §Hint Layer: a round that needed a hint "counts
     // as soft-success; does NOT advance promotion streak".
     final hintsUsed = _hints?.hintsUsed ?? 0;
-    final result = _wrongTaps >= 3
-        ? RoundResult.failure
-        : (_wrongTaps == 0 && hintsUsed == 0
-            ? RoundResult.success
-            : RoundResult.softSuccess);
+    final result = gradeRound(misses: _wrongTaps, helped: hintsUsed > 0);
 
     ref.read(roundCoordinatorProvider).resolveRound(
           activityId: 'counting-parade',
@@ -638,7 +628,7 @@ class _CountingParadeRunnerState extends ConsumerState<CountTheParadeRunner> {
               NarrationLine(
                 text: _finalKeeperLine,
                 cueId: 'parade:reward',
-                speaker: 'sanctuary-keeper-mystic',
+                speaker: kKeeperSpeaker,
               ),
             );
       });
@@ -664,7 +654,7 @@ class _CountingParadeRunnerState extends ConsumerState<CountTheParadeRunner> {
           NarrationLine(
             text: _transitionLine,
             cueId: 'parade:interstitial-r$_roundIndex',
-            speaker: 'sanctuary-keeper-mystic',
+            speaker: kKeeperSpeaker,
           ),
         );
   }

@@ -190,11 +190,7 @@ class _FluencyRoundBodyState extends ConsumerState<FluencyRoundBody> {
       _hints?.pause();
       final helped = (_hints?.hintsUsed ?? 0) > 0;
       widget.c.finish(
-        _misses >= 4
-            ? RoundResult.failure
-            : (_misses == 0 && !helped
-                ? RoundResult.success
-                : RoundResult.softSuccess),
+        gradeRound(misses: _misses, helped: helped, failAt: 4),
       );
       return;
     }

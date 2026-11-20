@@ -62,7 +62,7 @@ class _SanctuaryCutsceneScreenState
           NarrationLine(
             text: _pages[_page],
             cueId: 'sanctuary:kickoff-p$_page',
-            speaker: 'sanctuary-keeper-mystic',
+            speaker: kKeeperSpeaker,
           ),
         );
   }

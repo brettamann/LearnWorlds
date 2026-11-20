@@ -27,6 +27,7 @@
 //     three hundred.
 
 import '../engines/activity_runner/round_plan.dart';
+import '../engines/mastery/round_outcome.dart';
 import '../models/reward_track.dart';
 import '../platform/narration_clip_key.dart';
 import 'button_labels.dart';
@@ -88,9 +89,8 @@ class ScriptBatch {
 }
 
 /// Coin totals the parade reward line can report: one per plausible round
-/// count, at the five-coins-a-pass rate RoundCoordinator uses.
+/// count, at the clean-round rate RoundCoordinator pays.
 const List<int> _kRewardRoundCounts = <int>[3, 4, 5, 6, 7, 8];
-const int _kCoinsPerRound = 5;
 
 /// Every batch, most-heard first. Recording strictly down this list means the
 /// game gets warmer fastest per minute at the microphone.
@@ -517,7 +517,7 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
         note: 'The keeper handing over the coins at the end of a visit.',
         lines: <String>[
           for (final rounds in _kRewardRoundCounts)
-            paradeRewardLine(rounds * _kCoinsPerRound),
+            paradeRewardLine(rounds * kCoinsForCleanRound),
         ],
       ),
       ScriptBatch(

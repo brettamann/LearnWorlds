@@ -610,7 +610,7 @@ class _TwoAttributeHuntRunnerState
               NarrationLine(
                 text: _currentRound.keeperLine,
                 cueId: '2attr:r$_roundIndex:interstitial',
-                speaker: 'sanctuary-keeper-mystic',
+                speaker: kKeeperSpeaker,
               ),
             );
       });
@@ -629,7 +629,7 @@ class _TwoAttributeHuntRunnerState
             NarrationLine(
               text: _currentRound.keeperLine,
               cueId: '2attr:r$_roundIndex:interstitial',
-              speaker: 'sanctuary-keeper-mystic',
+              speaker: kKeeperSpeaker,
             ),
           );
     });
@@ -643,7 +643,7 @@ class _TwoAttributeHuntRunnerState
           NarrationLine(
             text: _rewardDialog,
             cueId: '2attr:reward',
-            speaker: 'sanctuary-keeper-mystic',
+            speaker: kKeeperSpeaker,
           ),
         );
   }

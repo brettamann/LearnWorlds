@@ -219,11 +219,7 @@ class _BenchRoundBodyState extends ConsumerState<BenchRoundBody> {
     _hints?.pause();
     final helped = (_hints?.hintsUsed ?? 0) > 0;
     widget.c.finish(
-      _misses >= 3
-          ? RoundResult.failure
-          : (_misses == 0 && !helped
-              ? RoundResult.success
-              : RoundResult.softSuccess),
+      gradeRound(misses: _misses, helped: helped),
     );
   }
 

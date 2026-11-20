@@ -80,7 +80,7 @@ class _RewardGiftScreenState extends ConsumerState<RewardGiftScreen> {
           const NarrationLine(
             text: RewardGiftScreen.kMysteryEggDialog,
             cueId: 'reward:k-mystery-egg:gift',
-            speaker: 'sanctuary-keeper-mystic',
+            speaker: kKeeperSpeaker,
           ),
         );
   }

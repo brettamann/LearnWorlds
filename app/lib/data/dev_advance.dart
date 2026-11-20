@@ -26,6 +26,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../engines/mastery/round_outcome.dart';
 import '../models/reward_track.dart';
 import '../providers/app_providers.dart';
 import '../providers/exploration_provider.dart';
@@ -35,10 +36,9 @@ import '../providers/sub_mode_progress_provider.dart';
 import '../providers/wallet_provider.dart';
 import 'sanctuary_sequence.dart';
 
-/// Production coin grant per round pass. Mirrors
-/// `RoundCoordinator._coinsPerRoundPass`. Kept here as a constant so the
-/// dev tool grants the same amount honest play would.
-const int kDevAdvanceCoinsPerActivity = 5;
+/// Production coin grant per round pass, so the dev tool grants the same
+/// amount honest play would.
+const int kDevAdvanceCoinsPerActivity = kCoinsForCleanRound;
 
 class DevAdvanceOption {
   const DevAdvanceOption({

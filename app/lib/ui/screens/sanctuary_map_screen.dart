@@ -232,7 +232,7 @@ class _SanctuaryMapScreenState extends ConsumerState<SanctuaryMapScreen> {
           NarrationLine(
             text: text,
             cueId: cueId,
-            speaker: 'sanctuary-keeper-mystic',
+            speaker: kKeeperSpeaker,
           ),
         );
   }

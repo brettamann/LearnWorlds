@@ -91,7 +91,7 @@ void _speak(WidgetRef ref, CreatureCard card, bool found) {
         NarrationLine(
           text: found ? cardFoundLine(card) : kCardNotFoundLine,
           cueId: 'collection:card-${card.id}',
-          speaker: 'sanctuary-keeper-mystic',
+          speaker: kKeeperSpeaker,
         ),
       );
 }

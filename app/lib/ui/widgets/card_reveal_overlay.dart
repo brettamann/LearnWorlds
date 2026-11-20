@@ -91,7 +91,7 @@ class _CardRevealOverlayState extends ConsumerState<CardRevealOverlay>
             NarrationLine(
               text: cardRevealLine(card),
               cueId: 'card-reveal:${card.id}',
-              speaker: 'sanctuary-keeper-mystic',
+              speaker: kKeeperSpeaker,
             ),
             // The card already shows the name in bigger type than the caption
             // bar would.

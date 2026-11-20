@@ -249,7 +249,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
           NarrationLine(
             text: _keeperIntroDialog(runtime),
             cueId: 'lesson:keeper-intro',
-            speaker: 'sanctuary-keeper-mystic',
+            speaker: kKeeperSpeaker,
           ),
         );
   }

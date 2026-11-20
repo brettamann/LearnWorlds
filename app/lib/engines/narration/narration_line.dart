@@ -3,6 +3,10 @@
 // only narration surface. Post-deferral, the same value object also drives
 // pre-rendered audio + (optional) system-TTS dispatch.
 
+/// The Sanctuary keeper, who introduces every activity and speaks between
+/// rounds.
+const String kKeeperSpeaker = 'sanctuary-keeper-mystic';
+
 class NarrationLine {
   const NarrationLine({
     required this.text,

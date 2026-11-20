@@ -164,9 +164,7 @@ class _ScribeRoundBodyState extends ConsumerState<ScribeRoundBody> {
     ref.read(feedbackEngineProvider).correct();
     widget.c.say(scribeDone(_r), replay: false);
     widget.c.finish(
-      (_hints?.hintsUsed ?? 0) > 0
-          ? RoundResult.softSuccess
-          : RoundResult.success,
+      gradeRound(helped: (_hints?.hintsUsed ?? 0) > 0),
     );
   }
 
@@ -220,11 +218,7 @@ class _ScribeRoundBodyState extends ConsumerState<ScribeRoundBody> {
     feedback.correct();
     widget.c.say(scribeDone(_r), replay: false);
     widget.c.finish(
-      _misses >= 3
-          ? RoundResult.failure
-          : (_misses == 0 && (_hints?.hintsUsed ?? 0) == 0
-              ? RoundResult.success
-              : RoundResult.softSuccess),
+      gradeRound(misses: _misses, helped: (_hints?.hintsUsed ?? 0) > 0),
     );
   }
 

@@ -11,6 +11,7 @@
 
 import '../../models/activity.dart';
 import '../mastery/concept_state.dart';
+import '../mastery/mastery_engine.dart';
 
 /// Her last two rounds of the concept failed, at the concrete layer.
 ///
@@ -18,7 +19,8 @@ import '../mastery/concept_state.dart';
 /// a layer and reset the count - so a run of failures that is still standing
 /// here is one there was no gentler representation for.
 bool isStrugglingAtFloor(ConceptState state) =>
-    state.currentLayer == CpaLayer.concrete && state.consecutiveFailures >= 2;
+    state.currentLayer == CpaLayer.concrete &&
+    state.consecutiveFailures >= MasteryEngine.demoteAfterFailures;
 
 /// The sub-mode to offer after [playedId], or null to go back to the map.
 ///

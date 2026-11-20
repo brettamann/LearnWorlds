@@ -548,11 +548,11 @@ class _WheresBuddyBodyState extends ConsumerState<_WheresBuddyBody> {
     // by guessing is not a failure, but it is not clean either: the game put
     // the Buddy where it goes.
     _hints?.pause();
-    final result = _wrongAttempts >= _kDemonstrateAfter
-        ? RoundResult.failure
-        : (_wrongAttempts == 0 && (_hints?.hintsUsed ?? 0) == 0
-            ? RoundResult.success
-            : RoundResult.softSuccess);
+    final result = gradeRound(
+      misses: _wrongAttempts,
+      helped: (_hints?.hintsUsed ?? 0) > 0,
+      failAt: _kDemonstrateAfter,
+    );
     ref.read(roundCoordinatorProvider).resolveRound(
           activityId: 'wheres-buddy',
           conceptId: 'K.G.1',
@@ -577,7 +577,7 @@ class _WheresBuddyBodyState extends ConsumerState<_WheresBuddyBody> {
                 text: _finalKeeperLine,
                 cueId: 'wheres-buddy:${widget.mode.name}:r$_roundIndex:'
                     'interstitial',
-                speaker: 'sanctuary-keeper-mystic',
+                speaker: kKeeperSpeaker,
               ),
             );
       });
@@ -596,7 +596,7 @@ class _WheresBuddyBodyState extends ConsumerState<_WheresBuddyBody> {
               text: _currentRound.keeperLine,
               cueId:
                   'wheres-buddy:${widget.mode.name}:r$_roundIndex:interstitial',
-              speaker: 'sanctuary-keeper-mystic',
+              speaker: kKeeperSpeaker,
             ),
           );
     });

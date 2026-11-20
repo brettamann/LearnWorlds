@@ -140,10 +140,6 @@ const List<_GardenRound> _kRoundSequence = <_GardenRound>[
   ),
 ];
 
-/// Mirrors `RoundCoordinator._coinsPerRoundPass`. Used by the final keeper
-/// line so the kid hears the total coins they earned.
-const int _coinsPerRound = 5;
-
 /// Sub-modes the Shape Garden activity supports.
 /// `find-shape` (K.G.2), `flat-or-solid` (K.G.3), `sort-by-attribute`
 /// (K.G.4), and `two-attribute-hunt` (K.G.4 challenge). Any unknown
@@ -272,7 +268,7 @@ class _ShapeGardenRunnerState extends ConsumerState<ShapeGardenFindingRunner> {
       "them all, won't you? We'll start with the circles.";
 
   String get _finalKeeperLine {
-    final coins = _kRoundSequence.length * _coinsPerRound;
+    final coins = _kRoundSequence.length * kCoinsForCleanRound;
     return 'You found every shape in the garden! Here are $coins coins '
         'for your help.';
   }
@@ -374,7 +370,7 @@ class _ShapeGardenRunnerState extends ConsumerState<ShapeGardenFindingRunner> {
           NarrationLine(
             text: _introDialog,
             cueId: 'shape-garden:intro',
-            speaker: 'sanctuary-keeper-mystic',
+            speaker: kKeeperSpeaker,
           ),
         );
   }
@@ -465,11 +461,7 @@ class _ShapeGardenRunnerState extends ConsumerState<ShapeGardenFindingRunner> {
     // wrong taps is a genuine miss of the shape; anything less, or a
     // demonstration, resolves soft.
     final hintsUsed = _hints?.hintsUsed ?? 0;
-    final result = _wrongTaps >= 3
-        ? RoundResult.failure
-        : (_wrongTaps == 0 && hintsUsed == 0
-            ? RoundResult.success
-            : RoundResult.softSuccess);
+    final result = gradeRound(misses: _wrongTaps, helped: hintsUsed > 0);
     ref.read(roundCoordinatorProvider).resolveRound(
           activityId: 'shape-garden',
           conceptId: 'K.G.2',
@@ -490,7 +482,7 @@ class _ShapeGardenRunnerState extends ConsumerState<ShapeGardenFindingRunner> {
               NarrationLine(
                 text: _finalKeeperLine,
                 cueId: 'shape-garden:r$_roundIndex:interstitial',
-                speaker: 'sanctuary-keeper-mystic',
+                speaker: kKeeperSpeaker,
               ),
             );
       });
@@ -508,7 +500,7 @@ class _ShapeGardenRunnerState extends ConsumerState<ShapeGardenFindingRunner> {
             NarrationLine(
               text: _currentRound.keeperLine,
               cueId: 'shape-garden:r$_roundIndex:interstitial',
-              speaker: 'sanctuary-keeper-mystic',
+              speaker: kKeeperSpeaker,
             ),
           );
     });
@@ -878,7 +870,7 @@ class _ShapeGardenSortingRunnerState
       'baskets!';
 
   String get _finalKeeperLine {
-    final coins = _kSortingSequence.length * _coinsPerRound;
+    final coins = _kSortingSequence.length * kCoinsForCleanRound;
     return 'You sorted every shape! Here are $coins coins for your help.';
   }
 
@@ -926,7 +918,7 @@ class _ShapeGardenSortingRunnerState
           NarrationLine(
             text: _introDialog,
             cueId: 'shape-garden-sort:intro',
-            speaker: 'sanctuary-keeper-mystic',
+            speaker: kKeeperSpeaker,
           ),
         );
   }
@@ -938,9 +930,7 @@ class _ShapeGardenSortingRunnerState
   void _onRoundComplete() {
     // Three wrong baskets across a round of four to six shapes is a genuine
     // miss of the flat/solid distinction, not a slip.
-    final result = _wrongDrops >= 3
-        ? RoundResult.failure
-        : (_wrongDrops == 0 ? RoundResult.success : RoundResult.softSuccess);
+    final result = gradeRound(misses: _wrongDrops);
     ref.read(roundCoordinatorProvider).resolveRound(
           activityId: 'shape-garden',
           conceptId: 'K.G.3',
@@ -961,7 +951,7 @@ class _ShapeGardenSortingRunnerState
               NarrationLine(
                 text: _finalKeeperLine,
                 cueId: 'shape-garden-sort:r$_roundIndex:interstitial',
-                speaker: 'sanctuary-keeper-mystic',
+                speaker: kKeeperSpeaker,
               ),
             );
       });
@@ -979,7 +969,7 @@ class _ShapeGardenSortingRunnerState
             NarrationLine(
               text: _currentRound.keeperLine,
               cueId: 'shape-garden-sort:r$_roundIndex:interstitial',
-              speaker: 'sanctuary-keeper-mystic',
+              speaker: kKeeperSpeaker,
             ),
           );
     });

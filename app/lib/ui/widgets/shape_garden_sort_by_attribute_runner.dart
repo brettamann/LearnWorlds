@@ -524,11 +524,7 @@ class _ShapeGardenSortByAttributeRunnerState
     // she still gets the coins - but the mastery ladder should not read a
     // round the game finished for her as evidence that she has it.
     final hintsUsed = _hints?.hintsUsed ?? 0;
-    final result = _wrongDrops >= 3
-        ? RoundResult.failure
-        : (_wrongDrops == 0 && hintsUsed == 0
-            ? RoundResult.success
-            : RoundResult.softSuccess);
+    final result = gradeRound(misses: _wrongDrops, helped: hintsUsed > 0);
     ref.read(roundCoordinatorProvider).resolveRound(
           activityId: 'shape-garden',
           conceptId: 'K.G.4',
@@ -549,7 +545,7 @@ class _ShapeGardenSortByAttributeRunnerState
               NarrationLine(
                 text: _finalKeeperLine,
                 cueId: 'sort-attr:r$_roundIndex:interstitial',
-                speaker: 'sanctuary-keeper-mystic',
+                speaker: kKeeperSpeaker,
               ),
             );
       });
@@ -567,7 +563,7 @@ class _ShapeGardenSortByAttributeRunnerState
             NarrationLine(
               text: _currentRound.keeperLine,
               cueId: 'sort-attr:r$_roundIndex:interstitial',
-              speaker: 'sanctuary-keeper-mystic',
+              speaker: kKeeperSpeaker,
             ),
           );
     });

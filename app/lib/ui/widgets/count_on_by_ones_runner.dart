@@ -302,9 +302,7 @@ class _CountOnByOnesRunnerState extends ConsumerState<CountOnByOnesRunner> {
 
     // Every arrival is a correct target, so the only thing separating a clean
     // round from a soft one is whether the ladder had to demonstrate.
-    final result = (_hints?.hintsUsed ?? 0) > 0
-        ? RoundResult.softSuccess
-        : RoundResult.success;
+    final result = gradeRound(helped: (_hints?.hintsUsed ?? 0) > 0);
     ref.read(roundCoordinatorProvider).resolveRound(
           activityId: 'counting-parade',
           conceptId: 'K.CC.1',
@@ -325,7 +323,7 @@ class _CountOnByOnesRunnerState extends ConsumerState<CountOnByOnesRunner> {
               NarrationLine(
                 text: _finalKeeperLine,
                 cueId: 'count-on-ones:r$_roundIndex:interstitial',
-                speaker: 'sanctuary-keeper-mystic',
+                speaker: kKeeperSpeaker,
               ),
             );
       });
@@ -343,7 +341,7 @@ class _CountOnByOnesRunnerState extends ConsumerState<CountOnByOnesRunner> {
             NarrationLine(
               text: _currentRound.keeperLine,
               cueId: 'count-on-ones:r$_roundIndex:interstitial',
-              speaker: 'sanctuary-keeper-mystic',
+              speaker: kKeeperSpeaker,
             ),
           );
     });

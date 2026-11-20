@@ -38,7 +38,7 @@ class MasteryEngine {
 
   /// Failures in a row before dropping a CPA layer. Two, against three to
   /// promote — see the header note on asymmetry.
-  static const int _demoteFailures = 2;
+  static const int demoteAfterFailures = 2;
 
   static const int _masteryAbstractSuccesses = 5;
   static const int _masterySessions = 3;
@@ -60,7 +60,7 @@ class MasteryEngine {
       // Concrete is the floor — there is no simpler representation to fall
       // back to, so a struggling kid stays there, the failures keep counting,
       // and `isStrugglingAtFloor` sends her one sub-mode simpler next.
-      final shouldDemote = failures >= _demoteFailures &&
+      final shouldDemote = failures >= demoteAfterFailures &&
           state.currentLayer != CpaLayer.concrete;
       return state.copyWith(
         currentStreak: 0,

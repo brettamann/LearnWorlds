@@ -195,7 +195,7 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
           NarrationLine(
             text: _introDialog,
             cueId: 'long-parade:intro',
-            speaker: 'sanctuary-keeper-mystic',
+            speaker: kKeeperSpeaker,
           ),
         );
   }
@@ -261,9 +261,7 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
     // the ladder had to demonstrate. adaptive-scaffolding.md §Hint Layer: a
     // round that needed a hint counts as soft-success and does not advance
     // the promotion streak.
-    final result = (_hints?.hintsUsed ?? 0) > 0
-        ? RoundResult.softSuccess
-        : RoundResult.success;
+    final result = gradeRound(helped: (_hints?.hintsUsed ?? 0) > 0);
     ref.read(roundCoordinatorProvider).resolveRound(
           activityId: 'counting-parade',
           conceptId: 'K.CC.1',
@@ -284,7 +282,7 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
               NarrationLine(
                 text: _finalKeeperLine,
                 cueId: 'long-parade:r$_roundIndex:interstitial',
-                speaker: 'sanctuary-keeper-mystic',
+                speaker: kKeeperSpeaker,
               ),
             );
       });
@@ -304,7 +302,7 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
             NarrationLine(
               text: _currentRound.keeperLine,
               cueId: 'long-parade:r$_roundIndex:interstitial',
-              speaker: 'sanctuary-keeper-mystic',
+              speaker: kKeeperSpeaker,
             ),
           );
     });

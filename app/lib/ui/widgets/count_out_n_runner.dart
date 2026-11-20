@@ -194,7 +194,7 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
           NarrationLine(
             text: _introDialog,
             cueId: 'count-out:intro',
-            speaker: 'sanctuary-keeper-mystic',
+            speaker: kKeeperSpeaker,
           ),
         );
   }
@@ -293,11 +293,7 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
     // that is a genuine miss and the mastery ladder should see it. One or two,
     // or a demonstration, resolves soft: she got there, with help.
     final hintsUsed = _hints?.hintsUsed ?? 0;
-    final result = _overCapDrops >= 3
-        ? RoundResult.failure
-        : (_overCapDrops == 0 && hintsUsed == 0
-            ? RoundResult.success
-            : RoundResult.softSuccess);
+    final result = gradeRound(misses: _overCapDrops, helped: hintsUsed > 0);
     ref.read(roundCoordinatorProvider).resolveRound(
           activityId: 'counting-parade',
           conceptId: 'K.CC.5',
@@ -318,7 +314,7 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
               NarrationLine(
                 text: _finalKeeperLine,
                 cueId: 'count-out:r$_roundIndex:interstitial',
-                speaker: 'sanctuary-keeper-mystic',
+                speaker: kKeeperSpeaker,
               ),
             );
       });
@@ -336,7 +332,7 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
             NarrationLine(
               text: _currentRound.keeperLine,
               cueId: 'count-out:r$_roundIndex:interstitial',
-              speaker: 'sanctuary-keeper-mystic',
+              speaker: kKeeperSpeaker,
             ),
           );
     });

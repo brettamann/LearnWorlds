@@ -360,11 +360,7 @@ class _BuildAHabitatRunnerState extends ConsumerState<BuildAHabitatRunner> {
     // Three sticks laid before their corners means she is not building the
     // frame in order, which is the K.G.5 idea itself.
     final hintsUsed = _hints?.hintsUsed ?? 0;
-    final result = _outOfOrderTaps >= 3
-        ? RoundResult.failure
-        : (_outOfOrderTaps == 0 && hintsUsed == 0
-            ? RoundResult.success
-            : RoundResult.softSuccess);
+    final result = gradeRound(misses: _outOfOrderTaps, helped: hintsUsed > 0);
     ref.read(roundCoordinatorProvider).resolveRound(
           activityId: 'build-a-habitat',
           conceptId: 'K.G.5',
@@ -413,9 +409,7 @@ class _BuildAHabitatRunnerState extends ConsumerState<BuildAHabitatRunner> {
     ref.read(roundCoordinatorProvider).resolveRound(
           activityId: 'build-a-habitat',
           conceptId: 'K.G.6',
-          result: (_hints?.hintsUsed ?? 0) > 0
-              ? RoundResult.softSuccess
-              : RoundResult.success,
+          result: gradeRound(helped: (_hints?.hintsUsed ?? 0) > 0),
         );
     _enterInterstitial();
   }
@@ -440,7 +434,7 @@ class _BuildAHabitatRunnerState extends ConsumerState<BuildAHabitatRunner> {
             NarrationLine(
               text: line,
               cueId: 'habitat:r$_roundIndex:interstitial',
-              speaker: 'sanctuary-keeper-mystic',
+              speaker: kKeeperSpeaker,
             ),
           );
     });

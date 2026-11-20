@@ -223,7 +223,7 @@ class _CountForwardFromNRunnerState
           NarrationLine(
             text: _introDialog,
             cueId: 'count-forward:intro',
-            speaker: 'sanctuary-keeper-mystic',
+            speaker: kKeeperSpeaker,
           ),
         );
   }
@@ -314,9 +314,7 @@ class _CountForwardFromNRunnerState
 
     // Every arrival is a correct target, so a hint is the only thing that
     // separates a clean round from a soft one.
-    final result = (_hints?.hintsUsed ?? 0) > 0
-        ? RoundResult.softSuccess
-        : RoundResult.success;
+    final result = gradeRound(helped: (_hints?.hintsUsed ?? 0) > 0);
     ref.read(roundCoordinatorProvider).resolveRound(
           activityId: 'counting-parade',
           conceptId: 'K.CC.2',
@@ -337,7 +335,7 @@ class _CountForwardFromNRunnerState
               NarrationLine(
                 text: _finalKeeperLine,
                 cueId: 'count-forward:r$_roundIndex:interstitial',
-                speaker: 'sanctuary-keeper-mystic',
+                speaker: kKeeperSpeaker,
               ),
             );
       });
@@ -355,7 +353,7 @@ class _CountForwardFromNRunnerState
             NarrationLine(
               text: _currentRound.keeperLine,
               cueId: 'count-forward:r$_roundIndex:interstitial',
-              speaker: 'sanctuary-keeper-mystic',
+              speaker: kKeeperSpeaker,
             ),
           );
     });
