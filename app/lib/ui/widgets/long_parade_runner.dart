@@ -337,7 +337,7 @@ class _LongParadeRunnerState extends ConsumerState<LongParadeRunner> {
         _LongParadeLayer(
           roundIndex: _roundIndex,
           clusterCount: _currentRound.clusterCount,
-          spriteAsset: _currentRound.spriteAsset,
+          spriteAsset: _currentRound.species.spriteAsset,
           tappedClusters: _tappedClusters,
           exitedClusters: _exitedClusters,
           burstCounters: _burstCounters,

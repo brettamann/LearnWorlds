@@ -373,7 +373,7 @@ class _CountOnByOnesRunnerState extends ConsumerState<CountOnByOnesRunner> {
           roundIndex: _roundIndex,
           startN: _currentRound.startN,
           arrivalsCount: _currentRound.arrivalsCount,
-          spriteAsset: _currentRound.spriteAsset,
+          spriteAsset: _currentRound.species.spriteAsset,
           tappedArrivals: _tappedArrivals,
           exitedArrivals: _exitedArrivals,
           arrivalsLanded: _arrivalsLanded,

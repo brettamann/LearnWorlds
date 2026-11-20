@@ -4609,6 +4609,39 @@
       ]
     },
     {
+      "id": "count-forward-keeper",
+      "title": "Count Forward From N — the keeper",
+      "note": "The opening, the line over each finished round, and the last beat. The round lines carry the total she just reached, so land on the number. The arrow nudge is said to a child who has counted everything and not yet pressed Done.",
+      "variants": 6,
+      "complete": true,
+      "lines": [
+        {
+          "text": "Sometimes we don't start at one. We can start at the number we left off! Watch — I count on from there.",
+          "clipKey": "sometimes-we-don-t-start-at-one-we-can-start-at__bf76bc8a"
+        },
+        {
+          "text": "Six fawns! Now some gryphons are catching up.",
+          "clipKey": "six-fawns-now-some-gryphons-are-catching-up__2dbe6133"
+        },
+        {
+          "text": "Eight gryphons! Last one — the dragons.",
+          "clipKey": "eight-gryphons-last-one-the-dragons__95b5afb0"
+        },
+        {
+          "text": "Ten dragons! Beautifully counted on.",
+          "clipKey": "ten-dragons-beautifully-counted-on__b6339b40"
+        },
+        {
+          "text": "You counted all the new creatures! Wonderful work.",
+          "clipKey": "you-counted-all-the-new-creatures-wonderful-work__248bae2e"
+        },
+        {
+          "text": "Nice counting! Tap the arrow to keep going.",
+          "clipKey": "nice-counting-tap-the-arrow-to-keep-going__74f2f34f"
+        }
+      ]
+    },
+    {
       "id": "count-on-by-ones",
       "title": "Count On By Ones — the two-beat opening",
       "note": "A pair, with the new creatures walking on between them. The first settles where the parade has got to; the second is the go signal and lands as they arrive. Say the two tens the same way so the journey sounds like one between them rather than two unrelated numbers.",
@@ -6726,7 +6759,7 @@
       "id": "dart-literals",
       "title": "Lines written directly in Dart",
       "note": "Swept out of lib/ by tool/narration_sources.dart: the sanctuary prologue, const round keeperLines, reward dialog. Interpolated templates are excluded - their variants have to come from the catalog that fills the slot.",
-      "variants": 123,
+      "variants": 117,
       "complete": true,
       "lines": [
         {
@@ -6804,10 +6837,6 @@
         {
           "text": "Eight dragons! You counted out every group.",
           "clipKey": "eight-dragons-you-counted-out-every-group__fd294be4"
-        },
-        {
-          "text": "Eight gryphons! Last one — the dragons.",
-          "clipKey": "eight-gryphons-last-one-the-dragons__95b5afb0"
         },
         {
           "text": "Eighty phoenixes! The golden eggs are at ninety.",
@@ -6946,10 +6975,6 @@
           "clipKey": "lovely-let-me-bring-out-a-few-more-shapes__1250c020"
         },
         {
-          "text": "Nice counting! Tap the arrow to keep going.",
-          "clipKey": "nice-counting-tap-the-arrow-to-keep-going__74f2f34f"
-        },
-        {
           "text": "Nice work!",
           "clipKey": "nice-work__be3361a0"
         },
@@ -7030,10 +7055,6 @@
           "clipKey": "sides-sorted-triangles-squares-rectangles-pentag__4e3eded8"
         },
         {
-          "text": "Six fawns! Now some gryphons are catching up.",
-          "clipKey": "six-fawns-now-some-gryphons-are-catching-up__2dbe6133"
-        },
-        {
           "text": "Six gryphons! One more round — the dragons.",
           "clipKey": "six-gryphons-one-more-round-the-dragons__35b841fc"
         },
@@ -7044,10 +7065,6 @@
         {
           "text": "Sometimes I just need a few creatures, not all of them! I'll ask for a number, and you bring me exactly that many. Ready?",
           "clipKey": "sometimes-i-just-need-a-few-creatures-not-all-of__37b6260d"
-        },
-        {
-          "text": "Sometimes we don't start at one. We can start at the number we left off! Watch — I count on from there.",
-          "clipKey": "sometimes-we-don-t-start-at-one-we-can-start-at__bf76bc8a"
         },
         {
           "text": "Sort the shapes — flat or solid?",
@@ -7080,10 +7097,6 @@
         {
           "text": "Tap the arrow when you are ready to count!",
           "clipKey": "tap-the-arrow-when-you-are-ready-to-count__7fb2e60f"
-        },
-        {
-          "text": "Ten dragons! Beautifully counted on.",
-          "clipKey": "ten-dragons-beautifully-counted-on__b6339b40"
         },
         {
           "text": "That basket is for shapes with five or more sides. Try another!",
@@ -7188,10 +7201,6 @@
         {
           "text": "Yes! Both.",
           "clipKey": "yes-both__96017ce8"
-        },
-        {
-          "text": "You counted all the new creatures! Wonderful work.",
-          "clipKey": "you-counted-all-the-new-creatures-wonderful-work__248bae2e"
         },
         {
           "text": "You counted them all! Tap the arrow to keep going.",

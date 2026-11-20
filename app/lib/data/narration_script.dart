@@ -384,6 +384,20 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
           ],
         ],
       ),
+      ScriptBatch(
+        id: 'count-forward-keeper',
+        title: 'Count Forward From N — the keeper',
+        note: 'The opening, the line over each finished round, and the last '
+            'beat. The round lines carry the total she just reached, so land '
+            'on the number. The arrow nudge is said to a child who has '
+            'counted everything and not yet pressed Done.',
+        lines: <String>[
+          kCountForwardIntro,
+          for (final round in kCountForwardRounds) round.keeperLine,
+          kCountForwardFinal,
+          kCountForwardDoneHint,
+        ],
+      ),
 
       // ---- Count On By Ones ---------------------------------------
       ScriptBatch(

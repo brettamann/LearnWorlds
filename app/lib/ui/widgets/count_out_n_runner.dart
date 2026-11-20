@@ -361,8 +361,8 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
           onStart: _onStartFromIntro,
         ),
       _Phase.demo => _CountOutDemo(
-          spriteAsset: _currentRound.spriteAsset,
-          singular: _currentRound.singular,
+          spriteAsset: _currentRound.species.spriteAsset,
+          singular: _currentRound.species.singular,
           onComplete: _onDemoComplete,
         ),
       _Phase.counting ||
@@ -372,8 +372,8 @@ class _CountOutNRunnerState extends ConsumerState<CountOutNRunner> {
           roundIndex: _roundIndex,
           targetN: _currentRound.targetN,
           poolSize: _currentRound.poolSize,
-          spriteAsset: _currentRound.spriteAsset,
-          plural: _currentRound.plural,
+          spriteAsset: _currentRound.species.spriteAsset,
+          plural: _currentRound.species.plural,
           placedIndices: _placedIndices,
           strayPositions: _strayPositions,
           basketBurstCounter: _basketBurstCounter,

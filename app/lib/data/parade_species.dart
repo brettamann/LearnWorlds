@@ -37,55 +37,73 @@ class ParadeSpecies {
   final String plural;
 }
 
+// One const per member, so a fixed round list (Count Forward From N, Long
+// Parade...) can name its creature rather than restate its sprite and words.
+const ParadeSpecies kParadeFawn = ParadeSpecies(
+  id: 'fawn',
+  spriteAsset: AssetPaths.countingParadeFawn,
+  singular: 'fawn',
+  plural: 'fawns',
+);
+
+const ParadeSpecies kParadeGryphon = ParadeSpecies(
+  id: 'gryphon',
+  spriteAsset: AssetPaths.countingParadeBabyGryphon,
+  singular: 'gryphon',
+  plural: 'gryphons',
+);
+
+const ParadeSpecies kParadeDragon = ParadeSpecies(
+  id: 'dragon',
+  spriteAsset: AssetPaths.countingParadeBabyDragon,
+  singular: 'dragon',
+  plural: 'dragons',
+);
+
+const ParadeSpecies kParadeUnicorn = ParadeSpecies(
+  id: 'unicorn',
+  spriteAsset: AssetPaths.countingParadeBabyUnicorn,
+  singular: 'unicorn',
+  plural: 'unicorns',
+);
+
+const ParadeSpecies kParadePhoenix = ParadeSpecies(
+  id: 'phoenix',
+  spriteAsset: AssetPaths.countingParadeBabyPhoenix,
+  singular: 'phoenix',
+  plural: 'phoenixes',
+);
+
+const ParadeSpecies kParadeCentaur = ParadeSpecies(
+  id: 'centaur',
+  spriteAsset: AssetPaths.countingParadeBabyCentaur,
+  singular: 'centaur',
+  plural: 'centaurs',
+);
+
+const ParadeSpecies kParadeToucan = ParadeSpecies(
+  id: 'toucan',
+  spriteAsset: AssetPaths.countingParadeBabyToucan,
+  singular: 'toucan',
+  plural: 'toucans',
+);
+
+const ParadeSpecies kParadeGoldenEgg = ParadeSpecies(
+  id: 'golden-egg',
+  spriteAsset: AssetPaths.countingParadeGoldenEgg,
+  singular: 'golden egg',
+  plural: 'golden eggs',
+);
+
 const List<ParadeSpecies> kParadeSpecies = <ParadeSpecies>[
-  ParadeSpecies(
-    id: 'fawn',
-    spriteAsset: AssetPaths.countingParadeFawn,
-    singular: 'fawn',
-    plural: 'fawns',
-  ),
-  ParadeSpecies(
-    id: 'gryphon',
-    spriteAsset: AssetPaths.countingParadeBabyGryphon,
-    singular: 'gryphon',
-    plural: 'gryphons',
-  ),
-  ParadeSpecies(
-    id: 'dragon',
-    spriteAsset: AssetPaths.countingParadeBabyDragon,
-    singular: 'dragon',
-    plural: 'dragons',
-  ),
-  ParadeSpecies(
-    id: 'unicorn',
-    spriteAsset: AssetPaths.countingParadeBabyUnicorn,
-    singular: 'unicorn',
-    plural: 'unicorns',
-  ),
-  ParadeSpecies(
-    id: 'phoenix',
-    spriteAsset: AssetPaths.countingParadeBabyPhoenix,
-    singular: 'phoenix',
-    plural: 'phoenixes',
-  ),
-  ParadeSpecies(
-    id: 'centaur',
-    spriteAsset: AssetPaths.countingParadeBabyCentaur,
-    singular: 'centaur',
-    plural: 'centaurs',
-  ),
-  ParadeSpecies(
-    id: 'toucan',
-    spriteAsset: AssetPaths.countingParadeBabyToucan,
-    singular: 'toucan',
-    plural: 'toucans',
-  ),
-  ParadeSpecies(
-    id: 'golden-egg',
-    spriteAsset: AssetPaths.countingParadeGoldenEgg,
-    singular: 'golden egg',
-    plural: 'golden eggs',
-  ),
+  kParadeFawn,
+  kParadeGryphon,
+  kParadeDragon,
+  kParadeUnicorn,
+  kParadePhoenix,
+  kParadeCentaur,
+  kParadeToucan,
+  kParadeGoldenEgg,
 ];
 
 const List<String> kAllParadeSpeciesIds = <String>[
