@@ -4765,6 +4765,71 @@
       ]
     },
     {
+      "id": "habitat-lines",
+      "title": "Build-a-Habitat — the keeper and the pieces",
+      "note": "The keeper opens, raises the roof and admires each finished habitat. The short lines name each piece as it lands - clay, stick, a roof shape - so keep them light and quick; she may hear a dozen in a minute. The two clay-first lines answer a stick tapped too early: gentle, never a correction.",
+      "variants": 14,
+      "complete": true,
+      "lines": [
+        {
+          "text": "Let's build a habitat together! Clay balls go in the corners, sticks go along the sides — then we add shapes on top to make the roof. Ready? Let's start.",
+          "clipKey": "let-s-build-a-habitat-together-clay-balls-go-in__89822532"
+        },
+        {
+          "text": "Now raise the habitat — tap each ghost shape to drop the matching piece in place.",
+          "clipKey": "now-raise-the-habitat-tap-each-ghost-shape-to-dr__935d42f9"
+        },
+        {
+          "text": "Every habitat is built! The Sanctuary feels cosy and safe.",
+          "clipKey": "every-habitat-is-built-the-sanctuary-feels-cosy__0a0ca2aa"
+        },
+        {
+          "text": "A fawn shelter! Beautifully built.",
+          "clipKey": "a-fawn-shelter-beautifully-built__606dc342"
+        },
+        {
+          "text": "A gryphon roost — four sides and a peaked roof!",
+          "clipKey": "a-gryphon-roost-four-sides-and-a-peaked-roof__f56b481d"
+        },
+        {
+          "text": "A unicorn gazebo — five sides and a starlit dome on top!",
+          "clipKey": "a-unicorn-gazebo-five-sides-and-a-starlit-dome-o__eb0535d7"
+        },
+        {
+          "text": "Clay corner.",
+          "clipKey": "clay-corner__a035ce31"
+        },
+        {
+          "text": "Stick.",
+          "clipKey": "stick__5510e66b"
+        },
+        {
+          "text": "Place clay in both corners first, then the stick.",
+          "clipKey": "place-clay-in-both-corners-first-then-the-stick__7a80e73b"
+        },
+        {
+          "text": "A stick needs a corner at each end. Clay first.",
+          "clipKey": "a-stick-needs-a-corner-at-each-end-clay-first__e221579d"
+        },
+        {
+          "text": "A cube. It goes on top.",
+          "clipKey": "a-cube-it-goes-on-top__4bfe26f4"
+        },
+        {
+          "text": "A cone. It goes on top.",
+          "clipKey": "a-cone-it-goes-on-top__06dc100e"
+        },
+        {
+          "text": "A sphere. It goes on top.",
+          "clipKey": "a-sphere-it-goes-on-top__02db8b04"
+        },
+        {
+          "text": "A cylinder. It goes on top.",
+          "clipKey": "a-cylinder-it-goes-on-top__944c70a5"
+        }
+      ]
+    },
+    {
       "id": "challenge-target",
       "title": "Counting challenge — the opening call",
       "note": "The target is a const in the runner (100 today) and the layer is generic, so every ten up to a hundred is enumerated rather than the one value in use. Ten clips is cheap insurance against a target being retuned and the line silently dropping back to the synth voice.",
@@ -6795,28 +6860,12 @@
       "id": "dart-literals",
       "title": "Lines written directly in Dart",
       "note": "Swept out of lib/ by tool/narration_sources.dart: the sanctuary prologue, const round keeperLines, reward dialog. Interpolated templates are excluded - their variants have to come from the catalog that fills the slot.",
-      "variants": 108,
+      "variants": 99,
       "complete": true,
       "lines": [
         {
-          "text": "A fawn shelter! Beautifully built.",
-          "clipKey": "a-fawn-shelter-beautifully-built__606dc342"
-        },
-        {
-          "text": "A gryphon roost — four sides and a peaked roof!",
-          "clipKey": "a-gryphon-roost-four-sides-and-a-peaked-roof__f56b481d"
-        },
-        {
           "text": "A new friend!",
           "clipKey": "a-new-friend__9e77f4a9"
-        },
-        {
-          "text": "A stick needs a corner at each end. Clay first.",
-          "clipKey": "a-stick-needs-a-corner-at-each-end-clay-first__e221579d"
-        },
-        {
-          "text": "A unicorn gazebo — five sides and a starlit dome on top!",
-          "clipKey": "a-unicorn-gazebo-five-sides-and-a-starlit-dome-o__eb0535d7"
         },
         {
           "text": "Almost done — one last basket-round!",
@@ -6843,10 +6892,6 @@
           "clipKey": "big-to-one-side-small-to-the-other-perfect__b4ae6caf"
         },
         {
-          "text": "Clay corner.",
-          "clipKey": "clay-corner__a035ce31"
-        },
-        {
           "text": "Count the animals with me out loud as they do their parade!",
           "clipKey": "count-the-animals-with-me-out-loud-as-they-do-th__3f39e42b"
         },
@@ -6861,10 +6906,6 @@
         {
           "text": "Eighty phoenixes! The golden eggs are at ninety.",
           "clipKey": "eighty-phoenixes-the-golden-eggs-are-at-ninety__7fca406f"
-        },
-        {
-          "text": "Every habitat is built! The Sanctuary feels cosy and safe.",
-          "clipKey": "every-habitat-is-built-the-sanctuary-feels-cosy__0a0ca2aa"
         },
         {
           "text": "Every shape sorted! You can group things by all kinds of differences.",
@@ -6913,10 +6954,6 @@
         {
           "text": "I'm in charge of this mystical sanctuary.",
           "clipKey": "i-m-in-charge-of-this-mystical-sanctuary__11971eaa"
-        },
-        {
-          "text": "Let's build a habitat together! Clay balls go in the corners, sticks go along the sides — then we add shapes on top to make the roof. Ready? Let's start.",
-          "clipKey": "let-s-build-a-habitat-together-clay-balls-go-in__89822532"
         },
         {
           "text": "Let's build!",
@@ -6987,10 +7024,6 @@
           "clipKey": "nicely-done-you-sorted-them-all__e08d1df1"
         },
         {
-          "text": "Now raise the habitat — tap each ghost shape to drop the matching piece in place.",
-          "clipKey": "now-raise-the-habitat-tap-each-ghost-shape-to-dr__935d42f9"
-        },
-        {
           "text": "Now you try!",
           "clipKey": "now-you-try__3c8418a4"
         },
@@ -7025,10 +7058,6 @@
         {
           "text": "One solid shape!",
           "clipKey": "one-solid-shape__62a3ed48"
-        },
-        {
-          "text": "Place clay in both corners first, then the stick.",
-          "clipKey": "place-clay-in-both-corners-first-then-the-stick__7a80e73b"
         },
         {
           "text": "Round things together, pointy things together. That's grouping by curves.",

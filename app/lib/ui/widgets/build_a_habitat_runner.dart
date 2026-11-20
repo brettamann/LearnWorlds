@@ -23,10 +23,11 @@
 //   grand-habitat (challenge)→ pentagon + 3 roof pieces
 //   frame-only (demotion)    → Phase 1 only, skip K.G.6
 //
-// Each round resolves through RoundCoordinator twice: once with
-// K.G.5 when Phase 1 finishes, once with K.G.6 when Phase 2 finishes.
+// Each phase is graded once, as it ends: the frame with `c.grade('K.G.5')`,
+// the roof by finishing the round, whose concept is K.G.6 (K.G.5 in
+// frame-only, where the frame *is* the round). The lifecycle around it is
+// SanctuaryRoundShell's; the words are in `habitat_words.dart`.
 
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -34,46 +35,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../activities/activity_ids.dart';
 import '../../activities/sub_mode_ids.dart';
-import '../../coordinators/round_coordinator.dart';
 import '../../data/asset_paths.dart';
 import '../../data/build_a_habitat_blueprints.dart';
-import '../../data/button_labels.dart';
 import '../../data/habitat_words.dart';
-import '../../data/sfx_catalog.dart';
-import '../../data/warm_lines.dart';
 import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/mastery/round_outcome.dart';
-import '../../engines/narration/narration_line.dart';
-import '../../engines/narration/narration_player.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
-import '../../platform/sfx_engine.dart';
-import 'buddy_companion.dart';
-import 'continue_arrow_shelf.dart';
+import '../common/target_hint.dart';
 import 'glitter_burst.dart';
-import 'keeper_aside.dart';
-import 'keeper_intro_overlay.dart';
-import 'next_arrow_button.dart';
-import 'playfield_scaffold.dart';
-import 'replay_demo_button.dart';
+import 'sanctuary_round_shell.dart';
 import 'touch_here_halo.dart';
 import 'touch_target.dart';
 
-enum _Phase {
-  intro,
-  cornersAndSticks,
-  raiseHabitat,
-
-  /// Keeper speaks over the finished habitat and advances the round
-  /// herself. No tap required.
-  transition,
-
-  celebrating,
-
-  /// Final beat only — the reward payoff, which is meant to interrupt.
-  interstitial,
-}
-
-class BuildAHabitatRunner extends ConsumerStatefulWidget {
+class BuildAHabitatRunner extends StatelessWidget {
   const BuildAHabitatRunner({
     super.key,
     required this.onSequenceComplete,
@@ -86,561 +60,308 @@ class BuildAHabitatRunner extends ConsumerStatefulWidget {
   final String subMode;
 
   @override
-  ConsumerState<BuildAHabitatRunner> createState() =>
-      _BuildAHabitatRunnerState();
+  Widget build(BuildContext context) {
+    final rounds = <HabitatBlueprint>[
+      for (final id in habitatBlueprintIdsFor(subMode))
+        kHabitatBlueprints.firstWhere((b) => b.id == id),
+    ];
+    final frameOnly = habitatSkipsRoof(subMode);
+    return SanctuaryRoundShell(
+      activityId: ActivityIds.buildAHabitat,
+      roundCount: rounds.length,
+      conceptIdFor: (_) => frameOnly ? 'K.G.5' : 'K.G.6',
+      introLine: kHabitatIntro,
+      startLabel: kHabitatStartLabel,
+      keeperLineFor: (i) => rounds[i].keeperLine,
+      finalLine: kHabitatFinal,
+      skipIntro: skipIntro,
+      onSequenceComplete: onSequenceComplete,
+      celebrationHold: const Duration(seconds: 1),
+      background: Image.asset(
+        AssetPaths.buildAHabitatBackground,
+        fit: BoxFit.cover,
+      ),
+      roundBuilder: (context, c) => HabitatRoundBody(
+        blueprint: rounds[c.index],
+        frameOnly: frameOnly,
+        c: c,
+      ),
+    );
+  }
 }
 
-class _BuildAHabitatRunnerState extends ConsumerState<BuildAHabitatRunner> {
-  late _Phase _phase =
-      widget.skipIntro ? _Phase.cornersAndSticks : _Phase.intro;
-  int _roundIndex = 0;
-  int _completedRounds = 0;
-  Set<int> _placedCorners = <int>{};
-  Set<int> _placedEdges = <int>{};
-  Set<int> _placedRoof = <int>{};
-  Timer? _celebrationTimer;
-  Timer? _interstitialTimer;
+/// The piece the hint ladder points at: ('corner'|'edge'|'roof', index).
+typedef _Piece = (String, int);
 
-  /// Bumped to (re)present the between-round keeper aside.
-  int _asideToken = 0;
+/// One habitat: the frame, then (unless frame-only) the roof.
+class HabitatRoundBody extends ConsumerStatefulWidget {
+  const HabitatRoundBody({
+    super.key,
+    required this.blueprint,
+    required this.frameOnly,
+    required this.c,
+  });
+
+  final HabitatBlueprint blueprint;
+
+  /// Skip the roof: the round ends, and is graded K.G.5, when the frame does.
+  final bool frameOnly;
+  final RoundContext c;
+
+  @override
+  ConsumerState<HabitatRoundBody> createState() => _HabitatRoundBodyState();
+}
+
+class _HabitatRoundBodyState extends ConsumerState<HabitatRoundBody> {
+  final Set<int> _corners = <int>{};
+  final Set<int> _edges = <int>{};
+  final Set<int> _roof = <int>{};
+
+  /// False while building the frame, true once raising the roof.
+  bool _raising = false;
+  bool _done = false;
 
   /// Sticks laid before both endpoints had clay. This is the wrong answer
   /// K.G.5 actually cares about — the whole point is corners first, sides
-  /// between — and until now it produced a spoken line and nothing else.
+  /// between.
   int _outOfOrderTaps = 0;
-  int _missRotation = 0;
 
-  /// The one piece the hint ladder is pointing at, as ('corner'|'edge'|
-  /// 'roof', index). Null while she is getting on with it.
-  (String, int)? _hinted;
+  /// The one piece the hint ladder is pointing at. Null while she is getting
+  /// on with it.
+  _Piece? _hinted;
 
   HintLadder? _hints;
 
-  /// Read eagerly — `ref.read` is illegal once dispose() has begun.
-  SfxEngine? _sfxForDispose;
-
-  /// One blueprint per round. Each sub-mode picks a slice of the
-  /// blueprint list: `simple-shelter` runs the triangle; `creature-home`
-  /// runs all three; `grand-habitat` runs the pentagon; `frame-only`
-  /// runs the triangle but skips Phase 2.
-  List<HabitatBlueprint> get _rounds {
-    switch (widget.subMode) {
-      case BuildAHabitatModes.creatureHome:
-        return kHabitatBlueprints;
-      case BuildAHabitatModes.grandHabitat:
-        return <HabitatBlueprint>[kHabitatBlueprints[2]];
-      case BuildAHabitatModes.frameOnly:
-      case BuildAHabitatModes.simpleShelter:
-      default:
-        return <HabitatBlueprint>[kHabitatBlueprints[0]];
-    }
-  }
-
-  bool get _skipRaisePhase => widget.subMode == BuildAHabitatModes.frameOnly;
-
-  HabitatBlueprint get _currentRound => _rounds[_roundIndex];
-  bool get _isLastRound => _roundIndex == _rounds.length - 1;
-  double get _progress => _completedRounds / _rounds.length;
-
-  bool get _allCornersPlaced =>
-      _placedCorners.length == _currentRound.corners.length;
-  bool get _allEdgesPlaced => _placedEdges.length == _currentRound.edges.length;
-  bool get _frameDone => _allCornersPlaced && _allEdgesPlaced;
-  bool get _allRoofPlaced => _placedRoof.length == _currentRound.roof.length;
-
-  String get _introDialog =>
-      "Let's build a habitat together! Clay balls go in the corners, "
-      'sticks go along the sides — then we add shapes on top to make '
-      "the roof. Ready? Let's start.";
-
-  String get _phase1Prompt => habitatBuildPrompt(_currentRound.id);
-
-  String get _phase2Prompt =>
-      'Now raise the habitat — tap each ghost shape to drop the '
-      'matching piece in place.';
-
-  String get _finalKeeperLine =>
-      'Every habitat is built! The Sanctuary feels cosy and safe.';
+  HabitatBlueprint get _bp => widget.blueprint;
+  bool get _open => !_done && !widget.c.locked;
+  bool get _frameDone =>
+      _corners.length == _bp.corners.length &&
+      _edges.length == _bp.edges.length;
 
   @override
   void initState() {
     super.initState();
-    _sfxForDispose = ref.read(sfxEngineProvider);
-    // Claimed here, not in the post-frame callback below: the release in
-    // dispose() is unconditional, so the claim has to be too, or a teardown
-    // before the first frame gives back a claim it never took. See
-    // SfxEngine.releaseMusicBed for what that costs.
-    unawaited(_sfxForDispose!.startMusicBed(kDefaultMusicBed));
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      ref.read(feedbackEngineProvider).resetRound();
-      if (_phase == _Phase.cornersAndSticks) {
-        _speakPhase1Prompt();
-        _startHints();
-      }
+      widget.c.say(habitatBuildPrompt(_bp.id));
+      _startHints();
     });
   }
 
   @override
   void dispose() {
     _hints?.dispose();
-    _celebrationTimer?.cancel();
-    _interstitialTimer?.cancel();
-    final sfx = _sfxForDispose;
-    if (sfx != null) sfx.releaseMusicBed();
     super.dispose();
-  }
-
-  void _speakPhase1Prompt() {
-    ref.narration
-        .say(_phase1Prompt, cueId: 'habitat:r$_roundIndex:phase1-prompt');
-  }
-
-  void _speakPhase2Prompt() {
-    ref.narration
-        .say(_phase2Prompt, cueId: 'habitat:r$_roundIndex:phase2-prompt');
-  }
-
-  void _onStartFromIntro() {
-    setState(() => _phase = _Phase.cornersAndSticks);
-    _speakPhase1Prompt();
-    _startHints();
   }
 
   void _startHints() {
     _hints?.dispose();
-    _hints = HintLadder(onLevel: _onHintLevel)..start();
+    _hints = HintLadder(onLevel: _onHint)..start();
   }
 
   /// Escalating help for a stalled builder.
   ///
-  /// The instruction here is three sentences long - clay in the corners,
-  /// sticks along the sides, then shapes on top - spoken once, to a child who
-  /// cannot read the replay button. Losing the thread is the expected case,
-  /// not the unlucky one, and until this existed losing it meant sitting in
-  /// front of a shelter that never got built.
-  ///
+  /// The instruction is three sentences long, spoken once, to a child who
+  /// cannot read the replay button; losing the thread is the expected case.
   /// The ring goes on exactly one piece, and always the next legal one: every
-  /// empty corner and every empty side already wears a ghost outline, so
-  /// "everything is glowing" is the state she is stuck in. The hint is which.
-  void _onHintLevel(HintLevel level) {
-    if (!mounted) return;
-    if (_phase != _Phase.cornersAndSticks && _phase != _Phase.raiseHabitat) {
-      return;
-    }
+  /// empty corner and side already wears a ghost outline, so "everything is
+  /// glowing" is the state she is stuck in. The hint is which.
+  void _onHint(HintLevel level) {
+    if (!mounted || !_open) return;
     final next = _nextPiece();
     if (next == null) return;
-    final feedback = ref.read(feedbackEngineProvider);
-    switch (level) {
-      case HintLevel.none:
-        return;
-      case HintLevel.highlight:
-        setState(() => _hinted = next);
-      case HintLevel.point:
-        setState(() => _hinted = next);
-        feedback.hint();
-        ref.narration
-            .say(warmHintLine(2), cueId: 'habitat:r$_roundIndex:hint-point');
-      case HintLevel.demonstrate:
-        feedback.hint();
-        ref.narration
-            .say(warmHintLine(3), cueId: 'habitat:r$_roundIndex:hint-demo');
-        final (kind, index) = next;
-        switch (kind) {
-          case 'corner':
-            _onCornerTap(index, fromHint: true);
-          case 'edge':
-            _onEdgeTap(index, fromHint: true);
-          default:
-            _onRoofTap(index, fromHint: true);
-        }
+    answerTargetHint(
+      level,
+      ring: () => setState(() => _hinted = next),
+      chime: ref.read(feedbackEngineProvider).hint,
+      say: (line) => widget.c.say(line, replay: false),
+      demonstrate: () => _place(next),
+    );
+  }
+
+  void _place(_Piece piece) {
+    final (kind, index) = piece;
+    switch (kind) {
+      case 'corner':
+        _onCornerTap(index, fromHint: true);
+      case 'edge':
+        _onEdgeTap(index, fromHint: true);
+      default:
+        _onRoofTap(index, fromHint: true);
     }
   }
 
   /// The next piece she could legally place, in the order the standard cares
   /// about: corners before the sides between them.
-  (String, int)? _nextPiece() {
-    if (_phase == _Phase.cornersAndSticks) {
-      for (var i = 0; i < _currentRound.corners.length; i++) {
-        if (!_placedCorners.contains(i)) return ('corner', i);
+  _Piece? _nextPiece() {
+    if (!_raising) {
+      for (var i = 0; i < _bp.corners.length; i++) {
+        if (!_corners.contains(i)) return ('corner', i);
       }
-      for (var i = 0; i < _currentRound.edges.length; i++) {
-        if (_placedEdges.contains(i)) continue;
-        final e = _currentRound.edges[i];
-        if (_placedCorners.contains(e[0]) && _placedCorners.contains(e[1])) {
+      for (var i = 0; i < _bp.edges.length; i++) {
+        if (_edges.contains(i)) continue;
+        final e = _bp.edges[i];
+        if (_corners.contains(e[0]) && _corners.contains(e[1])) {
           return ('edge', i);
         }
       }
       return null;
     }
-    for (var i = 0; i < _currentRound.roof.length; i++) {
-      if (!_placedRoof.contains(i)) return ('roof', i);
+    for (var i = 0; i < _bp.roof.length; i++) {
+      if (!_roof.contains(i)) return ('roof', i);
     }
     return null;
   }
 
+  /// Queued, not spoken, when the ladder placed the piece, so it does not cut
+  /// off the demonstration's own line. See HintLadder.
+  void _sayPiece(String line, {required bool fromHint}) =>
+      widget.c.say(line, replay: false, queue: fromHint);
+
   void _onCornerTap(int idx, {bool fromHint = false}) {
-    if (_placedCorners.contains(idx)) return;
+    if (!_open || _corners.contains(idx)) return;
     if (!fromHint) _hints?.poke();
     setState(() {
-      _placedCorners.add(idx);
+      _corners.add(idx);
       _hinted = null;
     });
     // Corners climb the scale, so a triangle's three corners sound like
-    // three and a pentagon's five sound like five — the count is the
-    // difference between the blueprints.
-    ref.read(feedbackEngineProvider).countStep(_placedCorners.length);
-    _speak(
-      'Clay corner.',
-      'habitat:r$_roundIndex:corner-${_placedCorners.length}',
-      fromHint: fromHint,
-    );
+    // three and a pentagon's five sound like five.
+    ref.read(feedbackEngineProvider).countStep(_corners.length);
+    _sayPiece(kHabitatCornerLine, fromHint: fromHint);
   }
 
   void _onEdgeTap(int idx, {bool fromHint = false}) {
-    if (_placedEdges.contains(idx)) return;
+    if (!_open || _edges.contains(idx)) return;
     if (!fromHint) _hints?.poke();
     // Sticks can only be placed once both endpoints have clay balls —
     // K.G.5's pedagogy depends on "corners first, then sides between."
-    final endpoints = _currentRound.edges[idx];
-    final bothClayed = _placedCorners.contains(endpoints[0]) &&
-        _placedCorners.contains(endpoints[1]);
-    if (!bothClayed) {
-      setState(() {
-        _outOfOrderTaps += 1;
-        _missRotation += 1;
-      });
+    final endpoints = _bp.edges[idx];
+    if (!_corners.contains(endpoints[0]) || !_corners.contains(endpoints[1])) {
+      setState(() => _outOfOrderTaps += 1);
       ref.read(feedbackEngineProvider).wrong();
-      _speak(
-        _missRotation.isOdd
-            ? 'Place clay in both corners first, then the stick.'
-            : 'A stick needs a corner at each end. Clay first.',
-        'habitat:r$_roundIndex:edge-block-$idx-$_outOfOrderTaps',
-      );
+      widget.c.say(habitatStickBlockedLine(_outOfOrderTaps), replay: false);
       return;
     }
     setState(() {
-      _placedEdges.add(idx);
+      _edges.add(idx);
       _hinted = null;
     });
     // Two sounds, in this order: the thing landing, then the answer being
-    // right. `Sfx.drop` had no call site at all, so three of the game's
-    // mechanics are drags in which nothing was ever heard to be put down.
+    // right.
     ref.read(feedbackEngineProvider)
       ..drop()
       ..correct();
-    _speak(
-      'Stick.',
-      'habitat:r$_roundIndex:edge-${_placedEdges.length}',
-      fromHint: fromHint,
-    );
-    if (_frameDone) _finishPhase1();
+    _sayPiece(kHabitatStickLine, fromHint: fromHint);
+    if (_frameDone) _finishFrame();
   }
 
-  void _finishPhase1() {
+  void _finishFrame() {
     // Three sticks laid before their corners means she is not building the
     // frame in order, which is the K.G.5 idea itself.
-    final hintsUsed = _hints?.hintsUsed ?? 0;
-    final result = gradeRound(misses: _outOfOrderTaps, helped: hintsUsed > 0);
-    ref.read(roundCoordinatorProvider).resolveRound(
-          activityId: ActivityIds.buildAHabitat,
-          conceptId: 'K.G.5',
-          result: result,
-        );
-    if (_skipRaisePhase) {
-      // Frame-only: skip K.G.6 and go to the interstitial directly.
-      _enterInterstitial();
+    final result = gradeRound(
+      misses: _outOfOrderTaps,
+      helped: (_hints?.hintsUsed ?? 0) > 0,
+    );
+    if (widget.frameOnly) {
+      _done = true;
+      _hints?.pause();
+      widget.c.finish(result);
       return;
     }
-    setState(() => _phase = _Phase.raiseHabitat);
-    _speakPhase2Prompt();
-    // A fresh ladder, not a poke: the two phases resolve separate concepts
-    // (K.G.5 the frame, K.G.6 the roof), so help taken on one must not be
-    // charged to the other.
+    widget.c.grade('K.G.5', result);
+    setState(() {
+      _raising = true;
+      _hinted = null;
+    });
+    // Queued behind "Stick.", which it used to cut off.
+    widget.c.say(kHabitatRaisePrompt, queue: true);
+    // A fresh ladder, not a poke: the two phases grade separate concepts, so
+    // help taken on one must not be charged to the other.
     _startHints();
   }
 
   void _onRoofTap(int idx, {bool fromHint = false}) {
-    if (_placedRoof.contains(idx)) return;
+    if (!_open || !_raising || _roof.contains(idx)) return;
     if (!fromHint) _hints?.poke();
-    final piece = _currentRound.roof[idx];
     setState(() {
-      _placedRoof.add(idx);
+      _roof.add(idx);
       _hinted = null;
     });
-    // Two sounds, in this order: the thing landing, then the answer being
-    // right. `Sfx.drop` had no call site at all, so three of the game's
-    // mechanics are drags in which nothing was ever heard to be put down.
     ref.read(feedbackEngineProvider)
       ..drop()
       ..correct();
-    _speak(
-      'A ${piece.kind}. It goes on top.',
-      'habitat:r$_roundIndex:roof-${_placedRoof.length}',
-      fromHint: fromHint,
-    );
-    if (_allRoofPlaced) _finishPhase2();
-  }
-
-  void _finishPhase2() {
-    // Every ghost is a correct target — there is nothing wrong to tap in
-    // this phase — so the only thing that can make it less than clean is the
-    // game having placed a piece for her.
-    _hints?.pause();
-    ref.read(roundCoordinatorProvider).resolveRound(
-          activityId: ActivityIds.buildAHabitat,
-          conceptId: 'K.G.6',
-          result: gradeRound(helped: (_hints?.hintsUsed ?? 0) > 0),
-        );
-    _enterInterstitial();
-  }
-
-  void _enterInterstitial() {
-    setState(() => _phase = _Phase.celebrating);
-    final feedback = ref.read(feedbackEngineProvider);
-    if (_isLastRound) {
-      feedback.celebrate();
-    } else {
-      feedback.roundPass();
-    }
-    _celebrationTimer = Timer(const Duration(seconds: 1), () {
-      if (!mounted) return;
-      setState(() {
-        _completedRounds += 1;
-        _phase = _isLastRound ? _Phase.interstitial : _Phase.transition;
-        if (!_isLastRound) _asideToken += 1;
-      });
-      final line = _isLastRound ? _finalKeeperLine : _currentRound.keeperLine;
-      ref.narration.say(
-        line,
-        cueId: 'habitat:r$_roundIndex:interstitial',
-        speaker: kKeeperSpeaker,
-        caption: false,
-      );
-    });
-  }
-
-  /// Fired by the keeper aside retiring itself, not by a button.
-  void _advanceToNextRound() {
-    if (!mounted || _phase != _Phase.transition) return;
-    setState(() {
-      _roundIndex += 1;
-      _placedCorners = <int>{};
-      _placedEdges = <int>{};
-      _placedRoof = <int>{};
-      _outOfOrderTaps = 0;
-      _missRotation = 0;
-      _hinted = null;
-      _phase = _Phase.cornersAndSticks;
-    });
-    ref.read(feedbackEngineProvider).resetRound();
-    _speakPhase1Prompt();
-    _startHints();
-  }
-
-  void _speak(String text, String cueId, {bool fromHint = false}) {
-    // Queued, not spoken, when the ladder placed this piece. See HintLadder.
-    final say = ref.narration;
-    final line = NarrationLine(text: text, cueId: cueId);
-    if (fromHint) {
-      say.enqueue(line);
-    } else {
-      say.speak(line);
+    _sayPiece(habitatRoofLine(_bp.roof[idx].kind), fromHint: fromHint);
+    if (_roof.length == _bp.roof.length) {
+      // Every ghost is a correct target — there is nothing wrong to tap in
+      // this phase — so the only thing that can make it less than clean is
+      // the game having placed a piece for her.
+      _done = true;
+      _hints?.pause();
+      widget.c.finish(gradeRound(helped: (_hints?.hintsUsed ?? 0) > 0));
     }
   }
-
-  @override
-  Widget build(BuildContext context) {
-    final phaseContent = switch (_phase) {
-      _Phase.intro => KeeperIntroOverlay(
-          dialog: _introDialog,
-          startLabel: "Let's build!",
-          startButtonKey: const ValueKey('habitat-start-button'),
-          onStart: _onStartFromIntro,
-        ),
-      _Phase.cornersAndSticks ||
-      _Phase.raiseHabitat ||
-      _Phase.celebrating ||
-      _Phase.transition =>
-        _BuildLayer(
-          blueprint: _currentRound,
-          placedCorners: _placedCorners,
-          placedEdges: _placedEdges,
-          placedRoof: _placedRoof,
-          showRoof: _phase != _Phase.cornersAndSticks,
-          hinted: _hinted,
-          inputLocked:
-              _phase == _Phase.celebrating || _phase == _Phase.transition,
-          onCornerTap: _onCornerTap,
-          onEdgeTap: _onEdgeTap,
-          onRoofTap: _onRoofTap,
-          replayPrompt:
-              _phase == _Phase.cornersAndSticks ? _phase1Prompt : _phase2Prompt,
-          replayCueId: 'habitat:replay-r$_roundIndex-${_phase.name}',
-          allDone: _phase == _Phase.celebrating,
-        ),
-      _Phase.interstitial => KeeperIntroOverlay(
-          dialog: _finalKeeperLine,
-          startLabel: 'Continue',
-          startButtonKey: const ValueKey('habitat-interstitial-next'),
-          onStart: widget.onSequenceComplete,
-        ),
-    };
-
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Image.asset(AssetPaths.buildAHabitatBackground, fit: BoxFit.cover),
-        PlayfieldScaffold(
-          progress: _progress,
-          celebrate: _phase == _Phase.celebrating,
-          child: phaseContent,
-        ),
-        if (_phase != _Phase.intro && _phase != _Phase.interstitial)
-          const BuddyCompanionCorner(),
-        if (_phase == _Phase.transition)
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: KeeperAside(
-              text: _currentRound.keeperLine,
-              token: _asideToken,
-              onDismissed: _advanceToNextRound,
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class _BuildLayer extends StatelessWidget {
-  const _BuildLayer({
-    required this.blueprint,
-    required this.placedCorners,
-    required this.placedEdges,
-    required this.placedRoof,
-    required this.showRoof,
-    required this.hinted,
-    required this.inputLocked,
-    required this.onCornerTap,
-    required this.onEdgeTap,
-    required this.onRoofTap,
-    required this.replayPrompt,
-    required this.replayCueId,
-    required this.allDone,
-  });
-
-  final HabitatBlueprint blueprint;
-  final Set<int> placedCorners;
-  final Set<int> placedEdges;
-  final Set<int> placedRoof;
-  final bool showRoof;
-
-  /// The single piece the hint ladder is ringing, if any.
-  final (String, int)? hinted;
-
-  final bool inputLocked;
-  final ValueChanged<int> onCornerTap;
-  final ValueChanged<int> onEdgeTap;
-  final ValueChanged<int> onRoofTap;
-  final String replayPrompt;
-  final String replayCueId;
-  final bool allDone;
 
   static const double _kClayDiameterFraction = 0.10;
   static const double _kStickThicknessFraction = 0.045;
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-        child: Row(
+    final open = _open;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final w = constraints.maxWidth;
+        final h = constraints.maxHeight;
+        final shortest = math.min(w, h);
+        final clayD = shortest * _kClayDiameterFraction;
+        final stickT = shortest * _kStickThicknessFraction;
+        return Stack(
           children: [
-            kReplayDemoShelf(
-              child: ReplayDemoButton(
-                label: replayPrompt,
-                cueId: replayCueId,
+            // Edges first so corners (which sit *over* the endpoints) draw on
+            // top.
+            for (var i = 0; i < _bp.edges.length; i++)
+              _EdgeWidget(
+                key: ValueKey('habitat-edge-$i'),
+                edge: _bp.edges[i],
+                corners: _bp.corners,
+                placed: _edges.contains(i),
+                canvasW: w,
+                canvasH: h,
+                stickThickness: stickT,
+                enabled: open,
+                hinted: _hinted == ('edge', i),
+                onTap: () => _onEdgeTap(i),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final w = constraints.maxWidth;
-                  final h = constraints.maxHeight;
-                  final shortest = math.min(w, h);
-                  final clayD = shortest * _kClayDiameterFraction;
-                  final stickT = shortest * _kStickThicknessFraction;
-                  return Stack(
-                    children: [
-                      // Edges first so corners (which sit *over* the
-                      // endpoints) draw on top.
-                      for (var i = 0; i < blueprint.edges.length; i++)
-                        _EdgeWidget(
-                          key: ValueKey('habitat-edge-$i'),
-                          edge: blueprint.edges[i],
-                          corners: blueprint.corners,
-                          placed: placedEdges.contains(i),
-                          canvasW: w,
-                          canvasH: h,
-                          stickThickness: stickT,
-                          enabled: !inputLocked,
-                          hinted: hinted == ('edge', i),
-                          onTap: () => onEdgeTap(i),
-                        ),
-                      // Corners on top of edges so the clay ball
-                      // visually anchors the joint.
-                      for (var i = 0; i < blueprint.corners.length; i++)
-                        _CornerWidget(
-                          key: ValueKey('habitat-corner-$i'),
-                          position: blueprint.corners[i],
-                          placed: placedCorners.contains(i),
-                          canvasW: w,
-                          canvasH: h,
-                          diameter: clayD,
-                          enabled: !inputLocked,
-                          hinted: hinted == ('corner', i),
-                          onTap: () => onCornerTap(i),
-                        ),
-                      // Roof pieces — only in Phase 2.
-                      if (showRoof)
-                        for (var i = 0; i < blueprint.roof.length; i++)
-                          _RoofPieceWidget(
-                            key: ValueKey('habitat-roof-$i'),
-                            piece: blueprint.roof[i],
-                            placed: placedRoof.contains(i),
-                            canvasW: w,
-                            canvasH: h,
-                            enabled: !inputLocked,
-                            hinted: hinted == ('roof', i),
-                            onTap: () => onRoofTap(i),
-                          ),
-                    ],
-                  );
-                },
+            for (var i = 0; i < _bp.corners.length; i++)
+              _CornerWidget(
+                key: ValueKey('habitat-corner-$i'),
+                position: _bp.corners[i],
+                placed: _corners.contains(i),
+                canvasW: w,
+                canvasH: h,
+                diameter: clayD,
+                enabled: open,
+                hinted: _hinted == ('corner', i),
+                onTap: () => _onCornerTap(i),
               ),
-            ),
-            const SizedBox(width: 24),
-            kContinueArrowShelf(
-              child: allDone
-                  ? const NextArrowButton(
-                      key: ValueKey('habitat-done-arrow'),
-                      idleHintEnabled: true,
-                      onPressed: _noop,
-                      label: kLabelNice,
-                    )
-                  : null,
-            ),
+            if (_raising)
+              for (var i = 0; i < _bp.roof.length; i++)
+                _RoofPieceWidget(
+                  key: ValueKey('habitat-roof-$i'),
+                  piece: _bp.roof[i],
+                  placed: _roof.contains(i),
+                  canvasW: w,
+                  canvasH: h,
+                  enabled: open,
+                  hinted: _hinted == ('roof', i),
+                  onTap: () => _onRoofTap(i),
+                ),
           ],
-        ),
-      ),
+        );
+      },
     );
   }
 }
-
-void _noop() {}
 
 class _CornerWidget extends StatelessWidget {
   const _CornerWidget({

@@ -435,6 +435,16 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
           for (final id in kHabitatDisplayNames.keys) habitatBuildPrompt(id),
         ],
       ),
+      ScriptBatch(
+        id: 'habitat-lines',
+        title: 'Build-a-Habitat — the keeper and the pieces',
+        note: 'The keeper opens, raises the roof and admires each finished '
+            'habitat. The short lines name each piece as it lands - clay, '
+            'stick, a roof shape - so keep them light and quick; she may hear '
+            'a dozen in a minute. The two clay-first lines answer a stick '
+            'tapped too early: gentle, never a correction.',
+        lines: habitatScriptLines(),
+      ),
 
       // ---- Counting challenge -------------------------------------
       ScriptBatch(

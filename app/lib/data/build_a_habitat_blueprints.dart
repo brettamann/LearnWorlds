@@ -69,7 +69,6 @@ class HabitatBlueprint {
     required this.corners,
     required this.edges,
     required this.roof,
-    required this.keeperLine,
     required this.rewardAsset,
   });
 
@@ -96,8 +95,9 @@ class HabitatBlueprint {
   /// 3D pieces to place on top in Phase 2 (K.G.6).
   final List<HabitatRoofPiece> roof;
 
-  /// Short keeper line after this habitat is finished.
-  final String keeperLine;
+  /// Short keeper line after this habitat is finished. Read from
+  /// habitat_words.dart, like [displayName].
+  String get keeperLine => kHabitatKeeperLines[id] ?? '';
 
   /// Reward sprite asset path (feather, gem, etc.).
   final String rewardAsset;
@@ -127,7 +127,6 @@ const List<HabitatBlueprint> kHabitatBlueprints = <HabitatBlueprint>[
         size: 0.22,
       ),
     ],
-    keeperLine: 'A fawn shelter! Beautifully built.',
     rewardAsset: 'assets/rewards/general/reward-feather.png',
   ),
   HabitatBlueprint(
@@ -162,7 +161,6 @@ const List<HabitatBlueprint> kHabitatBlueprints = <HabitatBlueprint>[
         size: 0.24,
       ),
     ],
-    keeperLine: 'A gryphon roost — four sides and a peaked roof!',
     rewardAsset: 'assets/rewards/general/reward-gem.png',
   ),
   HabitatBlueprint(
@@ -199,7 +197,6 @@ const List<HabitatBlueprint> kHabitatBlueprints = <HabitatBlueprint>[
         size: 0.18,
       ),
     ],
-    keeperLine: 'A unicorn gazebo — five sides and a starlit dome on top!',
     rewardAsset: 'assets/rewards/general/reward-gem.png',
   ),
 ];
