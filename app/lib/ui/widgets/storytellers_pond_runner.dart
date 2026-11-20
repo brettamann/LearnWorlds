@@ -30,6 +30,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../activities/activity_ids.dart';
+import '../../activities/sub_mode_ids.dart';
 import '../../data/asset_paths.dart';
 import '../../data/button_labels.dart';
 import '../../data/number_words.dart';
@@ -55,7 +56,7 @@ class StorytellersPondRunner extends ConsumerWidget {
   const StorytellersPondRunner({
     super.key,
     required this.onSequenceComplete,
-    this.subMode = kStorySubAddTo,
+    this.subMode = StorytellersPondModes.addTo,
     this.skipIntro = false,
   });
 
@@ -77,8 +78,9 @@ class StorytellersPondRunner extends ConsumerWidget {
       keeperLineFor: storyKeeperLine,
       finalLine: kStoryFinal,
       skipIntro: skipIntro,
-      musicBed:
-          subMode == kStorySubTwoStep ? kChallengeMusicBed : kDefaultMusicBed,
+      musicBed: subMode == StorytellersPondModes.twoStep
+          ? kChallengeMusicBed
+          : kDefaultMusicBed,
       onSequenceComplete: onSequenceComplete,
       background: Image.asset(
         AssetPaths.storytellersPondBackground,

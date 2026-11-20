@@ -29,6 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../activities/activity_ids.dart';
+import '../../activities/sub_mode_ids.dart';
 import '../../data/asset_paths.dart';
 import '../../data/number_words.dart';
 import '../../data/picnic_baskets_words.dart';
@@ -51,7 +52,7 @@ class PicnicBasketsRunner extends ConsumerWidget {
   const PicnicBasketsRunner({
     super.key,
     required this.onSequenceComplete,
-    this.subMode = kPicnicSubMatch,
+    this.subMode = PicnicBasketsModes.matchByLine,
     this.skipIntro = false,
   });
 
@@ -68,13 +69,15 @@ class PicnicBasketsRunner extends ConsumerWidget {
     return SanctuaryRoundShell(
       activityId: ActivityIds.picnicBaskets,
       roundCount: rounds.length,
-      conceptIdFor: (_) => subMode == kPicnicSubNumerals ? 'K.CC.7' : 'K.CC.6',
+      conceptIdFor: (_) =>
+          subMode == PicnicBasketsModes.numeralCompare ? 'K.CC.7' : 'K.CC.6',
       introLine: kPicnicIntro,
       keeperLineFor: picnicKeeperLine,
       finalLine: kPicnicFinal,
       skipIntro: skipIntro,
-      musicBed:
-          subMode == kPicnicSubThree ? kChallengeMusicBed : 'sanctuary-picnic',
+      musicBed: subMode == PicnicBasketsModes.threeWayCompare
+          ? kChallengeMusicBed
+          : 'sanctuary-picnic',
       onSequenceComplete: onSequenceComplete,
       background: Image.asset(AssetPaths.picnicBackground, fit: BoxFit.cover),
       roundBuilder: (context, c) =>

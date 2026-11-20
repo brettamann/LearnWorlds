@@ -2,6 +2,7 @@
 //
 // See ten_frame_words.dart for why rounds and words live together here.
 
+import '../activities/sub_mode_ids.dart';
 import 'asset_paths.dart';
 import 'round_pick.dart';
 import 'warm_lines.dart';
@@ -94,12 +95,8 @@ class BenchRound {
   }
 }
 
-const String kBenchSubDescribe = 'describe-attributes';
-const String kBenchSubCompare = 'compare-two';
-const String kBenchSubOrder = 'order-three-by-length';
-
 final Map<String, List<BenchRound>> kBenchRounds = <String, List<BenchRound>>{
-  kBenchSubDescribe: <BenchRound>[
+  CaretakersBenchModes.describeAttributes: <BenchRound>[
     const BenchRound(
       BenchTask.pickHeavy,
       things: <BenchThing>[kBenchFeather, kBenchPumpkin],
@@ -133,7 +130,7 @@ final Map<String, List<BenchRound>> kBenchRounds = <String, List<BenchRound>>{
       cats: <BenchCaterpillar>[_cat(_purple, 3), _cat(_green, 7)],
     ),
   ],
-  kBenchSubCompare: <BenchRound>[
+  CaretakersBenchModes.compareTwo: <BenchRound>[
     const BenchRound(
       BenchTask.weighHeavier,
       things: <BenchThing>[kBenchApple, kBenchPumpkin],
@@ -167,7 +164,7 @@ final Map<String, List<BenchRound>> kBenchRounds = <String, List<BenchRound>>{
       cats: <BenchCaterpillar>[_cat(_purple, 3), _cat(_green, 6)],
     ),
   ],
-  kBenchSubOrder: <BenchRound>[
+  CaretakersBenchModes.orderThreeByLength: <BenchRound>[
     BenchRound(
       BenchTask.orderThree,
       cats: <BenchCaterpillar>[
@@ -218,8 +215,9 @@ final Map<String, List<BenchRound>> kBenchRounds = <String, List<BenchRound>>{
 /// and alternating keeps "heavy" and "long" from blurring into one word for
 /// "big". The biggest difference goes first within each.
 List<BenchRound> benchRoundsFor(String subMode, {int seed = 0}) {
-  final pool = kBenchRounds[subMode] ?? kBenchRounds[kBenchSubDescribe]!;
-  if (subMode == kBenchSubOrder) {
+  final pool = kBenchRounds[subMode] ??
+      kBenchRounds[CaretakersBenchModes.describeAttributes]!;
+  if (subMode == CaretakersBenchModes.orderThreeByLength) {
     return pickRounds(
       pool,
       count: 3,

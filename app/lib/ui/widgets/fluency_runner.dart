@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../activities/activity_ids.dart';
+import '../../activities/sub_mode_ids.dart';
 import '../../data/asset_paths.dart';
 import '../../data/fluency_words.dart';
 import '../../data/sfx_catalog.dart';
@@ -40,7 +41,7 @@ class FluencyRunner extends ConsumerWidget {
   const FluencyRunner({
     super.key,
     required this.onSequenceComplete,
-    this.subMode = kFluencySubCasual,
+    this.subMode = FluencyWithin5Modes.casual,
     this.skipIntro = false,
   });
 
@@ -62,8 +63,9 @@ class FluencyRunner extends ConsumerWidget {
       keeperLineFor: fluencyKeeperLine,
       finalLine: kFluencyFinal,
       skipIntro: skipIntro,
-      musicBed:
-          subMode == kFluencySubSpeed ? kChallengeMusicBed : kDefaultMusicBed,
+      musicBed: subMode == FluencyWithin5Modes.speedRun
+          ? kChallengeMusicBed
+          : kDefaultMusicBed,
       onSequenceComplete: onSequenceComplete,
       background: Image.asset(
         AssetPaths.wheresBuddyBackground,
@@ -72,7 +74,7 @@ class FluencyRunner extends ConsumerWidget {
       roundBuilder: (context, c) => FluencyRoundBody(
         facts: rounds[c.index],
         c: c,
-        numeralsOnly: subMode == kFluencySubSpeed,
+        numeralsOnly: subMode == FluencyWithin5Modes.speedRun,
       ),
     );
   }

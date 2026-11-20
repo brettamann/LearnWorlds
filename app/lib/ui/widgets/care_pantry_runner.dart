@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../activities/activity_ids.dart';
+import '../../activities/sub_mode_ids.dart';
 import '../../data/asset_paths.dart';
 import '../../data/care_pantry_words.dart';
 import '../../data/number_words.dart';
@@ -45,7 +46,7 @@ class CarePantryRunner extends ConsumerWidget {
   const CarePantryRunner({
     super.key,
     required this.onSequenceComplete,
-    this.subMode = kPantrySubSimple,
+    this.subMode = CarePantryModes.simplePantry,
     this.skipIntro = false,
   });
 
@@ -67,8 +68,9 @@ class CarePantryRunner extends ConsumerWidget {
       keeperLineFor: pantryKeeperLine,
       finalLine: kPantryFinal,
       skipIntro: skipIntro,
-      musicBed:
-          subMode == kPantrySubColour ? kChallengeMusicBed : kDefaultMusicBed,
+      musicBed: subMode == CarePantryModes.unfamiliarRules
+          ? kChallengeMusicBed
+          : kDefaultMusicBed,
       onSequenceComplete: onSequenceComplete,
       background: Image.asset(
         AssetPaths.carePantryBackground,

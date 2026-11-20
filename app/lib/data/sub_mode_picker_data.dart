@@ -51,6 +51,7 @@
 // through the recording pipeline.
 
 import '../activities/activity_ids.dart';
+import '../activities/sub_mode_ids.dart';
 import 'asset_paths.dart';
 
 /// How a picker card draws itself.
@@ -161,24 +162,24 @@ class SubModePickerOption {
 final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
     <String, Map<String, SubModePickerOption>>{
   ActivityIds.shapeGarden: <String, SubModePickerOption>{
-    'find-shape': SubModePickerOption(
+    ShapeGardenModes.findShape: SubModePickerOption(
       label: 'Find the shape',
       symbol:
           PickerSprite(AssetPaths.shapeGarden2dSprite('triangle', 'yellow')),
     ),
-    'flat-or-solid': SubModePickerOption(
+    ShapeGardenModes.flatOrSolid: SubModePickerOption(
       label: 'Flat or solid',
       symbol: PickerSprite(
         AssetPaths.shapeGarden3dCreature('sphere', 'jellyfish'),
       ),
     ),
-    'sort-by-attribute': SubModePickerOption(
+    ShapeGardenModes.sortByAttribute: SubModePickerOption(
       label: 'Sort them out',
       symbol: PickerSprite(
         AssetPaths.shapeGarden2dSprite('hexagon', 'honeycomb'),
       ),
     ),
-    'two-attribute-hunt': SubModePickerOption(
+    ShapeGardenModes.twoAttributeHunt: SubModePickerOption(
       label: 'Two things at once',
       symbol: PickerSprite(
         AssetPaths.shapeGarden2dSprite('pentagon', 'starfruit'),
@@ -186,11 +187,11 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
     ),
   },
   ActivityIds.tenFramePond: <String, SubModePickerOption>{
-    'fill-to-target': const SubModePickerOption(
+    TenFramePondModes.fillToTarget: const SubModePickerOption(
       label: 'Fill the lily pads',
       symbol: PickerSprite(AssetPaths.tenFrameFrogGreen),
     ),
-    'two-ways': const SubModePickerOption(
+    TenFramePondModes.twoWays: const SubModePickerOption(
       label: 'Two kinds of frog',
       symbol: PickerScene(<PickerSceneLayer>[
         PickerSceneLayer.sprite(
@@ -207,7 +208,7 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
         ),
       ]),
     ),
-    'make-ten': const SubModePickerOption(
+    TenFramePondModes.makeTen: const SubModePickerOption(
       label: 'Make ten',
       symbol: PickerScene(<PickerSceneLayer>[
         PickerSceneLayer.sprite(
@@ -224,25 +225,25 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
         ),
       ]),
     ),
-    'ten-plus-n': const SubModePickerOption(
+    TenFramePondModes.tenPlusN: const SubModePickerOption(
       label: 'Ten and more',
       symbol: PickerSprite(AssetPaths.countingParadeMeadowFrog),
     ),
-    'three-frames': const SubModePickerOption(
+    TenFramePondModes.threeFrames: const SubModePickerOption(
       label: 'How many frogs?',
       symbol: PickerSprite(AssetPaths.tenFrameFrogWaving),
     ),
   },
   ActivityIds.carePantry: <String, SubModePickerOption>{
-    'simple-pantry': const SubModePickerOption(
+    CarePantryModes.simplePantry: const SubModePickerOption(
       label: 'Tidy the pantry',
       symbol: PickerSprite(AssetPaths.carePantryAcorn),
     ),
-    'full-pantry': const SubModePickerOption(
+    CarePantryModes.fullPantry: const SubModePickerOption(
       label: 'The big tidy',
       symbol: PickerSprite(AssetPaths.carePantryCarrot),
     ),
-    'unfamiliar-rules': const SubModePickerOption(
+    CarePantryModes.unfamiliarRules: const SubModePickerOption(
       label: 'Sort by colour',
       symbol: PickerScene(<PickerSceneLayer>[
         PickerSceneLayer.sprite(
@@ -267,11 +268,11 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
     ),
   },
   ActivityIds.scribesTower: <String, SubModePickerOption>{
-    'trace-numeral': const SubModePickerOption(
+    ScribesTowerModes.traceNumeral: const SubModePickerOption(
       label: 'Trace a number',
       symbol: PickerSprite(AssetPaths.countingParadeFireflySprite),
     ),
-    'write-from-cue': const SubModePickerOption(
+    ScribesTowerModes.writeFromCue: const SubModePickerOption(
       label: 'Count, then write',
       symbol: PickerScene(<PickerSceneLayer>[
         PickerSceneLayer.sprite(
@@ -294,21 +295,21 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
         ),
       ]),
     ),
-    'match-numeral': const SubModePickerOption(
+    ScribesTowerModes.matchNumeral: const SubModePickerOption(
       label: 'Find the number',
       symbol: PickerSprite(AssetPaths.countingParadeLanternMoth),
     ),
-    'audio-only-teens': const SubModePickerOption(
+    ScribesTowerModes.audioOnlyTeens: const SubModePickerOption(
       label: 'The big numbers',
       symbol: PickerSprite(AssetPaths.countingParadeMoonlightOwl),
     ),
   },
   ActivityIds.storytellersPond: <String, SubModePickerOption>{
-    'add-to': const SubModePickerOption(
+    StorytellersPondModes.addTo: const SubModePickerOption(
       label: 'More are coming',
       symbol: PickerSprite(AssetPaths.storytellersDuckling),
     ),
-    'take-from': const SubModePickerOption(
+    StorytellersPondModes.takeFrom: const SubModePickerOption(
       label: 'Time to go home',
       symbol: PickerScene(<PickerSceneLayer>[
         PickerSceneLayer.sprite(
@@ -325,7 +326,7 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
         ),
       ]),
     ),
-    'put-together': const SubModePickerOption(
+    StorytellersPondModes.putTogether: const SubModePickerOption(
       label: 'All together',
       symbol: PickerScene(<PickerSceneLayer>[
         PickerSceneLayer.sprite(
@@ -342,17 +343,17 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
         ),
       ]),
     ),
-    'take-apart': const SubModePickerOption(
+    StorytellersPondModes.takeApart: const SubModePickerOption(
       label: 'Some in the water',
       symbol: PickerSprite(AssetPaths.countingParadeMossBunny),
     ),
-    'two-step': const SubModePickerOption(
+    StorytellersPondModes.twoStep: const SubModePickerOption(
       label: 'A longer story',
       symbol: PickerSprite(AssetPaths.countingParadeStarTurtle),
     ),
   },
   ActivityIds.caretakersBench: <String, SubModePickerOption>{
-    'describe-attributes': const SubModePickerOption(
+    CaretakersBenchModes.describeAttributes: const SubModePickerOption(
       label: 'Heavy or light',
       symbol: PickerScene(<PickerSceneLayer>[
         PickerSceneLayer.sprite(
@@ -369,25 +370,25 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
         ),
       ]),
     ),
-    'compare-two': const SubModePickerOption(
+    CaretakersBenchModes.compareTwo: const SubModePickerOption(
       label: 'Weigh them',
       symbol: PickerSprite(AssetPaths.caretakersScaleStand),
     ),
-    'order-three-by-length': const SubModePickerOption(
+    CaretakersBenchModes.orderThreeByLength: const SubModePickerOption(
       label: 'Line them up',
       symbol: PickerSprite(AssetPaths.caretakersLeaf),
     ),
   },
   ActivityIds.picnicBaskets: <String, SubModePickerOption>{
-    'match-by-line': const SubModePickerOption(
+    PicnicBasketsModes.matchByLine: const SubModePickerOption(
       label: 'Find a partner',
       symbol: PickerSprite(AssetPaths.picnicBasket),
     ),
-    'count-and-compare': const SubModePickerOption(
+    PicnicBasketsModes.countAndCompare: const SubModePickerOption(
       label: 'Count and compare',
       symbol: PickerSprite(AssetPaths.carePantryBerries),
     ),
-    'numeral-compare': const SubModePickerOption(
+    PicnicBasketsModes.numeralCompare: const SubModePickerOption(
       label: 'Bigger number',
       symbol: PickerScene(<PickerSceneLayer>[
         PickerSceneLayer.sprite(
@@ -404,13 +405,13 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
         ),
       ]),
     ),
-    'three-way-compare': const SubModePickerOption(
+    PicnicBasketsModes.threeWayCompare: const SubModePickerOption(
       label: 'Three at the picnic',
       symbol: PickerSprite(AssetPaths.countingParadeBabyCentaur),
     ),
   },
   ActivityIds.fluencyWithin5: <String, SubModePickerOption>{
-    'casual': const SubModePickerOption(
+    FluencyWithin5Modes.casual: const SubModePickerOption(
       label: 'Quick puzzles',
       symbol: PickerScene(<PickerSceneLayer>[
         PickerSceneLayer.buddy(x: 0.42, y: 0.55, size: 0.72),
@@ -422,21 +423,21 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
         ),
       ]),
     ),
-    'speed-run': const SubModePickerOption(
+    FluencyWithin5Modes.speedRun: const SubModePickerOption(
       label: 'Just the numbers',
       symbol: PickerSprite(AssetPaths.countingParadeSunbeamStag),
     ),
   },
   ActivityIds.countingParade: <String, SubModePickerOption>{
-    'count-the-parade': const SubModePickerOption(
+    CountingParadeModes.countTheParade: const SubModePickerOption(
       label: 'Count the parade',
       symbol: PickerSprite(AssetPaths.countingParadeFawn),
     ),
-    'count-forward-from-n': const SubModePickerOption(
+    CountingParadeModes.countForwardFromN: const SubModePickerOption(
       label: 'Counting on',
       symbol: PickerSprite(AssetPaths.countingParadeBabyGryphon),
     ),
-    'count-out-n': const SubModePickerOption(
+    CountingParadeModes.countOutN: const SubModePickerOption(
       label: 'Count out that many',
       symbol: PickerSprite(AssetPaths.countingParadeGoldenEgg),
     ),
@@ -444,15 +445,15 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
     // Buddy's "Put Buddy there" and "In the middle" — the same picture
     // opening two different games from two different nodes. They are the
     // parade's alone now that those three cards draw their own scene.
-    'count-on-by-ones': const SubModePickerOption(
+    CountingParadeModes.countOnByOnes: const SubModePickerOption(
       label: 'Count by ones',
       symbol: PickerSprite(AssetPaths.countingParadeBabyPhoenix),
     ),
-    'long-parade': const SubModePickerOption(
+    CountingParadeModes.longParade: const SubModePickerOption(
       label: 'Big parade',
       symbol: PickerSprite(AssetPaths.countingParadeBabyUnicorn),
     ),
-    'tens-parade': const SubModePickerOption(
+    CountingParadeModes.tensParade: const SubModePickerOption(
       label: 'Count to 100',
       symbol: PickerSprite(AssetPaths.countingParadeBabyDragon),
     ),
@@ -468,7 +469,7 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
     // 34-pixel Buddy once BoxFit and his own transparent margin are taken
     // out: a green smudge next to a tree. Two elements only ever both read
     // here when one is clearly the subject and the other clearly the scenery.
-    'find-mode': const SubModePickerOption(
+    WheresBuddyModes.findMode: const SubModePickerOption(
       label: 'Hide and seek',
       symbol: PickerScene(<PickerSceneLayer>[
         // Buddy first so the trunk covers him — a hiding Buddy has to be
@@ -483,7 +484,7 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
         ),
       ]),
     ),
-    'place-mode': const SubModePickerOption(
+    WheresBuddyModes.placeMode: const SubModePickerOption(
       label: 'Put Buddy there',
       symbol: PickerScene(<PickerSceneLayer>[
         // The rocks are a low wide mound, which makes them a plinth: Buddy
@@ -499,7 +500,7 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
         PickerSceneLayer.buddy(x: 0.50, y: 0.33, size: 0.62),
       ]),
     ),
-    'relational-mode': const SubModePickerOption(
+    WheresBuddyModes.relationalMode: const SubModePickerOption(
       label: 'In the middle',
       symbol: PickerScene(<PickerSceneLayer>[
         // Two of the same landmark, one mirrored, so "between" has two
@@ -529,15 +530,15 @@ final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
     // the three sub-modes actually differ by: a triangle, a square, a
     // pentagon. `creature-home` plays all three blueprints in a row; its card
     // shows the square, which is the one it adds.
-    'simple-shelter': const SubModePickerOption(
+    BuildAHabitatModes.simpleShelter: const SubModePickerOption(
       label: 'Simple shelter',
       symbol: PickerHabitat(0),
     ),
-    'creature-home': const SubModePickerOption(
+    BuildAHabitatModes.creatureHome: const SubModePickerOption(
       label: 'Creature home',
       symbol: PickerHabitat(1),
     ),
-    'grand-habitat': const SubModePickerOption(
+    BuildAHabitatModes.grandHabitat: const SubModePickerOption(
       label: 'Grand habitat',
       symbol: PickerHabitat(2),
     ),

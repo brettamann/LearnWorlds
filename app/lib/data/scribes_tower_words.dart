@@ -2,13 +2,9 @@
 //
 // See ten_frame_words.dart for why rounds and words live together here.
 
+import '../activities/sub_mode_ids.dart';
 import 'number_words.dart';
 import 'warm_lines.dart';
-
-const String kScribeSubTrace = 'trace-numeral';
-const String kScribeSubCue = 'write-from-cue';
-const String kScribeSubMatch = 'match-numeral';
-const String kScribeSubTeens = 'audio-only-teens';
 
 enum ScribeTask {
   /// Trace a numeral along its path.
@@ -40,27 +36,27 @@ const List<int> kScribeHard = <int>[8, 9, 10];
 List<ScribeRound> scribeRoundsFor(String subMode, {required int seed}) {
   int pick(List<int> from, int salt) => from[(seed + salt).abs() % from.length];
   switch (subMode) {
-    case kScribeSubMatch:
+    case ScribesTowerModes.matchNumeral:
       return <ScribeRound>[
         ScribeRound(ScribeTask.match, pick(<int>[1, 2, 3, 4, 5], 0)),
         ScribeRound(ScribeTask.match, pick(<int>[6, 7, 8], 1)),
         ScribeRound(ScribeTask.match, pick(<int>[0, 9, 10], 2)),
         ScribeRound(ScribeTask.match, pick(<int>[3, 5, 6, 8], 3)),
       ];
-    case kScribeSubTeens:
+    case ScribesTowerModes.audioOnlyTeens:
       return <ScribeRound>[
         ScribeRound(ScribeTask.match, 11 + (seed.abs() % 3)),
         ScribeRound(ScribeTask.match, 14 + (seed.abs() % 3)),
         ScribeRound(ScribeTask.match, 17 + (seed.abs() % 3)),
       ];
-    case kScribeSubCue:
+    case ScribesTowerModes.writeFromCue:
       return <ScribeRound>[
         ScribeRound(ScribeTask.writeFromCue, pick(<int>[1, 4, 7], 0)),
         ScribeRound(ScribeTask.writeFromCue, pick(<int>[2, 3, 5], 1)),
         ScribeRound(ScribeTask.writeFromCue, pick(<int>[6, 10, 9], 2)),
         ScribeRound(ScribeTask.writeFromCue, pick(<int>[8, 3, 5], 3)),
       ];
-    case kScribeSubTrace:
+    case ScribesTowerModes.traceNumeral:
     default:
       final easy = List<int>.of(kScribeEasy);
       final a = pick(easy, 0);

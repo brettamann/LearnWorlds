@@ -34,6 +34,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../activities/activity_ids.dart';
+import '../../activities/sub_mode_ids.dart';
 import '../../coordinators/round_coordinator.dart';
 import '../../data/asset_paths.dart';
 import '../../data/button_labels.dart';
@@ -131,14 +132,6 @@ const Duration _kBuddyWalk = Duration(milliseconds: 850);
 /// the keeper interstitial appears with the reward message.
 const Duration _kFinalCelebrationHold = Duration(seconds: 2);
 
-/// Sub-modes the Counting Parade activity supports.
-const String kCountingParadeSubModeCountTheParade = 'count-the-parade';
-const String kCountingParadeSubModeCountForwardFromN = 'count-forward-from-n';
-const String kCountingParadeSubModeCountOutN = 'count-out-n';
-const String kCountingParadeSubModeLongParade = 'long-parade';
-const String kCountingParadeSubModeCountOnByOnes = 'count-on-by-ones';
-const String kCountingParadeSubModeTensParade = 'tens-parade';
-
 /// Top-level Counting Parade runner. Dispatches on `subMode` to one of
 /// four bodies: the existing 8-round parade (K.CC.4a/b), the count-on
 /// rounds (K.CC.2), the count-out drag rounds (K.CC.5), or the bigger-
@@ -150,7 +143,7 @@ class CountingParadeRunner extends StatelessWidget {
     super.key,
     required this.onSequenceComplete,
     this.skipIntro = false,
-    this.subMode = kCountingParadeSubModeCountTheParade,
+    this.subMode = CountingParadeModes.countTheParade,
     this.roundParameters,
   });
 
@@ -166,32 +159,32 @@ class CountingParadeRunner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (subMode) {
-      case kCountingParadeSubModeCountForwardFromN:
+      case CountingParadeModes.countForwardFromN:
         return CountForwardFromNRunner(
           onSequenceComplete: onSequenceComplete,
           skipIntro: skipIntro,
         );
-      case kCountingParadeSubModeCountOutN:
+      case CountingParadeModes.countOutN:
         return CountOutNRunner(
           onSequenceComplete: onSequenceComplete,
           skipIntro: skipIntro,
         );
-      case kCountingParadeSubModeLongParade:
+      case CountingParadeModes.longParade:
         return LongParadeRunner(
           onSequenceComplete: onSequenceComplete,
           skipIntro: skipIntro,
         );
-      case kCountingParadeSubModeCountOnByOnes:
+      case CountingParadeModes.countOnByOnes:
         return CountOnByOnesRunner(
           onSequenceComplete: onSequenceComplete,
           skipIntro: skipIntro,
         );
-      case kCountingParadeSubModeTensParade:
+      case CountingParadeModes.tensParade:
         return TensParadeRunner(
           onSequenceComplete: onSequenceComplete,
           skipIntro: skipIntro,
         );
-      case kCountingParadeSubModeCountTheParade:
+      case CountingParadeModes.countTheParade:
       default:
         return CountTheParadeRunner(
           onSequenceComplete: onSequenceComplete,

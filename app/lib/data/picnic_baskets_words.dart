@@ -2,6 +2,7 @@
 //
 // See ten_frame_words.dart for why rounds and words live together here.
 
+import '../activities/sub_mode_ids.dart';
 import 'asset_paths.dart';
 import 'number_words.dart';
 import 'round_pick.dart';
@@ -74,11 +75,6 @@ class PicnicRound {
   }
 }
 
-const String kPicnicSubMatch = 'match-by-line';
-const String kPicnicSubCount = 'count-and-compare';
-const String kPicnicSubNumerals = 'numeral-compare';
-const String kPicnicSubThree = 'three-way-compare';
-
 /// Every round each sub-mode can play; [picnicRoundsFor] picks a visit's.
 ///
 /// One round per two-diner visit is a tie, because "the same" is an answer
@@ -88,7 +84,7 @@ const String kPicnicSubThree = 'three-way-compare';
 /// at a size she can tap.
 const Map<String, List<PicnicRound>> kPicnicRounds =
     <String, List<PicnicRound>>{
-  kPicnicSubMatch: <PicnicRound>[
+  PicnicBasketsModes.matchByLine: <PicnicRound>[
     PicnicRound(PicnicTask.match, kTreatCherries, <int>[4, 3]),
     PicnicRound(PicnicTask.match, kTreatApples, <int>[2, 5]),
     PicnicRound(PicnicTask.match, kTreatCarrots, <int>[6, 4]),
@@ -99,7 +95,7 @@ const Map<String, List<PicnicRound>> kPicnicRounds =
     PicnicRound(PicnicTask.match, kTreatApples, <int>[3, 3]),
     PicnicRound(PicnicTask.match, kTreatCherries, <int>[5, 5]),
   ],
-  kPicnicSubCount: <PicnicRound>[
+  PicnicBasketsModes.countAndCompare: <PicnicRound>[
     PicnicRound(PicnicTask.count, kTreatApples, <int>[5, 3]),
     PicnicRound(PicnicTask.count, kTreatCherries, <int>[3, 6]),
     PicnicRound(PicnicTask.count, kTreatAcorns, <int>[7, 6]),
@@ -110,7 +106,7 @@ const Map<String, List<PicnicRound>> kPicnicRounds =
     PicnicRound(PicnicTask.count, kTreatAcorns, <int>[6, 6]),
     PicnicRound(PicnicTask.count, kTreatCherries, <int>[4, 4]),
   ],
-  kPicnicSubNumerals: <PicnicRound>[
+  PicnicBasketsModes.numeralCompare: <PicnicRound>[
     PicnicRound(PicnicTask.numerals, kTreatApples, <int>[7, 4]),
     PicnicRound(PicnicTask.numerals, kTreatApples, <int>[3, 8]),
     PicnicRound(PicnicTask.numerals, kTreatApples, <int>[6, 5]),
@@ -122,7 +118,7 @@ const Map<String, List<PicnicRound>> kPicnicRounds =
   ],
   // A clear most and a clear fewest in every one: "and who has the fewest?"
   // must have an answer.
-  kPicnicSubThree: <PicnicRound>[
+  PicnicBasketsModes.threeWayCompare: <PicnicRound>[
     PicnicRound(PicnicTask.three, kTreatCherries, <int>[3, 5, 2]),
     PicnicRound(PicnicTask.three, kTreatAcorns, <int>[6, 4, 5]),
     PicnicRound(PicnicTask.three, kTreatApples, <int>[2, 3, 6]),
@@ -137,13 +133,14 @@ const Map<String, List<PicnicRound>> kPicnicRounds =
 /// most obvious. Two-diner visits then get one tie, somewhere after the first
 /// round - a tie first would be a strange thing to open a picnic on.
 List<PicnicRound> picnicRoundsFor(String subMode, {int seed = 0}) {
-  final pool = kPicnicRounds[subMode] ?? kPicnicRounds[kPicnicSubMatch]!;
+  final pool =
+      kPicnicRounds[subMode] ?? kPicnicRounds[PicnicBasketsModes.matchByLine]!;
   num ease(PicnicRound r) {
     final sorted = List<int>.of(r.counts)..sort();
     return -(sorted.last - sorted.first);
   }
 
-  if (subMode == kPicnicSubThree) {
+  if (subMode == PicnicBasketsModes.threeWayCompare) {
     return pickRounds(pool, count: 3, seed: seed, ease: ease);
   }
   final ties = <PicnicRound>[

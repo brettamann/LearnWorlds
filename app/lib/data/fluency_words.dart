@@ -4,11 +4,9 @@
 
 import 'dart:math' as math;
 
+import '../activities/sub_mode_ids.dart';
 import 'number_words.dart';
 import 'warm_lines.dart';
-
-const String kFluencySubCasual = 'casual';
-const String kFluencySubSpeed = 'speed-run';
 
 class FluencyFact {
   const FluencyFact(this.a, this.b, {required this.plus});
@@ -36,7 +34,7 @@ const int kFluencyPerRound = 3;
 /// surest; zero turns up now and then, never as the very first puzzle.
 List<List<FluencyFact>> fluencyRoundsFor(String subMode, {required int seed}) {
   final rng = math.Random(seed);
-  final rounds = subMode == kFluencySubSpeed ? 4 : 3;
+  final rounds = subMode == FluencyWithin5Modes.speedRun ? 4 : 3;
   final sums = kFluencyFacts.where((f) => f.plus && f.a > 0).toList();
   final all = kFluencyFacts.where((f) => f.a > 0).toList();
   final out = <List<FluencyFact>>[];

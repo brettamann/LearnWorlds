@@ -11,6 +11,7 @@
 // and a miss puts one layer back for that puzzle, because a child who is
 // stuck at abstract is exactly the child the acorns are for.
 
+import 'package:critmath/activities/sub_mode_ids.dart';
 import 'package:critmath/data/fluency_words.dart';
 import 'package:critmath/data/round_pick.dart';
 import 'package:critmath/data/storytellers_pond_words.dart';
@@ -26,6 +27,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'support/harness.dart';
 
 const String _session = 'cpa-layers';
@@ -94,7 +96,7 @@ void main() {
 
   group('Fluency Within 5', () {
     final first = fluencyRoundsFor(
-      kFluencySubCasual,
+      FluencyWithin5Modes.casual,
       seed: _session.hashCode,
     ).first.first;
 
@@ -184,8 +186,8 @@ void main() {
 
   group("Storyteller's Pond", () {
     final story = storiesFor(
-      kStorySubAddTo,
-      seed: roundSeed(_session, kStorySubAddTo),
+      StorytellersPondModes.addTo,
+      seed: roundSeed(_session, StorytellersPondModes.addTo),
     ).first;
 
     Widget runner() => StorytellersPondRunner(

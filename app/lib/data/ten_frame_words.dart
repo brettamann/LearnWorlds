@@ -8,6 +8,7 @@
 // produce - no more, so nothing is rendered for a round that does not exist,
 // and no fewer.
 
+import '../activities/sub_mode_ids.dart';
 import 'number_words.dart';
 import 'round_pick.dart';
 import 'warm_lines.dart';
@@ -41,12 +42,6 @@ class PondRound {
   int get frames => (target > 10 || preset > 10) ? 2 : 1;
 }
 
-const String kTenFrameSubFill = 'fill-to-target';
-const String kTenFrameSubTwoWays = 'two-ways';
-const String kTenFrameSubMakeTen = 'make-ten';
-const String kTenFrameSubTenPlus = 'ten-plus-n';
-const String kTenFrameSubChallenge = 'three-frames';
-
 /// Every round each sub-mode can play. A visit plays four of them (the
 /// challenge, three), picked by [pondRoundsFor].
 ///
@@ -55,25 +50,25 @@ const String kTenFrameSubChallenge = 'three-frames';
 /// each target twice, once plain and once asking for a different way; a visit
 /// takes both halves of a pair or neither.
 final Map<String, List<PondRound>> kPondRounds = <String, List<PondRound>>{
-  kTenFrameSubFill: <PondRound>[
+  TenFramePondModes.fillToTarget: <PondRound>[
     for (var t = 3; t <= 9; t++) PondRound(target: t),
   ],
   // Five is one full row, which makes "four and one" and "two and three"
   // easy to see as the same five; the other targets let a return visit ask
   // for a number she has not split before.
-  kTenFrameSubTwoWays: <PondRound>[
+  TenFramePondModes.twoWays: <PondRound>[
     for (final t in const <int>[4, 5, 6, 7]) ...<PondRound>[
       PondRound(target: t, twoColors: true),
       PondRound(target: t, twoColors: true, differentWay: true),
     ],
   ],
-  kTenFrameSubMakeTen: <PondRound>[
+  TenFramePondModes.makeTen: <PondRound>[
     for (var p = 3; p <= 8; p++) PondRound(target: 10, preset: p),
   ],
-  kTenFrameSubTenPlus: <PondRound>[
+  TenFramePondModes.tenPlusN: <PondRound>[
     for (var t = 11; t <= 19; t++) PondRound(target: t),
   ],
-  kTenFrameSubChallenge: <PondRound>[
+  TenFramePondModes.threeFrames: <PondRound>[
     for (var t = 11; t <= 19; t++)
       PondRound(target: t, preset: t, askHowMany: true),
   ],
@@ -85,8 +80,9 @@ final Map<String, List<PondRound>> kPondRounds = <String, List<PondRound>>{
 /// count that only ever goes up is a mounting pressure, and one that dips is
 /// a breather.
 List<PondRound> pondRoundsFor(String subMode, {int seed = 0}) {
-  final pool = kPondRounds[subMode] ?? kPondRounds[kTenFrameSubFill]!;
-  if (subMode == kTenFrameSubTwoWays) {
+  final pool =
+      kPondRounds[subMode] ?? kPondRounds[TenFramePondModes.fillToTarget]!;
+  if (subMode == TenFramePondModes.twoWays) {
     final targets = pickRounds(
       <PondRound>[
         for (final r in pool)
@@ -105,7 +101,7 @@ List<PondRound> pondRoundsFor(String subMode, {int seed = 0}) {
   }
   return pickRounds(
     pool,
-    count: subMode == kTenFrameSubChallenge ? 3 : 4,
+    count: subMode == TenFramePondModes.threeFrames ? 3 : 4,
     seed: seed,
     // Make-ten is easiest when there is least to add.
     ease: (r) => r.preset > 0 && !r.askHowMany ? 10 - r.preset : r.target,

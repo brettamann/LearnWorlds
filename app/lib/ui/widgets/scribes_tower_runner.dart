@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../activities/activity_ids.dart';
+import '../../activities/sub_mode_ids.dart';
 import '../../data/asset_paths.dart';
 import '../../data/number_words.dart';
 import '../../data/scribes_tower_words.dart';
@@ -40,7 +41,7 @@ class ScribesTowerRunner extends ConsumerWidget {
   const ScribesTowerRunner({
     super.key,
     required this.onSequenceComplete,
-    this.subMode = kScribeSubTrace,
+    this.subMode = ScribesTowerModes.traceNumeral,
     this.skipIntro = false,
   });
 
@@ -62,8 +63,9 @@ class ScribesTowerRunner extends ConsumerWidget {
       keeperLineFor: scribeKeeperLine,
       finalLine: kScribeFinal,
       skipIntro: skipIntro,
-      musicBed:
-          subMode == kScribeSubTeens ? kChallengeMusicBed : kDefaultMusicBed,
+      musicBed: subMode == ScribesTowerModes.audioOnlyTeens
+          ? kChallengeMusicBed
+          : kDefaultMusicBed,
       onSequenceComplete: onSequenceComplete,
       background: Image.asset(
         AssetPaths.scribesTowerBackground,
@@ -72,7 +74,7 @@ class ScribesTowerRunner extends ConsumerWidget {
       roundBuilder: (context, c) => ScribeRoundBody(
         round: rounds[c.index],
         c: c,
-        teens: subMode == kScribeSubTeens,
+        teens: subMode == ScribesTowerModes.audioOnlyTeens,
       ),
     );
   }

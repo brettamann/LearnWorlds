@@ -8,6 +8,7 @@
 // within a visit, and that it keeps each place's shape - the rules that made
 // the fixed lists the way they were.
 
+import 'package:critmath/activities/sub_mode_ids.dart';
 import 'package:critmath/data/care_pantry_words.dart';
 import 'package:critmath/data/caretakers_bench_words.dart';
 import 'package:critmath/data/picnic_baskets_words.dart';
@@ -73,31 +74,55 @@ void main() {
 
   test('a visit is as long as it was when the lists were fixed', () {
     for (final s in seeds) {
-      expect(storiesFor(kStorySubAddTo, seed: s), hasLength(4));
-      expect(storiesFor(kStorySubTwoStep, seed: s), hasLength(3));
-      expect(pondRoundsFor(kTenFrameSubFill, seed: s), hasLength(4));
-      expect(pondRoundsFor(kTenFrameSubTwoWays, seed: s), hasLength(4));
-      expect(pondRoundsFor(kTenFrameSubChallenge, seed: s), hasLength(3));
-      expect(picnicRoundsFor(kPicnicSubMatch, seed: s), hasLength(4));
-      expect(picnicRoundsFor(kPicnicSubThree, seed: s), hasLength(3));
-      expect(pantryRoundsFor(kPantrySubSimple, seed: s), hasLength(4));
-      expect(pantryRoundsFor(kPantrySubFull, seed: s), hasLength(3));
-      expect(benchRoundsFor(kBenchSubDescribe, seed: s), hasLength(4));
-      expect(benchRoundsFor(kBenchSubOrder, seed: s), hasLength(3));
+      expect(storiesFor(StorytellersPondModes.addTo, seed: s), hasLength(4));
+      expect(storiesFor(StorytellersPondModes.twoStep, seed: s), hasLength(3));
+      expect(
+        pondRoundsFor(TenFramePondModes.fillToTarget, seed: s),
+        hasLength(4),
+      );
+      expect(pondRoundsFor(TenFramePondModes.twoWays, seed: s), hasLength(4));
+      expect(
+        pondRoundsFor(TenFramePondModes.threeFrames, seed: s),
+        hasLength(3),
+      );
+      expect(
+        picnicRoundsFor(PicnicBasketsModes.matchByLine, seed: s),
+        hasLength(4),
+      );
+      expect(
+        picnicRoundsFor(PicnicBasketsModes.threeWayCompare, seed: s),
+        hasLength(3),
+      );
+      expect(
+        pantryRoundsFor(CarePantryModes.simplePantry, seed: s),
+        hasLength(4),
+      );
+      expect(
+        pantryRoundsFor(CarePantryModes.fullPantry, seed: s),
+        hasLength(3),
+      );
+      expect(
+        benchRoundsFor(CaretakersBenchModes.describeAttributes, seed: s),
+        hasLength(4),
+      );
+      expect(
+        benchRoundsFor(CaretakersBenchModes.orderThreeByLength, seed: s),
+        hasLength(3),
+      );
     }
   });
 
   test('the first round of a visit is its gentlest', () {
     // It is also the one the "watch me" plays on.
     for (final s in seeds) {
-      final stories = storiesFor(kStorySubAddTo, seed: s);
+      final stories = storiesFor(StorytellersPondModes.addTo, seed: s);
       for (final st in stories.skip(1)) {
         expect(
           stories.first.a + stories.first.b,
           lessThanOrEqualTo(st.a + st.b),
         );
       }
-      final pond = pondRoundsFor(kTenFrameSubFill, seed: s);
+      final pond = pondRoundsFor(TenFramePondModes.fillToTarget, seed: s);
       for (final r in pond.skip(1)) {
         expect(pond.first.target, lessThanOrEqualTo(r.target));
       }
@@ -105,7 +130,10 @@ void main() {
   });
 
   test('picnic: exactly one tie a visit, never the first round', () {
-    for (final m in <String>[kPicnicSubMatch, kPicnicSubCount]) {
+    for (final m in <String>[
+      PicnicBasketsModes.matchByLine,
+      PicnicBasketsModes.countAndCompare,
+    ]) {
       for (final s in seeds) {
         final rounds = picnicRoundsFor(m, seed: s);
         expect(rounds.where((r) => r.same), hasLength(1), reason: '$m/$s');
@@ -115,7 +143,7 @@ void main() {
   });
 
   test('picnic: three diners always have one most and one fewest', () {
-    for (final r in kPicnicRounds[kPicnicSubThree]!) {
+    for (final r in kPicnicRounds[PicnicBasketsModes.threeWayCompare]!) {
       final c = r.counts;
       expect(
         c.where((n) => n == c.reduce((a, b) => a > b ? a : b)),
@@ -130,7 +158,7 @@ void main() {
 
   test('pond: "a different way" always follows the same number', () {
     for (final s in seeds) {
-      final rounds = pondRoundsFor(kTenFrameSubTwoWays, seed: s);
+      final rounds = pondRoundsFor(TenFramePondModes.twoWays, seed: s);
       for (var i = 0; i < rounds.length; i += 2) {
         expect(rounds[i].differentWay, isFalse);
         expect(rounds[i + 1].differentWay, isTrue);
@@ -140,7 +168,10 @@ void main() {
   });
 
   test('bench: weighing and measuring take turns, weighing first', () {
-    for (final m in <String>[kBenchSubDescribe, kBenchSubCompare]) {
+    for (final m in <String>[
+      CaretakersBenchModes.describeAttributes,
+      CaretakersBenchModes.compareTwo,
+    ]) {
       for (final s in seeds) {
         final rounds = benchRoundsFor(m, seed: s);
         for (var i = 0; i < rounds.length; i++) {

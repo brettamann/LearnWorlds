@@ -20,6 +20,7 @@
 
 import 'dart:io';
 
+import 'package:critmath/activities/sub_mode_ids.dart';
 import 'package:critmath/data/asset_paths.dart';
 import 'package:critmath/data/wheres_buddy_landmarks.dart';
 import 'package:critmath/data/wheres_buddy_words.dart';
@@ -31,6 +32,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'support/harness.dart';
 
 void main() {
@@ -143,7 +145,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: WheresBuddyRunner(
-                subMode: kWheresBuddySubModeFindMode,
+                subMode: WheresBuddyModes.findMode,
                 skipIntro: true,
                 onSequenceComplete: () {},
               ),

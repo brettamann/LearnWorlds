@@ -27,6 +27,7 @@
 //     three hundred.
 
 import '../activities/activity_ids.dart';
+import '../activities/sub_mode_ids.dart';
 import '../engines/activity_runner/round_plan.dart';
 import '../engines/mastery/round_outcome.dart';
 import '../models/reward_track.dart';
@@ -346,7 +347,7 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
 
       // ---- Count Out N --------------------------------------------
       ScriptBatch(
-        id: 'count-out-n',
+        id: CountingParadeModes.countOutN,
         title: 'Count Out N — the ask, and "you have enough"',
         note: 'The ask is the whole instruction: a pre-reader has nothing '
             'else telling her how many to bring. Land on the number. The '
@@ -381,7 +382,7 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
 
       // ---- Count On By Ones ---------------------------------------
       ScriptBatch(
-        id: 'count-on-by-ones',
+        id: CountingParadeModes.countOnByOnes,
         title: 'Count On By Ones — the two-beat opening',
         note: 'A pair, with the new creatures walking on between them. The '
             'first settles where the parade has got to; the second is the go '
@@ -398,7 +399,7 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
 
       // ---- Long Parade --------------------------------------------
       ScriptBatch(
-        id: 'long-parade',
+        id: CountingParadeModes.longParade,
         title: 'Long Parade — the instruction',
         note: 'One line per creature. No number in it: which ten she is on '
             'is what the taps say, not the prompt.',

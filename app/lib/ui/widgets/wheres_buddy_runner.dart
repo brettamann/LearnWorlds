@@ -38,6 +38,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../activities/activity_ids.dart';
+import '../../activities/sub_mode_ids.dart';
 import '../../coordinators/round_coordinator.dart';
 import '../../data/asset_paths.dart';
 import '../../data/button_labels.dart';
@@ -61,11 +62,6 @@ import 'playfield_scaffold.dart';
 import 'replay_demo_button.dart';
 import 'touch_here_halo.dart';
 import 'wheres_buddy_landmark_sprite.dart';
-
-/// Sub-mode ids the activity-screen passes via `launchExtra['subMode']`.
-const String kWheresBuddySubModeFindMode = 'find-mode';
-const String kWheresBuddySubModePlaceMode = 'place-mode';
-const String kWheresBuddySubModeRelationalMode = 'relational-mode';
 
 enum _Phase {
   intro,
@@ -193,7 +189,7 @@ class WheresBuddyRunner extends StatelessWidget {
     super.key,
     required this.onSequenceComplete,
     this.skipIntro = false,
-    this.subMode = kWheresBuddySubModePlaceMode,
+    this.subMode = WheresBuddyModes.placeMode,
   });
 
   final VoidCallback onSequenceComplete;
@@ -207,8 +203,8 @@ class WheresBuddyRunner extends StatelessWidget {
       onSequenceComplete: onSequenceComplete,
       skipIntro: skipIntro,
       mode: switch (subMode) {
-        kWheresBuddySubModeFindMode => _Mode.find,
-        kWheresBuddySubModeRelationalMode => _Mode.relational,
+        WheresBuddyModes.findMode => _Mode.find,
+        WheresBuddyModes.relationalMode => _Mode.relational,
         // place-mode, and anything unrecognised: dragging Buddy somewhere is
         // the safer thing to hand a child than a mode she cannot finish.
         _ => _Mode.place,

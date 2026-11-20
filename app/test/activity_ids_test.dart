@@ -3,6 +3,7 @@
 
 import 'package:critmath/activities/activity_ids.dart';
 import 'package:critmath/activities/activity_runners.dart';
+import 'package:critmath/activities/sub_mode_ids.dart';
 import 'package:critmath/data/sanctuary_sequence.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -25,5 +26,16 @@ void main() {
 
   test('every runner is for a registered activity', () {
     expect(registered, containsAll(kActivityRunners.keys));
+  });
+
+  test("every activity's sub-mode ids match the registry, in order", () {
+    for (final a in activityRegistryJson()['activities'] as List<dynamic>) {
+      final json = a as Map<String, dynamic>;
+      final ids = [
+        for (final m in json['subModes'] as List<dynamic>)
+          (m as Map<String, dynamic>)['id'] as String,
+      ];
+      expect(kSubModeIdsByActivity[json['id']], ids, reason: '${json['id']}');
+    }
   });
 }

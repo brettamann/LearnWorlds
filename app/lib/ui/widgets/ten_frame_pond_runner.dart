@@ -29,6 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../activities/activity_ids.dart';
+import '../../activities/sub_mode_ids.dart';
 import '../../data/asset_paths.dart';
 import '../../data/number_words.dart';
 import '../../data/round_pick.dart';
@@ -50,7 +51,7 @@ class TenFramePondRunner extends ConsumerStatefulWidget {
   const TenFramePondRunner({
     super.key,
     required this.onSequenceComplete,
-    this.subMode = kTenFrameSubFill,
+    this.subMode = TenFramePondModes.fillToTarget,
     this.skipIntro = false,
   });
 
@@ -73,8 +74,10 @@ class _TenFramePondRunnerState extends ConsumerState<TenFramePondRunner> {
   final Map<int, int> _lastGreen = <int, int>{};
 
   String get _concept => switch (widget.subMode) {
-        kTenFrameSubMakeTen => 'K.OA.4',
-        kTenFrameSubTenPlus || kTenFrameSubChallenge => 'K.NBT.1',
+        TenFramePondModes.makeTen => 'K.OA.4',
+        TenFramePondModes.tenPlusN ||
+        TenFramePondModes.threeFrames =>
+          'K.NBT.1',
         _ => 'K.OA.3',
       };
 
@@ -88,7 +91,7 @@ class _TenFramePondRunnerState extends ConsumerState<TenFramePondRunner> {
       keeperLineFor: pondKeeperLine,
       finalLine: kPondFinal,
       skipIntro: widget.skipIntro,
-      musicBed: widget.subMode == kTenFrameSubChallenge
+      musicBed: widget.subMode == TenFramePondModes.threeFrames
           ? kChallengeMusicBed
           : kDefaultMusicBed,
       onSequenceComplete: widget.onSequenceComplete,

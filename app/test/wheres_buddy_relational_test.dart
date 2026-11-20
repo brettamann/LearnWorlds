@@ -11,6 +11,7 @@
 // than a re-skin: the target is the midpoint of two named landmarks, and both
 // of them are pointed out.
 
+import 'package:critmath/activities/sub_mode_ids.dart';
 import 'package:critmath/data/wheres_buddy_landmarks.dart';
 import 'package:critmath/data/wheres_buddy_words.dart';
 import 'package:critmath/engines/narration/narration_player.dart';
@@ -24,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'support/harness.dart';
 
 void main() {
@@ -139,7 +141,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: WheresBuddyRunner(
-                subMode: kWheresBuddySubModeRelationalMode,
+                subMode: WheresBuddyModes.relationalMode,
                 skipIntro: true,
                 onSequenceComplete: () {},
               ),

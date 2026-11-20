@@ -2,6 +2,7 @@
 //
 // See ten_frame_words.dart for why rounds and words live together here.
 
+import '../activities/sub_mode_ids.dart';
 import 'asset_paths.dart';
 import 'number_words.dart';
 import 'round_pick.dart';
@@ -112,18 +113,13 @@ class PantryRound {
   final List<PantryKind> items;
 }
 
-const String kPantrySubSimple = 'simple-pantry';
-const String kPantrySubFull = 'full-pantry';
-const String kPantrySubColour = 'unfamiliar-rules';
-const String kPantrySubFloor = 'categorize-only';
-
 /// Every round each sub-mode can play; [pantryRoundsFor] picks a visit's.
 ///
 /// Counts are chosen so the most and the fewest are never tied: "which has
 /// the most" with two crates of four has no answer a child can find.
 const Map<String, List<PantryRound>> kPantryRounds =
     <String, List<PantryRound>>{
-  kPantrySubFloor: <PantryRound>[
+  CarePantryModes.categorizeOnly: <PantryRound>[
     PantryRound(
       crates: <PantryCrate>[
         PantryCrate(name: 'apples', count: 3, kind: kPantryApple),
@@ -160,7 +156,7 @@ const Map<String, List<PantryRound>> kPantryRounds =
       askMost: false,
     ),
   ],
-  kPantrySubSimple: <PantryRound>[
+  CarePantryModes.simplePantry: <PantryRound>[
     PantryRound(
       crates: <PantryCrate>[
         PantryCrate(name: 'apples', count: 2, kind: kPantryApple),
@@ -209,7 +205,7 @@ const Map<String, List<PantryRound>> kPantryRounds =
       ],
     ),
   ],
-  kPantrySubFull: <PantryRound>[
+  CarePantryModes.fullPantry: <PantryRound>[
     PantryRound(
       crates: <PantryCrate>[
         PantryCrate(name: 'apples', count: 3, kind: kPantryApple),
@@ -259,7 +255,7 @@ const Map<String, List<PantryRound>> kPantryRounds =
   // The challenge sorts by colour, which is a rule she has to hold in her
   // head against the pictures - two red things that are not the same thing
   // go in one crate.
-  kPantrySubColour: <PantryRound>[
+  CarePantryModes.unfamiliarRules: <PantryRound>[
     PantryRound(
       crates: <PantryCrate>[
         PantryCrate(name: 'red things', count: 3),
@@ -307,10 +303,11 @@ const Map<String, List<PantryRound>> kPantryRounds =
 
 /// The rounds for one visit, the fewest things on the floor first.
 List<PantryRound> pantryRoundsFor(String subMode, {int seed = 0}) {
-  final pool = kPantryRounds[subMode] ?? kPantryRounds[kPantrySubSimple]!;
+  final pool =
+      kPantryRounds[subMode] ?? kPantryRounds[CarePantryModes.simplePantry]!;
   return pickRounds(
     pool,
-    count: subMode == kPantrySubSimple ? 4 : 3,
+    count: subMode == CarePantryModes.simplePantry ? 4 : 3,
     seed: seed,
     ease: (r) => r.crates.fold<int>(0, (n, c) => n + c.count),
   );

@@ -25,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../activities/activity_ids.dart';
+import '../../activities/sub_mode_ids.dart';
 import '../../data/asset_paths.dart';
 import '../../data/caretakers_bench_words.dart';
 import '../../data/round_pick.dart';
@@ -45,7 +46,7 @@ class CaretakersBenchRunner extends ConsumerWidget {
   const CaretakersBenchRunner({
     super.key,
     required this.onSequenceComplete,
-    this.subMode = kBenchSubDescribe,
+    this.subMode = CaretakersBenchModes.describeAttributes,
     this.skipIntro = false,
   });
 
@@ -62,13 +63,16 @@ class CaretakersBenchRunner extends ConsumerWidget {
     return SanctuaryRoundShell(
       activityId: ActivityIds.caretakersBench,
       roundCount: rounds.length,
-      conceptIdFor: (i) => subMode == kBenchSubDescribe ? 'K.MD.1' : 'K.MD.2',
+      conceptIdFor: (i) => subMode == CaretakersBenchModes.describeAttributes
+          ? 'K.MD.1'
+          : 'K.MD.2',
       introLine: kBenchIntro,
       keeperLineFor: benchKeeperLine,
       finalLine: kBenchFinal,
       skipIntro: skipIntro,
-      musicBed:
-          subMode == kBenchSubOrder ? kChallengeMusicBed : kDefaultMusicBed,
+      musicBed: subMode == CaretakersBenchModes.orderThreeByLength
+          ? kChallengeMusicBed
+          : kDefaultMusicBed,
       onSequenceComplete: onSequenceComplete,
       background: Image.asset(
         AssetPaths.caretakersBenchBackground,

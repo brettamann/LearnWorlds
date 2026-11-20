@@ -2,6 +2,7 @@
 //
 // See ten_frame_words.dart for why rounds and words live together here.
 
+import '../activities/sub_mode_ids.dart';
 import 'asset_paths.dart';
 import 'number_words.dart';
 import 'round_pick.dart';
@@ -65,18 +66,12 @@ class Story {
       };
 }
 
-const String kStorySubAddTo = 'add-to';
-const String kStorySubTakeFrom = 'take-from';
-const String kStorySubPutTogether = 'put-together';
-const String kStorySubTakeApart = 'take-apart';
-const String kStorySubTwoStep = 'two-step';
-
 /// Every story each sub-mode can tell. A visit tells four of them (two-step,
 /// three), picked by [storiesFor]. Within seven animals, which is what fits
 /// on the pond at a size she can tap, and one kind of animal per story except
 /// put-together, whose whole point is two kinds counted as one group.
 const Map<String, List<Story>> kStories = <String, List<Story>>{
-  kStorySubAddTo: <Story>[
+  StorytellersPondModes.addTo: <Story>[
     Story(StoryKind.addTo, kStoryDuckling, 2, 1),
     Story(StoryKind.addTo, kStoryFrog, 3, 1),
     Story(StoryKind.addTo, kStoryBunny, 2, 2),
@@ -86,7 +81,7 @@ const Map<String, List<Story>> kStories = <String, List<Story>>{
     Story(StoryKind.addTo, kStoryDuckling, 5, 2),
     Story(StoryKind.addTo, kStoryFrog, 4, 3),
   ],
-  kStorySubTakeFrom: <Story>[
+  StorytellersPondModes.takeFrom: <Story>[
     Story(StoryKind.takeFrom, kStoryFrog, 4, 1),
     Story(StoryKind.takeFrom, kStoryDuckling, 3, 1),
     Story(StoryKind.takeFrom, kStoryDuckling, 5, 2),
@@ -96,7 +91,7 @@ const Map<String, List<Story>> kStories = <String, List<Story>>{
     Story(StoryKind.takeFrom, kStoryDuckling, 6, 2),
     Story(StoryKind.takeFrom, kStoryFrog, 7, 3),
   ],
-  kStorySubPutTogether: <Story>[
+  StorytellersPondModes.putTogether: <Story>[
     Story(StoryKind.putTogether, kStoryDuckling, 2, 2, other: kStoryFrog),
     Story(StoryKind.putTogether, kStoryFrog, 3, 1, other: kStoryBunny),
     Story(StoryKind.putTogether, kStoryBunny, 2, 4, other: kStoryDuckling),
@@ -105,7 +100,7 @@ const Map<String, List<Story>> kStories = <String, List<Story>>{
     Story(StoryKind.putTogether, kStoryBunny, 3, 2, other: kStoryFrog),
     Story(StoryKind.putTogether, kStoryDuckling, 3, 3, other: kStoryBunny),
   ],
-  kStorySubTakeApart: <Story>[
+  StorytellersPondModes.takeApart: <Story>[
     Story(StoryKind.takeApart, kStoryDuckling, 4, 0),
     Story(StoryKind.takeApart, kStoryFrog, 5, 0),
     Story(StoryKind.takeApart, kStoryDuckling, 6, 0),
@@ -113,7 +108,7 @@ const Map<String, List<Story>> kStories = <String, List<Story>>{
     Story(StoryKind.takeApart, kStoryFrog, 3, 0),
     Story(StoryKind.takeApart, kStoryBunny, 7, 0),
   ],
-  kStorySubTwoStep: <Story>[
+  StorytellersPondModes.twoStep: <Story>[
     Story(StoryKind.twoStep, kStoryFrog, 3, 2, c: 1),
     Story(StoryKind.twoStep, kStoryDuckling, 4, 2, c: 3),
     Story(StoryKind.twoStep, kStoryBunny, 2, 3, c: 2),
@@ -124,10 +119,10 @@ const Map<String, List<Story>> kStories = <String, List<Story>>{
 
 /// The stories for one visit, the gentlest first.
 List<Story> storiesFor(String subMode, {int seed = 0}) {
-  final pool = kStories[subMode] ?? kStories[kStorySubAddTo]!;
+  final pool = kStories[subMode] ?? kStories[StorytellersPondModes.addTo]!;
   return pickRounds(
     pool,
-    count: subMode == kStorySubTwoStep ? 3 : 4,
+    count: subMode == StorytellersPondModes.twoStep ? 3 : 4,
     seed: seed,
     ease: (s) => s.a + s.b + s.c,
   );

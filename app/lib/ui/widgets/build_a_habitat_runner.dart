@@ -33,6 +33,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../activities/activity_ids.dart';
+import '../../activities/sub_mode_ids.dart';
 import '../../coordinators/round_coordinator.dart';
 import '../../data/asset_paths.dart';
 import '../../data/build_a_habitat_blueprints.dart';
@@ -57,11 +58,6 @@ import 'replay_demo_button.dart';
 import 'touch_here_halo.dart';
 import 'touch_target.dart';
 
-const String kBuildAHabitatSubModeSimpleShelter = 'simple-shelter';
-const String kBuildAHabitatSubModeCreatureHome = 'creature-home';
-const String kBuildAHabitatSubModeGrandHabitat = 'grand-habitat';
-const String kBuildAHabitatSubModeFrameOnly = 'frame-only';
-
 enum _Phase {
   intro,
   cornersAndSticks,
@@ -82,7 +78,7 @@ class BuildAHabitatRunner extends ConsumerStatefulWidget {
     super.key,
     required this.onSequenceComplete,
     this.skipIntro = false,
-    this.subMode = kBuildAHabitatSubModeSimpleShelter,
+    this.subMode = BuildAHabitatModes.simpleShelter,
   });
 
   final VoidCallback onSequenceComplete;
@@ -129,18 +125,18 @@ class _BuildAHabitatRunnerState extends ConsumerState<BuildAHabitatRunner> {
   /// runs the triangle but skips Phase 2.
   List<HabitatBlueprint> get _rounds {
     switch (widget.subMode) {
-      case kBuildAHabitatSubModeCreatureHome:
+      case BuildAHabitatModes.creatureHome:
         return kHabitatBlueprints;
-      case kBuildAHabitatSubModeGrandHabitat:
+      case BuildAHabitatModes.grandHabitat:
         return <HabitatBlueprint>[kHabitatBlueprints[2]];
-      case kBuildAHabitatSubModeFrameOnly:
-      case kBuildAHabitatSubModeSimpleShelter:
+      case BuildAHabitatModes.frameOnly:
+      case BuildAHabitatModes.simpleShelter:
       default:
         return <HabitatBlueprint>[kHabitatBlueprints[0]];
     }
   }
 
-  bool get _skipRaisePhase => widget.subMode == kBuildAHabitatSubModeFrameOnly;
+  bool get _skipRaisePhase => widget.subMode == BuildAHabitatModes.frameOnly;
 
   HabitatBlueprint get _currentRound => _rounds[_roundIndex];
   bool get _isLastRound => _roundIndex == _rounds.length - 1;

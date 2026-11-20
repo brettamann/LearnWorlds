@@ -32,6 +32,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../activities/activity_ids.dart';
+import '../../activities/sub_mode_ids.dart';
 import '../../coordinators/round_coordinator.dart';
 import '../../data/asset_paths.dart';
 import '../../data/flat_or_solid_shapes.dart';
@@ -142,16 +143,6 @@ const List<_GardenRound> _kRoundSequence = <_GardenRound>[
   ),
 ];
 
-/// Sub-modes the Shape Garden activity supports.
-/// `find-shape` (K.G.2), `flat-or-solid` (K.G.3), `sort-by-attribute`
-/// (K.G.4), and `two-attribute-hunt` (K.G.4 challenge). Any unknown
-/// sub-mode falls back to find-shape so a registry-only sub-mode that
-/// hasn't shipped a runner yet stays playable.
-const String kShapeGardenSubModeFindShape = 'find-shape';
-const String kShapeGardenSubModeFlatOrSolid = 'flat-or-solid';
-const String kShapeGardenSubModeSortByAttribute = 'sort-by-attribute';
-const String kShapeGardenSubModeTwoAttributeHunt = 'two-attribute-hunt';
-
 /// Top-level Shape Garden runner. Dispatches on `subMode` so the activity
 /// screen doesn't need to know which K.G.* concept is being practiced —
 /// it just hands off `launchExtra['subMode']` and lets this widget pick
@@ -161,7 +152,7 @@ class ShapeGardenRunner extends StatelessWidget {
     super.key,
     required this.onSequenceComplete,
     this.skipIntro = false,
-    this.subMode = kShapeGardenSubModeFindShape,
+    this.subMode = ShapeGardenModes.findShape,
   });
 
   final VoidCallback onSequenceComplete;
@@ -170,19 +161,19 @@ class ShapeGardenRunner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (subMode == kShapeGardenSubModeFlatOrSolid) {
+    if (subMode == ShapeGardenModes.flatOrSolid) {
       return ShapeGardenSortingRunner(
         onSequenceComplete: onSequenceComplete,
         skipIntro: skipIntro,
       );
     }
-    if (subMode == kShapeGardenSubModeSortByAttribute) {
+    if (subMode == ShapeGardenModes.sortByAttribute) {
       return ShapeGardenSortByAttributeRunner(
         onSequenceComplete: onSequenceComplete,
         skipIntro: skipIntro,
       );
     }
-    if (subMode == kShapeGardenSubModeTwoAttributeHunt) {
+    if (subMode == ShapeGardenModes.twoAttributeHunt) {
       return TwoAttributeHuntRunner(
         onSequenceComplete: onSequenceComplete,
         skipIntro: skipIntro,
