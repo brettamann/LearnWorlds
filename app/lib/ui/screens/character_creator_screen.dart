@@ -43,6 +43,7 @@ import '../../providers/buddy_appearance_provider.dart';
 import '../../providers/buddy_wardrobe_provider.dart';
 import '../../providers/save_provider.dart';
 import '../../providers/wallet_provider.dart';
+import '../../theme/app_colors.dart';
 import '../widgets/answer_feedback.dart';
 import '../widgets/buddy_widget.dart';
 import '../widgets/coin_hud.dart';
@@ -282,11 +283,11 @@ class _CategoryChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: selected ? const Color(0xFFFFC53D) : Colors.white,
+      color: selected ? AppColors.buttonGold : Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(
-          color: selected ? const Color(0xFFEAA916) : const Color(0xFFD8D2C2),
+          color: selected ? AppColors.selectGold : AppColors.neutralRim,
           width: 2,
         ),
       ),
@@ -528,7 +529,7 @@ class _Swatch extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         side: BorderSide(
           color: selected
-              ? const Color(0xFFEAA916)
+              ? AppColors.selectGold
               : (locked ? const Color(0xFFEDE8DC) : const Color(0xFFE3DED0)),
           width: selected ? 4 : 2,
         ),
@@ -581,7 +582,11 @@ class _PriceChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.monetization_on, size: 14, color: Color(0xFFFFC94A)),
+          const Icon(
+            Icons.monetization_on,
+            size: 14,
+            color: AppColors.coinGold,
+          ),
           const SizedBox(width: 3),
           Text(
             '$price',
@@ -608,7 +613,7 @@ class _ShopTile extends StatelessWidget {
       color: const Color(0xFFFFF3D6),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
-        side: const BorderSide(color: Color(0xFFEAA916), width: 2),
+        side: const BorderSide(color: AppColors.selectGold, width: 2),
       ),
       elevation: 1,
       child: InkWell(

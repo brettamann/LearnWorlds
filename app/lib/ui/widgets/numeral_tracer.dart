@@ -27,6 +27,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/asset_paths.dart';
+import '../../theme/app_colors.dart';
 import 'numeral_strokes.dart';
 
 class NumeralTracer extends StatefulWidget {
@@ -326,7 +327,7 @@ class _TracePainter extends CustomPainter {
   final double? demo;
   final Animation<double>? pulse;
 
-  static const Color _ink = Color(0xFFFFB300);
+  static const Color _ink = AppColors.hintGlow;
   static const Color _road = Color(0xFF8A6A48);
 
   @override

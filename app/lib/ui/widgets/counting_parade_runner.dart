@@ -50,6 +50,8 @@ import '../../models/buddy_mood.dart';
 import '../../platform/sfx_engine.dart';
 import '../../providers/progress_provider.dart';
 import '../../providers/session_provider.dart';
+import '../../theme/app_colors.dart';
+import '../../ui/common/count_badge.dart';
 import 'animated_fawn.dart';
 import 'answer_feedback.dart';
 import 'buddy_companion.dart';
@@ -848,7 +850,7 @@ class _CountingParadeRunnerState extends ConsumerState<CountTheParadeRunner> {
                   eyebrow: "Look who's next!",
                   spriteAsset: _currentCreature.spriteAsset,
                   title: paradeSpeciesTitle(_currentCreature),
-                  accent: const Color(0xFFE0A53C),
+                  accent: AppColors.treasureGold,
                 ),
               ),
           ],
@@ -950,7 +952,7 @@ class _CountingLayer extends StatelessWidget {
             Expanded(
               child: Column(
                 children: [
-                  _CountBadge(value: tapped.length, target: targetCount),
+                  CountBadge(value: tapped.length, target: targetCount),
                   const Spacer(),
                   Wrap(
                     alignment: WrapAlignment.center,
@@ -1002,39 +1004,6 @@ class _CountingLayer extends StatelessWidget {
                   : null,
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _CountBadge extends StatelessWidget {
-  const _CountBadge({required this.value, required this.target});
-
-  final int value;
-  final int target;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 8,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Text(
-        '$value / $target',
-        style: const TextStyle(
-          fontSize: 40,
-          fontWeight: FontWeight.w700,
-          color: Colors.black87,
         ),
       ),
     );

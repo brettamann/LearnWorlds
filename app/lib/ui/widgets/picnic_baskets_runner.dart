@@ -38,6 +38,7 @@ import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/mastery/round_outcome.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../providers/session_provider.dart';
+import '../../theme/app_colors.dart';
 import '../common/timer_scope.dart';
 import 'answer_feedback.dart';
 import 'glitter_burst.dart';
@@ -490,10 +491,10 @@ class _PicnicRoundBodyState extends ConsumerState<PicnicRoundBody>
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: left
-                          ? const Color(0xFFFFB300)
+                          ? AppColors.hintGlow
                           : (done
                               ? const Color(0xFF7CC242)
-                              : const Color(0xFFD8C6A0)),
+                              : AppColors.cardRim),
                       width: left || done ? 5 : 2,
                     ),
                     boxShadow: const [
@@ -574,7 +575,7 @@ class _RibbonPainter extends CustomPainter {
       ..strokeWidth = 16
       ..strokeCap = StrokeCap.round;
     final ribbon = Paint()
-      ..color = const Color(0xFFFFB300)
+      ..color = AppColors.hintGlow
       ..strokeWidth = 7
       ..strokeCap = StrokeCap.round;
     for (final (a, b) in links) {
@@ -622,9 +623,7 @@ class _SameCard extends StatelessWidget {
                     color: chosen ? const Color(0xFFFFF4C9) : Colors.white,
                     borderRadius: BorderRadius.circular(24),
                     border: Border.all(
-                      color: chosen
-                          ? const Color(0xFFFFB300)
-                          : const Color(0xFFD8C6A0),
+                      color: chosen ? AppColors.hintGlow : AppColors.cardRim,
                       width: chosen ? 5 : 3,
                     ),
                   ),
@@ -643,7 +642,7 @@ class _SameCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 40,
                             fontWeight: FontWeight.w900,
-                            color: Color(0xFF4A3220),
+                            color: AppColors.cardInk,
                           ),
                         ),
                       ),

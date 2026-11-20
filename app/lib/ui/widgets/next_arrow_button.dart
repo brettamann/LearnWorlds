@@ -34,6 +34,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/button_labels.dart';
 import '../../engines/narration/narration_player.dart';
+import '../../theme/app_colors.dart';
 
 /// How many idle nudges before the button assumes nobody is listening.
 const int kMaxIdleHints = 5;
@@ -44,7 +45,7 @@ class NextArrowButton extends ConsumerStatefulWidget {
     required this.onPressed,
     this.size = 96,
     this.label,
-    this.color = const Color(0xFFFFC53D),
+    this.color = AppColors.buttonGold,
     this.idleHintEnabled = false,
     this.idleHintText = 'Tap the arrow to continue!',
     this.idleHintCueIdPrefix = 'next-arrow:idle-hint',

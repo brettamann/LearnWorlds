@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/wallet_provider.dart';
+import '../../theme/app_colors.dart';
 
 /// How many coins can be in the air at once for a single payout. A 5-coin
 /// round could draw five, but the arc reads better as a small handful than as
@@ -159,7 +160,7 @@ class _CoinFlyLayerState extends ConsumerState<CoinFlyLayer>
             child: const Icon(
               Icons.monetization_on,
               size: 36,
-              color: Color(0xFFFFC94A),
+              color: AppColors.coinGold,
               shadows: [Shadow(blurRadius: 8, color: Colors.black38)],
             ),
           ),

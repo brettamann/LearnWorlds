@@ -46,6 +46,7 @@ import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../platform/sfx_engine.dart';
+import '../../ui/common/count_badge.dart';
 import '../common/timer_scope.dart';
 import 'animated_fawn.dart';
 import 'buddy_companion.dart';
@@ -491,7 +492,11 @@ class _CountOnByOnesLayer extends StatelessWidget {
             Expanded(
               child: Column(
                 children: [
-                  _CountBadge(value: currentCount, target: finalCount),
+                  CountBadge(
+                    value: currentCount,
+                    target: finalCount,
+                    size: CountBadgeSize.small,
+                  ),
                   const SizedBox(height: 12),
                   Expanded(
                     child: SingleChildScrollView(
@@ -712,39 +717,6 @@ class _CompletedClusterCard extends StatelessWidget {
   }
 }
 
-class _CountBadge extends StatelessWidget {
-  const _CountBadge({required this.value, required this.target});
-
-  final int value;
-  final int target;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(22),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 8,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Text(
-        '$value / $target',
-        style: const TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.w800,
-          color: Colors.black87,
-        ),
-      ),
-    );
-  }
-}
-
 /// Animated lead-in for the count-on-by-ones sub-mode. Plays a three-act
 /// demo:
 ///
@@ -877,7 +849,11 @@ class _DemoLayerState extends ConsumerState<_DemoLayer>
             Expanded(
               child: Column(
                 children: [
-                  _CountBadge(value: _badgeValue, target: 100),
+                  CountBadge(
+                    value: _badgeValue,
+                    target: 100,
+                    size: CountBadgeSize.small,
+                  ),
                   const SizedBox(height: 16),
                   Expanded(
                     child: AnimatedSwitcher(

@@ -13,6 +13,7 @@
 // there so an adult sitting next to her knows what is going on.
 
 import 'package:flutter/material.dart';
+import '../../theme/app_colors.dart';
 
 /// The card face: a small label, a big picture, a name.
 class RevealCardFace extends StatelessWidget {
@@ -47,7 +48,7 @@ class RevealCardFace extends StatelessWidget {
       width: 300,
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 22),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF8E7),
+        color: AppColors.parchment,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: accent, width: 6),
         boxShadow: const [
@@ -78,7 +79,7 @@ class RevealCardFace extends StatelessWidget {
             style: const TextStyle(
               fontSize: 34,
               fontWeight: FontWeight.w800,
-              color: Color(0xFF3B3226),
+              color: AppColors.parchmentInk,
             ),
           ),
           if (footer != null) ...[

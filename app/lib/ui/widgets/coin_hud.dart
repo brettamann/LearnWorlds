@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/wallet_provider.dart';
+import '../../theme/app_colors.dart';
 
 class CoinHud extends ConsumerStatefulWidget {
   const CoinHud({super.key, this.compact = false});
@@ -85,7 +86,7 @@ class _CoinHudState extends ConsumerState<CoinHud>
           children: [
             Icon(
               Icons.monetization_on,
-              color: const Color(0xFFFFC94A),
+              color: AppColors.coinGold,
               size: coinSize,
               shadows: const [Shadow(blurRadius: 6, color: Colors.black45)],
             ),

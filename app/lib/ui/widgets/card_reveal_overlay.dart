@@ -39,6 +39,7 @@ import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../providers/collection_provider.dart';
+import '../../theme/app_colors.dart';
 import 'reveal_card.dart';
 
 /// How long before the card gives up waiting and takes itself away.
@@ -153,5 +154,5 @@ Color _rarityColor(CardRarity r) => switch (r) {
       // rather than a jump in volume.
       CardRarity.common => const Color(0xFF8FA96B),
       CardRarity.uncommon => const Color(0xFF4E9AC4),
-      CardRarity.rare => const Color(0xFFE0A53C),
+      CardRarity.rare => AppColors.treasureGold,
     };

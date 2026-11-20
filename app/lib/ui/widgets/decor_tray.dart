@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/button_labels.dart';
 import '../../data/sanctuary_decor_catalog.dart';
+import '../../theme/app_colors.dart';
 
 class DecorTray extends StatelessWidget {
   const DecorTray({
@@ -69,7 +70,7 @@ class DecorTray extends StatelessWidget {
           decoration: BoxDecoration(
             color: armed ? const Color(0xFF5A4632) : const Color(0xFF3A352D),
             border: const Border(
-              top: BorderSide(color: Color(0xFFE0A53C), width: 3),
+              top: BorderSide(color: AppColors.treasureGold, width: 3),
             ),
           ),
           child: Row(
@@ -138,10 +139,10 @@ class _TrayTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 5),
       padding: const EdgeInsets.symmetric(vertical: 6),
       decoration: BoxDecoration(
-        color: owned ? const Color(0xFFFFF8E7) : const Color(0xFF2E2A24),
+        color: owned ? AppColors.parchment : const Color(0xFF2E2A24),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: owned ? const Color(0xFFE0A53C) : const Color(0xFF4A443A),
+          color: owned ? AppColors.treasureGold : AppColors.emptySlot,
           width: owned ? 3 : 2,
         ),
       ),
@@ -161,7 +162,7 @@ class _TrayTile extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF3B3226),
+                    color: AppColors.parchmentInk,
                   ),
                 )
               : _PriceChip(price: decorPrice(item.id), affordable: affordable),
@@ -210,7 +211,7 @@ class _PriceChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: affordable ? const Color(0xFFE0A53C) : const Color(0xFF4A443A),
+        color: affordable ? AppColors.treasureGold : AppColors.emptySlot,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
@@ -220,7 +221,7 @@ class _PriceChip extends StatelessWidget {
             Icons.monetization_on,
             size: 13,
             color:
-                affordable ? const Color(0xFF3B3226) : const Color(0xFF9A8F7C),
+                affordable ? AppColors.parchmentInk : const Color(0xFF9A8F7C),
           ),
           const SizedBox(width: 3),
           Text(
@@ -228,9 +229,8 @@ class _PriceChip extends StatelessWidget {
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w800,
-              color: affordable
-                  ? const Color(0xFF3B3226)
-                  : const Color(0xFF9A8F7C),
+              color:
+                  affordable ? AppColors.parchmentInk : const Color(0xFF9A8F7C),
             ),
           ),
         ],

@@ -16,6 +16,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../theme/app_colors.dart';
 import 'answer_feedback.dart';
 import 'glitter_burst.dart';
 import 'touch_here_halo.dart';
@@ -139,7 +140,7 @@ class NumberCard extends StatelessWidget {
         color: glowing ? const Color(0xFFFFF4C9) : const Color(0xFFFFFBF0),
         borderRadius: BorderRadius.circular(w * 0.16),
         border: Border.all(
-          color: glowing ? const Color(0xFFFFB300) : const Color(0xFFD8C6A0),
+          color: glowing ? AppColors.hintGlow : AppColors.cardRim,
           width: glowing ? 5 : 3,
         ),
         boxShadow: const [
@@ -165,7 +166,7 @@ class NumberCard extends StatelessWidget {
                   fontSize: w * (showDots ? 0.46 : 0.6),
                   height: 1.0,
                   fontWeight: FontWeight.w900,
-                  color: const Color(0xFF4A3220),
+                  color: AppColors.cardInk,
                 ),
               ),
             if (showNumeral && showDots) SizedBox(height: w * 0.06),

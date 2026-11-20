@@ -34,6 +34,7 @@ import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../platform/sfx_engine.dart';
+import '../../ui/common/count_badge.dart';
 import 'buddy_companion.dart';
 import 'continue_arrow_shelf.dart';
 import 'glitter_burst.dart';
@@ -451,7 +452,11 @@ class _LongParadeLayer extends StatelessWidget {
             Expanded(
               child: Column(
                 children: [
-                  _CountBadge(value: currentCount, target: targetCount),
+                  CountBadge(
+                    value: currentCount,
+                    target: targetCount,
+                    size: CountBadgeSize.small,
+                  ),
                   const SizedBox(height: 12),
                   Expanded(
                     // Late rounds (8–10 clusters) overflow the natural Wrap
@@ -636,39 +641,6 @@ class _ClusterCard extends StatelessWidget {
                 ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _CountBadge extends StatelessWidget {
-  const _CountBadge({required this.value, required this.target});
-
-  final int value;
-  final int target;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(22),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 8,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Text(
-        '$value / $target',
-        style: const TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.w800,
-          color: Colors.black87,
         ),
       ),
     );

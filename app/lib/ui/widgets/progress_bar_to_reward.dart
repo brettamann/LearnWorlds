@@ -14,6 +14,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import '../../theme/app_colors.dart';
 
 class ProgressBarToReward extends StatefulWidget {
   const ProgressBarToReward({
@@ -111,8 +112,8 @@ class _ProgressBarToRewardState extends State<ProgressBarToReward>
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              Color(0xFFFFE08A),
-                              Color(0xFFFFC53D),
+                              AppColors.glitter,
+                              AppColors.buttonGold,
                             ],
                           ),
                         ),
@@ -149,7 +150,7 @@ class _ProgressBarToRewardState extends State<ProgressBarToReward>
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFFFC53D).withValues(alpha: 0.55),
+                      color: AppColors.buttonGold.withValues(alpha: 0.55),
                       blurRadius: 22,
                       spreadRadius: 2,
                     ),
@@ -158,7 +159,7 @@ class _ProgressBarToRewardState extends State<ProgressBarToReward>
                 child: Icon(
                   Icons.monetization_on,
                   size: widget.coinSize,
-                  color: const Color(0xFFFFC53D),
+                  color: AppColors.buttonGold,
                   shadows: const [
                     Shadow(color: Colors.black38, blurRadius: 4),
                   ],

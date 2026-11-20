@@ -27,6 +27,7 @@ import '../../data/sfx_catalog.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../platform/sfx_engine.dart';
+import '../../theme/app_decor.dart';
 import '../widgets/next_arrow_button.dart';
 
 class RewardGiftScreen extends ConsumerStatefulWidget {
@@ -115,17 +116,7 @@ class _RewardGiftScreenState extends ConsumerState<RewardGiftScreen> {
                         horizontal: 20,
                         vertical: 10,
                       ),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.92),
-                        borderRadius: BorderRadius.circular(18),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 8,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
-                      ),
+                      decoration: AppDecor.card(radius: 18),
                       child: const Text(
                         'Nicely counted!',
                         style: TextStyle(

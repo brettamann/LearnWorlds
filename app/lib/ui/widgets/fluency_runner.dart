@@ -30,6 +30,7 @@ import '../../engines/mastery/concept_state.dart';
 import '../../engines/mastery/round_outcome.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../providers/session_provider.dart';
+import '../../theme/app_colors.dart';
 import '../common/timer_scope.dart';
 import 'number_choice.dart';
 import 'sanctuary_round_shell.dart';
@@ -304,7 +305,7 @@ class _Puzzle extends StatelessWidget {
     const numeral = TextStyle(
       fontSize: 84,
       fontWeight: FontWeight.w900,
-      color: Color(0xFF4A3220),
+      color: AppColors.cardInk,
       height: 1,
     );
     Widget group(int n, {int takenAway = 0}) => Column(
@@ -367,7 +368,7 @@ class _Puzzle extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xEEFFFBF0),
         borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: const Color(0xFFD8C6A0), width: 4),
+        border: Border.all(color: AppColors.cardRim, width: 4),
       ),
       child: FittedBox(child: body),
     );

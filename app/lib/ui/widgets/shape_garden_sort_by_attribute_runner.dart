@@ -30,6 +30,7 @@ import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../platform/sfx_engine.dart';
+import '../../theme/app_colors.dart';
 import 'answer_feedback.dart';
 import 'buddy_companion.dart';
 import 'continue_arrow_shelf.dart';
@@ -952,9 +953,8 @@ class _BinDropTarget extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: highlighted
-                    ? Colors.amber.shade400
-                    : const Color(0xFFD8D2C2),
+                color:
+                    highlighted ? Colors.amber.shade400 : AppColors.neutralRim,
                 width: highlighted ? 4 : 2,
               ),
               boxShadow: const [

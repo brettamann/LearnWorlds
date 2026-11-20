@@ -25,6 +25,7 @@ import '../../data/shape_words.dart';
 import '../../data/warm_lines.dart';
 import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/narration/narration_player.dart';
+import '../../theme/app_decor.dart';
 import 'animated_shape.dart';
 import 'answer_feedback.dart';
 import 'glitter_burst.dart';
@@ -248,17 +249,8 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
                     horizontal: 20,
                     vertical: 10,
                   ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.92),
-                    borderRadius: BorderRadius.circular(18),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 6,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
+                  decoration:
+                      AppDecor.card(radius: 18, shadow: AppShadows.soft),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

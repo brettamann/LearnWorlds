@@ -32,6 +32,7 @@ import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/mastery/round_outcome.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../providers/session_provider.dart';
+import '../../theme/app_colors.dart';
 import '../common/timer_scope.dart';
 import 'answer_feedback.dart';
 import 'glitter_burst.dart';
@@ -625,8 +626,7 @@ class _CrateView extends StatelessWidget {
                       ? _colours[pantryCrateColour(crate)]
                       : const Color(0xFFFFFBF0),
                   border: Border.all(
-                    color:
-                        lit ? const Color(0xFFFFB300) : const Color(0xFF8A5A2B),
+                    color: lit ? AppColors.hintGlow : AppColors.wood,
                     width: lit ? 5 : 3,
                   ),
                 ),

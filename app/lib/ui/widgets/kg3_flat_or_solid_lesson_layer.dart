@@ -23,6 +23,7 @@ import '../../data/asset_paths.dart';
 import '../../data/button_labels.dart';
 import '../../data/flat_or_solid_shapes.dart';
 import '../../engines/narration/narration_player.dart';
+import '../../theme/app_decor.dart';
 import '../common/timer_scope.dart';
 import 'flat_or_solid_round.dart';
 import 'glitter_burst.dart';
@@ -315,17 +316,8 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody>
                     horizontal: 20,
                     vertical: 10,
                   ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.92),
-                    borderRadius: BorderRadius.circular(18),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 6,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
+                  decoration:
+                      AppDecor.card(radius: 18, shadow: AppShadows.soft),
                   child: const Text(
                     'Watch — how to sort flat vs solid!',
                     style: TextStyle(

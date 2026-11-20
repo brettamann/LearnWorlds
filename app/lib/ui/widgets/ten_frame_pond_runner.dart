@@ -38,6 +38,7 @@ import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/mastery/round_outcome.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../providers/session_provider.dart';
+import '../../theme/app_colors.dart';
 import '../common/timer_scope.dart';
 import 'lesson_hand_pointer.dart';
 import 'number_choice.dart';
@@ -696,7 +697,7 @@ class _FrameBorder extends StatelessWidget {
         color: const Color(0x3380D8E8),
         borderRadius: BorderRadius.circular(radius),
         border: Border.all(
-          color: glowing ? const Color(0xFFFFC94A) : const Color(0xFF8A5A2B),
+          color: glowing ? AppColors.coinGold : AppColors.wood,
           width: glowing ? 7 : 5,
         ),
         boxShadow: glowing

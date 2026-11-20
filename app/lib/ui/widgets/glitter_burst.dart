@@ -14,6 +14,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import '../../theme/app_colors.dart';
 
 class GlitterBurst extends StatefulWidget {
   const GlitterBurst({
@@ -21,7 +22,7 @@ class GlitterBurst extends StatefulWidget {
     this.particleCount = 8,
     this.maxRadius = 80,
     this.duration = const Duration(milliseconds: 750),
-    this.color = const Color(0xFFFFE08A),
+    this.color = AppColors.glitter,
   });
 
   final int particleCount;

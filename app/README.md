@@ -471,6 +471,8 @@ See `../specs/shared/project-bootstrap.md` for the full layout. Quick reference:
 | Folder | Purpose |
 |---|---|
 | `lib/ui/` | Screens and widgets |
+| `lib/ui/common/` | Shared building blocks: `TimerScope`, `CountBadge`, `RoundBackButton` |
+| `lib/theme/` | `AppColors` (palette by role), `AppDecor` / `AppShadows` (the floating white card) |
 | `lib/coordinators/` | Orchestrate engines for use cases |
 | `lib/engines/` | Pure logic (mastery, scaffolding, lesson runner, narration) |
 | `lib/data/` | Catalogs, registries, and the words the game speaks |

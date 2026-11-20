@@ -34,6 +34,9 @@ import '../../engines/narration/narration_player.dart';
 import '../../models/lesson_runtime.dart';
 import '../../models/we_try_script.dart';
 import '../../platform/sfx_engine.dart';
+import '../../theme/app_decor.dart';
+import '../../ui/common/count_badge.dart';
+import '../../ui/common/round_back_button.dart';
 import '../widgets/animated_fawn.dart';
 import '../widgets/caption_overlay.dart';
 import '../widgets/clearing_lesson_stage.dart';
@@ -1261,7 +1264,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
             top: 12,
             left: 12,
             child: SafeArea(
-              child: _BackToSanctuaryButton(
+              child: RoundBackButton(
                 onPressed: () {
                   ref.narration.clear();
                   context.go('/sanctuary');
@@ -1359,7 +1362,7 @@ class _FawnStage extends StatelessWidget {
             AnimatedOpacity(
               duration: const Duration(milliseconds: 300),
               opacity: badgeValue == null ? 0.0 : 1.0,
-              child: _CountBadge(value: badgeValue ?? 0, target: count),
+              child: CountBadge(value: badgeValue ?? 0, target: count),
             ),
             const Spacer(),
             Expanded(
@@ -1512,67 +1515,7 @@ class _ShapesDoneCelebration extends StatelessWidget {
 // Shared sub-widgets
 // ============================================================================
 
-class _CountBadge extends StatelessWidget {
-  const _CountBadge({required this.value, required this.target});
-
-  final int value;
-  final int target;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 8,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Text(
-        '$value / $target',
-        style: const TextStyle(
-          fontSize: 40,
-          fontWeight: FontWeight.w700,
-          color: Colors.black87,
-        ),
-      ),
-    );
-  }
-}
-
 /// Small chunky back arrow pinned to the top-left of the lesson.
-class _BackToSanctuaryButton extends StatelessWidget {
-  const _BackToSanctuaryButton({required this.onPressed});
-
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      shape: const CircleBorder(),
-      color: Colors.white.withValues(alpha: 0.88),
-      elevation: 3,
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onPressed,
-        child: const Padding(
-          padding: EdgeInsets.all(10),
-          child: Icon(
-            Icons.arrow_back,
-            size: 28,
-            color: Colors.black87,
-            semanticLabel: 'Back to the Sanctuary',
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 /// Tucked-corner "skip" affordance — small on purpose so the kid doesn't
 /// confuse it with the big glowing Continue arrow.
@@ -1869,17 +1812,7 @@ class _RunningBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(22),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 8,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
+      decoration: AppDecor.card(radius: 22),
       child: Text(
         '$value / $target',
         style: const TextStyle(

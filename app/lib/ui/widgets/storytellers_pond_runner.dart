@@ -41,6 +41,7 @@ import '../../engines/mastery/concept_state.dart';
 import '../../engines/mastery/round_outcome.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../providers/session_provider.dart';
+import '../../theme/app_colors.dart';
 import '../common/timer_scope.dart';
 import 'answer_feedback.dart';
 import 'lesson_hand_pointer.dart';
@@ -590,7 +591,7 @@ class _NumberSentence extends StatelessWidget {
           decoration: BoxDecoration(
             color: const Color(0xEEFFFBF0),
             borderRadius: BorderRadius.circular(22),
-            border: Border.all(color: const Color(0xFFD8C6A0), width: 3),
+            border: Border.all(color: AppColors.cardRim, width: 3),
           ),
           child: Text(
             text,
@@ -598,7 +599,7 @@ class _NumberSentence extends StatelessWidget {
               fontSize: 56,
               height: 1.1,
               fontWeight: FontWeight.w900,
-              color: Color(0xFF4A3220),
+              color: AppColors.cardInk,
             ),
           ),
         ),

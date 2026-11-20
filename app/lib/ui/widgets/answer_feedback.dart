@@ -23,6 +23,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../theme/app_colors.dart';
 import 'glitter_burst.dart';
 
 class AnswerFeedback extends StatefulWidget {
@@ -32,7 +33,7 @@ class AnswerFeedback extends StatefulWidget {
     this.correctToken = 0,
     this.wrongToken = 0,
     this.suppressCorrectPop = false,
-    this.burstColor = const Color(0xFFFFE08A),
+    this.burstColor = AppColors.glitter,
     this.shakeExtent = 10,
   });
 

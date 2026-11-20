@@ -18,6 +18,8 @@ import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../providers/exploration_provider.dart';
 import '../../providers/save_provider.dart';
+import '../../theme/app_decor.dart';
+import '../../ui/common/round_back_button.dart';
 import '../widgets/caption_overlay.dart';
 import '../widgets/music_bed_scope.dart';
 import '../widgets/next_arrow_button.dart';
@@ -149,7 +151,7 @@ class _SanctuaryCutsceneScreenState
               top: 12,
               left: 12,
               child: SafeArea(
-                child: _BackButton(
+                child: RoundBackButton(
                   onPressed: () {
                     ref.narration.clear();
                     context.go('/sanctuary');
@@ -235,51 +237,13 @@ class _SpeechBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
+      decoration: AppDecor.card(radius: 20, shadow: AppShadows.raised),
       child: Text(
         text,
         style: const TextStyle(
           fontSize: 22,
           height: 1.35,
           color: Colors.black87,
-        ),
-      ),
-    );
-  }
-}
-
-class _BackButton extends StatelessWidget {
-  const _BackButton({required this.onPressed});
-
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      shape: const CircleBorder(),
-      color: Colors.white.withValues(alpha: 0.88),
-      elevation: 3,
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onPressed,
-        child: const Padding(
-          padding: EdgeInsets.all(10),
-          child: Icon(
-            Icons.arrow_back,
-            size: 28,
-            color: Colors.black87,
-            semanticLabel: 'Back to the Sanctuary',
-          ),
         ),
       ),
     );

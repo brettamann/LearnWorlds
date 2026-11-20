@@ -22,6 +22,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/asset_paths.dart';
 import '../../data/sort_attribute_words.dart';
 import '../../engines/narration/narration_player.dart';
+import '../../theme/app_colors.dart';
 import '../common/timer_scope.dart';
 import 'glitter_burst.dart';
 import 'lesson_hand_pointer.dart';
@@ -531,8 +532,7 @@ class _BinTarget extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(22),
                   border: Border.all(
-                    color:
-                        hot ? Colors.amber.shade400 : const Color(0xFFD8D2C2),
+                    color: hot ? Colors.amber.shade400 : AppColors.neutralRim,
                     width: hot ? 4 : 2,
                   ),
                   boxShadow: const [

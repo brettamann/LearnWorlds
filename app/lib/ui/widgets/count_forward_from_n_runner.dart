@@ -42,6 +42,7 @@ import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../platform/sfx_engine.dart';
+import '../../ui/common/count_badge.dart';
 import 'animated_fawn.dart';
 import 'buddy_companion.dart';
 import 'continue_arrow_shelf.dart';
@@ -504,7 +505,11 @@ class _CountForwardLayer extends StatelessWidget {
             Expanded(
               child: Column(
                 children: [
-                  _CountBadge(value: currentCount, target: finalCount),
+                  CountBadge(
+                    value: currentCount,
+                    target: finalCount,
+                    size: CountBadgeSize.medium,
+                  ),
                   const SizedBox(height: 12),
                   // Pre-counted row — faint, with numerals above each.
                   Wrap(
@@ -645,39 +650,6 @@ class _CountForwardLayer extends StatelessWidget {
                   : null,
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _CountBadge extends StatelessWidget {
-  const _CountBadge({required this.value, required this.target});
-
-  final int value;
-  final int target;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(22),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 8,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Text(
-        '$value / $target',
-        style: const TextStyle(
-          fontSize: 36,
-          fontWeight: FontWeight.w800,
-          color: Colors.black87,
         ),
       ),
     );

@@ -10,6 +10,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/asset_paths.dart';
+import '../../theme/app_decor.dart';
 import 'next_arrow_button.dart';
 
 class KeeperChoiceOverlay extends StatelessWidget {
@@ -98,17 +99,7 @@ class _SpeechBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
+      decoration: AppDecor.card(radius: 20, shadow: AppShadows.raised),
       child: Text(
         text,
         style: const TextStyle(

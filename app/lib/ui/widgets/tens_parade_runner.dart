@@ -32,6 +32,7 @@ import '../../engines/narration/narration_player.dart';
 import '../../platform/sfx_engine.dart';
 import '../../providers/collection_provider.dart';
 import '../../providers/wallet_provider.dart';
+import '../../ui/common/count_badge.dart';
 import 'buddy_companion.dart';
 import 'counting_challenge_layer.dart';
 import 'keeper_choice_overlay.dart';
@@ -188,7 +189,11 @@ class _TensParadeRunnerState extends ConsumerState<TensParadeRunner> {
               left: 0,
               right: 0,
               child: Center(
-                child: _CountBadge(value: _count, target: _kTarget),
+                child: CountBadge(
+                  value: _count,
+                  target: _kTarget,
+                  size: CountBadgeSize.medium,
+                ),
               ),
             ),
           ],
@@ -363,39 +368,6 @@ class _DemoLayerState extends ConsumerState<_DemoLayer>
           },
         );
       },
-    );
-  }
-}
-
-class _CountBadge extends StatelessWidget {
-  const _CountBadge({required this.value, required this.target});
-
-  final int value;
-  final int target;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(22),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 8,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Text(
-        '$value / $target',
-        style: const TextStyle(
-          fontSize: 36,
-          fontWeight: FontWeight.w800,
-          color: Colors.black87,
-        ),
-      ),
     );
   }
 }

@@ -33,6 +33,7 @@ import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/mastery/round_outcome.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../providers/session_provider.dart';
+import '../../theme/app_colors.dart';
 import '../common/timer_scope.dart';
 import 'answer_feedback.dart';
 import 'glitter_burst.dart';
@@ -341,7 +342,7 @@ class _BenchRoundBodyState extends ConsumerState<BenchRoundBody>
           height: rowH * n + 20,
           child: const DecoratedBox(
             decoration: BoxDecoration(
-              color: Color(0xFF8A5A2B),
+              color: AppColors.wood,
               borderRadius: BorderRadius.all(Radius.circular(3)),
             ),
           ),
@@ -636,7 +637,7 @@ class _CaterpillarPainter extends CustomPainter {
     if (medal != null) {
       final m = Offset(head.dx + hr * 1.3, cy - r * 0.2);
       canvas
-        ..drawCircle(m, r * 0.6, Paint()..color = const Color(0xFFFFC94A))
+        ..drawCircle(m, r * 0.6, Paint()..color = AppColors.coinGold)
         ..drawCircle(m, r * 0.6, outline);
       // Dots for its place - one, two, three - rather than a numeral.
       for (var k = 0; k < medal!; k++) {

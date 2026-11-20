@@ -26,6 +26,7 @@ import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../platform/sfx_engine.dart';
+import '../../theme/app_decor.dart';
 import '../common/timer_scope.dart';
 import 'buddy_companion.dart';
 import 'glitter_burst.dart';
@@ -502,17 +503,8 @@ class _CountOutLayer extends StatelessWidget {
                       horizontal: 20,
                       vertical: 10,
                     ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.92),
-                      borderRadius: BorderRadius.circular(18),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 6,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
+                    decoration:
+                        AppDecor.card(radius: 18, shadow: AppShadows.soft),
                     child: Text(
                       'Bring me $targetN $plural!',
                       style: const TextStyle(
@@ -991,17 +983,8 @@ class _CountOutDemoState extends ConsumerState<_CountOutDemo>
                       horizontal: 20,
                       vertical: 10,
                     ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.92),
-                      borderRadius: BorderRadius.circular(18),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 6,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
+                    decoration:
+                        AppDecor.card(radius: 18, shadow: AppShadows.soft),
                     child: const Text(
                       'Watch — drag creatures into the basket!',
                       style: TextStyle(

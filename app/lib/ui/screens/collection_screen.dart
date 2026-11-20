@@ -19,6 +19,7 @@ import '../../data/creature_card_catalog.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../providers/collection_provider.dart';
+import '../../theme/app_colors.dart';
 import '../widgets/music_bed_scope.dart';
 
 class CollectionScreen extends ConsumerWidget {
@@ -116,10 +117,10 @@ class _AlbumSlot extends StatelessWidget {
         width: 180,
         padding: const EdgeInsets.fromLTRB(12, 12, 12, 14),
         decoration: BoxDecoration(
-          color: found ? const Color(0xFFFFF8E7) : const Color(0xFF3A352D),
+          color: found ? AppColors.parchment : const Color(0xFF3A352D),
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color: found ? const Color(0xFFE0A53C) : const Color(0xFF4A443A),
+            color: found ? AppColors.treasureGold : AppColors.emptySlot,
             width: found ? 4 : 2,
           ),
         ),
@@ -147,8 +148,7 @@ class _AlbumSlot extends StatelessWidget {
               style: TextStyle(
                 fontSize: found ? 20 : 26,
                 fontWeight: FontWeight.w800,
-                color:
-                    found ? const Color(0xFF3B3226) : const Color(0xFF6A6154),
+                color: found ? AppColors.parchmentInk : const Color(0xFF6A6154),
               ),
             ),
           ],
