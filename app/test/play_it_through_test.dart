@@ -55,6 +55,8 @@ const List<String> _tapPrefixes = <String>[
   'garden-r',
   'count-forward-r',
   'count-forward-done',
+  'count-on-ones-r',
+  'count-on-ones-done',
 ];
 
 Future<ProviderContainer> _mount(WidgetTester tester, String key) async {

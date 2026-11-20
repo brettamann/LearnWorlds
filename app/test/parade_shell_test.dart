@@ -5,6 +5,8 @@ import 'package:critmath/data/count_forward_from_n_rounds.dart';
 import 'package:critmath/providers/session_provider.dart';
 import 'package:critmath/providers/wallet_provider.dart';
 import 'package:critmath/ui/widgets/count_forward_from_n_runner.dart';
+import 'package:critmath/ui/widgets/count_on_by_ones_runner.dart';
+import 'package:critmath/ui/widgets/keeper_intro_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -56,6 +58,32 @@ void main() {
       expect(
         find.byKey(const ValueKey('count-forward-done-arrow')),
         findsNothing,
+      );
+      await unmountAndDrain(tester);
+    });
+  });
+
+  group('count on by ones', () {
+    testWidgets('the animated demo is the opening, and Start begins round one',
+        (tester) async {
+      await _pump(
+        tester,
+        CountOnByOnesRunner(onSequenceComplete: () {}),
+      );
+      expect(
+        find.byType(KeeperIntroOverlay),
+        findsNothing,
+        reason: 'the demo stands in for the keeper intro',
+      );
+      // Ten counts, the fold, nine decades, the kick-off.
+      for (var i = 0; i < 25; i++) {
+        await tester.pump(const Duration(seconds: 1));
+      }
+      await _tapKey(tester, 'count-on-ones-demo-start');
+      await tester.pump(const Duration(seconds: 2));
+      expect(
+        find.byKey(const ValueKey('count-on-ones-r0-arrival-0')),
+        findsOneWidget,
       );
       await unmountAndDrain(tester);
     });

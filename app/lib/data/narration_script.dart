@@ -415,6 +415,23 @@ List<ScriptBatch> buildNarrationScript() => <ScriptBatch>[
           ],
         ],
       ),
+      ScriptBatch(
+        id: 'count-on-by-ones-keeper',
+        title: 'Count On By Ones — the demo and the keeper',
+        note: 'The demo counts to ten and then by tens to a hundred on the '
+            'shared number clips; these are the two sentences around those '
+            'counts, and the nudge on its Start arrow. Then the line over '
+            'each finished round, the last beat, and the nudge on the Done '
+            'arrow.',
+        lines: <String>[
+          kCountOnByOnesDemoCollapse,
+          kCountOnByOnesDemoKickoff,
+          kCountOnByOnesDemoStartHint,
+          for (final round in kCountOnByOnesRounds) round.keeperLine,
+          kCountOnByOnesFinal,
+          kCountOnByOnesDoneHint,
+        ],
+      ),
 
       // ---- Long Parade --------------------------------------------
       ScriptBatch(

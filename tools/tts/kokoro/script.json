@@ -4683,6 +4683,51 @@
       ]
     },
     {
+      "id": "count-on-by-ones-keeper",
+      "title": "Count On By Ones — the demo and the keeper",
+      "note": "The demo counts to ten and then by tens to a hundred on the shared number clips; these are the two sentences around those counts, and the nudge on its Start arrow. Then the line over each finished round, the last beat, and the nudge on the Done arrow.",
+      "variants": 9,
+      "complete": true,
+      "lines": [
+        {
+          "text": "When we count to ten, we get a special new number. And the ones start over.",
+          "clipKey": "when-we-count-to-ten-we-get-a-special-new-number__71f69894"
+        },
+        {
+          "text": "Let's count all the different tens!",
+          "clipKey": "let-s-count-all-the-different-tens__5afbdc85"
+        },
+        {
+          "text": "Tap the arrow when you are ready to count!",
+          "clipKey": "tap-the-arrow-when-you-are-ready-to-count__7fb2e60f"
+        },
+        {
+          "text": "Twenty fawns! The dragons are already up at forty.",
+          "clipKey": "twenty-fawns-the-dragons-are-already-up-at-forty__b0669213"
+        },
+        {
+          "text": "Fifty dragons! Now — the phoenixes are at seventy.",
+          "clipKey": "fifty-dragons-now-the-phoenixes-are-at-seventy__b53cc1d7"
+        },
+        {
+          "text": "Eighty phoenixes! The golden eggs are at ninety.",
+          "clipKey": "eighty-phoenixes-the-golden-eggs-are-at-ninety__7fca406f"
+        },
+        {
+          "text": "One hundred! You counted all the way to one hundred by ones.",
+          "clipKey": "one-hundred-you-counted-all-the-way-to-one-hundr__fe1dda5f"
+        },
+        {
+          "text": "One hundred! Counting by ones got you all the way there. Amazing work.",
+          "clipKey": "one-hundred-counting-by-ones-got-you-all-the-way__4c65e8c3"
+        },
+        {
+          "text": "Beautifully counted! Tap the arrow to keep going.",
+          "clipKey": "beautifully-counted-tap-the-arrow-to-keep-going__54892763"
+        }
+      ]
+    },
+    {
       "id": "long-parade",
       "title": "Long Parade — the instruction",
       "note": "One line per creature. No number in it: which ten she is on is what the taps say, not the prompt.",
@@ -6759,7 +6804,7 @@
       "id": "dart-literals",
       "title": "Lines written directly in Dart",
       "note": "Swept out of lib/ by tool/narration_sources.dart: the sanctuary prologue, const round keeperLines, reward dialog. Interpolated templates are excluded - their variants have to come from the catalog that fills the slot.",
-      "variants": 117,
+      "variants": 108,
       "complete": true,
       "lines": [
         {
@@ -6803,10 +6848,6 @@
           "clipKey": "beautifully-counted-out-just-the-number-i-asked__1b38c9e0"
         },
         {
-          "text": "Beautifully counted! Tap the arrow to keep going.",
-          "clipKey": "beautifully-counted-tap-the-arrow-to-keep-going__54892763"
-        },
-        {
           "text": "Behind the cottage. Sneaky!",
           "clipKey": "behind-the-cottage-sneaky__b1d4c3c5"
         },
@@ -6839,10 +6880,6 @@
           "clipKey": "eight-dragons-you-counted-out-every-group__fd294be4"
         },
         {
-          "text": "Eighty phoenixes! The golden eggs are at ninety.",
-          "clipKey": "eighty-phoenixes-the-golden-eggs-are-at-ninety__7fca406f"
-        },
-        {
           "text": "Every habitat is built! The Sanctuary feels cosy and safe.",
           "clipKey": "every-habitat-is-built-the-sanctuary-feels-cosy__0a0ca2aa"
         },
@@ -6857,10 +6894,6 @@
         {
           "text": "Every shape sorted! You can group things by all kinds of differences.",
           "clipKey": "every-shape-sorted-you-can-group-things-by-all-k__347782bc"
-        },
-        {
-          "text": "Fifty dragons! Now — the phoenixes are at seventy.",
-          "clipKey": "fifty-dragons-now-the-phoenixes-are-at-seventy__b53cc1d7"
         },
         {
           "text": "Fifty dragons! Phoenix babies are next.",
@@ -6925,10 +6958,6 @@
         {
           "text": "Let's build!",
           "clipKey": "let-s-build__6f22709f"
-        },
-        {
-          "text": "Let's count all the different tens!",
-          "clipKey": "let-s-count-all-the-different-tens__5afbdc85"
         },
         {
           "text": "Let's count!",
@@ -7007,16 +7036,8 @@
           "clipKey": "one-flat-shape__5d4200a6"
         },
         {
-          "text": "One hundred! Counting by ones got you all the way there. Amazing work.",
-          "clipKey": "one-hundred-counting-by-ones-got-you-all-the-way__4c65e8c3"
-        },
-        {
           "text": "One hundred! Counting by tens carries you all the way there.",
           "clipKey": "one-hundred-counting-by-tens-carries-you-all-the__c405e03d"
-        },
-        {
-          "text": "One hundred! You counted all the way to one hundred by ones.",
-          "clipKey": "one-hundred-you-counted-all-the-way-to-one-hundr__fe1dda5f"
         },
         {
           "text": "One hundred! You counted to one hundred by tens — that's amazing.",
@@ -7095,10 +7116,6 @@
           "clipKey": "tap-the-arrow-to-start-the-challenge__fe0a2cd2"
         },
         {
-          "text": "Tap the arrow when you are ready to count!",
-          "clipKey": "tap-the-arrow-when-you-are-ready-to-count__7fb2e60f"
-        },
-        {
           "text": "That basket is for shapes with five or more sides. Try another!",
           "clipKey": "that-basket-is-for-shapes-with-five-or-more-side__f1d2e7ac"
         },
@@ -7143,10 +7160,6 @@
           "clipKey": "today-s-parade-is-huge-but-we-won-t-count-one-by__132297ee"
         },
         {
-          "text": "Twenty fawns! The dragons are already up at forty.",
-          "clipKey": "twenty-fawns-the-dragons-are-already-up-at-forty__b0669213"
-        },
-        {
           "text": "Two big round things — both found!",
           "clipKey": "two-big-round-things-both-found__b53a94fc"
         },
@@ -7181,10 +7194,6 @@
         {
           "text": "Well hello there, adventurer! I'm Haddock.",
           "clipKey": "well-hello-there-adventurer-i-m-haddock__9e017329"
-        },
-        {
-          "text": "When we count to ten, we get a special new number. And the ones start over.",
-          "clipKey": "when-we-count-to-ten-we-get-a-special-new-number__71f69894"
         },
         {
           "text": "Wonderful sorting! Try another round.",
