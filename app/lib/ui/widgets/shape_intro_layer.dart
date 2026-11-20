@@ -23,7 +23,6 @@
 // Circles get the "no sides — smooth all the way around" path and skip
 // the counting beats entirely.
 
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -35,6 +34,7 @@ import '../../data/shape_words.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../providers/shape_dots_provider.dart';
+import '../common/timer_scope.dart';
 import 'glitter_burst.dart';
 import 'lesson_hand_pointer.dart';
 
@@ -127,8 +127,8 @@ class ShapeIntroLayer extends ConsumerStatefulWidget {
   ConsumerState<ShapeIntroLayer> createState() => _ShapeIntroLayerState();
 }
 
-class _ShapeIntroLayerState extends ConsumerState<ShapeIntroLayer> {
-  final List<Timer> _timers = [];
+class _ShapeIntroLayerState extends ConsumerState<ShapeIntroLayer>
+    with TimerScope<ShapeIntroLayer> {
   bool _shapeVisible = false;
   bool _pointerVisible = false;
   int _pointerPokeCounter = 0;
@@ -138,23 +138,6 @@ class _ShapeIntroLayerState extends ConsumerState<ShapeIntroLayer> {
   List<Offset> _resolvedSides = const [];
 
   int get _sides => kIntroSidesByKind[widget.shapeKind] ?? 0;
-
-  @override
-  void dispose() {
-    for (final t in _timers) {
-      t.cancel();
-    }
-    super.dispose();
-  }
-
-  void _schedule(int ms, VoidCallback action) {
-    _timers.add(
-      Timer(Duration(milliseconds: ms), () {
-        if (!mounted) return;
-        action();
-      }),
-    );
-  }
 
   void _speak(String text, String cueId) {
     ref.read(narrationPlayerProvider.notifier).speak(
@@ -174,27 +157,27 @@ class _ShapeIntroLayerState extends ConsumerState<ShapeIntroLayer> {
 
   void _scheduleTimeline() {
     // Beat 1 — sprite fades + scales in.
-    _schedule(100, () => setState(() => _shapeVisible = true));
+    afterMs(100, () => setState(() => _shapeVisible = true));
 
     final opening = _kIntroOpening[widget.shapeKind] ??
         'This is a ${kShapeDisplayName[widget.shapeKind] ?? widget.shapeKind}!';
 
     // Beat 2 — opening sentence ("This is a ...!").
-    _schedule(
+    afterMs(
       800,
       () => _speak(opening, 'intro:${widget.shapeKind}:opening'),
     );
 
     if (_sides == 0 || _resolvedSides.isEmpty) {
       // Circle / smooth-around path, or polygon with no dots: no count.
-      _schedule(6500, () => setState(() => _shapeVisible = false));
-      _schedule(7000, widget.onComplete);
+      afterMs(6500, () => setState(() => _shapeVisible = false));
+      afterMs(7000, widget.onComplete);
       return;
     }
 
     // Show the pointer parked over side 0 a moment after the opening
     // settles.
-    _schedule(
+    afterMs(
       3600,
       () => setState(() {
         _currentSideIndex = 0;
@@ -208,12 +191,12 @@ class _ShapeIntroLayerState extends ConsumerState<ShapeIntroLayer> {
     for (var i = 0; i < sideCount; i++) {
       final countMs = 4200 + i * _kSidePaceMs;
       if (i > 0) {
-        _schedule(
+        afterMs(
           countMs - handPointerGlideDuration.inMilliseconds,
           () => setState(() => _currentSideIndex = i),
         );
       }
-      _schedule(countMs, () {
+      afterMs(countMs, () {
         setState(() {
           _burstCounters[i] = (_burstCounters[i] ?? 0) + 1;
           _pointerPokeCounter++;
@@ -226,13 +209,13 @@ class _ShapeIntroLayerState extends ConsumerState<ShapeIntroLayer> {
     }
 
     final lastCountMs = 4200 + (sideCount - 1) * _kSidePaceMs;
-    _schedule(lastCountMs + 1500, () {
+    afterMs(lastCountMs + 1500, () {
       setState(() {
         _shapeVisible = false;
         _pointerVisible = false;
       });
     });
-    _schedule(lastCountMs + 2000, widget.onComplete);
+    afterMs(lastCountMs + 2000, widget.onComplete);
   }
 
   /// Side midpoints of a regular N-gon inscribed in the sprite's box, in

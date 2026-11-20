@@ -17,7 +17,6 @@
 // what is inside them, so the answer is something she can see as well as
 // count. The full pantry asks for the fewest too.
 
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -33,6 +32,7 @@ import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/mastery/round_outcome.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../providers/session_provider.dart';
+import '../common/timer_scope.dart';
 import 'answer_feedback.dart';
 import 'glitter_burst.dart';
 import 'lesson_hand_pointer.dart';
@@ -106,9 +106,9 @@ class PantryRoundBody extends ConsumerStatefulWidget {
   ConsumerState<PantryRoundBody> createState() => _PantryRoundBodyState();
 }
 
-class _PantryRoundBodyState extends ConsumerState<PantryRoundBody> {
+class _PantryRoundBodyState extends ConsumerState<PantryRoundBody>
+    with TimerScope<PantryRoundBody> {
   final List<_Item> _items = <_Item>[];
-  final List<Timer> _timers = <Timer>[];
   HintLadder? _hints;
   _Stage _stage = _Stage.sorting;
   int _active = 0;
@@ -161,14 +161,8 @@ class _PantryRoundBodyState extends ConsumerState<PantryRoundBody> {
   @override
   void dispose() {
     _hints?.dispose();
-    for (final t in _timers) {
-      t.cancel();
-    }
     super.dispose();
   }
-
-  void _after(Duration d, VoidCallback f) =>
-      _timers.add(Timer(d, () => mounted ? f() : null));
 
   PantryCrate get _activeCrate => _r.crates[_active];
 
@@ -197,8 +191,8 @@ class _PantryRoundBodyState extends ConsumerState<PantryRoundBody> {
       _handAt = geo.itemCenter(it.spot);
     });
     widget.c.say(kPantryDemo, replay: false);
-    _after(const Duration(milliseconds: 900), () => setState(() => _poke++));
-    _after(const Duration(milliseconds: 1100), () {
+    after(const Duration(milliseconds: 900), () => setState(() => _poke++));
+    after(const Duration(milliseconds: 1100), () {
       setState(() {
         it
           ..crate = _active
@@ -208,7 +202,7 @@ class _PantryRoundBodyState extends ConsumerState<PantryRoundBody> {
       ref.read(feedbackEngineProvider).drop();
     });
     // And back out again - the first one is hers to find.
-    _after(const Duration(milliseconds: 2600), () {
+    after(const Duration(milliseconds: 2600), () {
       widget.c.say(kPantryDemoBack, replay: false, queue: true);
       setState(() {
         it
@@ -216,7 +210,7 @@ class _PantryRoundBodyState extends ConsumerState<PantryRoundBody> {
           ..flying = false;
       });
     });
-    _after(const Duration(milliseconds: 4600), () {
+    after(const Duration(milliseconds: 4600), () {
       setState(() => _busy = false);
       _begin();
     });
@@ -248,7 +242,7 @@ class _PantryRoundBodyState extends ConsumerState<PantryRoundBody> {
     feedback
       ..drop()
       ..countStep(n);
-    _after(const Duration(milliseconds: 480), () {
+    after(const Duration(milliseconds: 480), () {
       setState(() => it.flying = false);
     });
     final crateDone = n >= _activeCrate.count;
@@ -322,7 +316,7 @@ class _PantryRoundBodyState extends ConsumerState<PantryRoundBody> {
         _stage = _Stage.askFewest;
         _busy = true;
       });
-      _after(const Duration(milliseconds: 1600), () {
+      after(const Duration(milliseconds: 1600), () {
         setState(() {
           _rightCrate = null;
           _busy = false;

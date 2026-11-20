@@ -46,6 +46,7 @@ import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../platform/sfx_engine.dart';
+import '../common/timer_scope.dart';
 import 'animated_fawn.dart';
 import 'buddy_companion.dart';
 import 'continue_arrow_shelf.dart';
@@ -775,7 +776,8 @@ class _DemoLayer extends ConsumerStatefulWidget {
   ConsumerState<_DemoLayer> createState() => _DemoLayerState();
 }
 
-class _DemoLayerState extends ConsumerState<_DemoLayer> {
+class _DemoLayerState extends ConsumerState<_DemoLayer>
+    with TimerScope<_DemoLayer> {
   // `_step` encodes the entire demo timeline:
   //   0       — idle (pre-first-frame)
   //   1..10   — counting sprites (visible count == _step)
@@ -783,7 +785,6 @@ class _DemoLayerState extends ConsumerState<_DemoLayer> {
   //   12..20  — additional decade clusters; total clusters == _step - 10
   //   21      — kickoff line + Start arrow visible
   int _step = 0;
-  final List<Timer> _timers = <Timer>[];
   bool _showStart = false;
 
   /// The whole demo uses a single species — keeps the visual story
@@ -805,56 +806,44 @@ class _DemoLayerState extends ConsumerState<_DemoLayer> {
     // narrator without feeling slow for a tablet audience.
     for (var i = 1; i <= 10; i++) {
       final value = i;
-      _timers.add(
-        Timer(Duration(milliseconds: t), () {
-          if (!mounted) return;
-          setState(() => _step = value);
-          _speak('${kSpelledCounts[value]}.', 'demo:count-$value');
-        }),
-      );
+      after(Duration(milliseconds: t), () {
+        setState(() => _step = value);
+        _speak('${kSpelledCounts[value]}.', 'demo:count-$value');
+      });
       t += 600;
     }
     // Beat after the last "ten" before the cluster collapses + the
     // explanation plays. Long enough to feel deliberate.
     t += 700;
-    _timers.add(
-      Timer(Duration(milliseconds: t), () {
-        if (!mounted) return;
-        setState(() => _step = 11);
-        _speak(
-          'When we count to ten, we get a special new number. '
-              'And the ones start over.',
-          'demo:collapse',
-        );
-      }),
-    );
+    after(Duration(milliseconds: t), () {
+      setState(() => _step = 11);
+      _speak(
+        'When we count to ten, we get a special new number. '
+            'And the ones start over.',
+        'demo:collapse',
+      );
+    });
     // Hold on the single "10" cluster long enough for the narration to
     // breathe (~5s spoken).
     t += 5200;
     // Decades two through ten — one card slides in per beat.
     for (var i = 2; i <= 10; i++) {
       final value = i;
-      _timers.add(
-        Timer(Duration(milliseconds: t), () {
-          if (!mounted) return;
-          setState(() => _step = 10 + value);
-          _speak('${kSpelledTens[value]}.', 'demo:decade-$value');
-        }),
-      );
+      after(Duration(milliseconds: t), () {
+        setState(() => _step = 10 + value);
+        _speak('${kSpelledTens[value]}.', 'demo:decade-$value');
+      });
       t += 1100;
     }
     // Kickoff — narration + Start arrow appear together.
     t += 500;
-    _timers.add(
-      Timer(Duration(milliseconds: t), () {
-        if (!mounted) return;
-        setState(() {
-          _step = 21;
-          _showStart = true;
-        });
-        _speak("Let's count all the different tens!", 'demo:kickoff');
-      }),
-    );
+    after(Duration(milliseconds: t), () {
+      setState(() {
+        _step = 21;
+        _showStart = true;
+      });
+      _speak("Let's count all the different tens!", 'demo:kickoff');
+    });
   }
 
   /// Speaks [text] exactly as given.
@@ -868,14 +857,6 @@ class _DemoLayerState extends ConsumerState<_DemoLayer> {
     ref.read(narrationPlayerProvider.notifier).speak(
           NarrationLine(text: text, cueId: cueId),
         );
-  }
-
-  @override
-  void dispose() {
-    for (final t in _timers) {
-      t.cancel();
-    }
-    super.dispose();
   }
 
   /// Top-of-stage badge value. Climbs by ones during the counting

@@ -16,8 +16,6 @@
 // After the last pairing's round, `onComplete` fires and the LessonScreen
 // hands off to the activity in `flat-or-solid` sub-mode.
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,6 +24,7 @@ import '../../data/button_labels.dart';
 import '../../data/flat_or_solid_shapes.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
+import '../common/timer_scope.dart';
 import 'flat_or_solid_round.dart';
 import 'glitter_burst.dart';
 import 'kg3_pairing_intro_layer.dart';
@@ -177,11 +176,10 @@ class _SortDemoBody extends ConsumerStatefulWidget {
   ConsumerState<_SortDemoBody> createState() => _SortDemoBodyState();
 }
 
-class _SortDemoBodyState extends ConsumerState<_SortDemoBody> {
+class _SortDemoBodyState extends ConsumerState<_SortDemoBody>
+    with TimerScope<_SortDemoBody> {
   static const double _shapeSize = 110;
   static const double _handSize = 96;
-
-  final List<Timer> _timers = [];
 
   _DemoStep _step = _DemoStep.idle;
   bool _pointerVisible = false;
@@ -206,23 +204,6 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody> {
     });
   }
 
-  @override
-  void dispose() {
-    for (final t in _timers) {
-      t.cancel();
-    }
-    super.dispose();
-  }
-
-  void _schedule(int ms, VoidCallback action) {
-    _timers.add(
-      Timer(Duration(milliseconds: ms), () {
-        if (!mounted) return;
-        action();
-      }),
-    );
-  }
-
   void _speak(String text, String cueId) {
     ref.read(narrationPlayerProvider.notifier).speak(
           NarrationLine(text: text, cueId: cueId),
@@ -231,7 +212,7 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody> {
 
   void _scheduleTimeline() {
     // Beat 0 — intro.
-    _schedule(300, () {
+    afterMs(300, () {
       _speak(
         "Watch — I'll show you how to sort. The flat shapes go in the "
             'flat basket, the solid shapes in the solid basket.',
@@ -239,7 +220,7 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody> {
       );
     });
     // Beat 1 — hand glides to the flat triangle, picks it up.
-    _schedule(2400, () {
+    afterMs(2400, () {
       setState(() {
         _pointerVisible = true;
         _step = _DemoStep.pickFlat;
@@ -247,17 +228,17 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody> {
       });
       _pokeCounter += 1;
     });
-    _schedule(2900, () {
+    afterMs(2900, () {
       _speak('Triangle.', 'kg3-demo:flat-name');
     });
     // Beat 2 — carry to flat bin.
-    _schedule(3800, () {
+    afterMs(3800, () {
       setState(() {
         _step = _DemoStep.carryFlat;
         _carriedShapePos = const Offset(0.25, 0.78);
       });
     });
-    _schedule(5000, () {
+    afterMs(5000, () {
       setState(() {
         _step = _DemoStep.dropFlat;
         _flatVisible = false;
@@ -267,24 +248,24 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody> {
       _speak('One flat shape!', 'kg3-demo:flat-drop');
     });
     // Beat 3 — hand glides to the solid sphere.
-    _schedule(6400, () {
+    afterMs(6400, () {
       setState(() {
         _step = _DemoStep.pickSolid;
         _carriedShapePos = const Offset(0.70, 0.38);
       });
       _pokeCounter += 1;
     });
-    _schedule(6900, () {
+    afterMs(6900, () {
       _speak('Sphere.', 'kg3-demo:solid-name');
     });
     // Beat 4 — carry to solid bin.
-    _schedule(7800, () {
+    afterMs(7800, () {
       setState(() {
         _step = _DemoStep.carrySolid;
         _carriedShapePos = const Offset(0.75, 0.78);
       });
     });
-    _schedule(9000, () {
+    afterMs(9000, () {
       setState(() {
         _step = _DemoStep.dropSolid;
         _solidVisible = false;
@@ -294,14 +275,14 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody> {
       _speak('One solid shape!', 'kg3-demo:solid-drop');
     });
     // Beat 5 — wrap up + hand off.
-    _schedule(10400, () {
+    afterMs(10400, () {
       setState(() {
         _step = _DemoStep.wrapUp;
         _pointerVisible = false;
       });
       _speak('Now you try!', 'kg3-demo:wrapup');
     });
-    _schedule(12000, widget.onComplete);
+    afterMs(12000, widget.onComplete);
   }
 
   @override

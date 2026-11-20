@@ -23,7 +23,6 @@
 // The treats sit on white plates. The blanket is red gingham; red cherries on
 // it disappear.
 
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -39,6 +38,7 @@ import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/mastery/round_outcome.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../providers/session_provider.dart';
+import '../common/timer_scope.dart';
 import 'answer_feedback.dart';
 import 'glitter_burst.dart';
 import 'number_choice.dart';
@@ -96,8 +96,8 @@ class PicnicRoundBody extends ConsumerStatefulWidget {
   ConsumerState<PicnicRoundBody> createState() => _PicnicRoundBodyState();
 }
 
-class _PicnicRoundBodyState extends ConsumerState<PicnicRoundBody> {
-  final List<Timer> _timers = <Timer>[];
+class _PicnicRoundBodyState extends ConsumerState<PicnicRoundBody>
+    with TimerScope<PicnicRoundBody> {
   HintLadder? _hints;
   _Step _step = _Step.act;
   bool _busy = false;
@@ -135,14 +135,8 @@ class _PicnicRoundBodyState extends ConsumerState<PicnicRoundBody> {
   @override
   void dispose() {
     _hints?.dispose();
-    for (final t in _timers) {
-      t.cancel();
-    }
     super.dispose();
   }
-
-  void _after(Duration d, VoidCallback f) =>
-      _timers.add(Timer(d, () => mounted ? f() : null));
 
   bool _paired(_Treat t) => t.$1 == 0
       ? _pairs.any((p) => p.$1 == t.$2)
@@ -202,7 +196,7 @@ class _PicnicRoundBodyState extends ConsumerState<PicnicRoundBody> {
     if (_step != _Step.act) return;
     setState(() => _busy = true);
     // A beat to see the leftovers before the question lands on top of them.
-    _after(const Duration(milliseconds: 900), () {
+    after(const Duration(milliseconds: 900), () {
       setState(() {
         _busy = false;
         _step = _Step.ask;
@@ -240,7 +234,7 @@ class _PicnicRoundBodyState extends ConsumerState<PicnicRoundBody> {
     if (_r.task == PicnicTask.three && !fewest) {
       widget.c.say(picnicDoneMost(_r), replay: false);
       setState(() => _busy = true);
-      _after(const Duration(milliseconds: 1500), () {
+      after(const Duration(milliseconds: 1500), () {
         setState(() {
           _busy = false;
           _chosenDiner = null;

@@ -16,8 +16,6 @@
 //   3. Done — onComplete fires; LessonScreen hands off to the
 //      sort-by-attribute activity sub-mode.
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -25,6 +23,7 @@ import '../../data/asset_paths.dart';
 import '../../data/sort_attribute_words.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
+import '../common/timer_scope.dart';
 import 'glitter_burst.dart';
 import 'lesson_hand_pointer.dart';
 
@@ -137,9 +136,9 @@ class Kg4SortByAttributeLessonLayer extends ConsumerStatefulWidget {
 }
 
 class _Kg4SortByAttributeLessonLayerState
-    extends ConsumerState<Kg4SortByAttributeLessonLayer> {
+    extends ConsumerState<Kg4SortByAttributeLessonLayer>
+    with TimerScope<Kg4SortByAttributeLessonLayer> {
   _Beat _beat = _Beat.iShow;
-  final List<Timer> _timers = <Timer>[];
 
   /// Per-shape current position (normalized). Mutated as the hand or
   /// the kid drags a shape into a bin.
@@ -173,14 +172,6 @@ class _Kg4SortByAttributeLessonLayerState
     });
   }
 
-  @override
-  void dispose() {
-    for (final t in _timers) {
-      t.cancel();
-    }
-    super.dispose();
-  }
-
   void _speak(String text, String cueId) {
     ref.read(narrationPlayerProvider.notifier).speak(
           NarrationLine(text: text, cueId: cueId),
@@ -199,36 +190,27 @@ class _Kg4SortByAttributeLessonLayerState
   }) {
     final shape = _kLessonShapes.firstWhere((s) => s.id == shapeId);
     final bin = _kLessonBins.firstWhere((b) => b.id == binId);
-    _timers.add(
-      Timer(Duration(milliseconds: startMs), () {
-        if (!mounted) return;
-        setState(() {
-          _handVisible = true;
-          _handTarget = shape.startPos;
-        });
-      }),
-    );
-    _timers.add(
-      Timer(Duration(milliseconds: startMs + 600), () {
-        if (!mounted) return;
-        setState(() {
-          // Glide the shape onto the bin alongside the hand.
-          _positions[shapeId] = bin.position;
-          _handTarget = bin.position;
-          _pokeKey += 1;
-        });
-        _speak(narrationText, narrationCue);
-      }),
-    );
-    _timers.add(
-      Timer(Duration(milliseconds: startMs + 1300), () {
-        if (!mounted) return;
-        setState(() {
-          _placed.add(shapeId);
-          _burstByBin[binId] = (_burstByBin[binId] ?? 0) + 1;
-        });
-      }),
-    );
+    after(Duration(milliseconds: startMs), () {
+      setState(() {
+        _handVisible = true;
+        _handTarget = shape.startPos;
+      });
+    });
+    after(Duration(milliseconds: startMs + 600), () {
+      setState(() {
+        // Glide the shape onto the bin alongside the hand.
+        _positions[shapeId] = bin.position;
+        _handTarget = bin.position;
+        _pokeKey += 1;
+      });
+      _speak(narrationText, narrationCue);
+    });
+    after(Duration(milliseconds: startMs + 1300), () {
+      setState(() {
+        _placed.add(shapeId);
+        _burstByBin[binId] = (_burstByBin[binId] ?? 0) + 1;
+      });
+    });
   }
 
   void _scheduleIShow() {
@@ -257,29 +239,23 @@ class _Kg4SortByAttributeLessonLayerState
       narrationText: 'Five sides.',
       narrationCue: 'k-g-4-lesson:ishow-5',
     );
-    _timers.add(
-      Timer(const Duration(milliseconds: 11200), () {
-        if (!mounted) return;
-        _speak(
-          'Shapes with the same number of sides go together, no matter '
-              'their size.',
-          'k-g-4-lesson:ishow-closer',
-        );
-      }),
-    );
-    _timers.add(
-      Timer(const Duration(milliseconds: 15200), () {
-        if (!mounted) return;
-        setState(() {
-          _handVisible = false;
-          _beat = _Beat.weTry;
-        });
-        _speak(
-          'Your turn. Sort by how many sides.',
-          'k-g-4-lesson:we-try-start',
-        );
-      }),
-    );
+    after(const Duration(milliseconds: 11200), () {
+      _speak(
+        'Shapes with the same number of sides go together, no matter '
+            'their size.',
+        'k-g-4-lesson:ishow-closer',
+      );
+    });
+    after(const Duration(milliseconds: 15200), () {
+      setState(() {
+        _handVisible = false;
+        _beat = _Beat.weTry;
+      });
+      _speak(
+        'Your turn. Sort by how many sides.',
+        'k-g-4-lesson:we-try-start',
+      );
+    });
   }
 
   /// First un-placed shape — the one the kid is currently invited to
@@ -295,12 +271,10 @@ class _Kg4SortByAttributeLessonLayerState
     // Auto-complete the round if the kid hesitates for ~6s on the
     // current invited shape. Keeps the lesson moving for a stuck kid
     // without punishing them.
-    _timers.add(
-      Timer(const Duration(seconds: 6), () {
-        if (!mounted || _beat != _Beat.weTry) return;
-        _autoCompleteRemaining();
-      }),
-    );
+    after(const Duration(seconds: 6), () {
+      if (_beat != _Beat.weTry) return;
+      _autoCompleteRemaining();
+    });
   }
 
   void _autoCompleteRemaining() {
@@ -314,43 +288,34 @@ class _Kg4SortByAttributeLessonLayerState
     var t = 0;
     for (final s in remaining) {
       final bin = _kLessonBins.firstWhere((b) => b.id == s.targetBin);
-      _timers.add(
-        Timer(Duration(milliseconds: t), () {
-          if (!mounted) return;
-          setState(() {
-            _positions[s.id] = bin.position;
-            _placed.add(s.id);
-            _burstByBin[bin.id] = (_burstByBin[bin.id] ?? 0) + 1;
-            _handVisible = true;
-            _handTarget = bin.position;
-            _pokeKey += 1;
-          });
-          final sides = bin.id == 'bin-3'
-              ? 'Three sides.'
-              : bin.id == 'bin-4'
-                  ? 'Four sides.'
-                  : 'Five sides.';
-          _speak(sides, 'k-g-4-lesson:auto-${s.id}');
-        }),
-      );
+      after(Duration(milliseconds: t), () {
+        setState(() {
+          _positions[s.id] = bin.position;
+          _placed.add(s.id);
+          _burstByBin[bin.id] = (_burstByBin[bin.id] ?? 0) + 1;
+          _handVisible = true;
+          _handTarget = bin.position;
+          _pokeKey += 1;
+        });
+        final sides = bin.id == 'bin-3'
+            ? 'Three sides.'
+            : bin.id == 'bin-4'
+                ? 'Four sides.'
+                : 'Five sides.';
+        _speak(sides, 'k-g-4-lesson:auto-${s.id}');
+      });
       t += 700;
     }
-    _timers.add(
-      Timer(Duration(milliseconds: t + 200), () {
-        if (!mounted) return;
-        _speak(
-          'Six shapes sorted. Two in each basket.',
-          'k-g-4-lesson:we-try-closer',
-        );
-      }),
-    );
-    _timers.add(
-      Timer(Duration(milliseconds: t + 2200), () {
-        if (!mounted) return;
-        setState(() => _handVisible = false);
-        _finishLesson();
-      }),
-    );
+    after(Duration(milliseconds: t + 200), () {
+      _speak(
+        'Six shapes sorted. Two in each basket.',
+        'k-g-4-lesson:we-try-closer',
+      );
+    });
+    after(Duration(milliseconds: t + 2200), () {
+      setState(() => _handVisible = false);
+      _finishLesson();
+    });
   }
 
   void _finishLesson() {
@@ -391,18 +356,13 @@ class _Kg4SortByAttributeLessonLayerState
             : 'Five sides.';
     _speak(sides, 'k-g-4-lesson:we-try-right-${shape.id}');
     if (_kLessonShapes.every((s) => _placed.contains(s.id))) {
-      _timers.add(
-        Timer(const Duration(milliseconds: 900), () {
-          if (!mounted) return;
-          _speak(
-            'Six shapes sorted. Two in each basket.',
-            'k-g-4-lesson:we-try-closer',
-          );
-        }),
-      );
-      _timers.add(
-        Timer(const Duration(milliseconds: 2800), _finishLesson),
-      );
+      after(const Duration(milliseconds: 900), () {
+        _speak(
+          'Six shapes sorted. Two in each basket.',
+          'k-g-4-lesson:we-try-closer',
+        );
+      });
+      after(const Duration(milliseconds: 2800), _finishLesson);
     } else if (!_kidActionInflight) {
       _scheduleWeTryHesitation();
     }

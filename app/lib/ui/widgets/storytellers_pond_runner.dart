@@ -24,7 +24,6 @@
 // "three and two more make five" - so the first number sentences she meets
 // are ones she has just acted out.
 
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -42,6 +41,7 @@ import '../../engines/mastery/concept_state.dart';
 import '../../engines/mastery/round_outcome.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../providers/session_provider.dart';
+import '../common/timer_scope.dart';
 import 'answer_feedback.dart';
 import 'lesson_hand_pointer.dart';
 import 'next_arrow_button.dart';
@@ -115,9 +115,9 @@ class StoryRoundBody extends ConsumerStatefulWidget {
   ConsumerState<StoryRoundBody> createState() => _StoryRoundBodyState();
 }
 
-class _StoryRoundBodyState extends ConsumerState<StoryRoundBody> {
+class _StoryRoundBodyState extends ConsumerState<StoryRoundBody>
+    with TimerScope<StoryRoundBody> {
   final List<_Critter> _critters = <_Critter>[];
-  final List<Timer> _timers = <Timer>[];
   HintLadder? _hints;
   _Step _step = _Step.act;
   int _arrived = 0;
@@ -205,14 +205,8 @@ class _StoryRoundBodyState extends ConsumerState<StoryRoundBody> {
   @override
   void dispose() {
     _hints?.dispose();
-    for (final t in _timers) {
-      t.cancel();
-    }
     super.dispose();
   }
-
-  void _after(Duration d, VoidCallback f) =>
-      _timers.add(Timer(d, () => mounted ? f() : null));
 
   /// The first visit's "watch me": the hand points at the first thing to tap
   /// and taps it, and the animal wiggles - nothing moves. The story is hers
@@ -225,13 +219,13 @@ class _StoryRoundBodyState extends ConsumerState<StoryRoundBody> {
       _handVisible = true;
       _handAt = geo.centerOf(target, _critters);
     });
-    _after(const Duration(milliseconds: 1200), () {
+    after(const Duration(milliseconds: 1200), () {
       setState(() {
         _poke++;
         target.wrong++;
       });
     });
-    _after(const Duration(milliseconds: 2200), () {
+    after(const Duration(milliseconds: 2200), () {
       setState(() => _handVisible = false);
     });
   }

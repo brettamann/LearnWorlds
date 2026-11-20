@@ -26,6 +26,7 @@ import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../platform/sfx_engine.dart';
+import '../common/timer_scope.dart';
 import 'buddy_companion.dart';
 import 'glitter_burst.dart';
 import 'keeper_aside.dart';
@@ -876,11 +877,10 @@ class _CountOutDemo extends ConsumerStatefulWidget {
   ConsumerState<_CountOutDemo> createState() => _CountOutDemoState();
 }
 
-class _CountOutDemoState extends ConsumerState<_CountOutDemo> {
+class _CountOutDemoState extends ConsumerState<_CountOutDemo>
+    with TimerScope<_CountOutDemo> {
   static const double _spriteSize = 84;
   static const double _handSize = 96;
-
-  final List<Timer> _timers = <Timer>[];
 
   bool _pointerVisible = false;
   int _pokeCounter = 0;
@@ -908,23 +908,6 @@ class _CountOutDemoState extends ConsumerState<_CountOutDemo> {
     });
   }
 
-  @override
-  void dispose() {
-    for (final t in _timers) {
-      t.cancel();
-    }
-    super.dispose();
-  }
-
-  void _schedule(int ms, VoidCallback action) {
-    _timers.add(
-      Timer(Duration(milliseconds: ms), () {
-        if (!mounted) return;
-        action();
-      }),
-    );
-  }
-
   void _speak(String text, String cueId) {
     ref.read(narrationPlayerProvider.notifier).speak(
           NarrationLine(text: text, cueId: cueId),
@@ -933,14 +916,14 @@ class _CountOutDemoState extends ConsumerState<_CountOutDemo> {
 
   void _scheduleTimeline() {
     // 0.0s — narrate the intro.
-    _schedule(200, () {
+    afterMs(200, () {
       _speak(
         "Watch — I'll show you. Drag each ${widget.singular} into the basket.",
         'count-out:demo:intro',
       );
     });
     // 1.0s — hand appears at slot 0.
-    _schedule(1000, () {
+    afterMs(1000, () {
       setState(() {
         _pointerVisible = true;
         _pointerTarget = _slot0;
@@ -949,15 +932,15 @@ class _CountOutDemoState extends ConsumerState<_CountOutDemo> {
       });
     });
     // 2.0s — pick up the first creature.
-    _schedule(2000, () {
+    afterMs(2000, () {
       setState(() => _carriedIdx = 0);
     });
     // 2.5s — glide to basket.
-    _schedule(2500, () {
+    afterMs(2500, () {
       setState(() => _pointerTarget = _basketCenter);
     });
     // 3.5s — drop it. "One!"
-    _schedule(3500, () {
+    afterMs(3500, () {
       setState(() {
         _consumed.add(0);
         _carriedIdx = -1;
@@ -968,19 +951,19 @@ class _CountOutDemoState extends ConsumerState<_CountOutDemo> {
       _speak('One.', 'count-out:demo:one');
     });
     // 4.3s — hand glides to slot 1.
-    _schedule(4300, () {
+    afterMs(4300, () {
       setState(() => _pointerTarget = _slot1);
     });
     // 5.3s — pick up second creature.
-    _schedule(5300, () {
+    afterMs(5300, () {
       setState(() => _carriedIdx = 1);
     });
     // 5.8s — glide to basket.
-    _schedule(5800, () {
+    afterMs(5800, () {
       setState(() => _pointerTarget = _basketCenter);
     });
     // 6.8s — drop it. "Two!"
-    _schedule(6800, () {
+    afterMs(6800, () {
       setState(() {
         _consumed.add(1);
         _carriedIdx = -1;
@@ -991,11 +974,11 @@ class _CountOutDemoState extends ConsumerState<_CountOutDemo> {
       _speak('Two.', 'count-out:demo:two');
     });
     // 7.8s — wrap up + hand off.
-    _schedule(7800, () {
+    afterMs(7800, () {
       setState(() => _pointerVisible = false);
       _speak('Now you try!', 'count-out:demo:handoff');
     });
-    _schedule(9200, widget.onComplete);
+    afterMs(9200, widget.onComplete);
   }
 
   @override

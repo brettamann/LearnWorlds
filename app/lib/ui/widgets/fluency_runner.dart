@@ -18,8 +18,6 @@
 // layer for that puzzle only - the acorns reappear over the numbers she is
 // stuck on - and the next puzzle starts back where she is.
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -32,6 +30,7 @@ import '../../engines/mastery/concept_state.dart';
 import '../../engines/mastery/round_outcome.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../providers/session_provider.dart';
+import '../common/timer_scope.dart';
 import 'number_choice.dart';
 import 'sanctuary_round_shell.dart';
 
@@ -93,8 +92,8 @@ class FluencyRoundBody extends ConsumerStatefulWidget {
   ConsumerState<FluencyRoundBody> createState() => _FluencyRoundBodyState();
 }
 
-class _FluencyRoundBodyState extends ConsumerState<FluencyRoundBody> {
-  final List<Timer> _timers = <Timer>[];
+class _FluencyRoundBodyState extends ConsumerState<FluencyRoundBody>
+    with TimerScope<FluencyRoundBody> {
   HintLadder? _hints;
   int _i = 0;
   int _streak = 0;
@@ -145,9 +144,6 @@ class _FluencyRoundBodyState extends ConsumerState<FluencyRoundBody> {
   @override
   void dispose() {
     _hints?.dispose();
-    for (final t in _timers) {
-      t.cancel();
-    }
     super.dispose();
   }
 
@@ -194,21 +190,18 @@ class _FluencyRoundBodyState extends ConsumerState<FluencyRoundBody> {
       );
       return;
     }
-    _timers.add(
-      Timer(const Duration(milliseconds: 1700), () {
-        if (!mounted) return;
-        setState(() {
-          _i += 1;
-          _answered = null;
-          _wrong = <int, int>{};
-          _helped = false;
-          _choices = _choicesFor(_i);
-          _busy = false;
-        });
-        widget.c.say(fluencyQuestion(_f), queue: true);
-        _hints?.start();
-      }),
-    );
+    after(const Duration(milliseconds: 1700), () {
+      setState(() {
+        _i += 1;
+        _answered = null;
+        _wrong = <int, int>{};
+        _helped = false;
+        _choices = _choicesFor(_i);
+        _busy = false;
+      });
+      widget.c.say(fluencyQuestion(_f), queue: true);
+      _hints?.start();
+    });
   }
 
   void _onHint(HintLevel level) {

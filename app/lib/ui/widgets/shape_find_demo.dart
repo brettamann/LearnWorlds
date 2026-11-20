@@ -19,8 +19,6 @@
 // concludes and `onComplete` fires. The LessonScreen swaps to the real
 // ShapeFindRound right after.
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,6 +26,7 @@ import '../../data/asset_paths.dart';
 import '../../data/shape_words.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
+import '../common/timer_scope.dart';
 import 'animated_shape.dart';
 import 'glitter_burst.dart';
 import 'lesson_hand_pointer.dart';
@@ -53,7 +52,8 @@ class ShapeFindDemo extends ConsumerStatefulWidget {
   ConsumerState<ShapeFindDemo> createState() => _ShapeFindDemoState();
 }
 
-class _ShapeFindDemoState extends ConsumerState<ShapeFindDemo> {
+class _ShapeFindDemoState extends ConsumerState<ShapeFindDemo>
+    with TimerScope<ShapeFindDemo> {
   static const double _spriteSize = 144;
   static const double _spriteSizeDecor = 120;
 
@@ -65,7 +65,6 @@ class _ShapeFindDemoState extends ConsumerState<ShapeFindDemo> {
   static const int _completeGapMs = 2200;
 
   late final List<_DemoPlacement> _placements;
-  final List<Timer> _timers = [];
   final Map<String, int> _burstCounters = <String, int>{};
   int? _activeTargetIndex; // index into _targets
   int _pokeCounter = 0;
@@ -87,23 +86,6 @@ class _ShapeFindDemoState extends ConsumerState<ShapeFindDemo> {
       if (!mounted) return;
       _scheduleDemo();
     });
-  }
-
-  @override
-  void dispose() {
-    for (final t in _timers) {
-      t.cancel();
-    }
-    super.dispose();
-  }
-
-  void _schedule(int ms, VoidCallback action) {
-    _timers.add(
-      Timer(Duration(milliseconds: ms), () {
-        if (!mounted) return;
-        action();
-      }),
-    );
   }
 
   void _speak(String text, String cueId) {
@@ -175,7 +157,7 @@ class _ShapeFindDemoState extends ConsumerState<ShapeFindDemo> {
   void _scheduleDemo() {
     final targets = _targets;
 
-    _schedule(_introMs, () {
+    afterMs(_introMs, () {
       _speak(
         "Watch — I'll show you how to find them! I'm looking for $_targetPlural.",
         'find-demo:${widget.targetKind}:intro',
@@ -197,12 +179,12 @@ class _ShapeFindDemoState extends ConsumerState<ShapeFindDemo> {
       // Pre-glide to the next target one glide-duration before the tap so
       // the poke + glitter + narration land together.
       if (i > 0) {
-        _schedule(
+        afterMs(
           tapAt - handPointerGlideDuration.inMilliseconds,
           () => setState(() => _activeTargetIndex = i),
         );
       }
-      _schedule(tapAt, () {
+      afterMs(tapAt, () {
         final id = targets[i].id;
         setState(() {
           _burstCounters[id] = (_burstCounters[id] ?? 0) + 1;
@@ -218,7 +200,7 @@ class _ShapeFindDemoState extends ConsumerState<ShapeFindDemo> {
 
     final lastTapAt = _firstTapMs + (targets.length - 1) * _stepMs;
     final wrapupAt = lastTapAt + _wrapupGapMs;
-    _schedule(wrapupAt, () {
+    afterMs(wrapupAt, () {
       setState(() {
         _pointerVisible = false;
         _activeTargetIndex = null;
@@ -228,7 +210,7 @@ class _ShapeFindDemoState extends ConsumerState<ShapeFindDemo> {
         'find-demo:${widget.targetKind}:wrapup',
       );
     });
-    _schedule(wrapupAt + _completeGapMs, widget.onComplete);
+    afterMs(wrapupAt + _completeGapMs, widget.onComplete);
   }
 
   @override

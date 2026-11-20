@@ -23,7 +23,6 @@
 //   row is full" and "Ten! The whole pond is full" replace the plain count at
 //   exactly the moments the structure appears.
 
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -39,6 +38,7 @@ import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/mastery/round_outcome.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../providers/session_provider.dart';
+import '../common/timer_scope.dart';
 import 'lesson_hand_pointer.dart';
 import 'number_choice.dart';
 import 'sanctuary_round_shell.dart';
@@ -228,12 +228,12 @@ class PondRoundBody extends ConsumerStatefulWidget {
   ConsumerState<PondRoundBody> createState() => _PondRoundBodyState();
 }
 
-class _PondRoundBodyState extends ConsumerState<PondRoundBody> {
+class _PondRoundBodyState extends ConsumerState<PondRoundBody>
+    with TimerScope<PondRoundBody> {
   static const int _bankSlots = 5;
   static const int _twoColourSlots = 4;
 
   final List<_Frog> _frogs = <_Frog>[];
-  final List<Timer> _timers = <Timer>[];
   int _nextId = 0;
   bool _busy = false;
   bool _done = false;
@@ -291,18 +291,7 @@ class _PondRoundBodyState extends ConsumerState<PondRoundBody> {
   @override
   void dispose() {
     _hints?.dispose();
-    for (final t in _timers) {
-      t.cancel();
-    }
     super.dispose();
-  }
-
-  void _after(Duration d, VoidCallback f) {
-    _timers.add(
-      Timer(d, () {
-        if (mounted) f();
-      }),
-    );
   }
 
   /// Keeps each bank topped up: a frog that hops off is replaced by one that
@@ -376,10 +365,10 @@ class _PondRoundBodyState extends ConsumerState<PondRoundBody> {
       _handAt = geo.bankCenter(orange: false, slot: frog.slot);
     });
     widget.c.say(kPondDemo, replay: false);
-    _after(const Duration(milliseconds: 900), () {
+    after(const Duration(milliseconds: 900), () {
       setState(() => _poke++);
     });
-    _after(const Duration(milliseconds: 1100), () {
+    after(const Duration(milliseconds: 1100), () {
       // The next free pad, not pad 0: in make-ten seven frogs are already
       // sitting, and the demonstration used to land its frog on top of one.
       final pad = _nextPad();
@@ -392,7 +381,7 @@ class _PondRoundBodyState extends ConsumerState<PondRoundBody> {
       });
       ref.read(feedbackEngineProvider).countStep(_filled);
     });
-    _after(const Duration(milliseconds: 2500), () {
+    after(const Duration(milliseconds: 2500), () {
       widget.c.say(kPondDemoBack, replay: false, queue: true);
       setState(() {
         frog
@@ -400,7 +389,7 @@ class _PondRoundBodyState extends ConsumerState<PondRoundBody> {
           ..hop += 1;
       });
     });
-    _after(const Duration(milliseconds: 4700), () {
+    after(const Duration(milliseconds: 4700), () {
       setState(() => _busy = false);
       _begin();
     });
@@ -427,7 +416,7 @@ class _PondRoundBodyState extends ConsumerState<PondRoundBody> {
       // for her; it shows her where the frogs are instead.
       setState(() => _ringBanks = true);
       ref.read(feedbackEngineProvider).bubble();
-      _after(const Duration(milliseconds: 1600), () {
+      after(const Duration(milliseconds: 1600), () {
         setState(() => _ringBanks = false);
       });
       return;
@@ -474,7 +463,7 @@ class _PondRoundBodyState extends ConsumerState<PondRoundBody> {
       widget.c.say(kPondSameWay, replay: false, queue: true);
       // They dive back in rather than hopping back: the bank is always full,
       // and a splash is a better way to say "again" than a refusal.
-      _after(const Duration(milliseconds: 2400), () {
+      after(const Duration(milliseconds: 2400), () {
         setState(() {
           for (final f in _frogs) {
             if (f.pad != null) f.gone = true;
@@ -482,7 +471,7 @@ class _PondRoundBodyState extends ConsumerState<PondRoundBody> {
         });
         ref.read(feedbackEngineProvider).bubble();
       });
-      _after(const Duration(milliseconds: 3000), () {
+      after(const Duration(milliseconds: 3000), () {
         setState(() {
           _frogs.removeWhere((f) => f.gone);
           _fillBank();

@@ -18,7 +18,6 @@
 // per stage drives the cross-fade. `onComplete` fires after stage 3's
 // fade-out so the lesson layer can advance to the per-pairing sort round.
 
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -27,6 +26,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/flat_or_solid_shapes.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
+import '../common/timer_scope.dart';
 
 class Kg3PairingIntroLayer extends ConsumerStatefulWidget {
   const Kg3PairingIntroLayer({
@@ -45,8 +45,8 @@ class Kg3PairingIntroLayer extends ConsumerStatefulWidget {
 
 enum _Stage { hidden, flat, outline, themed, done }
 
-class _Kg3PairingIntroLayerState extends ConsumerState<Kg3PairingIntroLayer> {
-  final List<Timer> _timers = [];
+class _Kg3PairingIntroLayerState extends ConsumerState<Kg3PairingIntroLayer>
+    with TimerScope<Kg3PairingIntroLayer> {
   _Stage _stage = _Stage.hidden;
 
   @override
@@ -56,23 +56,6 @@ class _Kg3PairingIntroLayerState extends ConsumerState<Kg3PairingIntroLayer> {
       if (!mounted) return;
       _scheduleTimeline();
     });
-  }
-
-  @override
-  void dispose() {
-    for (final t in _timers) {
-      t.cancel();
-    }
-    super.dispose();
-  }
-
-  void _schedule(int ms, VoidCallback action) {
-    _timers.add(
-      Timer(Duration(milliseconds: ms), () {
-        if (!mounted) return;
-        action();
-      }),
-    );
   }
 
   void _speak(String text, String cueId) {
@@ -86,8 +69,8 @@ class _Kg3PairingIntroLayerState extends ConsumerState<Kg3PairingIntroLayer> {
     final cuePrefix = 'kg3-intro:${p.id}';
 
     // Stage 1 — flat example fades in.
-    _schedule(150, () => setState(() => _stage = _Stage.flat));
-    _schedule(
+    afterMs(150, () => setState(() => _stage = _Stage.flat));
+    afterMs(
       700,
       () => _speak(
         'This is a flat ${p.flatName}. But every shape has a solid '
@@ -97,8 +80,8 @@ class _Kg3PairingIntroLayerState extends ConsumerState<Kg3PairingIntroLayer> {
     );
 
     // Stage 2 — cross-fade to the 3D outline.
-    _schedule(5000, () => setState(() => _stage = _Stage.outline));
-    _schedule(
+    afterMs(5000, () => setState(() => _stage = _Stage.outline));
+    afterMs(
       5400,
       () => _speak(
         'When a ${p.flatName} is solid, instead of flat, we call it a '
@@ -109,8 +92,8 @@ class _Kg3PairingIntroLayerState extends ConsumerState<Kg3PairingIntroLayer> {
     );
 
     // Stage 3 — cross-fade to themed creature sprite.
-    _schedule(10500, () => setState(() => _stage = _Stage.themed));
-    _schedule(
+    afterMs(10500, () => setState(() => _stage = _Stage.themed));
+    afterMs(
       10900,
       () => _speak(
         'These shapes can take many forms. See how this ${p.creatureName} '
@@ -120,8 +103,8 @@ class _Kg3PairingIntroLayerState extends ConsumerState<Kg3PairingIntroLayer> {
     );
 
     // Fade out + complete.
-    _schedule(15500, () => setState(() => _stage = _Stage.done));
-    _schedule(16000, widget.onComplete);
+    afterMs(15500, () => setState(() => _stage = _Stage.done));
+    afterMs(16000, widget.onComplete);
   }
 
   @override

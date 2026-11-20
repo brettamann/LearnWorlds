@@ -13,7 +13,6 @@
 //   other number card in the game carries are off - but a wrong card shows its
 //   dots after she taps it, so a miss tells her what that card says.
 
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -28,6 +27,7 @@ import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/mastery/round_outcome.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../providers/session_provider.dart';
+import '../common/timer_scope.dart';
 import 'answer_feedback.dart';
 import 'number_choice.dart';
 import 'numeral_tracer.dart';
@@ -93,8 +93,8 @@ class ScribeRoundBody extends ConsumerStatefulWidget {
   ConsumerState<ScribeRoundBody> createState() => _ScribeRoundBodyState();
 }
 
-class _ScribeRoundBodyState extends ConsumerState<ScribeRoundBody> {
-  final List<Timer> _timers = <Timer>[];
+class _ScribeRoundBodyState extends ConsumerState<ScribeRoundBody>
+    with TimerScope<ScribeRoundBody> {
   HintLadder? _hints;
   bool _done = false;
   bool _ringStart = false;
@@ -130,7 +130,7 @@ class _ScribeRoundBodyState extends ConsumerState<ScribeRoundBody> {
       if (widget.c.showDemo && _r.task == ScribeTask.trace) {
         widget.c.say(kScribeDemo, replay: false);
         setState(() => _demoToken++);
-        _after(const Duration(milliseconds: 2600), _begin);
+        after(const Duration(milliseconds: 2600), _begin);
       } else {
         _begin();
       }
@@ -140,14 +140,8 @@ class _ScribeRoundBodyState extends ConsumerState<ScribeRoundBody> {
   @override
   void dispose() {
     _hints?.dispose();
-    for (final t in _timers) {
-      t.cancel();
-    }
     super.dispose();
   }
-
-  void _after(Duration d, VoidCallback f) =>
-      _timers.add(Timer(d, () => mounted ? f() : null));
 
   void _begin() {
     widget.c.say(scribePrompt(_r), queue: true);

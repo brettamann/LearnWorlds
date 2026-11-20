@@ -19,7 +19,6 @@
 // pumpkin is heavy. The feather is light." The words are learned by hearing
 // them next to the thing.
 
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -34,6 +33,7 @@ import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/mastery/round_outcome.dart';
 import '../../engines/scaffolding/hint_ladder.dart';
 import '../../providers/session_provider.dart';
+import '../common/timer_scope.dart';
 import 'answer_feedback.dart';
 import 'glitter_burst.dart';
 import 'sanctuary_round_shell.dart';
@@ -88,8 +88,8 @@ class BenchRoundBody extends ConsumerStatefulWidget {
   ConsumerState<BenchRoundBody> createState() => _BenchRoundBodyState();
 }
 
-class _BenchRoundBodyState extends ConsumerState<BenchRoundBody> {
-  final List<Timer> _timers = <Timer>[];
+class _BenchRoundBodyState extends ConsumerState<BenchRoundBody>
+    with TimerScope<BenchRoundBody> {
   HintLadder? _hints;
   bool _done = false;
   bool _busy = false;
@@ -127,14 +127,8 @@ class _BenchRoundBodyState extends ConsumerState<BenchRoundBody> {
   @override
   void dispose() {
     _hints?.dispose();
-    for (final t in _timers) {
-      t.cancel();
-    }
     super.dispose();
   }
-
-  void _after(Duration d, VoidCallback f) =>
-      _timers.add(Timer(d, () => mounted ? f() : null));
 
   /// The next caterpillar in shortest-to-longest order that is not yet tapped.
   int _nextInOrder() {
@@ -161,10 +155,10 @@ class _BenchRoundBodyState extends ConsumerState<BenchRoundBody> {
       if (_onPan.length < 2) return;
       // Both on: let the beam swing and settle before asking her to read it.
       setState(() => _busy = true);
-      _after(const Duration(milliseconds: 520), () {
+      after(const Duration(milliseconds: 520), () {
         setState(() => _tipped = true);
       });
-      _after(const Duration(milliseconds: 1800), () {
+      after(const Duration(milliseconds: 1800), () {
         setState(() {
           _busy = false;
           _asked = true;
