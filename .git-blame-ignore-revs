@@ -1,0 +1,5 @@
+# Formatting-only commits, skipped by `git blame` (git config blame.ignoreRevsFile .git-blame-ignore-revs;
+# GitHub honours this file automatically).
+
+# Adopt the current Dart formatter (language version 3.12)
+d3f3a242c15c3221dec89ff1f2e6cbdc102dbc77
