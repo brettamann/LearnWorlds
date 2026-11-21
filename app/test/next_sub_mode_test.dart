@@ -22,8 +22,10 @@ Map<String, Activity> _registry() {
 }
 
 const ConceptState _fine = ConceptState(conceptId: 'x');
-const ConceptState _struggling =
-    ConceptState(conceptId: 'x', consecutiveFailures: 2);
+const ConceptState _struggling = ConceptState(
+  conceptId: 'x',
+  consecutiveFailures: 2,
+);
 
 void main() {
   final registry = _registry();
@@ -33,13 +35,12 @@ void main() {
     String played, {
     ConceptState state = _fine,
     Set<String>? completed,
-  }) =>
-      nextSubModeAfter(
-        activity: registry[activity]!,
-        playedId: played,
-        completed: completed ?? <String>{played},
-        state: state,
-      )?.id;
+  }) => nextSubModeAfter(
+    activity: registry[activity]!,
+    playedId: played,
+    completed: completed ?? <String>{played},
+    state: state,
+  )?.id;
 
   group('a child who is doing fine', () {
     test('walks the chain in order', () {
@@ -97,10 +98,7 @@ void main() {
     });
 
     test('is not sent backwards out of a challenge', () {
-      expect(
-        registry['care-pantry']!.simplerThan('unfamiliar-rules'),
-        isNull,
-      );
+      expect(registry['care-pantry']!.simplerThan('unfamiliar-rules'), isNull);
       expect(
         next(
           'care-pantry',
@@ -112,21 +110,22 @@ void main() {
       );
     });
 
-    test('and after the easier one, "Next!" moves on - a detour, not a loop',
-        () {
-      // full-pantry was marked done even though it went badly; after the
-      // simpler one she is not sent straight back into it.
-      final after = next(
-        'care-pantry',
-        'simple-pantry',
-        completed: {'simple-pantry', 'full-pantry'},
-      );
-      expect(after, isNull);
-    });
+    test(
+      'and after the easier one, "Next!" moves on - a detour, not a loop',
+      () {
+        // full-pantry was marked done even though it went badly; after the
+        // simpler one she is not sent straight back into it.
+        final after = next(
+          'care-pantry',
+          'simple-pantry',
+          completed: {'simple-pantry', 'full-pantry'},
+        );
+        expect(after, isNull);
+      },
+    );
   });
 
-  test(
-      'struggling means the concrete layer - above it the engine has a '
+  test('struggling means the concrete layer - above it the engine has a '
       'layer to drop', () {
     expect(isStrugglingAtFloor(_struggling), isTrue);
     expect(

@@ -93,10 +93,7 @@ void main() {
       await pumpHabitat(tester, BuildAHabitatModes.simpleShelter);
       await buildFrame(tester);
       // The roof prompt waits for "Stick." instead of cutting it off.
-      expect(
-        container.read(narrationPlayerProvider)?.text,
-        kHabitatStickLine,
-      );
+      expect(container.read(narrationPlayerProvider)?.text, kHabitatStickLine);
       // The frame (K.G.5) pays as it ends, before the roof is touched.
       expect(container.read(walletProvider), coinsFor(RoundResult.success));
       expect(find.byKey(const ValueKey('habitat-roof-0')), findsOneWidget);
@@ -104,17 +101,11 @@ void main() {
       await pumpFrames(tester, count: 80);
 
       await tapKey(tester, 'habitat-roof-0');
-      expect(
-        container.read(walletProvider),
-        2 * coinsFor(RoundResult.success),
-      );
+      expect(container.read(walletProvider), 2 * coinsFor(RoundResult.success));
       // Past the celebration and into the finale: nothing more is paid.
       await pumpFrames(tester, count: 60);
       expect(find.byType(KeeperIntroOverlay), findsOneWidget);
-      expect(
-        container.read(walletProvider),
-        2 * coinsFor(RoundResult.success),
-      );
+      expect(container.read(walletProvider), 2 * coinsFor(RoundResult.success));
 
       // ...and is then said.
       final stick = heard.lastIndexOf(kHabitatStickLine);
@@ -142,8 +133,9 @@ void main() {
       await unmountAndDrain(tester);
     });
 
-    testWidgets('three sticks before their corners fail the frame',
-        (tester) async {
+    testWidgets('three sticks before their corners fail the frame', (
+      tester,
+    ) async {
       await pumpHabitat(tester, BuildAHabitatModes.frameOnly);
       for (var i = 0; i < 3; i++) {
         await tapKey(tester, 'habitat-edge-0');

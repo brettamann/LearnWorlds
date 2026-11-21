@@ -45,14 +45,16 @@ void main() {
     expect(await hydratedMusicVolume(<String, dynamic>{}), kDefaultMusicVolume);
   });
 
-  test('a stored level that was only ever the old default moves forward',
-      () async {
-    expect(
-      await hydratedMusicVolume(<String, dynamic>{'musicVolume': 0.35}),
-      kDefaultMusicVolume,
-      reason: 'without this, retuning the bed reaches nobody who has played',
-    );
-  });
+  test(
+    'a stored level that was only ever the old default moves forward',
+    () async {
+      expect(
+        await hydratedMusicVolume(<String, dynamic>{'musicVolume': 0.35}),
+        kDefaultMusicVolume,
+        reason: 'without this, retuning the bed reaches nobody who has played',
+      );
+    },
+  );
 
   test('a level someone actually chose is left alone', () async {
     expect(

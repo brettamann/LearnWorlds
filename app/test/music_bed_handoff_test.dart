@@ -97,9 +97,9 @@ class _Scored extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MusicBedScope(
-        bed: bed,
-        child: Scaffold(body: Center(child: Text(name))),
-      );
+    bed: bed,
+    child: Scaffold(body: Center(child: Text(name))),
+  );
 }
 
 /// An app under test: the engine, the one player carrying the music, and
@@ -177,8 +177,9 @@ void main() {
   Future<void> waitOutTheGrace(WidgetTester tester) =>
       tester.pump(kMusicBedReleaseGrace + const Duration(seconds: 3));
 
-  testWidgets('the music keeps playing after walking to the next screen',
-      (tester) async {
+  testWidgets('the music keeps playing after walking to the next screen', (
+    tester,
+  ) async {
     final (rig, router) = await pumpApp(tester, {
       '/': (_) => const _Scored(name: 'map'),
       '/next': (_) => const _Scored(name: 'lesson'),
@@ -192,7 +193,8 @@ void main() {
     expect(
       rig.music.playing,
       isTrue,
-      reason: 'the outgoing screen released after the incoming one claimed, '
+      reason:
+          'the outgoing screen released after the incoming one claimed, '
           'and that release stopped music somebody was still asking for',
     );
     expect(
@@ -203,8 +205,9 @@ void main() {
     await rig.shutDown(tester);
   });
 
-  testWidgets('three screens deep, the music is still the same take',
-      (tester) async {
+  testWidgets('three screens deep, the music is still the same take', (
+    tester,
+  ) async {
     // Map -> lesson -> round is the shape of an ordinary visit, and it was the
     // second hop where the child heard it stop.
     final (rig, router) = await pumpApp(tester, {
@@ -227,8 +230,9 @@ void main() {
     await rig.shutDown(tester);
   });
 
-  testWidgets('leaving for a screen that wants no music does stop it',
-      (tester) async {
+  testWidgets('leaving for a screen that wants no music does stop it', (
+    tester,
+  ) async {
     // The other half. If a release can no longer stop the bed then the bed
     // never stops, so this is the test that keeps the fix honest.
     final (rig, router) = await pumpApp(tester, {
@@ -298,21 +302,22 @@ void main() {
     await rig.shutDown(tester);
   });
 
-  testWidgets('a scope that changes its bed does not leak a claim',
-      (tester) async {
+  testWidgets('a scope that changes its bed does not leak a claim', (
+    tester,
+  ) async {
     // MusicBedScope.didUpdateWidget re-points its claim rather than taking a
     // second one. A second claim would leave the count permanently high and the
     // music would outlive every screen.
     final rig = await buildRig();
 
     Widget app(String bed) => rig.wrap(
-          MaterialApp(
-            home: MusicBedScope(
-              bed: bed,
-              child: const Scaffold(body: Text('here')),
-            ),
-          ),
-        );
+      MaterialApp(
+        home: MusicBedScope(
+          bed: bed,
+          child: const Scaffold(body: Text('here')),
+        ),
+      ),
+    );
 
     await tester.pumpWidget(app(kDefaultMusicBed));
     await tester.pumpAndSettle();

@@ -136,7 +136,8 @@ void main() {
         expect(
           said,
           isNotEmpty,
-          reason: '$key left her with nothing for '
+          reason:
+              '$key left her with nothing for '
               '${_kPatience.inSeconds}s. Every playfield needs a HintLadder, '
               'or standing still is indistinguishable from the app being '
               'frozen.',
@@ -155,7 +156,8 @@ void main() {
           expect(
             gap,
             greaterThanOrEqualTo(_kShortestLineMs),
-            reason: '$key cut off "${said[i - 1].text}" after ${gap}ms with '
+            reason:
+                '$key cut off "${said[i - 1].text}" after ${gap}ms with '
                 '"${said[i].text}". Nothing she did caused this, so the '
                 'second line has to wait: enqueue it rather than speaking it.',
           );

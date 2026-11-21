@@ -14,40 +14,37 @@ void main() {
     CpaLayer layer = CpaLayer.concrete,
     String session = 's1',
     DateTime? at,
-  }) =>
-      RoundOutcome(
-        conceptId: conceptId,
-        layer: layer,
-        result: RoundResult.success,
-        sessionId: session,
-        at: at ?? DateTime(2026, 6, 1),
-      );
+  }) => RoundOutcome(
+    conceptId: conceptId,
+    layer: layer,
+    result: RoundResult.success,
+    sessionId: session,
+    at: at ?? DateTime(2026, 6, 1),
+  );
 
   RoundOutcome failure({
     CpaLayer layer = CpaLayer.concrete,
     String session = 's1',
     DateTime? at,
-  }) =>
-      RoundOutcome(
-        conceptId: conceptId,
-        layer: layer,
-        result: RoundResult.failure,
-        sessionId: session,
-        at: at ?? DateTime(2026, 6, 1),
-      );
+  }) => RoundOutcome(
+    conceptId: conceptId,
+    layer: layer,
+    result: RoundResult.failure,
+    sessionId: session,
+    at: at ?? DateTime(2026, 6, 1),
+  );
 
   RoundOutcome softSuccess({
     CpaLayer layer = CpaLayer.concrete,
     String session = 's1',
     DateTime? at,
-  }) =>
-      RoundOutcome(
-        conceptId: conceptId,
-        layer: layer,
-        result: RoundResult.softSuccess,
-        sessionId: session,
-        at: at ?? DateTime(2026, 6, 1),
-      );
+  }) => RoundOutcome(
+    conceptId: conceptId,
+    layer: layer,
+    result: RoundResult.softSuccess,
+    sessionId: session,
+    at: at ?? DateTime(2026, 6, 1),
+  );
 
   group('MasteryEngine', () {
     test('first success promotes NotStarted to Practicing', () {
@@ -101,11 +98,7 @@ void main() {
       for (var i = 0; i < 5; i++) {
         state = engine.apply(
           state,
-          success(
-            layer: CpaLayer.abstract,
-            session: sessions[i],
-            at: dates[i],
-          ),
+          success(layer: CpaLayer.abstract, session: sessions[i], at: dates[i]),
         );
       }
       expect(state.status, MasteryStatus.mastered);

@@ -115,9 +115,9 @@ void main() {
     // would deadlock against the fake, exactly as it stalled against a looping
     // music bed in the browser.
     final ok = await engine.unlock().timeout(
-          const Duration(seconds: 5),
-          onTimeout: () => fail('unlock never completed — is play() awaited?'),
-        );
+      const Duration(seconds: 5),
+      onTimeout: () => fail('unlock never completed — is play() awaited?'),
+    );
 
     expect(ok, isTrue);
     expect(engine.isUnlocked, isTrue);
@@ -128,7 +128,8 @@ void main() {
     expect(
       pauses,
       plays,
-      reason: 'every player that was started has to be paused again, or the '
+      reason:
+          'every player that was started has to be paused again, or the '
           'unlock pass is audible',
     );
   });

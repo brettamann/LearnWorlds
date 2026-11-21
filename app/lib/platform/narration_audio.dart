@@ -36,11 +36,9 @@ export 'narration_clip_key.dart';
 
 class NarrationAudio {
   /// [playerFactory] and [bundle] are test seams, matching SfxEngine's shape.
-  NarrationAudio({
-    AudioPlayer Function()? playerFactory,
-    AssetBundle? bundle,
-  })  : _newPlayer = playerFactory ?? AudioPlayer.new,
-        _bundle = bundle ?? rootBundle;
+  NarrationAudio({AudioPlayer Function()? playerFactory, AssetBundle? bundle})
+    : _newPlayer = playerFactory ?? AudioPlayer.new,
+      _bundle = bundle ?? rootBundle;
 
   final AudioPlayer Function() _newPlayer;
   final AssetBundle _bundle;

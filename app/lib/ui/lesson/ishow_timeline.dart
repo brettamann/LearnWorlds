@@ -54,12 +54,14 @@ class IShowTimeline {
     // and narration land together at the touch moment. The first touch is
     // arranged by the upstream `pointer-appear` step (or starts mid-screen),
     // so only the second onward needs it.
-    final touches =
-        show.animationSteps.where((s) => s.action == 'pointer-touch').toList();
+    final touches = show.animationSteps
+        .where((s) => s.action == 'pointer-touch')
+        .toList();
     for (var i = 1; i < touches.length; i++) {
       final targetId = LessonScene.resolveTargetId(touches[i].params['target']);
       if (targetId == null) continue;
-      final preGlideMs = parseSeconds(touches[i].at) * 1000 -
+      final preGlideMs =
+          parseSeconds(touches[i].at) * 1000 -
           handPointerGlideDuration.inMilliseconds;
       if (preGlideMs <= 0) continue;
       _at(Duration(milliseconds: preGlideMs), () => scene.aimAt(targetId));

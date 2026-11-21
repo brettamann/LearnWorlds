@@ -158,7 +158,11 @@ class TenClusterGrid extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: rowGap),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [sprite, SizedBox(width: gap), sprite],
+              children: [
+                sprite,
+                SizedBox(width: gap),
+                sprite,
+              ],
             ),
           ),
       ],

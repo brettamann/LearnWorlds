@@ -34,8 +34,7 @@ extension AppNavigation on BuildContext {
   void goActivity(
     String activityId, [
     ActivityLaunch launch = const ActivityLaunch(),
-  ]) =>
-      go(Routes.activity(activityId), extra: launch);
+  ]) => go(Routes.activity(activityId), extra: launch);
 
   /// Opens the lesson [lessonId], handing off into [subModeId] afterwards
   /// when given.

@@ -104,10 +104,7 @@ const List<WheresBuddyLandmark> kWheresBuddyLandmarks = <WheresBuddyLandmark>[
 /// One of the six position vocabulary words. `vector` tells the
 /// layout where the Buddy belongs *relative* to a landmark centre.
 class WheresBuddyPosition {
-  const WheresBuddyPosition({
-    required this.id,
-    required this.vector,
-  });
+  const WheresBuddyPosition({required this.id, required this.vector});
 
   /// Stable id used in narration cue ids.
   final String id;
@@ -125,42 +122,21 @@ class WheresBuddyPosition {
 /// enough that "above" and "below" read as visually different, close
 /// enough that the Buddy stays "near" the landmark.
 const List<WheresBuddyPosition> kWheresBuddyPositions = <WheresBuddyPosition>[
-  WheresBuddyPosition(
-    id: 'above',
-    vector: Offset(0, -0.16),
-  ),
-  WheresBuddyPosition(
-    id: 'below',
-    vector: Offset(0, 0.16),
-  ),
-  WheresBuddyPosition(
-    id: 'next-to',
-    vector: Offset(0.18, 0),
-  ),
+  WheresBuddyPosition(id: 'above', vector: Offset(0, -0.16)),
+  WheresBuddyPosition(id: 'below', vector: Offset(0, 0.16)),
+  WheresBuddyPosition(id: 'next-to', vector: Offset(0.18, 0)),
   WheresBuddyPosition(
     id: 'behind',
     // "Behind" pushes the Buddy slightly up-left + scales it down a
     // touch at render time so the kid reads it as "tucked behind."
     vector: Offset(-0.05, -0.04),
   ),
-  WheresBuddyPosition(
-    id: 'in-front-of',
-    vector: Offset(0, 0.10),
-  ),
-  WheresBuddyPosition(
-    id: 'beside',
-    vector: Offset(-0.18, 0),
-  ),
+  WheresBuddyPosition(id: 'in-front-of', vector: Offset(0, 0.10)),
+  WheresBuddyPosition(id: 'beside', vector: Offset(-0.18, 0)),
 ];
 
-WheresBuddyLandmark wheresBuddyLandmark(String id) =>
-    kWheresBuddyLandmarks.firstWhere(
-      (l) => l.id == id,
-      orElse: () => kWheresBuddyLandmarks.first,
-    );
+WheresBuddyLandmark wheresBuddyLandmark(String id) => kWheresBuddyLandmarks
+    .firstWhere((l) => l.id == id, orElse: () => kWheresBuddyLandmarks.first);
 
-WheresBuddyPosition wheresBuddyPosition(String id) =>
-    kWheresBuddyPositions.firstWhere(
-      (p) => p.id == id,
-      orElse: () => kWheresBuddyPositions.first,
-    );
+WheresBuddyPosition wheresBuddyPosition(String id) => kWheresBuddyPositions
+    .firstWhere((p) => p.id == id, orElse: () => kWheresBuddyPositions.first);

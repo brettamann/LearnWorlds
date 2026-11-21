@@ -32,7 +32,8 @@ void main() {
         expect(
           buddyMouthAsset(id),
           isNot(defaultAsset),
-          reason: 'mood $mood wants "$id" and got the fallback — the art is '
+          reason:
+              'mood $mood wants "$id" and got the fallback — the art is '
               'missing from kBuddyExpressionMouths, so the mood renders as v1',
         );
       }
@@ -79,9 +80,9 @@ void main() {
     });
 
     test('shop mouth items stay limited to the cosmetic list', () {
-      final shopMouthIds = buddyPartsOfKind(BuddyPartKind.mouth)
-          .map((({String assetPath, String id}) o) => o.id)
-          .toSet();
+      final shopMouthIds = buddyPartsOfKind(
+        BuddyPartKind.mouth,
+      ).map((({String assetPath, String id}) o) => o.id).toSet();
       for (final option in kBuddyExpressionMouths) {
         expect(shopMouthIds, isNot(contains(option.id)));
       }

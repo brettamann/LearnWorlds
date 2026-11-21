@@ -31,8 +31,9 @@ class DecorOwnership extends Notifier<Set<String>> {
       state = <String>{...owned}..removeWhere(kDecorFreeItems.contains);
 }
 
-final decorOwnershipProvider =
-    NotifierProvider<DecorOwnership, Set<String>>(DecorOwnership.new);
+final decorOwnershipProvider = NotifierProvider<DecorOwnership, Set<String>>(
+  DecorOwnership.new,
+);
 
 /// Where each decoration sits, in map order — later placements draw on top,
 /// which is the behaviour anyone dragging things around expects.

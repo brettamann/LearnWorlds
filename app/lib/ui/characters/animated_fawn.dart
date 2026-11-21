@@ -68,32 +68,42 @@ class _AnimatedFawnState extends State<AnimatedFawn>
     _scaleY = TweenSequence<double>([
       // Squash (anticipation).
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 0.72)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween(
+          begin: 1.0,
+          end: 0.72,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 15,
       ),
       // Stretch + launch.
       TweenSequenceItem(
-        tween: Tween(begin: 0.72, end: 1.18)
-            .chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween(
+          begin: 0.72,
+          end: 1.18,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 20,
       ),
       // Apex: drift back to neutral.
       TweenSequenceItem(
-        tween: Tween(begin: 1.18, end: 1.0)
-            .chain(CurveTween(curve: Curves.easeInOut)),
+        tween: Tween(
+          begin: 1.18,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeInOut)),
         weight: 30,
       ),
       // Land squash.
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 0.85)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween(
+          begin: 1.0,
+          end: 0.85,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 15,
       ),
       // Settle.
       TweenSequenceItem(
-        tween: Tween(begin: 0.85, end: 1.0)
-            .chain(CurveTween(curve: Curves.elasticOut)),
+        tween: Tween(
+          begin: 0.85,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.elasticOut)),
         weight: 20,
       ),
     ]).animate(_controller);
@@ -101,28 +111,38 @@ class _AnimatedFawnState extends State<AnimatedFawn>
     _scaleX = TweenSequence<double>([
       // Inversely compresses while scaleY squashes — volume-preserving.
       TweenSequenceItem(
-        tween:
-            Tween(begin: 1.0, end: 1.2).chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween(
+          begin: 1.0,
+          end: 1.2,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 15,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 1.2, end: 0.88)
-            .chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween(
+          begin: 1.2,
+          end: 0.88,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 20,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 0.88, end: 1.0)
-            .chain(CurveTween(curve: Curves.easeInOut)),
+        tween: Tween(
+          begin: 0.88,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeInOut)),
         weight: 30,
       ),
       TweenSequenceItem(
-        tween:
-            Tween(begin: 1.0, end: 1.1).chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween(
+          begin: 1.0,
+          end: 1.1,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 15,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 1.1, end: 1.0)
-            .chain(CurveTween(curve: Curves.elasticOut)),
+        tween: Tween(
+          begin: 1.1,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.elasticOut)),
         weight: 20,
       ),
     ]).animate(_controller);
@@ -132,14 +152,18 @@ class _AnimatedFawnState extends State<AnimatedFawn>
       TweenSequenceItem(tween: ConstantTween<double>(0), weight: 15),
       // Lift off.
       TweenSequenceItem(
-        tween: Tween(begin: 0.0, end: -widget.hopHeight)
-            .chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween(
+          begin: 0.0,
+          end: -widget.hopHeight,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 20,
       ),
       // Fall to ground.
       TweenSequenceItem(
-        tween: Tween(begin: -widget.hopHeight, end: 0.0)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween(
+          begin: -widget.hopHeight,
+          end: 0.0,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 30,
       ),
       // Stay grounded for land + settle.
@@ -200,8 +224,8 @@ class _AnimatedFawnState extends State<AnimatedFawn>
               opacity: widget.active
                   ? 1.0
                   : widget.pointed
-                      ? 0.6
-                      : 0.0,
+                  ? 0.6
+                  : 0.0,
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -216,10 +240,7 @@ class _AnimatedFawnState extends State<AnimatedFawn>
                 ),
               ),
             ),
-            Image.asset(
-              widget.spriteAsset,
-              fit: BoxFit.contain,
-            ),
+            Image.asset(widget.spriteAsset, fit: BoxFit.contain),
             if (widget.active)
               const Positioned(
                 top: 4,
@@ -228,9 +249,7 @@ class _AnimatedFawnState extends State<AnimatedFawn>
                   Icons.auto_awesome,
                   color: Colors.amber,
                   size: 28,
-                  shadows: [
-                    Shadow(blurRadius: 6, color: Colors.black54),
-                  ],
+                  shadows: [Shadow(blurRadius: 6, color: Colors.black54)],
                 ),
               ),
           ],

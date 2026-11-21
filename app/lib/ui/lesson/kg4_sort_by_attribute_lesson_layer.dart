@@ -123,10 +123,7 @@ const List<_LessonBin> _kLessonBins = <_LessonBin>[
 ];
 
 class Kg4SortByAttributeLessonLayer extends ConsumerStatefulWidget {
-  const Kg4SortByAttributeLessonLayer({
-    super.key,
-    required this.onComplete,
-  });
+  const Kg4SortByAttributeLessonLayer({super.key, required this.onComplete});
 
   final VoidCallback onComplete;
 
@@ -294,8 +291,8 @@ class _Kg4SortByAttributeLessonLayerState
         final sides = bin.id == 'bin-3'
             ? 'Three sides.'
             : bin.id == 'bin-4'
-                ? 'Four sides.'
-                : 'Five sides.';
+            ? 'Four sides.'
+            : 'Five sides.';
         ref.narration.say(sides, cueId: 'k-g-4-lesson:auto-${s.id}');
       });
       t += 700;
@@ -331,8 +328,8 @@ class _Kg4SortByAttributeLessonLayerState
         bin.id == 'bin-3'
             ? 'That basket is for shapes with three sides. Try another!'
             : bin.id == 'bin-4'
-                ? 'That basket is for shapes with four sides. Try another!'
-                : 'That basket is for shapes with five or more sides. Try another!',
+            ? 'That basket is for shapes with four sides. Try another!'
+            : 'That basket is for shapes with five or more sides. Try another!',
         cueId: 'k-g-4-lesson:we-try-corrective-${shape.id}-${bin.id}',
       );
       return;
@@ -346,8 +343,8 @@ class _Kg4SortByAttributeLessonLayerState
     final sides = bin.id == 'bin-3'
         ? 'Three sides.'
         : bin.id == 'bin-4'
-            ? 'Four sides.'
-            : 'Five sides.';
+        ? 'Four sides.'
+        : 'Five sides.';
     ref.narration.say(sides, cueId: 'k-g-4-lesson:we-try-right-${shape.id}');
     if (_kLessonShapes.every((s) => _placed.contains(s.id))) {
       after(const Duration(milliseconds: 900), () {
@@ -473,11 +470,7 @@ class _LessonShapeWidget extends StatelessWidget {
               data: shape,
               feedback: Material(
                 color: Colors.transparent,
-                child: SizedBox(
-                  width: _kSize,
-                  height: _kSize,
-                  child: sprite,
-                ),
+                child: SizedBox(width: _kSize, height: _kSize, child: sprite),
               ),
               childWhenDragging: Opacity(opacity: 0.35, child: sprite),
               child: visual,
@@ -527,9 +520,7 @@ class _BinTarget extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(
-                    alpha: hot ? 0.85 : 0.7,
-                  ),
+                  color: Colors.white.withValues(alpha: hot ? 0.85 : 0.7),
                   borderRadius: BorderRadius.circular(22),
                   border: Border.all(
                     color: hot ? Colors.amber.shade400 : AppColors.neutralRim,

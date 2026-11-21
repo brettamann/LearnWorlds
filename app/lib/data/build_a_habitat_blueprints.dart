@@ -44,9 +44,9 @@ class HabitatRoofPiece {
   /// quiet drift a five-year-old learning "which picture is which game"
   /// cannot afford. One mapping, both callers.
   String get placedAsset => AssetPaths.shapeGarden3dCreature(
-        kind,
-        _kCreatureByKind[kind] ?? 'turtle',
-      );
+    kind,
+    _kCreatureByKind[kind] ?? 'turtle',
+  );
 
   /// Unplaced, the piece shows its hollow outline instead.
   String get outlineAsset => AssetPaths.shapeGarden3dOutline(kind);
@@ -121,11 +121,7 @@ const List<HabitatBlueprint> kHabitatBlueprints = <HabitatBlueprint>[
       <int>[2, 0],
     ],
     roof: <HabitatRoofPiece>[
-      HabitatRoofPiece(
-        kind: 'cube',
-        position: Offset(0.5, 0.40),
-        size: 0.22,
-      ),
+      HabitatRoofPiece(kind: 'cube', position: Offset(0.5, 0.40), size: 0.22),
     ],
     rewardAsset: 'assets/rewards/general/reward-feather.png',
   ),
@@ -145,21 +141,9 @@ const List<HabitatBlueprint> kHabitatBlueprints = <HabitatBlueprint>[
       <int>[3, 0],
     ],
     roof: <HabitatRoofPiece>[
-      HabitatRoofPiece(
-        kind: 'cone',
-        position: Offset(0.32, 0.36),
-        size: 0.20,
-      ),
-      HabitatRoofPiece(
-        kind: 'cone',
-        position: Offset(0.68, 0.36),
-        size: 0.20,
-      ),
-      HabitatRoofPiece(
-        kind: 'cube',
-        position: Offset(0.5, 0.50),
-        size: 0.24,
-      ),
+      HabitatRoofPiece(kind: 'cone', position: Offset(0.32, 0.36), size: 0.20),
+      HabitatRoofPiece(kind: 'cone', position: Offset(0.68, 0.36), size: 0.20),
+      HabitatRoofPiece(kind: 'cube', position: Offset(0.5, 0.50), size: 0.24),
     ],
     rewardAsset: 'assets/rewards/general/reward-gem.png',
   ),
@@ -181,11 +165,7 @@ const List<HabitatBlueprint> kHabitatBlueprints = <HabitatBlueprint>[
       <int>[4, 0],
     ],
     roof: <HabitatRoofPiece>[
-      HabitatRoofPiece(
-        kind: 'sphere',
-        position: Offset(0.5, 0.38),
-        size: 0.22,
-      ),
+      HabitatRoofPiece(kind: 'sphere', position: Offset(0.5, 0.38), size: 0.22),
       HabitatRoofPiece(
         kind: 'cylinder',
         position: Offset(0.32, 0.56),

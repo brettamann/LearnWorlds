@@ -74,12 +74,10 @@ class _TenFramePondRunnerState extends ConsumerState<TenFramePondRunner> {
   final Map<int, int> _lastGreen = <int, int>{};
 
   String get _concept => switch (widget.subMode) {
-        TenFramePondModes.makeTen => 'K.OA.4',
-        TenFramePondModes.tenPlusN ||
-        TenFramePondModes.threeFrames =>
-          'K.NBT.1',
-        _ => 'K.OA.3',
-      };
+    TenFramePondModes.makeTen => 'K.OA.4',
+    TenFramePondModes.tenPlusN || TenFramePondModes.threeFrames => 'K.NBT.1',
+    _ => 'K.OA.3',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -174,11 +172,11 @@ class _PondGeometry {
   late final double bankY;
 
   Rect frameRect(int frame) => Rect.fromLTWH(
-        frameLeft,
-        frameTop + frame * (frameH + pad * 0.34),
-        frameW,
-        frameH,
-      );
+    frameLeft,
+    frameTop + frame * (frameH + pad * 0.34),
+    frameW,
+    frameH,
+  );
 
   Rect padRect(int i) {
     final frame = frameRect(i ~/ 10);
@@ -323,21 +321,23 @@ class _PondRoundBodyState extends ConsumerState<PondRoundBody>
   }
 
   _Frog? _firstWaiting({bool? orange}) {
-    final waiting = _frogs
-        .where(
-          (f) =>
-              f.pad == null &&
-              !f.gone &&
-              (orange == null || f.orange == orange),
-        )
-        .toList()
-      ..sort((a, b) => a.slot.compareTo(b.slot));
+    final waiting =
+        _frogs
+            .where(
+              (f) =>
+                  f.pad == null &&
+                  !f.gone &&
+                  (orange == null || f.orange == orange),
+            )
+            .toList()
+          ..sort((a, b) => a.slot.compareTo(b.slot));
     return waiting.isEmpty ? null : waiting.first;
   }
 
   int _nextPad() {
-    final taken =
-        _frogs.where((f) => f.pad != null && !f.gone).map((f) => f.pad);
+    final taken = _frogs
+        .where((f) => f.pad != null && !f.gone)
+        .map((f) => f.pad);
     for (var i = 0; i < _r.frames * 10; i++) {
       if (!taken.contains(i)) return i;
     }
@@ -459,8 +459,9 @@ class _PondRoundBodyState extends ConsumerState<PondRoundBody>
   }
 
   void _complete() {
-    final green =
-        _frogs.where((f) => f.pad != null && !f.gone && !f.orange).length;
+    final green = _frogs
+        .where((f) => f.pad != null && !f.gone && !f.orange)
+        .length;
     if (_r.differentWay && widget.previousGreen == green && _sameWayTries < 2) {
       _sameWayTries += 1;
       setState(() => _busy = true);
@@ -520,8 +521,10 @@ class _PondRoundBodyState extends ConsumerState<PondRoundBody>
     });
     feedback.correct();
     widget.c.say(pondDoneLine(_r), replay: false);
-    final result =
-        gradeRound(misses: _misses, helped: (_hints?.hintsUsed ?? 0) > 0);
+    final result = gradeRound(
+      misses: _misses,
+      helped: (_hints?.hintsUsed ?? 0) > 0,
+    );
     widget.c.finish(result);
   }
 
@@ -810,13 +813,13 @@ class _HoppingFrogState extends State<_HoppingFrog>
         // A squash on take-off and landing; stretched in the air.
         final stretch = _hopC.isAnimating
             ? 1 +
-                0.12 * math.sin(math.pi * t) -
-                0.1 * math.sin(math.pi * 2 * t).abs() * 0.5
+                  0.12 * math.sin(math.pi * t) -
+                  0.1 * math.sin(math.pi * 2 * t).abs() * 0.5
             : 1.0;
         final wig = _wiggleC.isAnimating
             ? math.sin(_wiggleC.value * math.pi * 4) *
-                0.14 *
-                (1 - _wiggleC.value)
+                  0.14 *
+                  (1 - _wiggleC.value)
             : 0.0;
         final arrive = Curves.easeOutBack.transform(_arriveC.value);
         return Transform.translate(

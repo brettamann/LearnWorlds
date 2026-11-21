@@ -59,8 +59,7 @@ void main() {
     expect(scene.nextUnplacedFramePiece('halo-pulse-next-edge'), ['edge-1']);
   });
 
-  test(
-      'a settled gate puts Buddy where the prompt asked, and sparkles only '
+  test('a settled gate puts Buddy where the prompt asked, and sparkles only '
       'what she touched', () {
     final scene = LessonScene()..halo(['above-fountain']);
     scene.settleGate(['above-fountain'], byHer: false);

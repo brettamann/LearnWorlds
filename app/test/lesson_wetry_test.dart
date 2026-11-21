@@ -62,9 +62,9 @@ Map<String, dynamic> _read(File f) =>
     jsonDecode(f.readAsStringSync()) as Map<String, dynamic>;
 
 List<Map<String, dynamic>> _allLessons() => [
-      for (final e in Directory('assets/data/lesson-runtime').listSync())
-        if (e is File && e.path.endsWith('.json')) _read(e),
-    ];
+  for (final e in Directory('assets/data/lesson-runtime').listSync())
+    if (e is File && e.path.endsWith('.json')) _read(e),
+];
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -157,7 +157,8 @@ void main() {
         expect(
           File(entry.value).existsSync(),
           isTrue,
-          reason: '${entry.key} is excused the generic We-Try because '
+          reason:
+              '${entry.key} is excused the generic We-Try because '
               '${entry.value} gives it one of its own',
         );
       }
@@ -330,8 +331,9 @@ void main() {
       fail('the We-Try never opened a gate');
     }
 
-    testWidgets('the demonstration hands over to her instead of to the game',
-        (tester) async {
+    testWidgets('the demonstration hands over to her instead of to the game', (
+      tester,
+    ) async {
       await openWeTry(tester, 'lesson-k-cc-4a-one-to-one');
       expect(
         find.byKey(const ValueKey('we-try-layer')),
@@ -345,8 +347,9 @@ void main() {
       }
     });
 
-    testWidgets('it waits for her, and her touch is what moves it on',
-        (tester) async {
+    testWidgets('it waits for her, and her touch is what moves it on', (
+      tester,
+    ) async {
       await openWeTry(tester, 'lesson-k-cc-4b-cardinality');
       await pumpToGate(tester);
       expect(
@@ -371,8 +374,9 @@ void main() {
       }
     });
 
-    testWidgets('and it never strands a child who touches nothing at all',
-        (tester) async {
+    testWidgets('and it never strands a child who touches nothing at all', (
+      tester,
+    ) async {
       // The one failure this phase must not have. `highlight-target` says
       // re-light and keep waiting, which has no floor; a kid who decides not
       // to play this beat is still owed the rest of her lesson.

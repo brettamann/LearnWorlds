@@ -231,10 +231,7 @@ class _PickerPane extends ConsumerWidget {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-            child: _SwatchGrid(
-              kind: category,
-              mode: mode,
-            ),
+            child: _SwatchGrid(kind: category, mode: mode),
           ),
         ),
       ],
@@ -301,10 +298,7 @@ class _CategoryChip extends StatelessWidget {
 }
 
 class _SwatchGrid extends ConsumerStatefulWidget {
-  const _SwatchGrid({
-    required this.kind,
-    required this.mode,
-  });
+  const _SwatchGrid({required this.kind, required this.mode});
 
   final BuddyPartKind kind;
   final BuddyScreenMode mode;
@@ -348,8 +342,9 @@ class _SwatchGridState extends ConsumerState<_SwatchGrid> {
       return;
     }
 
-    final bought =
-        ref.read(shopProvider).buyBuddyPart(key, buddyPartPrice(kind, id));
+    final bought = ref
+        .read(shopProvider)
+        .buyBuddyPart(key, buddyPartPrice(kind, id));
     if (bought == PurchaseOutcome.cannotAfford) {
       // Not enough coins yet. Reuse the wrong-answer beat rather than an error
       // tone: a shop that scolds is a shop she stops opening.
@@ -460,11 +455,7 @@ class _GridOfSwatches extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Wrap(
-        spacing: 12,
-        runSpacing: 12,
-        children: items,
-      ),
+      child: Wrap(spacing: 12, runSpacing: 12, children: items),
     );
   }
 }

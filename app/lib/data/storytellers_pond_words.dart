@@ -59,11 +59,11 @@ class Story {
   final StoryCreature? other;
 
   int get answer => switch (kind) {
-        StoryKind.addTo || StoryKind.putTogether => a + b,
-        StoryKind.takeFrom => a - b,
-        StoryKind.takeApart => a,
-        StoryKind.twoStep => a + b - c,
-      };
+    StoryKind.addTo || StoryKind.putTogether => a + b,
+    StoryKind.takeFrom => a - b,
+    StoryKind.takeApart => a,
+    StoryKind.twoStep => a + b - c,
+  };
 }
 
 /// Every story each sub-mode can tell. A visit tells four of them (two-step,
@@ -134,12 +134,14 @@ String _n(int n) => spellNumber(n);
 String _cap(String s) => s[0].toUpperCase() + s.substring(1);
 String _of(int n, StoryCreature c) => n == 1 ? c.singular : c.plural;
 
-const String kStoryIntro = 'Hello, I am the storyteller turtle. Listen to '
+const String kStoryIntro =
+    'Hello, I am the storyteller turtle. Listen to '
     'my stories, and help the animals act them out!';
 const String kStoryBye = 'Bye-bye!';
 const String kStoryCountAgain = 'Count them again.';
 const String kStoryDoneSplit = 'Tap the check when you are ready.';
-const String kStoryFinal = 'Thank you for helping with my stories. Here are '
+const String kStoryFinal =
+    'Thank you for helping with my stories. Here are '
     'some coins. Come back for more stories soon!';
 
 const List<String> kStoryKeeperLines = <String>[
@@ -185,13 +187,12 @@ String storyJustThat(int n) =>
     'Just ${_n(n)} ${n == 1 ? 'goes' : 'go'} home. The rest can stay.';
 
 String storyQuestion(Story s) => switch (s.kind) {
-      StoryKind.addTo ||
-      StoryKind.twoStep =>
-        'How many ${s.creature.plural} are there now?',
-      StoryKind.takeFrom => 'How many ${s.creature.plural} are left?',
-      StoryKind.putTogether => 'How many animals are there altogether?',
-      StoryKind.takeApart => kStoryDoneSplit,
-    };
+  StoryKind.addTo ||
+  StoryKind.twoStep => 'How many ${s.creature.plural} are there now?',
+  StoryKind.takeFrom => 'How many ${s.creature.plural} are left?',
+  StoryKind.putTogether => 'How many animals are there altogether?',
+  StoryKind.takeApart => kStoryDoneSplit,
+};
 
 /// Said when she has the answer. [inWater] only matters for take-apart.
 String storyDone(Story s, {int inWater = 0}) {
@@ -217,13 +218,11 @@ String storyDone(Story s, {int inWater = 0}) {
 /// spoken, so it is not in the recording script. Take-apart is written from
 /// the split she chose: "5 = 2 + 3".
 String storySentence(Story s, {int inWater = 0}) => switch (s.kind) {
-      StoryKind.addTo ||
-      StoryKind.putTogether =>
-        '${s.a} + ${s.b} = ${s.answer}',
-      StoryKind.takeFrom => '${s.a} − ${s.b} = ${s.answer}',
-      StoryKind.twoStep => '${s.a} + ${s.b} − ${s.c} = ${s.answer}',
-      StoryKind.takeApart => '${s.a} = $inWater + ${s.a - inWater}',
-    };
+  StoryKind.addTo || StoryKind.putTogether => '${s.a} + ${s.b} = ${s.answer}',
+  StoryKind.takeFrom => '${s.a} − ${s.b} = ${s.answer}',
+  StoryKind.twoStep => '${s.a} + ${s.b} − ${s.c} = ${s.answer}',
+  StoryKind.takeApart => '${s.a} = $inWater + ${s.a - inWater}',
+};
 
 String storyMiss(int rotation) => '${warmMissLine(rotation)} $kStoryCountAgain';
 

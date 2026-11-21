@@ -9,47 +9,47 @@ import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 WeTryPhase _phase({bool autoCompletes = false}) => WeTryPhase(
-      durationSec: 20,
-      narrationByCueId: const {},
-      initialGlowTarget: null,
-      landmarkIds: const [],
-      creatureCount: 3,
-      framePrebuilt: false,
-      showsRoof: false,
-      script: WeTryScript(
-        hesitation: WeTryHesitation(
-          after: const Duration(seconds: 5),
-          autoCompletes: autoCompletes,
-        ),
-        beats: const <WeTryBeat>[
-          WeTrySay(
-            cueId: 'ask',
-            text: 'Touch the first fawn.',
-            delay: Duration.zero,
-            when: WeTryWhen.always,
-          ),
-          WeTryGate(
-            targets: ['fawn-0'],
-            passText: 'Yes, that one!',
-            failText: 'This one is first.',
-            delay: Duration.zero,
-            when: WeTryWhen.always,
-          ),
-          WeTrySay(
-            cueId: 'after-pass',
-            text: 'One.',
-            delay: Duration.zero,
-            when: WeTryWhen.onPass,
-          ),
-          WeTrySay(
-            cueId: 'after-fail',
-            text: 'Watch me.',
-            delay: Duration.zero,
-            when: WeTryWhen.onFail,
-          ),
-        ],
+  durationSec: 20,
+  narrationByCueId: const {},
+  initialGlowTarget: null,
+  landmarkIds: const [],
+  creatureCount: 3,
+  framePrebuilt: false,
+  showsRoof: false,
+  script: WeTryScript(
+    hesitation: WeTryHesitation(
+      after: const Duration(seconds: 5),
+      autoCompletes: autoCompletes,
+    ),
+    beats: const <WeTryBeat>[
+      WeTrySay(
+        cueId: 'ask',
+        text: 'Touch the first fawn.',
+        delay: Duration.zero,
+        when: WeTryWhen.always,
       ),
-    );
+      WeTryGate(
+        targets: ['fawn-0'],
+        passText: 'Yes, that one!',
+        failText: 'This one is first.',
+        delay: Duration.zero,
+        when: WeTryWhen.always,
+      ),
+      WeTrySay(
+        cueId: 'after-pass',
+        text: 'One.',
+        delay: Duration.zero,
+        when: WeTryWhen.onPass,
+      ),
+      WeTrySay(
+        cueId: 'after-fail',
+        text: 'Watch me.',
+        delay: Duration.zero,
+        when: WeTryWhen.onFail,
+      ),
+    ],
+  ),
+);
 
 class _Harness {
   _Harness({bool autoCompletes = false, bool hit = true}) {
@@ -91,23 +91,24 @@ void main() {
     });
   });
 
-  test('a touch elsewhere gets the corrective line, still not the miss sound',
-      () {
-    fakeAsync((clock) {
-      final h = _Harness(hit: false);
-      h.runner.start();
-      clock.elapse(const Duration(seconds: 3));
-      h.runner.touch(Offset.zero);
-      clock.elapse(const Duration(seconds: 10));
-      expect(h.pops, 1);
-      expect(h.said, contains('This one is first.'));
-      expect(h.said, contains('Watch me.'));
-      expect(h.said, isNot(contains('One.')));
-    });
-  });
-
   test(
-      'a child who does nothing gets urgency, then a nudge, then her turn '
+    'a touch elsewhere gets the corrective line, still not the miss sound',
+    () {
+      fakeAsync((clock) {
+        final h = _Harness(hit: false);
+        h.runner.start();
+        clock.elapse(const Duration(seconds: 3));
+        h.runner.touch(Offset.zero);
+        clock.elapse(const Duration(seconds: 10));
+        expect(h.pops, 1);
+        expect(h.said, contains('This one is first.'));
+        expect(h.said, contains('Watch me.'));
+        expect(h.said, isNot(contains('One.')));
+      });
+    },
+  );
+
+  test('a child who does nothing gets urgency, then a nudge, then her turn '
       'completes itself', () {
     fakeAsync((clock) {
       final h = _Harness(autoCompletes: true);

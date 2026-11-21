@@ -281,9 +281,7 @@ class _PicnicRoundBodyState extends ConsumerState<PicnicRoundBody>
     _step = _Step.done;
     _hints?.pause();
     final helped = (_hints?.hintsUsed ?? 0) > 0;
-    widget.c.finish(
-      gradeRound(misses: _misses, helped: helped),
-    );
+    widget.c.finish(gradeRound(misses: _misses, helped: helped));
   }
 
   // ---- help ---------------------------------------------------------------
@@ -360,15 +358,10 @@ class _PicnicRoundBodyState extends ConsumerState<PicnicRoundBody>
               Positioned.fill(
                 child: IgnorePointer(
                   child: CustomPaint(
-                    painter: _RibbonPainter(
-                      <(Offset, Offset)>[
-                        for (final p in _pairs)
-                          (
-                            geo.treatCenter(0, p.$1),
-                            geo.treatCenter(1, p.$2),
-                          ),
-                      ],
-                    ),
+                    painter: _RibbonPainter(<(Offset, Offset)>[
+                      for (final p in _pairs)
+                        (geo.treatCenter(0, p.$1), geo.treatCenter(1, p.$2)),
+                    ]),
                   ),
                 ),
               ),
@@ -471,7 +464,8 @@ class _PicnicRoundBodyState extends ConsumerState<PicnicRoundBody>
     final c = geo.treatCenter(row, i);
     final p = geo.plate;
     final done = _paired(t) || _counted.contains(t);
-    final left = _leftover.contains(t) ||
+    final left =
+        _leftover.contains(t) ||
         (_asking && _r.task == PicnicTask.match && !_paired(t));
     return Positioned(
       left: c.dx - p / 2,
@@ -497,8 +491,8 @@ class _PicnicRoundBodyState extends ConsumerState<PicnicRoundBody>
                       color: left
                           ? AppColors.hintGlow
                           : (done
-                              ? const Color(0xFF7CC242)
-                              : AppColors.cardRim),
+                                ? const Color(0xFF7CC242)
+                                : AppColors.cardRim),
                       width: left || done ? 5 : 2,
                     ),
                     boxShadow: const [
@@ -634,11 +628,7 @@ class _SameCard extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        kPicnicUnicorn.asset,
-                        width: 48,
-                        height: 48,
-                      ),
+                      Image.asset(kPicnicUnicorn.asset, width: 48, height: 48),
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 4),
                         child: Text(
@@ -650,11 +640,7 @@ class _SameCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Image.asset(
-                        kPicnicDragon.asset,
-                        width: 48,
-                        height: 48,
-                      ),
+                      Image.asset(kPicnicDragon.asset, width: 48, height: 48),
                     ],
                   ),
                 ),

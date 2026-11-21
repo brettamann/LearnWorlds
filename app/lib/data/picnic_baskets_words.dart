@@ -18,12 +18,18 @@ class Picnicker {
   String get capName => name[0].toUpperCase() + name.substring(1);
 }
 
-const Picnicker kPicnicUnicorn =
-    Picnicker('the unicorn', AssetPaths.countingParadeBabyUnicorn);
-const Picnicker kPicnicDragon =
-    Picnicker('the dragon', AssetPaths.countingParadeBabyDragon);
-const Picnicker kPicnicCentaur =
-    Picnicker('the centaur', AssetPaths.countingParadeBabyCentaur);
+const Picnicker kPicnicUnicorn = Picnicker(
+  'the unicorn',
+  AssetPaths.countingParadeBabyUnicorn,
+);
+const Picnicker kPicnicDragon = Picnicker(
+  'the dragon',
+  AssetPaths.countingParadeBabyDragon,
+);
+const Picnicker kPicnicCentaur = Picnicker(
+  'the centaur',
+  AssetPaths.countingParadeBabyCentaur,
+);
 
 class PicnicTreat {
   const PicnicTreat(this.plural, this.asset);
@@ -31,14 +37,22 @@ class PicnicTreat {
   final String asset;
 }
 
-const PicnicTreat kTreatCherries =
-    PicnicTreat('cherries', AssetPaths.carePantryBerries);
-const PicnicTreat kTreatApples =
-    PicnicTreat('apples', AssetPaths.carePantryApple);
-const PicnicTreat kTreatAcorns =
-    PicnicTreat('acorns', AssetPaths.carePantryAcorn);
-const PicnicTreat kTreatCarrots =
-    PicnicTreat('carrots', AssetPaths.carePantryCarrot);
+const PicnicTreat kTreatCherries = PicnicTreat(
+  'cherries',
+  AssetPaths.carePantryBerries,
+);
+const PicnicTreat kTreatApples = PicnicTreat(
+  'apples',
+  AssetPaths.carePantryApple,
+);
+const PicnicTreat kTreatAcorns = PicnicTreat(
+  'acorns',
+  AssetPaths.carePantryAcorn,
+);
+const PicnicTreat kTreatCarrots = PicnicTreat(
+  'carrots',
+  AssetPaths.carePantryCarrot,
+);
 
 enum PicnicTask { match, count, numerals, three }
 
@@ -84,48 +98,48 @@ class PicnicRound {
 /// at a size she can tap.
 const Map<String, List<PicnicRound>> kPicnicRounds =
     <String, List<PicnicRound>>{
-  PicnicBasketsModes.matchByLine: <PicnicRound>[
-    PicnicRound(PicnicTask.match, kTreatCherries, <int>[4, 3]),
-    PicnicRound(PicnicTask.match, kTreatApples, <int>[2, 5]),
-    PicnicRound(PicnicTask.match, kTreatCarrots, <int>[6, 4]),
-    PicnicRound(PicnicTask.match, kTreatAcorns, <int>[3, 5]),
-    PicnicRound(PicnicTask.match, kTreatCherries, <int>[5, 2]),
-    PicnicRound(PicnicTask.match, kTreatCarrots, <int>[3, 6]),
-    PicnicRound(PicnicTask.match, kTreatAcorns, <int>[4, 4]),
-    PicnicRound(PicnicTask.match, kTreatApples, <int>[3, 3]),
-    PicnicRound(PicnicTask.match, kTreatCherries, <int>[5, 5]),
-  ],
-  PicnicBasketsModes.countAndCompare: <PicnicRound>[
-    PicnicRound(PicnicTask.count, kTreatApples, <int>[5, 3]),
-    PicnicRound(PicnicTask.count, kTreatCherries, <int>[3, 6]),
-    PicnicRound(PicnicTask.count, kTreatAcorns, <int>[7, 6]),
-    PicnicRound(PicnicTask.count, kTreatCarrots, <int>[4, 6]),
-    PicnicRound(PicnicTask.count, kTreatCherries, <int>[6, 4]),
-    PicnicRound(PicnicTask.count, kTreatApples, <int>[5, 7]),
-    PicnicRound(PicnicTask.count, kTreatCarrots, <int>[5, 5]),
-    PicnicRound(PicnicTask.count, kTreatAcorns, <int>[6, 6]),
-    PicnicRound(PicnicTask.count, kTreatCherries, <int>[4, 4]),
-  ],
-  PicnicBasketsModes.numeralCompare: <PicnicRound>[
-    PicnicRound(PicnicTask.numerals, kTreatApples, <int>[7, 4]),
-    PicnicRound(PicnicTask.numerals, kTreatApples, <int>[3, 8]),
-    PicnicRound(PicnicTask.numerals, kTreatApples, <int>[6, 5]),
-    PicnicRound(PicnicTask.numerals, kTreatApples, <int>[2, 9]),
-    PicnicRound(PicnicTask.numerals, kTreatApples, <int>[5, 8]),
-    PicnicRound(PicnicTask.numerals, kTreatApples, <int>[9, 6]),
-    PicnicRound(PicnicTask.numerals, kTreatApples, <int>[4, 3]),
-    PicnicRound(PicnicTask.numerals, kTreatApples, <int>[10, 7]),
-  ],
-  // A clear most and a clear fewest in every one: "and who has the fewest?"
-  // must have an answer.
-  PicnicBasketsModes.threeWayCompare: <PicnicRound>[
-    PicnicRound(PicnicTask.three, kTreatCherries, <int>[3, 5, 2]),
-    PicnicRound(PicnicTask.three, kTreatAcorns, <int>[6, 4, 5]),
-    PicnicRound(PicnicTask.three, kTreatApples, <int>[2, 3, 6]),
-    PicnicRound(PicnicTask.three, kTreatCarrots, <int>[4, 2, 5]),
-    PicnicRound(PicnicTask.three, kTreatCherries, <int>[5, 6, 3]),
-  ],
-};
+      PicnicBasketsModes.matchByLine: <PicnicRound>[
+        PicnicRound(PicnicTask.match, kTreatCherries, <int>[4, 3]),
+        PicnicRound(PicnicTask.match, kTreatApples, <int>[2, 5]),
+        PicnicRound(PicnicTask.match, kTreatCarrots, <int>[6, 4]),
+        PicnicRound(PicnicTask.match, kTreatAcorns, <int>[3, 5]),
+        PicnicRound(PicnicTask.match, kTreatCherries, <int>[5, 2]),
+        PicnicRound(PicnicTask.match, kTreatCarrots, <int>[3, 6]),
+        PicnicRound(PicnicTask.match, kTreatAcorns, <int>[4, 4]),
+        PicnicRound(PicnicTask.match, kTreatApples, <int>[3, 3]),
+        PicnicRound(PicnicTask.match, kTreatCherries, <int>[5, 5]),
+      ],
+      PicnicBasketsModes.countAndCompare: <PicnicRound>[
+        PicnicRound(PicnicTask.count, kTreatApples, <int>[5, 3]),
+        PicnicRound(PicnicTask.count, kTreatCherries, <int>[3, 6]),
+        PicnicRound(PicnicTask.count, kTreatAcorns, <int>[7, 6]),
+        PicnicRound(PicnicTask.count, kTreatCarrots, <int>[4, 6]),
+        PicnicRound(PicnicTask.count, kTreatCherries, <int>[6, 4]),
+        PicnicRound(PicnicTask.count, kTreatApples, <int>[5, 7]),
+        PicnicRound(PicnicTask.count, kTreatCarrots, <int>[5, 5]),
+        PicnicRound(PicnicTask.count, kTreatAcorns, <int>[6, 6]),
+        PicnicRound(PicnicTask.count, kTreatCherries, <int>[4, 4]),
+      ],
+      PicnicBasketsModes.numeralCompare: <PicnicRound>[
+        PicnicRound(PicnicTask.numerals, kTreatApples, <int>[7, 4]),
+        PicnicRound(PicnicTask.numerals, kTreatApples, <int>[3, 8]),
+        PicnicRound(PicnicTask.numerals, kTreatApples, <int>[6, 5]),
+        PicnicRound(PicnicTask.numerals, kTreatApples, <int>[2, 9]),
+        PicnicRound(PicnicTask.numerals, kTreatApples, <int>[5, 8]),
+        PicnicRound(PicnicTask.numerals, kTreatApples, <int>[9, 6]),
+        PicnicRound(PicnicTask.numerals, kTreatApples, <int>[4, 3]),
+        PicnicRound(PicnicTask.numerals, kTreatApples, <int>[10, 7]),
+      ],
+      // A clear most and a clear fewest in every one: "and who has the fewest?"
+      // must have an answer.
+      PicnicBasketsModes.threeWayCompare: <PicnicRound>[
+        PicnicRound(PicnicTask.three, kTreatCherries, <int>[3, 5, 2]),
+        PicnicRound(PicnicTask.three, kTreatAcorns, <int>[6, 4, 5]),
+        PicnicRound(PicnicTask.three, kTreatApples, <int>[2, 3, 6]),
+        PicnicRound(PicnicTask.three, kTreatCarrots, <int>[4, 2, 5]),
+        PicnicRound(PicnicTask.three, kTreatCherries, <int>[5, 6, 3]),
+      ],
+    };
 
 /// The rounds for one visit.
 ///
@@ -166,11 +180,13 @@ List<PicnicRound> picnicRoundsFor(String subMode, {int seed = 0}) {
 
 String _cap(String s) => s[0].toUpperCase() + s.substring(1);
 
-const String kPicnicIntro = 'It is a picnic! The unicorn and the dragon are '
+const String kPicnicIntro =
+    'It is a picnic! The unicorn and the dragon are '
     'sharing treats. Let us find out who has more.';
 const String kPicnicLeftOver =
     'Look! Some have no partner. They are left over.';
-const String kPicnicFinal = 'What a lovely picnic. Everyone had plenty! '
+const String kPicnicFinal =
+    'What a lovely picnic. Everyone had plenty! '
     'Here are some coins for you.';
 
 const List<String> kPicnicKeeperLines = <String>[
@@ -184,13 +200,14 @@ String picnicKeeperLine(int round) =>
     kPicnicKeeperLines[round % kPicnicKeeperLines.length];
 
 String picnicPrompt(PicnicRound r) => switch (r.task) {
-      PicnicTask.match =>
-        'Tap a treat to find it a partner. Who has more ${r.treat.plural}?',
-      PicnicTask.count => 'Tap to count the ${r.treat.plural}. Who has more?',
-      PicnicTask.numerals => 'Which number is bigger?',
-      PicnicTask.three => 'Tap to count the ${r.treat.plural}. '
-          'Who has the most?',
-    };
+  PicnicTask.match =>
+    'Tap a treat to find it a partner. Who has more ${r.treat.plural}?',
+  PicnicTask.count => 'Tap to count the ${r.treat.plural}. Who has more?',
+  PicnicTask.numerals => 'Which number is bigger?',
+  PicnicTask.three =>
+    'Tap to count the ${r.treat.plural}. '
+        'Who has the most?',
+};
 
 String picnicAsk(PicnicRound r) => r.task == PicnicTask.three
     ? 'Who has the most ${r.treat.plural}?'
@@ -220,10 +237,10 @@ String picnicDoneFewest(PicnicRound r) =>
 
 /// The advice half of a miss, also said on its own as a hint.
 String picnicLookHint(PicnicRound r) => switch (r.task) {
-      PicnicTask.numerals => 'Look at the dots.',
-      PicnicTask.match => 'Look at the ones left over.',
-      _ => 'Count them again.',
-    };
+  PicnicTask.numerals => 'Look at the dots.',
+  PicnicTask.match => 'Look at the ones left over.',
+  _ => 'Count them again.',
+};
 
 String picnicMiss(PicnicRound r, int rotation) =>
     '${warmMissLine(rotation)} ${picnicLookHint(r)}';

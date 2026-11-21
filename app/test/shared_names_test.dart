@@ -60,9 +60,10 @@ String _head(String name) {
 Map<String, List<_Naming>> _namings() {
   final out = <String, List<_Naming>>{};
   void add(String asset, String name, String catalog) {
-    out.putIfAbsent(asset, () => <_Naming>[]).add(
-      (name: name, catalog: catalog),
-    );
+    out.putIfAbsent(asset, () => <_Naming>[]).add((
+      name: name,
+      catalog: catalog,
+    ));
   }
 
   for (final d in kSanctuaryDecor) {
@@ -107,7 +108,8 @@ void main() {
       expect(
         offenders,
         isEmpty,
-        reason: 'one picture, two names that share no noun. She has the '
+        reason:
+            'one picture, two names that share no noun. She has the '
             'picture and the spoken word and nothing else to go on, so the '
             'two have to be talking about the same thing.',
       );

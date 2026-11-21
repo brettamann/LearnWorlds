@@ -20,7 +20,7 @@ class RoundCoordinator {
   /// [random] is a test seam — override the provider with a seeded Random to
   /// make card drops deterministic.
   RoundCoordinator(this._ref, {math.Random? random})
-      : _random = random ?? math.Random();
+    : _random = random ?? math.Random();
 
   /// Chance that a passed round yields a creature card she doesn't have.
   ///
@@ -82,8 +82,10 @@ class RoundCoordinator {
 
     // Rarity biases *which* card drops, not whether one does. A round that
     // promises a card and delivers nothing is worse than not promising.
-    final total =
-        pool.fold<int>(0, (sum, c) => sum + cardRarityWeight(c.rarity));
+    final total = pool.fold<int>(
+      0,
+      (sum, c) => sum + cardRarityWeight(c.rarity),
+    );
     var roll = _random.nextInt(total);
     for (final card in pool) {
       roll -= cardRarityWeight(card.rarity);
@@ -96,5 +98,6 @@ class RoundCoordinator {
   }
 }
 
-final roundCoordinatorProvider =
-    Provider<RoundCoordinator>(RoundCoordinator.new);
+final roundCoordinatorProvider = Provider<RoundCoordinator>(
+  RoundCoordinator.new,
+);

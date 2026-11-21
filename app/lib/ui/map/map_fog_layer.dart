@@ -185,19 +185,12 @@ class _BreathingCloud extends StatelessWidget {
           top: centre.dy - height / 2,
           width: width,
           height: height,
-          child: Transform.scale(
-            scaleX: scaleX,
-            scaleY: scaleY,
-            child: child,
-          ),
+          child: Transform.scale(scaleX: scaleX, scaleY: scaleY, child: child),
         );
       },
       child: Opacity(
         opacity: 0.92,
-        child: Image.asset(
-          AssetPaths.mapCloud,
-          fit: BoxFit.contain,
-        ),
+        child: Image.asset(AssetPaths.mapCloud, fit: BoxFit.contain),
       ),
     );
   }

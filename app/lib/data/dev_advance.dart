@@ -80,7 +80,8 @@ List<DevAdvanceOption> devAdvanceOptions(ActivityRegistry? registry) {
       DevAdvanceOption(
         code: code,
         activityId: activityId,
-        displayName: registry?.byIdOrNull(activityId)?.displayName ??
+        displayName:
+            registry?.byIdOrNull(activityId)?.displayName ??
             placeholderActivityName(activityId),
         sequenceIndex: i,
       ),
@@ -168,12 +169,12 @@ Future<DevAdvanceResult> applyDevAdvance(
 /// Sanctuary node. Use this to undo a previous dev jump.
 Future<void> resetDevAdvance(WidgetRef ref) async {
   ref.read(explorationProvider.notifier).replaceAll(const <int>{});
-  ref.read(rewardProgressProvider.notifier).replaceAll(
-    const <String, RewardTrackState>{},
-  );
-  ref.read(subModeProgressProvider.notifier).replaceAll(
-    const <String, Set<String>>{},
-  );
+  ref
+      .read(rewardProgressProvider.notifier)
+      .replaceAll(const <String, RewardTrackState>{});
+  ref
+      .read(subModeProgressProvider.notifier)
+      .replaceAll(const <String, Set<String>>{});
   ref.read(walletProvider.notifier).set(0);
   await ref.read(saveCoordinatorProvider).persist();
 }

@@ -71,8 +71,9 @@ void main() {
     return engine;
   }
 
-  testWidgets('the map claims the music bed, and releases it on the way out',
-      (tester) async {
+  testWidgets('the map claims the music bed, and releases it on the way out', (
+    tester,
+  ) async {
     final engine = await pumpMap(tester);
 
     expect(
@@ -87,7 +88,8 @@ void main() {
     expect(
       engine.releases,
       1,
-      reason: 'released rather than stopped, so the next screen can claim the '
+      reason:
+          'released rather than stopped, so the next screen can claim the '
           'same bed inside the grace window and she hears no seam',
     );
   });
@@ -134,8 +136,9 @@ void main() {
     expect(rail.width, kMapRailWidth);
   });
 
-  testWidgets('MusicBedScope wraps the screen rather than the map alone',
-      (tester) async {
+  testWidgets('MusicBedScope wraps the screen rather than the map alone', (
+    tester,
+  ) async {
     // Wrapping inside the AspectRatio would release the bed every time the
     // decorate tray rebuilt the tree beneath it.
     await pumpMap(tester);

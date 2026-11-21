@@ -47,7 +47,8 @@ void main() {
         expect(
           path,
           isNotNull,
-          reason: '${lm.id} is a place the narrator names with nothing drawn '
+          reason:
+              '${lm.id} is a place the narrator names with nothing drawn '
               'for it, which is the bug this file exists for',
         );
         expect(
@@ -119,7 +120,8 @@ void main() {
           expect(
             dx >= clearance || dy >= clearance,
             isTrue,
-            reason: '${a.id} and ${b.id} overlap at $aspect:1 — '
+            reason:
+                '${a.id} and ${b.id} overlap at $aspect:1 — '
                 'dx ${dx.toStringAsFixed(0)}, dy ${dy.toStringAsFixed(0)}, '
                 'need ${clearance.toStringAsFixed(0)} in one of them',
           );
@@ -177,8 +179,9 @@ void main() {
       }
     });
 
-    testWidgets('only the place under discussion carries its name',
-        (tester) async {
+    testWidgets('only the place under discussion carries its name', (
+      tester,
+    ) async {
       // Six permanent captions were the old design and they were the whole of
       // the landmark. Now the picture is, and six pieces of text a pre-reader
       // cannot use would only crowd a clearing she has to judge distances
@@ -248,7 +251,8 @@ void main() {
             expect(
               bottom,
               lessThanOrEqualTo(windowH - kCaptionBandClearance + 1),
-              reason: '${position.id} ${landmark.id} at $aspect:1 puts him '
+              reason:
+                  '${position.id} ${landmark.id} at $aspect:1 puts him '
                   'under the caption band',
             );
           }

@@ -208,14 +208,16 @@ class _NextArrowButtonState extends ConsumerState<NextArrowButton>
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color:
-                            widget.color.withValues(alpha: 0.55 + glowT * 0.35),
+                        color: widget.color.withValues(
+                          alpha: 0.55 + glowT * 0.35,
+                        ),
                         blurRadius: 22 + glowT * 14 + hintEnvelope * 18,
                         spreadRadius: 2 + glowT * 4 + hintEnvelope * 6,
                       ),
                       BoxShadow(
-                        color:
-                            Colors.amber.withValues(alpha: 0.25 + glowT * 0.25),
+                        color: Colors.amber.withValues(
+                          alpha: 0.25 + glowT * 0.25,
+                        ),
                         blurRadius: 40 + glowT * 20,
                         spreadRadius: 6 + glowT * 6,
                       ),

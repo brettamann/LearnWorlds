@@ -43,10 +43,8 @@ class PlayfieldArea {
     return PlayfieldArea._(width: width, height: usable);
   }
 
-  factory PlayfieldArea.of(BoxConstraints constraints) => PlayfieldArea(
-        width: constraints.maxWidth,
-        height: constraints.maxHeight,
-      );
+  factory PlayfieldArea.of(BoxConstraints constraints) =>
+      PlayfieldArea(width: constraints.maxWidth, height: constraints.maxHeight);
 
   const PlayfieldArea._({required this.width, required this.height});
 

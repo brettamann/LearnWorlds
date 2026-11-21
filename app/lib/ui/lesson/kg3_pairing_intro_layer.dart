@@ -104,11 +104,8 @@ class _Kg3PairingIntroLayerState extends ConsumerState<Kg3PairingIntroLayer>
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final shapeSize = math.min(
-              constraints.maxWidth,
-              constraints.maxHeight,
-            ) *
-            0.55;
+        final shapeSize =
+            math.min(constraints.maxWidth, constraints.maxHeight) * 0.55;
         final left = (constraints.maxWidth - shapeSize) / 2;
         final top = (constraints.maxHeight - shapeSize) / 2;
         final p = widget.pairing;

@@ -44,12 +44,13 @@ void main() {
   /// The slider under [key], addressed by its ValueKey rather than by position
   /// so that adding a setting above it cannot silently re-target the test.
   Finder sliderIn(String key) => find.descendant(
-        of: find.byKey(ValueKey(key)),
-        matching: find.byType(Slider),
-      );
+    of: find.byKey(ValueKey(key)),
+    matching: find.byType(Slider),
+  );
 
-  testWidgets('both levels are reachable, and start at the shipped defaults',
-      (tester) async {
+  testWidgets('both levels are reachable, and start at the shipped defaults', (
+    tester,
+  ) async {
     await pumpSettings(tester);
 
     expect(find.text('Music'), findsOneWidget);
@@ -65,8 +66,9 @@ void main() {
     );
   });
 
-  testWidgets('dragging is heard immediately and saved once it settles',
-      (tester) async {
+  testWidgets('dragging is heard immediately and saved once it settles', (
+    tester,
+  ) async {
     final container = await pumpSettings(tester);
     container.read(saveCoordinatorProvider).startAutosave();
     final slider = tester.widget<Slider>(sliderIn('music-volume'));
@@ -82,7 +84,8 @@ void main() {
     expect(
       (await SharedPreferences.getInstance()).getKeys(),
       isEmpty,
-      reason: 'a per-frame save rewrites the whole save blob sixty times a '
+      reason:
+          'a per-frame save rewrites the whole save blob sixty times a '
           'second',
     );
 
@@ -113,8 +116,9 @@ void main() {
     );
   });
 
-  testWidgets('the screen keeps the music playing while you set its level',
-      (tester) async {
+  testWidgets('the screen keeps the music playing while you set its level', (
+    tester,
+  ) async {
     // The reason this screen claims the bed at all. Without it the release from
     // the previous screen expires a few seconds after arriving here, and the
     // music slider is being tuned against silence.

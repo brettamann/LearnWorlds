@@ -242,8 +242,10 @@ class _ShapeFindDemoState extends ConsumerState<ShapeFindDemo>
                     horizontal: 20,
                     vertical: 10,
                   ),
-                  decoration:
-                      AppDecor.card(radius: 18, shadow: AppShadows.soft),
+                  decoration: AppDecor.card(
+                    radius: 18,
+                    shadow: AppShadows.soft,
+                  ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -281,25 +283,22 @@ class _ShapeFindDemoState extends ConsumerState<ShapeFindDemo>
             ),
             for (final p in _placements)
               Positioned(
-                left: p.center.dx * w -
+                left:
+                    p.center.dx * w -
                     (p.isDecor ? _spriteSizeDecor : _spriteSize) / 2,
-                top: p.center.dy * h -
+                top:
+                    p.center.dy * h -
                     (p.isDecor ? _spriteSizeDecor : _spriteSize) / 2 +
                     24,
                 width: p.isDecor ? _spriteSizeDecor : _spriteSize,
                 height: p.isDecor ? _spriteSizeDecor : _spriteSize,
                 child: IgnorePointer(
                   child: p.isDecor
-                      ? Image.asset(
-                          p.assetPath,
-                          fit: BoxFit.contain,
-                        )
+                      ? Image.asset(p.assetPath, fit: BoxFit.contain)
                       : AnimatedShape(
                           spriteAsset: p.assetPath,
                           active: p.tapped,
-                          pose: ShapePose(
-                            rotationDegrees: p.rotationDegrees,
-                          ),
+                          pose: ShapePose(rotationDegrees: p.rotationDegrees),
                           size: _spriteSize,
                         ),
                 ),
@@ -311,8 +310,9 @@ class _ShapeFindDemoState extends ConsumerState<ShapeFindDemo>
                     final placement = _placements.firstWhere(
                       (p) => p.id == entry.key,
                     );
-                    final size =
-                        placement.isDecor ? _spriteSizeDecor : _spriteSize;
+                    final size = placement.isDecor
+                        ? _spriteSizeDecor
+                        : _spriteSize;
                     return Positioned(
                       left: placement.center.dx * w - size / 2 - 22,
                       top: placement.center.dy * h - size / 2 + 24 - 22,

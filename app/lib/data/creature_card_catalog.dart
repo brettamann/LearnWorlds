@@ -316,10 +316,10 @@ const List<CreatureCard> kCreatureCards = <CreatureCard>[
 /// rarer by being picked less often, not by making the drop itself fail — a
 /// round that promises a card and delivers nothing is worse than no promise.
 int cardRarityWeight(CardRarity r) => switch (r) {
-      CardRarity.common => 4,
-      CardRarity.uncommon => 2,
-      CardRarity.rare => 1,
-    };
+  CardRarity.common => 4,
+  CardRarity.uncommon => 2,
+  CardRarity.rare => 1,
+};
 
 /// Spoken when she taps a card she has already found, in the album.
 ///
@@ -352,8 +352,8 @@ CreatureCard? creatureCardById(String id) {
 /// Cards with a null speciesId carry their own art and have no species to
 /// check, so they are skipped rather than failing this.
 bool debugCardSpeciesAreValid() => kCreatureCards.every(
-      (c) => c.speciesId == null || kAllParadeSpeciesIds.contains(c.speciesId),
-    );
+  (c) => c.speciesId == null || kAllParadeSpeciesIds.contains(c.speciesId),
+);
 
 /// Spoken over the reveal card, the moment a card is earned.
 ///

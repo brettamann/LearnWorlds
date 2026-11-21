@@ -63,164 +63,149 @@ import 'support/harness.dart';
 /// A function rather than a const map because a widget cannot be reused
 /// across two `pumpWidget` calls with different sizes.
 Map<String, Widget> playfields() => <String, Widget>{
-      'counting-parade': CountingParadeRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-      ),
-      'long-parade': LongParadeRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-      ),
-      'count-out-n': CountOutNRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-      ),
-      'count-forward-from-n': CountForwardFromNRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-      ),
-      'count-on-by-ones': CountOnByOnesRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-      ),
-      'shape-garden-find': ShapeGardenRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-      ),
-      'tens-parade': TensParadeRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-      ),
-      'shape-garden-flat-or-solid': ShapeGardenSortingRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-      ),
-      'shape-garden-sort': ShapeGardenSortByAttributeRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-      ),
-      'two-attribute-hunt': TwoAttributeHuntRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-      ),
-      'build-a-habitat': BuildAHabitatRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-      ),
-      'wheres-buddy': WheresBuddyRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-        subMode: 'place-mode',
-      ),
-      'ten-frame-fill': TenFramePondRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-      ),
-      'ten-frame-two-ways': TenFramePondRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-        subMode: 'two-ways',
-      ),
-      'ten-frame-teens': TenFramePondRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-        subMode: 'ten-plus-n',
-      ),
-      'ten-frame-challenge': TenFramePondRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-        subMode: 'three-frames',
-      ),
-      'pantry-simple': CarePantryRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-      ),
-      'pantry-full': CarePantryRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-        subMode: 'full-pantry',
-      ),
-      'pantry-colour': CarePantryRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-        subMode: 'unfamiliar-rules',
-      ),
-      'scribe-trace': ScribesTowerRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-      ),
-      'scribe-cue': ScribesTowerRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-        subMode: 'write-from-cue',
-      ),
-      'scribe-match': ScribesTowerRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-        subMode: 'match-numeral',
-      ),
-      'story-add': StorytellersPondRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-      ),
-      'story-take': StorytellersPondRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-        subMode: 'take-from',
-      ),
-      'story-together': StorytellersPondRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-        subMode: 'put-together',
-      ),
-      'story-apart': StorytellersPondRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-        subMode: 'take-apart',
-      ),
-      'bench-describe': CaretakersBenchRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-      ),
-      'bench-weigh': CaretakersBenchRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-        subMode: 'compare-two',
-      ),
-      'bench-order': CaretakersBenchRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-        subMode: 'order-three-by-length',
-      ),
-      'picnic-match': PicnicBasketsRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-      ),
-      'picnic-count': PicnicBasketsRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-        subMode: 'count-and-compare',
-      ),
-      'picnic-numerals': PicnicBasketsRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-        subMode: 'numeral-compare',
-      ),
-      'picnic-three': PicnicBasketsRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-        subMode: 'three-way-compare',
-      ),
-      'fluency-casual': FluencyRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-      ),
-      'fluency-speed': FluencyRunner(
-        onSequenceComplete: () {},
-        skipIntro: true,
-        subMode: 'speed-run',
-      ),
-    };
+  'counting-parade': CountingParadeRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+  ),
+  'long-parade': LongParadeRunner(onSequenceComplete: () {}, skipIntro: true),
+  'count-out-n': CountOutNRunner(onSequenceComplete: () {}, skipIntro: true),
+  'count-forward-from-n': CountForwardFromNRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+  ),
+  'count-on-by-ones': CountOnByOnesRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+  ),
+  'shape-garden-find': ShapeGardenRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+  ),
+  'tens-parade': TensParadeRunner(onSequenceComplete: () {}, skipIntro: true),
+  'shape-garden-flat-or-solid': ShapeGardenSortingRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+  ),
+  'shape-garden-sort': ShapeGardenSortByAttributeRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+  ),
+  'two-attribute-hunt': TwoAttributeHuntRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+  ),
+  'build-a-habitat': BuildAHabitatRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+  ),
+  'wheres-buddy': WheresBuddyRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+    subMode: 'place-mode',
+  ),
+  'ten-frame-fill': TenFramePondRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+  ),
+  'ten-frame-two-ways': TenFramePondRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+    subMode: 'two-ways',
+  ),
+  'ten-frame-teens': TenFramePondRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+    subMode: 'ten-plus-n',
+  ),
+  'ten-frame-challenge': TenFramePondRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+    subMode: 'three-frames',
+  ),
+  'pantry-simple': CarePantryRunner(onSequenceComplete: () {}, skipIntro: true),
+  'pantry-full': CarePantryRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+    subMode: 'full-pantry',
+  ),
+  'pantry-colour': CarePantryRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+    subMode: 'unfamiliar-rules',
+  ),
+  'scribe-trace': ScribesTowerRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+  ),
+  'scribe-cue': ScribesTowerRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+    subMode: 'write-from-cue',
+  ),
+  'scribe-match': ScribesTowerRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+    subMode: 'match-numeral',
+  ),
+  'story-add': StorytellersPondRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+  ),
+  'story-take': StorytellersPondRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+    subMode: 'take-from',
+  ),
+  'story-together': StorytellersPondRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+    subMode: 'put-together',
+  ),
+  'story-apart': StorytellersPondRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+    subMode: 'take-apart',
+  ),
+  'bench-describe': CaretakersBenchRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+  ),
+  'bench-weigh': CaretakersBenchRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+    subMode: 'compare-two',
+  ),
+  'bench-order': CaretakersBenchRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+    subMode: 'order-three-by-length',
+  ),
+  'picnic-match': PicnicBasketsRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+  ),
+  'picnic-count': PicnicBasketsRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+    subMode: 'count-and-compare',
+  ),
+  'picnic-numerals': PicnicBasketsRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+    subMode: 'numeral-compare',
+  ),
+  'picnic-three': PicnicBasketsRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+    subMode: 'three-way-compare',
+  ),
+  'fluency-casual': FluencyRunner(onSequenceComplete: () {}, skipIntro: true),
+  'fluency-speed': FluencyRunner(
+    onSequenceComplete: () {},
+    skipIntro: true,
+    subMode: 'speed-run',
+  ),
+};
 
 /// Window shapes to check.
 ///
@@ -230,10 +215,7 @@ Map<String, Widget> playfields() => <String, Widget>{
 /// larger share of a shorter window. Height is the only thing varied on
 /// purpose: playfields are fixed logical pixels by design, so squeezing the
 /// width produces overflow that says nothing about the caption band.
-const List<Size> _sizes = <Size>[
-  Size(1180, 820),
-  Size(1180, 700),
-];
+const List<Size> _sizes = <Size>[Size(1180, 820), Size(1180, 700)];
 
 /// The on-screen rect of the nearest enclosing scroll viewport, if any.
 Rect? _viewportOf(Element element) {
@@ -256,8 +238,9 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   for (final entry in playfields().entries) {
-    testWidgets('${entry.key} keeps everything touchable above the band',
-        (tester) async {
+    testWidgets('${entry.key} keeps everything touchable above the band', (
+      tester,
+    ) async {
       for (final size in _sizes) {
         useViewSize(tester, size);
 
@@ -329,7 +312,8 @@ void main() {
         expect(
           offenders.toSet().toList(),
           isEmpty,
-          reason: '${entry.key} at ${size.width.toInt()}x'
+          reason:
+              '${entry.key} at ${size.width.toInt()}x'
               '${size.height.toInt()} puts something she has to touch under '
               'the caption band',
         );

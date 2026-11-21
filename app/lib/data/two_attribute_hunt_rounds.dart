@@ -284,14 +284,14 @@ const String kTwoAttributeDemoHandoff =
 
 /// Every line the hunt can say, apart from the shared warm hint lines.
 List<String> twoAttributeHuntScriptLines() => <String>[
-      kTwoAttributeHuntIntro,
-      kTwoAttributeDemoIntro,
-      kTwoAttributeDemoMatch,
-      kTwoAttributeDemoMiss,
-      kTwoAttributeDemoHandoff,
-      for (final r in kTwoAttributeHuntRounds) r.prompt,
-      kTwoAttributeHitLine,
-      for (var n = 0; n < 4; n++) twoAttributeMissLine(n),
-      for (final r in kTwoAttributeHuntRounds) r.keeperLine,
-      kTwoAttributeHuntReward,
-    ];
+  kTwoAttributeHuntIntro,
+  kTwoAttributeDemoIntro,
+  kTwoAttributeDemoMatch,
+  kTwoAttributeDemoMiss,
+  kTwoAttributeDemoHandoff,
+  for (final r in kTwoAttributeHuntRounds) r.prompt,
+  kTwoAttributeHitLine,
+  for (var n = 0; n < 4; n++) twoAttributeMissLine(n),
+  for (final r in kTwoAttributeHuntRounds) r.keeperLine,
+  kTwoAttributeHuntReward,
+];

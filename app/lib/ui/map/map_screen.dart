@@ -130,10 +130,7 @@ class MapScreen extends StatelessWidget {
             return Stack(
               children: [
                 Positioned.fill(
-                  child: Image.asset(
-                    imageAsset,
-                    fit: BoxFit.fill,
-                  ),
+                  child: Image.asset(imageAsset, fit: BoxFit.fill),
                 ),
                 for (final region in regions)
                   Positioned(
@@ -174,8 +171,9 @@ class _RegionHit extends StatelessWidget {
           )
         : null;
     final visual = MouseRegion(
-      cursor:
-          region.enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      cursor: region.enabled
+          ? SystemMouseCursors.click
+          : SystemMouseCursors.basic,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: region.enabled ? region.onTap : null,

@@ -50,7 +50,8 @@ void main() {
         expect(
           script,
           contains(narrationTextNormalize(label)),
-          reason: '"$label" is spoken by ReadAloudGate and the renderer will '
+          reason:
+              '"$label" is spoken by ReadAloudGate and the renderer will '
               'never see it',
         );
       }
@@ -61,7 +62,8 @@ void main() {
         expect(
           narrationClipFor(label),
           isNotNull,
-          reason: 'no clip for "$label". Re-render:\n'
+          reason:
+              'no clip for "$label". Re-render:\n'
               '  cd app && dart run tool/dump_narration_script.dart '
               '> ../tools/tts/kokoro/script.json\n'
               '  node tools/tts/kokoro/render.mjs render',
@@ -86,10 +88,11 @@ void main() {
       // voice, and made no sound either. A guard that names one parameter
       // catches only the parameter it names.
       final offenders = <String>[];
-      for (final file in Directory('lib')
-          .listSync(recursive: true)
-          .whereType<File>()
-          .where((f) => f.path.endsWith('.dart'))) {
+      for (final file
+          in Directory('lib')
+              .listSync(recursive: true)
+              .whereType<File>()
+              .where((f) => f.path.endsWith('.dart'))) {
         final path = file.path.replaceAll(r'\', '/');
         final rel = path.substring(path.indexOf('lib/'));
         if (_labelCatalogs.contains(rel)) continue;
@@ -103,7 +106,8 @@ void main() {
       expect(
         offenders,
         isEmpty,
-        reason: 'a spoken label is typed inline in: $offenders — it belongs '
+        reason:
+            'a spoken label is typed inline in: $offenders — it belongs '
             'in lib/data/button_labels.dart',
       );
     });

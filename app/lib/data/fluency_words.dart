@@ -58,7 +58,8 @@ List<List<FluencyFact>> fluencyRoundsFor(String subMode, {required int seed}) {
 
 String _cap(String s) => s[0].toUpperCase() + s.substring(1);
 
-const String kFluencyIntro = "Welcome to Buddy's practice clearing! Let us do "
+const String kFluencyIntro =
+    "Welcome to Buddy's practice clearing! Let us do "
     'some quick number puzzles together.';
 const String kFluencyCount = 'Count the acorns.';
 
@@ -66,7 +67,8 @@ const String kFluencyCount = 'Count the acorns.';
 /// count - telling her to count them there pointed at nothing.
 const String kFluencyNumbersHint = 'Say the numbers out loud.';
 const String kFluencyStreak = 'Three in a row! Buddy is so happy.';
-const String kFluencyFinal = 'What a practice! Buddy is so proud of you. '
+const String kFluencyFinal =
+    'What a practice! Buddy is so proud of you. '
     'Here are some coins.';
 
 const List<String> kFluencyKeeperLines = <String>[
@@ -85,25 +87,25 @@ String fluencyQuestion(FluencyFact f) => f.plus
 
 String fluencyRight(FluencyFact f) => f.plus
     ? '${_cap(spellNumber(f.a))} plus ${spellNumber(f.b)} is '
-        '${spellNumber(f.answer)}!'
+          '${spellNumber(f.answer)}!'
     : '${_cap(spellNumber(f.a))} take away ${spellNumber(f.b)} is '
-        '${spellNumber(f.answer)}!';
+          '${spellNumber(f.answer)}!';
 
 String fluencyMiss(int rotation, {bool numeralsOnly = false}) =>
     '${warmMissLine(rotation)} '
     '${numeralsOnly ? kFluencyNumbersHint : kFluencyCount}';
 
 List<String> fluencyScriptLines() => <String>{
-      kFluencyIntro,
-      kFluencyCount,
-      kFluencyStreak,
-      kFluencyFinal,
-      ...kFluencyKeeperLines,
-      kFluencyNumbersHint,
-      for (var r = 0; r < 4; r++) fluencyMiss(r),
-      for (var r = 0; r < 4; r++) fluencyMiss(r, numeralsOnly: true),
-      for (final f in kFluencyFacts) ...<String>[
-        fluencyQuestion(f),
-        fluencyRight(f),
-      ],
-    }.toList();
+  kFluencyIntro,
+  kFluencyCount,
+  kFluencyStreak,
+  kFluencyFinal,
+  ...kFluencyKeeperLines,
+  kFluencyNumbersHint,
+  for (var r = 0; r < 4; r++) fluencyMiss(r),
+  for (var r = 0; r < 4; r++) fluencyMiss(r, numeralsOnly: true),
+  for (final f in kFluencyFacts) ...<String>[
+    fluencyQuestion(f),
+    fluencyRight(f),
+  ],
+}.toList();

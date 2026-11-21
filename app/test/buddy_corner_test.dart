@@ -97,7 +97,8 @@ void main() {
         expect(
           offenders,
           isEmpty,
-          reason: 'Buddy takes the touch, so these cannot be tapped where '
+          reason:
+              'Buddy takes the touch, so these cannot be tapped where '
               'they overlap him',
         );
       }

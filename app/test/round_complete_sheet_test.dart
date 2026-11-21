@@ -112,8 +112,9 @@ void main() {
     expect(find.byIcon(Icons.celebration), findsOneWidget);
   });
 
-  testWidgets('and the way onward is the arrow, as everywhere else',
-      (tester) async {
+  testWidgets('and the way onward is the arrow, as everywhere else', (
+    tester,
+  ) async {
     var tapped = false;
     useViewSize(tester, const Size(900, 900));
 

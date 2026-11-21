@@ -39,13 +39,15 @@ void main() {
       expect(literals, contains("I'm in charge of this mystical sanctuary."));
     });
 
-    test('finds keeperLines held in data catalogs that never mention narration',
-        () {
-      // build_a_habitat_blueprints.dart contains no NarrationLine and no
-      // narration provider — the runner speaks its strings. Scoping the sweep
-      // to "files that narrate" would drop these.
-      expect(literals, contains('A fawn shelter! Beautifully built.'));
-    });
+    test(
+      'finds keeperLines held in data catalogs that never mention narration',
+      () {
+        // build_a_habitat_blueprints.dart contains no NarrationLine and no
+        // narration provider — the runner speaks its strings. Scoping the sweep
+        // to "files that narrate" would drop these.
+        expect(literals, contains('A fawn shelter! Beautifully built.'));
+      },
+    );
 
     test('joins adjacent literals into the one sentence they form', () {
       // Long lines are wrapped as 'part one ' 'part two', which Dart

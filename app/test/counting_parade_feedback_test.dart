@@ -123,8 +123,9 @@ void main() {
     await drainTimers(tester);
   });
 
-  testWidgets('tapping decor shakes it and does not advance the count',
-      (tester) async {
+  testWidgets('tapping decor shakes it and does not advance the count', (
+    tester,
+  ) async {
     // Round 2 is where decor first appears.
     final container = await pumpParade(tester);
     for (var i = 0; i < 3; i++) {
@@ -158,8 +159,7 @@ void main() {
     await drainTimers(tester);
   });
 
-  testWidgets(
-      'a round with wrong taps still pays out and never demotes below '
+  testWidgets('a round with wrong taps still pays out and never demotes below '
       'Concrete', (tester) async {
     final container = await pumpParade(tester);
     for (var i = 0; i < 3; i++) {

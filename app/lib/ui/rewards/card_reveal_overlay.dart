@@ -149,10 +149,10 @@ class _CardRevealOverlayState extends ConsumerState<CardRevealOverlay>
 }
 
 Color _rarityColor(CardRarity r) => switch (r) {
-      // Warm across the board — specs/shared/art-direction.md wants reward
-      // signals warm rather than loud, so rarity reads as a shift in metal
-      // rather than a jump in volume.
-      CardRarity.common => const Color(0xFF8FA96B),
-      CardRarity.uncommon => const Color(0xFF4E9AC4),
-      CardRarity.rare => AppColors.treasureGold,
-    };
+  // Warm across the board — specs/shared/art-direction.md wants reward
+  // signals warm rather than loud, so rarity reads as a shift in metal
+  // rather than a jump in volume.
+  CardRarity.common => const Color(0xFF8FA96B),
+  CardRarity.uncommon => const Color(0xFF4E9AC4),
+  CardRarity.rare => AppColors.treasureGold,
+};

@@ -112,17 +112,17 @@ class MapNodeWithBanner extends StatelessWidget {
   /// node that is merely a different colour. Together they read as "not yet"
   /// without a word of text.
   static Widget _dimmed(Widget child) => Opacity(
-        opacity: 0.55,
-        child: ColorFiltered(
-          colorFilter: const ColorFilter.matrix(<double>[
-            0.2126, 0.7152, 0.0722, 0, 0, //
-            0.2126, 0.7152, 0.0722, 0, 0, //
-            0.2126, 0.7152, 0.0722, 0, 0, //
-            0, 0, 0, 1, 0, //
-          ]),
-          child: child,
-        ),
-      );
+    opacity: 0.55,
+    child: ColorFiltered(
+      colorFilter: const ColorFilter.matrix(<double>[
+        0.2126, 0.7152, 0.0722, 0, 0, //
+        0.2126, 0.7152, 0.0722, 0, 0, //
+        0.2126, 0.7152, 0.0722, 0, 0, //
+        0, 0, 0, 1, 0, //
+      ]),
+      child: child,
+    ),
+  );
 
   /// Compute the banner width such that the label fits inside the text area
   /// at the chosen font size; never shrink below the natural banner width.
@@ -202,10 +202,7 @@ class MapNodeWithBanner extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         Positioned.fill(
-          child: Image.asset(
-            AssetPaths.mapBannerParchment,
-            fit: BoxFit.fill,
-          ),
+          child: Image.asset(AssetPaths.mapBannerParchment, fit: BoxFit.fill),
         ),
         Positioned(
           left: textLeftPx,
@@ -231,10 +228,7 @@ class MapNodeWithBanner extends StatelessWidget {
     final nodeVisual = Stack(
       alignment: Alignment.center,
       children: [
-        Image.asset(
-          AssetPaths.mapNodeYellow,
-          fit: BoxFit.contain,
-        ),
+        Image.asset(AssetPaths.mapNodeYellow, fit: BoxFit.contain),
         if (asleep)
           FractionallySizedBox(
             widthFactor: 0.5,
@@ -304,11 +298,7 @@ class MapNodeWithBanner extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: Center(
-        child: SizedBox(
-          width: bannerW,
-          height: bannerH,
-          child: bannerVisual,
-        ),
+        child: SizedBox(width: bannerW, height: bannerH, child: bannerVisual),
       ),
     );
     // Same treatment for the banner, which is 45 pixels tall - it is a strip
@@ -324,11 +314,7 @@ class MapNodeWithBanner extends StatelessWidget {
       // second tap to protect, and its onTap already speaks.
       child: asleep
           ? _dimmed(bannerTappable)
-          : ReadAloudGate(
-              label: label,
-              onTap: onTap,
-              child: bannerTappable,
-            ),
+          : ReadAloudGate(label: label, onTap: onTap, child: bannerTappable),
     );
     // The gesture detector wraps the padding, not the other way round: a
     // detector inside a bigger box is still only as big as itself, and the
@@ -360,15 +346,9 @@ class MapNodeWithBanner extends StatelessWidget {
     );
     switch (renderMode) {
       case MapNodeRenderMode.nodeOnly:
-        return Stack(
-          clipBehavior: Clip.none,
-          children: [nodePositioned],
-        );
+        return Stack(clipBehavior: Clip.none, children: [nodePositioned]);
       case MapNodeRenderMode.bannerOnly:
-        return Stack(
-          clipBehavior: Clip.none,
-          children: [bannerPositioned],
-        );
+        return Stack(clipBehavior: Clip.none, children: [bannerPositioned]);
       case MapNodeRenderMode.both:
         return Stack(
           clipBehavior: Clip.none,

@@ -46,7 +46,7 @@ typedef ActivityRunnerBuilder = Widget Function(RunnerArgs a);
 /// Every playable activity's runner, by activity id.
 final Map<String, ActivityRunnerBuilder> kActivityRunners =
     <String, ActivityRunnerBuilder>{
-  ActivityIds.countingParade: (a) => CountingParadeRunner(
+      ActivityIds.countingParade: (a) => CountingParadeRunner(
         skipIntro: a.skipIntro,
         subMode: a.subModeId,
         // Lesson JSON carries a roundParameters block for the parade, so
@@ -54,54 +54,54 @@ final Map<String, ActivityRunnerBuilder> kActivityRunners =
         roundParameters: a.launch.roundParameters,
         onSequenceComplete: a.onSequenceComplete,
       ),
-  ActivityIds.shapeGarden: (a) => ShapeGardenRunner(
+      ActivityIds.shapeGarden: (a) => ShapeGardenRunner(
         skipIntro: a.skipIntro,
         subMode: a.subModeId,
         onSequenceComplete: a.onSequenceComplete,
       ),
-  ActivityIds.wheresBuddy: (a) => WheresBuddyRunner(
+      ActivityIds.wheresBuddy: (a) => WheresBuddyRunner(
         skipIntro: a.skipIntro,
         subMode: a.subModeId,
         onSequenceComplete: a.onSequenceComplete,
       ),
-  ActivityIds.buildAHabitat: (a) => BuildAHabitatRunner(
+      ActivityIds.buildAHabitat: (a) => BuildAHabitatRunner(
         skipIntro: a.skipIntro,
         subMode: a.subModeId,
         onSequenceComplete: a.onSequenceComplete,
       ),
-  ActivityIds.tenFramePond: (a) => TenFramePondRunner(
+      ActivityIds.tenFramePond: (a) => TenFramePondRunner(
         skipIntro: a.skipIntro,
         subMode: a.subModeId,
         onSequenceComplete: a.onSequenceComplete,
       ),
-  ActivityIds.carePantry: (a) => CarePantryRunner(
+      ActivityIds.carePantry: (a) => CarePantryRunner(
         skipIntro: a.skipIntro,
         subMode: a.subModeId,
         onSequenceComplete: a.onSequenceComplete,
       ),
-  ActivityIds.scribesTower: (a) => ScribesTowerRunner(
+      ActivityIds.scribesTower: (a) => ScribesTowerRunner(
         skipIntro: a.skipIntro,
         subMode: a.subModeId,
         onSequenceComplete: a.onSequenceComplete,
       ),
-  ActivityIds.storytellersPond: (a) => StorytellersPondRunner(
+      ActivityIds.storytellersPond: (a) => StorytellersPondRunner(
         skipIntro: a.skipIntro,
         subMode: a.subModeId,
         onSequenceComplete: a.onSequenceComplete,
       ),
-  ActivityIds.caretakersBench: (a) => CaretakersBenchRunner(
+      ActivityIds.caretakersBench: (a) => CaretakersBenchRunner(
         skipIntro: a.skipIntro,
         subMode: a.subModeId,
         onSequenceComplete: a.onSequenceComplete,
       ),
-  ActivityIds.picnicBaskets: (a) => PicnicBasketsRunner(
+      ActivityIds.picnicBaskets: (a) => PicnicBasketsRunner(
         skipIntro: a.skipIntro,
         subMode: a.subModeId,
         onSequenceComplete: a.onSequenceComplete,
       ),
-  ActivityIds.fluencyWithin5: (a) => FluencyRunner(
+      ActivityIds.fluencyWithin5: (a) => FluencyRunner(
         skipIntro: a.skipIntro,
         subMode: a.subModeId,
         onSequenceComplete: a.onSequenceComplete,
       ),
-};
+    };

@@ -23,10 +23,16 @@ const _concept = Concept(
 const _registry = ConceptRegistry(version: 1, concepts: [_concept]);
 
 const _step = SubMode(id: 'step', primaryConcepts: ['K.T.1'], isDefault: true);
-const _challenge =
-    SubMode(id: 'challenge', primaryConcepts: ['K.T.1'], isChallenge: true);
-const _ownsIntro =
-    SubMode(id: 'own-demo', primaryConcepts: ['K.T.1'], ownsIntro: true);
+const _challenge = SubMode(
+  id: 'challenge',
+  primaryConcepts: ['K.T.1'],
+  isChallenge: true,
+);
+const _ownsIntro = SubMode(
+  id: 'own-demo',
+  primaryConcepts: ['K.T.1'],
+  ownsIntro: true,
+);
 
 const _activity = Activity(
   id: 'test-activity',

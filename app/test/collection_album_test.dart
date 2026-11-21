@@ -48,8 +48,9 @@ void main() {
     expect(spoken!.text, 'Fawn.');
   });
 
-  testWidgets('tapping a silhouette answers rather than doing nothing',
-      (tester) async {
+  testWidgets('tapping a silhouette answers rather than doing nothing', (
+    tester,
+  ) async {
     final container = await pumpAlbum(tester);
 
     await tester.tap(find.byKey(const ValueKey('card-creature-card-fawn')));
@@ -58,8 +59,9 @@ void main() {
     expect(container.read(narrationPlayerProvider)?.text, kCardNotFoundLine);
   });
 
-  testWidgets('the Cloud Unicorn has a slot even before it is earned',
-      (tester) async {
+  testWidgets('the Cloud Unicorn has a slot even before it is earned', (
+    tester,
+  ) async {
     // The gap is the content: a rare she has never seen still has to be on
     // screen as a silhouette, or there is nothing to want.
     await pumpAlbum(tester);

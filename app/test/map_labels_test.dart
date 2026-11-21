@@ -46,7 +46,8 @@ void main() {
       expect(
         script,
         contains(label),
-        reason: '"$label" is spoken by ReadAloudGate but the renderer will '
+        reason:
+            '"$label" is spoken by ReadAloudGate but the renderer will '
             'never see it, so it will speak in the browser voice',
       );
     }
@@ -57,7 +58,8 @@ void main() {
       expect(
         narrationClipFor(label),
         isNotNull,
-        reason: 'no clip for "$label". Re-render:\n'
+        reason:
+            'no clip for "$label". Re-render:\n'
             '  cd app && dart run tool/dump_narration_script.dart '
             '> ../tools/tts/kokoro/script.json\n'
             '  node tools/tts/kokoro/render.mjs render',
@@ -90,7 +92,8 @@ void main() {
       expect(
         inlineLabel.hasMatch(source),
         isFalse,
-        reason: '$path has a `label:` with a string literal. Map labels are '
+        reason:
+            '$path has a `label:` with a string literal. Map labels are '
             'spoken, so they belong in data/map_labels.dart where the '
             'narration script can enumerate them.',
       );

@@ -168,7 +168,8 @@ void main() {
         expect(
           unvoiced,
           isEmpty,
-          reason: 'said by the game and missing from the recording script, so '
+          reason:
+              'said by the game and missing from the recording script, so '
               'spoken in the synth voice. Build the line in the activity\'s '
               '_words.dart and list it there - never cut a sentence up at '
               'runtime.',
@@ -181,8 +182,9 @@ void main() {
   group('a child who does nothing', () {
     for (final key in playfields().keys) {
       if (key == 'wheres-buddy') continue;
-      testWidgets('never has the round in $key finished for her',
-          (tester) async {
+      testWidgets('never has the round in $key finished for her', (
+        tester,
+      ) async {
         final container = await _mount(tester, key);
         for (var i = 0; i < 90; i++) {
           await tester.pump(const Duration(seconds: 1));
@@ -190,7 +192,8 @@ void main() {
         expect(
           container.read(walletProvider),
           0,
-          reason: 'a round resolved with nobody touching anything - the hint '
+          reason:
+              'a round resolved with nobody touching anything - the hint '
               'ladder did her turn for her',
         );
         await _drain(tester);

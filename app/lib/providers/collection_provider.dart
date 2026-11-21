@@ -25,8 +25,9 @@ class CardCollection extends Notifier<Set<String>> {
   void hydrate(Set<String> cardIds) => state = cardIds;
 }
 
-final cardCollectionProvider =
-    NotifierProvider<CardCollection, Set<String>>(CardCollection.new);
+final cardCollectionProvider = NotifierProvider<CardCollection, Set<String>>(
+  CardCollection.new,
+);
 
 /// The card the kid has just earned and not yet been shown, or null.
 class PendingCardReveal extends Notifier<String?> {
@@ -44,5 +45,6 @@ class PendingCardReveal extends Notifier<String?> {
   void dismiss() => state = null;
 }
 
-final pendingCardRevealProvider =
-    NotifierProvider<PendingCardReveal, String?>(PendingCardReveal.new);
+final pendingCardRevealProvider = NotifierProvider<PendingCardReveal, String?>(
+  PendingCardReveal.new,
+);

@@ -148,8 +148,9 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
 
   void _onHint(HintLevel level) {
     if (!mounted || _completed) return;
-    final next =
-        widget.shapes.where((s) => !_sortedIds.contains(s.id)).firstOrNull;
+    final next = widget.shapes
+        .where((s) => !_sortedIds.contains(s.id))
+        .firstOrNull;
     if (next == null) return;
     if (level == HintLevel.point || level == HintLevel.demonstrate) {
       widget.onHelped?.call();
@@ -168,8 +169,10 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
   void _maybeSpeakPrompt() {
     if (_promptSpoken) return;
     _promptSpoken = true;
-    ref.narration
-        .say(widget.spokenPrompt, cueId: '${widget.cueIdPrefix}:prompt');
+    ref.narration.say(
+      widget.spokenPrompt,
+      cueId: '${widget.cueIdPrefix}:prompt',
+    );
   }
 
   void _handleDrop(
@@ -196,11 +199,11 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
       final hitText = switch (widget.narrationStyle) {
         FlatOrSolidNarrationStyle.shapeName => flatOrSolidHitLine(shape),
         FlatOrSolidNarrationStyle.count => () {
-            final n = binIsFlat ? _flatCount : _solidCount;
-            final side = binIsFlat ? 'flat' : 'solid';
-            final noun = n == 1 ? 'shape' : 'shapes';
-            return '${_spelledCount(n)} $side $noun.';
-          }(),
+          final n = binIsFlat ? _flatCount : _solidCount;
+          final side = binIsFlat ? 'flat' : 'solid';
+          final noun = n == 1 ? 'shape' : 'shapes';
+          return '${_spelledCount(n)} $side $noun.';
+        }(),
       };
       ref.read(feedbackEngineProvider).correct();
       // Queued when the ladder sorted it, so it follows the "watch me" line
@@ -258,10 +261,7 @@ class _FlatOrSolidRoundState extends ConsumerState<FlatOrSolidRound> {
         children: [
           // Prompt banner.
           Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 10,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             decoration: AppDecor.card(radius: 18, shadow: AppShadows.soft),
             child: Text(
               widget.headerPrompt,
@@ -355,11 +355,7 @@ class _DraggableShape extends StatelessWidget {
       // to render correctly above the source tree during the drag.
       feedback: Material(
         color: Colors.transparent,
-        child: SizedBox(
-          width: size,
-          height: size,
-          child: sprite,
-        ),
+        child: SizedBox(width: size, height: size, child: sprite),
       ),
       childWhenDragging: SizedBox(width: size, height: size),
       child: ringed
@@ -392,8 +388,9 @@ class _Bin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final binAsset =
-        binIsFlat ? AssetPaths.shapeGardenBin2d : AssetPaths.shapeGardenBin3d;
+    final binAsset = binIsFlat
+        ? AssetPaths.shapeGardenBin2d
+        : AssetPaths.shapeGardenBin3d;
     return DragTarget<FlatOrSolidShape>(
       // Accept any drag so we can narrate a corrective on wrong-bin tries.
       // The actual correctness check happens in `onAcceptWithDetails`.
@@ -429,9 +426,7 @@ class _Bin extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: Image.asset(binAsset, fit: BoxFit.contain),
-                  ),
+                  Expanded(child: Image.asset(binAsset, fit: BoxFit.contain)),
                   const SizedBox(height: 4),
                   Text(
                     label,

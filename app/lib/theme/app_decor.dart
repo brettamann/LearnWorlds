@@ -31,10 +31,9 @@ abstract final class AppDecor {
   static BoxDecoration card({
     required double radius,
     List<BoxShadow> shadow = AppShadows.medium,
-  }) =>
-      BoxDecoration(
-        color: cardFill,
-        borderRadius: BorderRadius.circular(radius),
-        boxShadow: shadow,
-      );
+  }) => BoxDecoration(
+    color: cardFill,
+    borderRadius: BorderRadius.circular(radius),
+    boxShadow: shadow,
+  );
 }

@@ -79,18 +79,14 @@ class _RewardOverlayState extends ConsumerState<RewardOverlay>
       });
       // The sprite swaps halfway through; the crack lands with it rather than
       // at the start, so the sound and the picture are the same event.
-      Future<void>.delayed(
-        _advancement.duration! * 0.5,
-        () {
-          if (mounted) ref.read(feedbackEngineProvider).eggAdvance();
-        },
-      );
+      Future<void>.delayed(_advancement.duration! * 0.5, () {
+        if (mounted) ref.read(feedbackEngineProvider).eggAdvance();
+      });
       _advancement.forward(from: 0).then((_) {
         if (!mounted) return;
-        ref.read(rewardProgressProvider.notifier).markStageSeen(
-              trackId: widget.track.id,
-              stage: target,
-            );
+        ref
+            .read(rewardProgressProvider.notifier)
+            .markStageSeen(trackId: widget.track.id, stage: target);
         setState(() {
           _animatingFromStage = null;
           _animatingToStage = null;
@@ -181,14 +177,16 @@ class _RewardOverlayState extends ConsumerState<RewardOverlay>
     if (trackState.graduated) return widget.track.completeStage;
     // Use the last-seen stage (so the corner shows the old sprite while
     // an advancement is queued).
-    final displayed =
-        trackState.lastSeenStage == 0 ? target : trackState.lastSeenStage;
+    final displayed = trackState.lastSeenStage == 0
+        ? target
+        : trackState.lastSeenStage;
     return widget.track.stageByNumber(displayed);
   }
 
   @override
   Widget build(BuildContext context) {
-    final trackState = ref.watch(rewardProgressProvider)[widget.track.id] ??
+    final trackState =
+        ref.watch(rewardProgressProvider)[widget.track.id] ??
         const RewardTrackState();
     final stage = _displayStage(trackState);
     if (stage == null) return const SizedBox.shrink();
@@ -248,8 +246,9 @@ class _RewardOverlayState extends ConsumerState<RewardOverlay>
     // we don't have an "old sprite". Use the new sprite throughout but
     // delay its first appearance to the flash beat.
     final hasOldSprite = fromStage >= 1;
-    final oldSprite =
-        hasOldSprite ? widget.track.stageByNumber(fromStage).spriteAsset : null;
+    final oldSprite = hasOldSprite
+        ? widget.track.stageByNumber(fromStage).spriteAsset
+        : null;
     final newSprite = widget.track.stageByNumber(toStage).spriteAsset;
 
     return AbsorbPointer(
@@ -316,10 +315,9 @@ class _RewardOverlayState extends ConsumerState<RewardOverlay>
                 child: IgnorePointer(
                   child: Container(
                     color: Colors.black.withValues(
-                      alpha: 0.35 *
-                          Curves.easeInOut.transform(
-                            phaseT(0.05, 0.25),
-                          ) *
+                      alpha:
+                          0.35 *
+                          Curves.easeInOut.transform(phaseT(0.05, 0.25)) *
                           (1 - phaseT(0.75, 0.95)),
                     ),
                   ),

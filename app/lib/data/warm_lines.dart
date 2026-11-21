@@ -60,5 +60,6 @@ String warmHintLine(int level) =>
 /// cleared sub-mode is what hands the egg over. It exists because the sheet's
 /// whole content is the egg, and a beat that falls back to nothing is the
 /// silent screen this replaced.
-const String kRoundCompleteFallbackLine = 'You finished the whole thing. '
+const String kRoundCompleteFallbackLine =
+    'You finished the whole thing. '
     'Nicely done!';

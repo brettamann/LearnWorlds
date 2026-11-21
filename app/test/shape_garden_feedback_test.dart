@@ -45,10 +45,7 @@ void main() {
         container: container,
         child: MaterialApp(
           home: Scaffold(
-            body: ShapeGardenRunner(
-              skipIntro: true,
-              onSequenceComplete: () {},
-            ),
+            body: ShapeGardenRunner(skipIntro: true, onSequenceComplete: () {}),
           ),
         ),
       ),
@@ -57,8 +54,9 @@ void main() {
     return container;
   }
 
-  testWidgets('every shape on the board is wrapped in AnswerFeedback',
-      (tester) async {
+  testWidgets('every shape on the board is wrapped in AnswerFeedback', (
+    tester,
+  ) async {
     await pumpGarden(tester);
     // Round 1 is 3 circles + 4 distractors. The exact count doesn't matter;
     // what matters is that the wrong-answer reaction is attached at all,
@@ -67,8 +65,9 @@ void main() {
     await drainTimers(tester);
   });
 
-  testWidgets('a wrong tap is registered and does not resolve the round',
-      (tester) async {
+  testWidgets('a wrong tap is registered and does not resolve the round', (
+    tester,
+  ) async {
     final container = await pumpGarden(tester);
 
     // Round 1 hunts circles. Its wrong answers are all decor — the
@@ -94,16 +93,17 @@ void main() {
     await drainTimers(tester);
   });
 
-  testWidgets('wrong taps downgrade the round from clean to soft',
-      (tester) async {
+  testWidgets('wrong taps downgrade the round from clean to soft', (
+    tester,
+  ) async {
     final container = await pumpGarden(tester);
 
     Finder byIdFragment(String fragment) => find.byWidgetPredicate(
-          (w) =>
-              w is GestureDetector &&
-              w.key is ValueKey<String> &&
-              (w.key! as ValueKey<String>).value.contains(fragment),
-        );
+      (w) =>
+          w is GestureDetector &&
+          w.key is ValueKey<String> &&
+          (w.key! as ValueKey<String>).value.contains(fragment),
+    );
 
     // One wrong tap, then clear every circle.
     final wrong = find.byWidgetPredicate(

@@ -51,9 +51,7 @@ List<Stroke> numeralStrokes(int n) {
   switch (n) {
     case 0:
       // From the top, round to the left - anticlockwise, the way it is taught.
-      return <Stroke>[
-        _arc(const Offset(0.5, 0.5), 0.3, 0.42, -90, -450),
-      ];
+      return <Stroke>[_arc(const Offset(0.5, 0.5), 0.3, 0.42, -90, -450)];
     case 1:
       return <Stroke>[
         _line(const <Offset>[Offset(0.5, 0.08), Offset(0.5, 0.92)]),

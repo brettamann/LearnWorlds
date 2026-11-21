@@ -188,17 +188,15 @@ class _SortAttributeRoundBodyState
     // adaptive-scaffolding.md: a round that needed a demonstration "counts as
     // soft-success; does NOT advance promotion streak".
     widget.c.finish(
-      gradeRound(
-        misses: _wrongDrops,
-        helped: (_hints?.hintsUsed ?? 0) > 0,
-      ),
+      gradeRound(misses: _wrongDrops, helped: (_hints?.hintsUsed ?? 0) > 0),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final unplaced =
-        _round.items.where((it) => !_placement.containsKey(it.id)).toList();
+    final unplaced = _round.items
+        .where((it) => !_placement.containsKey(it.id))
+        .toList();
     return Column(
       children: [
         // Pool of unplaced shapes — wraps so it stays tappable as items
@@ -429,13 +427,12 @@ class _BinDropTarget extends StatelessWidget {
           onTap: onLabelTap,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white.withValues(
-                alpha: highlighted ? 0.85 : 0.65,
-              ),
+              color: Colors.white.withValues(alpha: highlighted ? 0.85 : 0.65),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color:
-                    highlighted ? Colors.amber.shade400 : AppColors.neutralRim,
+                color: highlighted
+                    ? Colors.amber.shade400
+                    : AppColors.neutralRim,
                 width: highlighted ? 4 : 2,
               ),
               boxShadow: const [
@@ -470,10 +467,7 @@ class _BinDropTarget extends StatelessWidget {
                             SizedBox(
                               width: 30,
                               height: 30,
-                              child: Image.asset(
-                                it.asset,
-                                fit: BoxFit.contain,
-                              ),
+                              child: Image.asset(it.asset, fit: BoxFit.contain),
                             ),
                         ],
                       ),

@@ -83,8 +83,9 @@ void main() {
     );
   });
 
-  testWidgets('a target nothing drew is a target she cannot miss',
-      (tester) async {
+  testWidgets('a target nothing drew is a target she cannot miss', (
+    tester,
+  ) async {
     // The load-bearing one, and the one no widget test caught: flipping this
     // answer turns every gate on an unregistered target into a permanent,
     // silent miss - she would be corrected every time, in a phase whose own
@@ -104,8 +105,9 @@ void main() {
     );
   });
 
-  testWidgets('but one real target among unknowns is still judged',
-      (tester) async {
+  testWidgets('but one real target among unknowns is still judged', (
+    tester,
+  ) async {
     // Mixed lists must not be waved through on the strength of the unknown
     // half, or a named target stops meaning anything the moment a lesson adds
     // a second id the stage does not draw.
@@ -123,8 +125,9 @@ void main() {
     expect(registry.rectOf('nothing'), isNull);
   });
 
-  testWidgets('and the same id keeps the same key across rebuilds',
-      (tester) async {
+  testWidgets('and the same id keeps the same key across rebuilds', (
+    tester,
+  ) async {
     // A fresh GlobalKey per frame would detach and re-attach every target on
     // every tick, and lose the rect at exactly the moment of a tap.
     final registry = LessonTargetRegistry();

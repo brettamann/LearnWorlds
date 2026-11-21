@@ -73,8 +73,10 @@ void main() {
       // shuffle that happens to match.
       final base = planner.plan(seed: 1).map((r) => r.species.id).toList();
       final anyDifferent = List<int>.generate(20, (i) => i + 2).any((seed) {
-        final other =
-            planner.plan(seed: seed).map((r) => r.species.id).toList();
+        final other = planner
+            .plan(seed: seed)
+            .map((r) => r.species.id)
+            .toList();
         return other.toString() != base.toString();
       });
       expect(anyDifferent, isTrue);
@@ -141,8 +143,10 @@ void main() {
 
     test('later rounds do have distractors', () {
       final rounds = planner.plan(seed: 7);
-      final decorLater =
-          rounds.skip(1).expand((r) => r.cells).where((c) => !c.isCreature);
+      final decorLater = rounds
+          .skip(1)
+          .expand((r) => r.cells)
+          .where((c) => !c.isCreature);
       expect(decorLater, isNotEmpty);
     });
 

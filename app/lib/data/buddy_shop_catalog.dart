@@ -76,8 +76,8 @@ const Set<String> kBuddyFreeParts = <String>{
 /// What [id] costs in [kind], or 0 if it is part of the starter wardrobe.
 int buddyPartPrice(BuddyPartKind kind, String id) =>
     kBuddyFreeParts.contains(buddyOwnershipKey(kind, id))
-        ? 0
-        : kBuddyPartPrices[kind]!;
+    ? 0
+    : kBuddyPartPrices[kind]!;
 
 /// Every part of [kind] the shop can offer, as (id, assetPath) pairs.
 /// Arms and legs surface their right-hand sprite, matching the swatch the
@@ -91,13 +91,9 @@ List<({String id, String assetPath})> buddyPartsOfKind(BuddyPartKind kind) {
     case BuddyPartKind.mouth:
       return [for (final o in kBuddyMouths) (id: o.id, assetPath: o.assetPath)];
     case BuddyPartKind.arms:
-      return [
-        for (final o in kBuddyArms) (id: o.id, assetPath: o.rightAsset),
-      ];
+      return [for (final o in kBuddyArms) (id: o.id, assetPath: o.rightAsset)];
     case BuddyPartKind.legs:
-      return [
-        for (final o in kBuddyLegs) (id: o.id, assetPath: o.rightAsset),
-      ];
+      return [for (final o in kBuddyLegs) (id: o.id, assetPath: o.rightAsset)];
     case BuddyPartKind.hat:
       return [for (final o in kBuddyHats) (id: o.id, assetPath: o.assetPath)];
   }

@@ -110,7 +110,8 @@ List<PondRound> pondRoundsFor(String subMode, {int seed = 0}) {
 
 // ---- words ----------------------------------------------------------------
 
-const String kPondIntro = 'Welcome to the lily pond! The frogs want to sit on '
+const String kPondIntro =
+    'Welcome to the lily pond! The frogs want to sit on '
     'the lily pads. Tap a frog, and it hops on.';
 
 const String kPondDemo = 'Watch. Tap a frog, and hop!';
@@ -128,7 +129,8 @@ String pondMissLine(int n) => '${warmMissLine(n)} $kPondCountOn';
 const String kPondSameWay =
     'That is the same way as last time. Let us find a new way!';
 
-const String kPondFinal = 'Every frog found a lily pad. The pond is so happy! '
+const String kPondFinal =
+    'Every frog found a lily pad. The pond is so happy! '
     'Here are some coins for your help.';
 
 /// Between rounds, over the finished pond. Rotated by round.

@@ -93,10 +93,9 @@ void main() {
     });
 
     test('hydrate does not store free parts', () {
-      wardrobe.hydrate(
-        const <String>{'body:purple'},
-        appearance: BuddyAppearance.defaults(),
-      );
+      wardrobe.hydrate(const <String>{
+        'body:purple',
+      }, appearance: BuddyAppearance.defaults());
       // gold / v1 / arm-1 / leg-1 are all free; only the purchase persists.
       expect(container.read(buddyWardrobeProvider), {'body:purple'});
     });
@@ -157,8 +156,9 @@ void main() {
       await drain(tester);
     });
 
-    testWidgets('a second tap on an owned part does not charge again',
-        (tester) async {
+    testWidgets('a second tap on an owned part does not charge again', (
+      tester,
+    ) async {
       final container = await pump(tester, BuddyScreenMode.shop);
       container.read(walletProvider.notifier).award(50);
       await tester.pump();
@@ -175,8 +175,9 @@ void main() {
       await drain(tester);
     });
 
-    testWidgets('create mode hides locked parts and offers a way to the shop',
-        (tester) async {
+    testWidgets('create mode hides locked parts and offers a way to the shop', (
+      tester,
+    ) async {
       await pump(tester, BuddyScreenMode.create);
 
       // Free bodies are pickable...

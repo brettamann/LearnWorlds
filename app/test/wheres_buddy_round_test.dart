@@ -28,8 +28,9 @@ import 'support/harness.dart';
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  testWidgets('three misses: cue, warm cue, demonstration, graded a miss',
-      (tester) async {
+  testWidgets('three misses: cue, warm cue, demonstration, graded a miss', (
+    tester,
+  ) async {
     useViewSize(tester);
     final container = testContainer();
     addTearDown(container.dispose);

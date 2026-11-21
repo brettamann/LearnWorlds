@@ -111,7 +111,8 @@ Map<String, dynamic> buildNarrationExport({
         <String, dynamic>{
           'id': 'observed',
           'title': 'Heard while playing, not in the catalogs',
-          'note': 'Lines assembled from lesson JSON rather than from a Dart '
+          'note':
+              'Lines assembled from lesson JSON rather than from a Dart '
               'catalog, so they only appear here once the lesson that owns '
               'them has been played. Expect this batch to grow.',
           'complete': true,
@@ -144,7 +145,6 @@ NarrationCoverage narrationCoverage({
 String narrationExportJson({
   required Iterable<ObservedCue> observed,
   required Set<String> clipKeys,
-}) =>
-    const JsonEncoder.withIndent('  ').convert(
-      buildNarrationExport(observed: observed, clipKeys: clipKeys),
-    );
+}) => const JsonEncoder.withIndent(
+  '  ',
+).convert(buildNarrationExport(observed: observed, clipKeys: clipKeys));

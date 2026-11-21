@@ -26,14 +26,8 @@ class ScaffoldEngine {
         concept.requiresLesson &&
         concept.lessonId != null &&
         isCanonicalIntroducer) {
-      return PlayLesson(
-        lessonId: concept.lessonId!,
-        conceptId: concept.id,
-      );
+      return PlayLesson(lessonId: concept.lessonId!, conceptId: concept.id);
     }
-    return ProceedAtLayer(
-      conceptId: concept.id,
-      layer: state.currentLayer,
-    );
+    return ProceedAtLayer(conceptId: concept.id, layer: state.currentLayer);
   }
 }

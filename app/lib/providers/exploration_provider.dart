@@ -23,5 +23,6 @@ class ExplorationProgress extends Notifier<Set<int>> {
   bool isCompleted(int code) => state.contains(code);
 }
 
-final explorationProvider =
-    NotifierProvider<ExplorationProgress, Set<int>>(ExplorationProgress.new);
+final explorationProvider = NotifierProvider<ExplorationProgress, Set<int>>(
+  ExplorationProgress.new,
+);

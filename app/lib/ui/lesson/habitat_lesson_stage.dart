@@ -296,26 +296,26 @@ class _BuildSite extends StatelessWidget {
   /// An empty corner: the amber ghost halo `_CornerWidget` draws in the round,
   /// so "a piece goes here" looks the same in the lesson and in the game.
   Widget _ghostDot() => DecoratedBox(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: Colors.amber.shade400.withValues(alpha: 0.85),
-            width: 3,
-          ),
-          color: Colors.amber.withValues(alpha: 0.15),
-        ),
-      );
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      border: Border.all(
+        color: Colors.amber.shade400.withValues(alpha: 0.85),
+        width: 3,
+      ),
+      color: Colors.amber.withValues(alpha: 0.15),
+    ),
+  );
 
   Widget _ghostBar(double thickness) => DecoratedBox(
-        decoration: BoxDecoration(
-          color: Colors.amber.withValues(alpha: 0.20),
-          border: Border.all(
-            color: Colors.amber.shade400.withValues(alpha: 0.85),
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(thickness / 2),
-        ),
-      );
+    decoration: BoxDecoration(
+      color: Colors.amber.withValues(alpha: 0.20),
+      border: Border.all(
+        color: Colors.amber.shade400.withValues(alpha: 0.85),
+        width: 2,
+      ),
+      borderRadius: BorderRadius.circular(thickness / 2),
+    ),
+  );
 }
 
 /// The clay and sticks she will be picking up in a moment.
@@ -400,9 +400,10 @@ class _Hand extends StatelessWidget {
     final asset = switch (carrying) {
       HabitatCarry.clay => AssetPaths.buildAHabitatClayBall,
       HabitatCarry.stick => AssetPaths.buildAHabitatStick,
-      HabitatCarry.roofPiece => blueprint.roof.isEmpty
-          ? AssetPaths.buildAHabitatClayBall
-          : blueprint.roof.first.placedAsset,
+      HabitatCarry.roofPiece =>
+        blueprint.roof.isEmpty
+            ? AssetPaths.buildAHabitatClayBall
+            : blueprint.roof.first.placedAsset,
       HabitatCarry.none => null,
     };
     return AnimatedPositioned(

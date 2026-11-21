@@ -145,9 +145,7 @@ class MapRailButton extends StatelessWidget {
                   height: 1.1,
                   fontWeight: FontWeight.w700,
                   color: _kInk,
-                  shadows: [
-                    Shadow(color: Colors.white70, blurRadius: 4),
-                  ],
+                  shadows: [Shadow(color: Colors.white70, blurRadius: 4)],
                 ),
               ),
             ),

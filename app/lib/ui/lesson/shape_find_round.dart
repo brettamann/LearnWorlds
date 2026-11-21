@@ -123,8 +123,10 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
       default:
         text = 'One more time! Find every $_targetDisplay.';
     }
-    ref.narration
-        .say(text, cueId: 'find:${widget.targetKind}:r$_currentRound:prompt');
+    ref.narration.say(
+      text,
+      cueId: 'find:${widget.targetKind}:r$_currentRound:prompt',
+    );
   }
 
   void _advanceToNextRound() {
@@ -150,8 +152,9 @@ class _ShapeFindRoundState extends ConsumerState<ShapeFindRound> {
         _burstCounters[p.id] = (_burstCounters[p.id] ?? 0) + 1;
       });
       ref.read(feedbackEngineProvider).countStep(_tappedIds.length);
-      final remaining =
-          _placements.where((q) => q.isTarget && !_tappedIds.contains(q.id));
+      final remaining = _placements.where(
+        (q) => q.isTarget && !_tappedIds.contains(q.id),
+      );
       if (remaining.isEmpty) {
         final isLastRound = _currentRound + 1 >= widget.roundsPerShape;
         if (isLastRound) {

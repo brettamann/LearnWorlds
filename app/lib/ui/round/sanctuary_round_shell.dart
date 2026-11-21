@@ -132,10 +132,8 @@ CpaLayer supportLayer(CpaLayer layer, {int misses = 0}) {
 /// touch. So anything a body puts in its bottom strip has to start this far in.
 const double kBuddyCornerReserve = 110;
 
-typedef RoundBodyBuilder = Widget Function(
-  BuildContext context,
-  RoundContext c,
-);
+typedef RoundBodyBuilder =
+    Widget Function(BuildContext context, RoundContext c);
 
 enum _ShellPhase { intro, playing, celebrating, transition, finale }
 
@@ -216,8 +214,9 @@ class SanctuaryRoundShell extends ConsumerStatefulWidget {
 }
 
 class _SanctuaryRoundShellState extends ConsumerState<SanctuaryRoundShell> {
-  late _ShellPhase _phase =
-      widget.skipIntro ? _ShellPhase.playing : _ShellPhase.intro;
+  late _ShellPhase _phase = widget.skipIntro
+      ? _ShellPhase.playing
+      : _ShellPhase.intro;
   int _round = 0;
   int _completed = 0;
   int _asideToken = 0;
@@ -339,7 +338,9 @@ class _SanctuaryRoundShellState extends ConsumerState<SanctuaryRoundShell> {
 
   void _grade(String conceptId, RoundResult result) {
     if (!mounted || !widget.gradeRounds) return;
-    ref.read(roundCoordinatorProvider).resolveRound(
+    ref
+        .read(roundCoordinatorProvider)
+        .resolveRound(
           activityId: widget.activityId,
           conceptId: conceptId,
           result: result,

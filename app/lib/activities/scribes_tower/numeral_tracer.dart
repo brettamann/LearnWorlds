@@ -223,9 +223,7 @@ class _TraceGeometry {
     tolerance = math.max(34, h * 0.1);
     thickness = math.max(26, h * 0.085);
     for (final s in strokes) {
-      final pts = <Offset>[
-        for (final p in s) numeralPointIn(size, numeral, p),
-      ];
+      final pts = <Offset>[for (final p in s) numeralPointIn(size, numeral, p)];
       final cum = <double>[0];
       for (var i = 1; i < pts.length; i++) {
         cum.add(cum.last + (pts[i] - pts[i - 1]).distance);

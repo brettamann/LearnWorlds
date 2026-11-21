@@ -37,11 +37,11 @@ Set<int> exploredThrough(String activityId) {
 
 /// The activity behind each visible lesson node.
 List<String> visibleActivities(Set<int> explored) => [
-      for (final code in kSanctuarySequence)
-        if (code != kSanctuaryCutsceneCode &&
-            isSanctuaryNodeVisible(code, explored))
-          kSanctuaryActivityByCode[code]!,
-    ];
+  for (final code in kSanctuarySequence)
+    if (code != kSanctuaryCutsceneCode &&
+        isSanctuaryNodeVisible(code, explored))
+      kSanctuaryActivityByCode[code]!,
+];
 
 void main() {
   group('the path', () {

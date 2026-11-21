@@ -28,9 +28,9 @@ import 'support/harness.dart';
 
 /// Every (id, left, right) the game can equip.
 List<(String, String, String)> _pairs() => <(String, String, String)>[
-      for (final o in kBuddyArms) (o.id, o.leftAsset, o.rightAsset),
-      for (final o in kBuddyLegs) (o.id, o.leftAsset, o.rightAsset),
-    ];
+  for (final o in kBuddyArms) (o.id, o.leftAsset, o.rightAsset),
+  for (final o in kBuddyLegs) (o.id, o.leftAsset, o.rightAsset),
+];
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -81,9 +81,9 @@ void main() {
       // shop tab exists at all, so it is the difference between two visible
       // categories and two absent ones.
       for (final kind in [BuddyPartKind.arms, BuddyPartKind.legs]) {
-        final forSale = buddyPartsOfKind(kind)
-            .where((p) => buddyPartPrice(kind, p.id) > 0)
-            .toList();
+        final forSale = buddyPartsOfKind(
+          kind,
+        ).where((p) => buddyPartPrice(kind, p.id) > 0).toList();
         expect(
           forSale,
           isNotEmpty,

@@ -14,10 +14,7 @@ class NarrationCue {
   const NarrationCue({required this.at, required this.text});
 
   factory NarrationCue.fromJson(Map<String, dynamic> json) {
-    return NarrationCue(
-      at: json['at'] as String,
-      text: json['text'] as String,
-    );
+    return NarrationCue(at: json['at'] as String, text: json['text'] as String);
   }
 
   /// Either a duration string like "5s" / "11s" (iShow) or a cueId
@@ -267,8 +264,9 @@ class YouDoPhase {
     return YouDoPhase(
       activityId: json['activityId'] as String,
       subMode: json['subMode'] as String,
-      roundParameters:
-          Map<String, dynamic>.from(json['roundParameters'] as Map),
+      roundParameters: Map<String, dynamic>.from(
+        json['roundParameters'] as Map,
+      ),
     );
   }
 
@@ -360,9 +358,9 @@ enum LessonStage {
   final String id;
 
   static LessonStage fromId(String id) => values.firstWhere(
-        (s) => s.id == id,
-        orElse: () => throw FormatException('Unknown lesson stage "$id"'),
-      );
+    (s) => s.id == id,
+    orElse: () => throw FormatException('Unknown lesson stage "$id"'),
+  );
 
   /// Stages that are their own guided practice, and so must not also run
   /// the generic We-Try: asking her to do the same thing twice in a row.
@@ -379,9 +377,9 @@ enum LessonBackdrop {
   final String id;
 
   static LessonBackdrop fromId(String id) => values.firstWhere(
-        (b) => b.id == id,
-        orElse: () => throw FormatException('Unknown lesson backdrop "$id"'),
-      );
+    (b) => b.id == id,
+    orElse: () => throw FormatException('Unknown lesson backdrop "$id"'),
+  );
 }
 
 /// How a lesson is presented. Authored in the lesson JSON; it used to be

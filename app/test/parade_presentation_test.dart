@@ -79,8 +79,9 @@ void main() {
   }
 
   group('the card that names the creature', () {
-    testWidgets('opens the round, naming what she is about to count',
-        (tester) async {
+    testWidgets('opens the round, naming what she is about to count', (
+      tester,
+    ) async {
       await pumpParade(tester);
       expect(card(), findsOneWidget);
       expect(find.text('Fawn'), findsOneWidget);
@@ -99,13 +100,15 @@ void main() {
 
     testWidgets('counting cannot start until it is gone', (tester) async {
       await pumpParade(tester);
-      await tester
-          .tapAt(tester.getCenter(find.byKey(const ValueKey('fawn-0'))));
+      await tester.tapAt(
+        tester.getCenter(find.byKey(const ValueKey('fawn-0'))),
+      );
       await tester.pump();
       expect(
         find.text('0 / 3'),
         findsOneWidget,
-        reason: 'a tap through the card would count a creature she has not '
+        reason:
+            'a tap through the card would count a creature she has not '
             'been introduced to yet',
       );
       await tearDownTree(tester);
@@ -131,8 +134,9 @@ void main() {
   });
 
   group('Buddy', () {
-    testWidgets('stands in the meadow at a size worth noticing',
-        (tester) async {
+    testWidgets('stands in the meadow at a size worth noticing', (
+      tester,
+    ) async {
       await pumpParade(tester);
       final buddy = tester.widget<BuddyCompanion>(find.byType(BuddyCompanion));
       expect(
@@ -159,7 +163,8 @@ void main() {
       expect(
         visiting,
         isNot(home),
-        reason: 'the hint is Buddy going to the creature. A child who cannot '
+        reason:
+            'the hint is Buddy going to the creature. A child who cannot '
             'read the spoken nudge can still see where her friend went.',
       );
 
@@ -185,8 +190,9 @@ void main() {
       expect(tester.getTopLeft(find.byType(BuddyCompanion)), isNot(home));
 
       // Help parked over a creature after she has moved on is in the way.
-      await tester
-          .tapAt(tester.getCenter(find.byKey(const ValueKey('fawn-0'))));
+      await tester.tapAt(
+        tester.getCenter(find.byKey(const ValueKey('fawn-0'))),
+      );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 900));
       expect(tester.getTopLeft(find.byType(BuddyCompanion)), home);
@@ -225,8 +231,9 @@ void main() {
   });
 
   group('RevealCardFace', () {
-    testWidgets('shows the prompt when one is given, and not otherwise',
-        (tester) async {
+    testWidgets('shows the prompt when one is given, and not otherwise', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -282,8 +289,9 @@ void main() {
       await tester.pump(const Duration(seconds: 40));
     });
 
-    testWidgets('shows the tap prompt and waits to be dismissed',
-        (tester) async {
+    testWidgets('shows the tap prompt and waits to be dismissed', (
+      tester,
+    ) async {
       await pumpReveal(tester);
       expect(find.text(kCreatureCards.first.displayName), findsOneWidget);
       expect(find.text('Tap anywhere'), findsOneWidget);
@@ -336,8 +344,9 @@ void main() {
   });
 
   group('Buddy after a demonstration', () {
-    testWidgets('walks back rather than standing over what it counted',
-        (tester) async {
+    testWidgets('walks back rather than standing over what it counted', (
+      tester,
+    ) async {
       // The demonstration is the one hint the child does not answer, so
       // nothing else was sending Buddy home and it stood over the creature it
       // had just counted for the rest of the round.

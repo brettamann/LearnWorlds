@@ -130,9 +130,8 @@ class _SanctuaryMapScreenState extends ConsumerState<SanctuaryMapScreen> {
                             loading: () => const Center(
                               child: CircularProgressIndicator(),
                             ),
-                            error: (e, _) => Center(
-                              child: Text('Map load failed: $e'),
-                            ),
+                            error: (e, _) =>
+                                Center(child: Text('Map load failed: $e')),
                             data: (data) => _MapStack(
                               key: _mapKey,
                               anchors: data.anchors,
@@ -172,8 +171,9 @@ class _SanctuaryMapScreenState extends ConsumerState<SanctuaryMapScreen> {
                         MapRailButton(
                           key: const ValueKey('sanctuary-decorate'),
                           icon: _decorating ? Icons.check : Icons.park,
-                          caption:
-                              _decorating ? kLabelDone : kRailDecorateLabel,
+                          caption: _decorating
+                              ? kLabelDone
+                              : kRailDecorateLabel,
                           active: _decorating,
                           onPressed: _toggleDecorating,
                         ),
@@ -253,8 +253,9 @@ class _SanctuaryMapScreenState extends ConsumerState<SanctuaryMapScreen> {
     // Dropped outside the map: nothing happens, and nothing is said. She
     // still has the item; there is no mistake here to report.
     if (at == null) return;
-    final placed =
-        ref.read(sanctuaryDecorProvider.notifier).place(item.id, at.x, at.y);
+    final placed = ref
+        .read(sanctuaryDecorProvider.notifier)
+        .place(item.id, at.x, at.y);
     if (placed == null) return;
     ref.read(feedbackEngineProvider).correct();
   }
@@ -311,10 +312,12 @@ class _SanctuaryMapScreenState extends ConsumerState<SanctuaryMapScreen> {
     // drew as a grey question mark over the words `frame-only`. (Most
     // activities mark their *default* sub-mode as the floor too; that one is
     // the first thing she plays and stays. See SubMode.isChainStep.)
-    final completed =
-        ref.read(subModeProgressProvider.notifier).completedFor(activity.id);
-    final regular =
-        activity.subModes.where((m) => m.isChainStep).toList(growable: false);
+    final completed = ref
+        .read(subModeProgressProvider.notifier)
+        .completedFor(activity.id);
+    final regular = activity.subModes
+        .where((m) => m.isChainStep)
+        .toList(growable: false);
     final entries = <SubModePickerEntry>[];
     var nextAssigned = false;
     for (final subMode in regular) {
@@ -369,8 +372,9 @@ class _SanctuaryMapScreenState extends ConsumerState<SanctuaryMapScreen> {
       );
       if (pickedId == null) return; // dismissed
       if (!context.mounted) return;
-      chosenSubMode =
-          entries.firstWhere((e) => e.subMode.id == pickedId).subMode;
+      chosenSubMode = entries
+          .firstWhere((e) => e.subMode.id == pickedId)
+          .subMode;
     }
 
     launchSubMode(context, ref, activity: activity, subMode: chosenSubMode);
@@ -527,9 +531,7 @@ class _MapStack extends StatelessWidget {
             // Reward overlay sits above everything else so the advancement
             // animation can take over the whole map area when it plays.
             // See specs/shared/reward-tracks.md.
-            Positioned.fill(
-              child: RewardOverlay(track: kMysteryEggTrack),
-            ),
+            Positioned.fill(child: RewardOverlay(track: kMysteryEggTrack)),
           ],
         );
       },
@@ -552,9 +554,7 @@ class _MapStack extends StatelessWidget {
     final isBannerPass = renderMode != MapNodeRenderMode.nodeOnly;
     if (code == kSanctuarySequence.first) {
       return MapNodeWithBanner(
-        key: ValueKey(
-          isBannerPass ? 'node-cutscene' : 'node-cutscene-disc',
-        ),
+        key: ValueKey(isBannerPass ? 'node-cutscene' : 'node-cutscene-disc'),
         center: centre,
         nodeDiameter: nodeDiameter,
         label: kSanctuaryCutsceneLabel,
@@ -577,7 +577,8 @@ class _MapStack extends StatelessWidget {
     // Registered is not the same as playable: three more are in the registry
     // with no runner behind them, and routing to one of those lands a
     // pre-reader on a sentence in English on a blank screen.
-    final awake = activity != null &&
+    final awake =
+        activity != null &&
         conceptRegistry.valueOrNull != null &&
         isActivityPlayable(activityId);
     return MapNodeWithBanner(

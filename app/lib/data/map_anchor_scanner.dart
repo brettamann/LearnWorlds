@@ -60,8 +60,9 @@ class MapAnchorScanner {
     final frame = await codec.getNextFrame();
     final image = frame.image;
     try {
-      final byteData =
-          await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+      final byteData = await image.toByteData(
+        format: ui.ImageByteFormat.rawRgba,
+      );
       if (byteData == null) {
         throw StateError(
           'Failed to read pixels from $assetPath (toByteData returned null)',
@@ -79,8 +80,9 @@ class MapAnchorScanner {
       // Always log the actual codes found + the codes still missing inside
       // the expected band — makes a drifted single anchor easy to spot.
       final foundCodes = found.keys.toList()..sort();
-      final foundHex =
-          foundCodes.map((c) => '0x${c.toRadixString(16)}').join(', ');
+      final foundHex = foundCodes
+          .map((c) => '0x${c.toRadixString(16)}')
+          .join(', ');
       final missingCodes = <String>[
         for (var c = minBlue; c <= maxBlue; c++)
           if (!found.containsKey(c)) '0x${c.toRadixString(16)}',

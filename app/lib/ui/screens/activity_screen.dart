@@ -118,7 +118,8 @@ class ActivityScreen extends ConsumerWidget {
     // completed", because the egg now also advances per cleared sub-mode.
     // The gift moment is simply the track leaving stage zero — whichever
     // source got it there.
-    final eggBefore = ref.read(rewardProgressProvider)[kMysteryEggTrack.id] ??
+    final eggBefore =
+        ref.read(rewardProgressProvider)[kMysteryEggTrack.id] ??
         const RewardTrackState();
     final stageBefore = kMysteryEggTrack.computeTargetStage(
       eggBefore.completedActivities,
@@ -128,7 +129,8 @@ class ActivityScreen extends ConsumerWidget {
 
     _markActivityCompleted(ref);
 
-    final eggAfter = ref.read(rewardProgressProvider)[kMysteryEggTrack.id] ??
+    final eggAfter =
+        ref.read(rewardProgressProvider)[kMysteryEggTrack.id] ??
         const RewardTrackState();
     final stageAfter = kMysteryEggTrack.computeTargetStage(
       eggAfter.completedActivities,
@@ -172,13 +174,15 @@ class ActivityScreen extends ConsumerWidget {
     final activity = registry?.byIdOrNull(activityId);
     if (activity == null) return null;
     final playedId = launch.subModeFor(activity);
-    final conceptId =
-        activity.entryConceptIdFor(activity.subModeById(playedId));
+    final conceptId = activity.entryConceptIdFor(
+      activity.subModeById(playedId),
+    );
     return nextSubModeAfter(
       activity: activity,
       playedId: playedId,
-      completed:
-          ref.read(subModeProgressProvider.notifier).completedFor(activityId),
+      completed: ref
+          .read(subModeProgressProvider.notifier)
+          .completedFor(activityId),
       state: ref.read(kidProgressProvider.notifier).getOrCreate(conceptId),
     );
   }
@@ -190,8 +194,10 @@ class ActivityScreen extends ConsumerWidget {
     WidgetRef ref,
     SubMode subMode,
   ) {
-    final activity =
-        ref.read(activityRegistryProvider).valueOrNull?.byIdOrNull(activityId);
+    final activity = ref
+        .read(activityRegistryProvider)
+        .valueOrNull
+        ?.byIdOrNull(activityId);
     if (activity == null) {
       context.go(Routes.sanctuary);
       return;
@@ -206,18 +212,21 @@ class ActivityScreen extends ConsumerWidget {
   /// so the kid only meets Haddock-with-egg after finishing the full
   /// counting curriculum, not just the first sub-mode.
   void _markActivityCompleted(WidgetRef ref) {
-    final activity =
-        ref.read(activityRegistryProvider).valueOrNull?.byIdOrNull(activityId);
+    final activity = ref
+        .read(activityRegistryProvider)
+        .valueOrNull
+        ?.byIdOrNull(activityId);
     final subMode = launch.subModeId ?? activity?.defaultSubMode.id;
     if (subMode == null) return;
-    ref.read(subModeProgressProvider.notifier).markCompleted(
-          activityId: activityId,
-          subModeId: subMode,
-        );
+    ref
+        .read(subModeProgressProvider.notifier)
+        .markCompleted(activityId: activityId, subModeId: subMode);
     // Unconditional, and deliberately *not* gated on the whole activity being
     // done: this is the beat the egg now advances on. Keyed by sub-mode so
     // replaying one she already cleared can't push the track forward again.
-    ref.read(rewardProgressProvider.notifier).markCompletionEvent(
+    ref
+        .read(rewardProgressProvider.notifier)
+        .markCompletionEvent(
           trackId: kMysteryEggTrack.id,
           key: '$activityId/$subMode',
         );
@@ -226,7 +235,9 @@ class ActivityScreen extends ConsumerWidget {
       if (code != null) {
         ref.read(explorationProvider.notifier).markCompleted(code);
       }
-      ref.read(rewardProgressProvider.notifier).markActivityCompleted(
+      ref
+          .read(rewardProgressProvider.notifier)
+          .markActivityCompleted(
             trackId: kMysteryEggTrack.id,
             activityId: activityId,
           );
@@ -248,8 +259,9 @@ class ActivityScreen extends ConsumerWidget {
     if (registry == null) return false;
     final activity = registry.byIdOrNull(activityId);
     if (activity == null) return false;
-    final completed =
-        ref.read(subModeProgressProvider.notifier).completedFor(activityId);
+    final completed = ref
+        .read(subModeProgressProvider.notifier)
+        .completedFor(activityId);
     for (final subMode in activity.subModes) {
       if (!subMode.isChainStep) continue;
       if (!completed.contains(subMode.id)) return false;

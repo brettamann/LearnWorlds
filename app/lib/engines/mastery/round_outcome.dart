@@ -42,10 +42,10 @@ RoundResult gradeRound({
 /// whatever we call it. The gap between 5 and 1 is enough to make clean
 /// rounds feel better without making a hard one feel like a loss.
 int coinsFor(RoundResult result) => switch (result) {
-      RoundResult.success => kCoinsForCleanRound,
-      RoundResult.softSuccess => 3,
-      RoundResult.failure => 1,
-    };
+  RoundResult.success => kCoinsForCleanRound,
+  RoundResult.softSuccess => 3,
+  RoundResult.failure => 1,
+};
 
 /// What a clean round pays - the most a round can earn.
 const int kCoinsForCleanRound = 5;

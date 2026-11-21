@@ -84,8 +84,10 @@ class NarrationCueLog extends Notifier<Map<String, ObservedCue>> {
         final map = entry as Map<String, dynamic>;
         final text = narrationTextNormalize(map['text'] as String? ?? '');
         if (text.isEmpty) continue;
-        restored[text] =
-            ObservedCue(text: text, cueId: map['cueId'] as String?);
+        restored[text] = ObservedCue(
+          text: text,
+          cueId: map['cueId'] as String?,
+        );
       }
       // Anything spoken while we were still reading wins — it is newer.
       state = <String, ObservedCue>{...restored, ...state};
@@ -113,5 +115,5 @@ class NarrationCueLog extends Notifier<Map<String, ObservedCue>> {
 
 final narrationCueLogProvider =
     NotifierProvider<NarrationCueLog, Map<String, ObservedCue>>(
-  NarrationCueLog.new,
-);
+      NarrationCueLog.new,
+    );

@@ -60,15 +60,17 @@ class MasteryEngine {
       // Concrete is the floor — there is no simpler representation to fall
       // back to, so a struggling kid stays there, the failures keep counting,
       // and `isStrugglingAtFloor` sends her one sub-mode simpler next.
-      final shouldDemote = failures >= demoteAfterFailures &&
+      final shouldDemote =
+          failures >= demoteAfterFailures &&
           state.currentLayer != CpaLayer.concrete;
       return state.copyWith(
         currentStreak: 0,
         // Reset on demote so the kid gets a full two attempts at the easier
         // layer before anything moves again.
         consecutiveFailures: shouldDemote ? 0 : failures,
-        currentLayer:
-            shouldDemote ? _demote(state.currentLayer) : state.currentLayer,
+        currentLayer: shouldDemote
+            ? _demote(state.currentLayer)
+            : state.currentLayer,
         sessionIds: sessions,
         daysTouched: days,
         firstTouchedAt: firstTouched,
@@ -92,8 +94,8 @@ class MasteryEngine {
         status: state.status == MasteryStatus.notStarted
             ? MasteryStatus.practicing
             : (state.status == MasteryStatus.introduced
-                ? MasteryStatus.practicing
-                : state.status),
+                  ? MasteryStatus.practicing
+                  : state.status),
       );
     }
 
@@ -104,8 +106,8 @@ class MasteryEngine {
     var newStatus = state.status == MasteryStatus.notStarted
         ? MasteryStatus.practicing
         : (state.status == MasteryStatus.introduced
-            ? MasteryStatus.practicing
-            : state.status);
+              ? MasteryStatus.practicing
+              : state.status);
 
     if (newStreak >= _promoteStreak && newLayer != CpaLayer.abstract) {
       newLayer = _promote(newLayer);
@@ -180,7 +182,8 @@ class MasteryEngine {
         days.length >= _masteryDays;
   }
 
-  String _dayKey(DateTime at) => '${at.year.toString().padLeft(4, '0')}-'
+  String _dayKey(DateTime at) =>
+      '${at.year.toString().padLeft(4, '0')}-'
       '${at.month.toString().padLeft(2, '0')}-'
       '${at.day.toString().padLeft(2, '0')}';
 }

@@ -75,7 +75,8 @@ void main() {
     expect(
       missing,
       isEmpty,
-      reason: 'these lines would speak in the browser synth voice:\n'
+      reason:
+          'these lines would speak in the browser synth voice:\n'
           '${missing.entries.map((e) => '  ${e.key}: ${e.value.join("\n    ")}').join("\n")}\n'
           'Re-render — see the header of this file.',
     );

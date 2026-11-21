@@ -29,13 +29,9 @@ void useViewSize(WidgetTester tester, [Size size = kTabletSize]) {
 ProviderContainer testContainer({
   String sessionId = 'test',
   List<Override> overrides = const [],
-}) =>
-    ProviderContainer(
-      overrides: [
-        sessionIdProvider.overrideWithValue(sessionId),
-        ...overrides,
-      ],
-    );
+}) => ProviderContainer(
+  overrides: [sessionIdProvider.overrideWithValue(sessionId), ...overrides],
+);
 
 /// Loads the activity and concept registries for real. They read JSON out of
 /// the asset bundle, whose cache the test binding clears between tests, so

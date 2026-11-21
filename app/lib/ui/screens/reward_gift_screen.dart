@@ -99,10 +99,7 @@ class _RewardGiftScreenState extends ConsumerState<RewardGiftScreen> {
         children: [
           // Same meadow background as the lesson + parade so this scene
           // reads as a direct continuation rather than a separate place.
-          Image.asset(
-            AssetPaths.countingParadeMeadow,
-            fit: BoxFit.cover,
-          ),
+          Image.asset(AssetPaths.countingParadeMeadow, fit: BoxFit.cover),
           // Soft dim so the keeper + egg pop forward against the meadow.
           Container(color: Colors.black.withValues(alpha: 0.18)),
           SafeArea(

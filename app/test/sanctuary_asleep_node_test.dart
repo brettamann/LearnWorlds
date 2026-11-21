@@ -43,16 +43,16 @@ import 'support/harness.dart';
 /// "the node went nowhere", which is indistinguishable from the bug these
 /// tests exist to catch.
 MapAnchors _fakeAnchors() => MapAnchors(
-      anchors: <int, Offset>{
-        for (var i = 0; i < kSanctuarySequence.length; i++)
-          kSanctuarySequence[i]: Offset(
-            0.13 + 0.33 * (i % 3),
-            0.11 + 0.22 * (i ~/ 3),
-          ),
-      },
-      imageWidth: 1024,
-      imageHeight: 1024,
-    );
+  anchors: <int, Offset>{
+    for (var i = 0; i < kSanctuarySequence.length; i++)
+      kSanctuarySequence[i]: Offset(
+        0.13 + 0.33 * (i % 3),
+        0.11 + 0.22 * (i ~/ 3),
+      ),
+  },
+  imageWidth: 1024,
+  imageHeight: 1024,
+);
 
 /// A silent engine — these tests are about pictures and words, not audio.
 class _QuietEngine extends SfxEngine {
@@ -143,14 +143,12 @@ void main() {
   /// absolutely-positioned child, so its own centre is the middle of the map
   /// and a tap there lands on the artwork.
   Finder banner(String activityId) => find
-      .descendant(
-        of: node(activityId),
-        matching: find.byType(GestureDetector),
-      )
+      .descendant(of: node(activityId), matching: find.byType(GestureDetector))
       .first;
 
-  testWidgets('a sleeping node is drawn, and drawn differently',
-      (tester) async {
+  testWidgets('a sleeping node is drawn, and drawn differently', (
+    tester,
+  ) async {
     await pumpMap(tester, {kSanctuaryCutsceneCode, 0xF1, 0xF2});
 
     final asleep = tester.widget<MapNodeWithBanner>(node('ten-frame-pond'));
@@ -166,8 +164,9 @@ void main() {
     expect(awake.numberInside, isNotNull);
   });
 
-  testWidgets('the activities behind an unbuilt one are reachable',
-      (tester) async {
+  testWidgets('the activities behind an unbuilt one are reachable', (
+    tester,
+  ) async {
     // The regression that matters. Ten-Frame Pond is node three and has no
     // runner, so under the old one-step reveal the map stopped there and
     // Build-a-Habitat and Where's Buddy — both finished — were unreachable.
@@ -182,10 +181,14 @@ void main() {
     );
   });
 
-  testWidgets('tapping a sleeping node says why, and goes nowhere',
-      (tester) async {
-    final (router, container) =
-        await pumpMap(tester, {kSanctuaryCutsceneCode, 0xF1, 0xF2});
+  testWidgets('tapping a sleeping node says why, and goes nowhere', (
+    tester,
+  ) async {
+    final (router, container) = await pumpMap(tester, {
+      kSanctuaryCutsceneCode,
+      0xF1,
+      0xF2,
+    });
 
     await tester.tap(banner('ten-frame-pond'));
     await tester.pump();
@@ -202,8 +205,9 @@ void main() {
     );
   });
 
-  testWidgets('the nodes this unblocked actually open something',
-      (tester) async {
+  testWidgets('the nodes this unblocked actually open something', (
+    tester,
+  ) async {
     // Opening the path is only worth anything if what is behind it works. Both
     // of these route through ScaffoldEngine on a first tap, which needs a
     // lesson to exist for their entry concept (K.G.5 and K.G.1) — so this is
@@ -223,7 +227,8 @@ void main() {
       for (var i = 0; i < 40 && !opened; i++) {
         await tester.pump(const Duration(milliseconds: 50));
         final path = router.routerDelegate.currentConfiguration.uri.path;
-        opened = path.startsWith('/lesson/') ||
+        opened =
+            path.startsWith('/lesson/') ||
             path.startsWith('/activity/') ||
             // More than one playable sub-mode opens the picker instead of
             // routing, which is just as much "it opened something".
@@ -237,8 +242,9 @@ void main() {
     }
   });
 
-  testWidgets('a node the registry never heard of still reads as a place',
-      (tester) async {
+  testWidgets('a node the registry never heard of still reads as a place', (
+    tester,
+  ) async {
     // care-pantry has a spec and a map position but no registry entry, so the
     // map had nothing for the parchment and printed the id.
     await pumpMap(tester, {kSanctuaryCutsceneCode, 0xF1, 0xF2, 0xF4});

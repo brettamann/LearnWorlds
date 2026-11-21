@@ -75,10 +75,7 @@ class HintThresholds {
 }
 
 class HintLadder {
-  HintLadder({
-    required this.onLevel,
-    this.thresholds = const HintThresholds(),
-  });
+  HintLadder({required this.onLevel, this.thresholds = const HintThresholds()});
 
   /// Fired each time the ladder climbs. Never fired for [HintLevel.none] —
   /// resets are silent, because a kid who just tapped doesn't need to be told
@@ -137,13 +134,13 @@ class HintLadder {
     final next = switch (_level) {
       HintLevel.none => (HintLevel.highlight, thresholds.highlightSec),
       HintLevel.highlight => (
-          HintLevel.point,
-          thresholds.pointSec - thresholds.highlightSec,
-        ),
+        HintLevel.point,
+        thresholds.pointSec - thresholds.highlightSec,
+      ),
       HintLevel.point => (
-          HintLevel.demonstrate,
-          thresholds.demonstrateSec - thresholds.pointSec,
-        ),
+        HintLevel.demonstrate,
+        thresholds.demonstrateSec - thresholds.pointSec,
+      ),
       // Top of the ladder: stop climbing. The demonstration hands control
       // back, and the next tap restarts the whole cycle.
       HintLevel.demonstrate => null,

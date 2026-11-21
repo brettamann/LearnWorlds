@@ -207,9 +207,7 @@ class ClearingLessonStage extends StatelessWidget {
       top: target.dy * h - drawn / 2,
       width: drawn,
       height: drawn,
-      child: IgnorePointer(
-        child: BuddyWidget(size: drawn),
-      ),
+      child: IgnorePointer(child: BuddyWidget(size: drawn)),
     );
   }
 }

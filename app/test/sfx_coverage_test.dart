@@ -56,13 +56,15 @@ String _stripComments(String source) {
 /// Every `.dart` file under `lib/`, keyed by its repo-relative path.
 Map<String, String> _sources() {
   final out = <String, String>{};
-  for (final file in Directory('lib')
-      .listSync(recursive: true)
-      .whereType<File>()
-      .where((f) => f.path.endsWith('.dart'))) {
+  for (final file
+      in Directory('lib')
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((f) => f.path.endsWith('.dart'))) {
     final path = file.path.replaceAll(r'\', '/');
-    out[path.substring(path.indexOf('lib/'))] =
-        _stripComments(file.readAsStringSync());
+    out[path.substring(path.indexOf('lib/'))] = _stripComments(
+      file.readAsStringSync(),
+    );
   }
   return out;
 }
@@ -84,7 +86,8 @@ void main() {
     expect(
       dead,
       isEmpty,
-      reason: 'these sounds are bundled into every build and played by '
+      reason:
+          'these sounds are bundled into every build and played by '
           'nothing: $dead',
     );
   });
@@ -94,7 +97,8 @@ void main() {
       expect(
         File(entry.value.asset).existsSync(),
         isTrue,
-        reason: '${entry.key.name} points at ${entry.value.asset}, which is '
+        reason:
+            '${entry.key.name} points at ${entry.value.asset}, which is '
             'not in the repo',
       );
     }
@@ -116,7 +120,8 @@ void main() {
     expect(
       gate,
       contains('uiTap()'),
-      reason: 'the one wrapper every control goes through no longer makes a '
+      reason:
+          'the one wrapper every control goes through no longer makes a '
           'sound, so most controls no longer do',
     );
   });

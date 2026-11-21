@@ -117,7 +117,8 @@ class LessonScene extends ChangeNotifier {
       case 'pointer-appear':
         pointerVisible = true;
         handAtTarget = false;
-        final t = resolveTargetId(step.params['position']) ??
+        final t =
+            resolveTargetId(step.params['position']) ??
             resolveTargetId(step.params['target']);
         if (t != null) pointerTargetId = t;
       case 'pointer-touch':
@@ -218,9 +219,9 @@ class LessonScene extends ChangeNotifier {
   /// the stage; the hand is positioned in stage space, so each spot is mapped
   /// back out through that rectangle.
   static Offset _stageSpot(Offset inBlueprintSpace) => Offset(
-        kHabitatSiteRect.left + inBlueprintSpace.dx * kHabitatSiteRect.width,
-        kHabitatSiteRect.top + inBlueprintSpace.dy * kHabitatSiteRect.height,
-      );
+    kHabitatSiteRect.left + inBlueprintSpace.dx * kHabitatSiteRect.width,
+    kHabitatSiteRect.top + inBlueprintSpace.dy * kHabitatSiteRect.height,
+  );
 
   static Offset _edgeSpot(int i) {
     final pair = _blueprint.edges[i];

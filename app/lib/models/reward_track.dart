@@ -136,49 +136,57 @@ final RewardTrack kMysteryEggTrack = RewardTrack(
   stages: List<RewardStage>.unmodifiable([
     RewardStage(
       spriteAsset: AssetPaths.kMysteryEggStage(1),
-      message: 'Haddock gave you this mysterious egg to look after. '
+      message:
+          'Haddock gave you this mysterious egg to look after. '
           'Keep counting and see what hatches!',
       ambient: RewardAmbient.still,
     ),
     RewardStage(
       spriteAsset: AssetPaths.kMysteryEggStage(2),
-      message: 'The egg gave a little jump just now. Strange... '
+      message:
+          'The egg gave a little jump just now. Strange... '
           'keep at your studies!',
       ambient: RewardAmbient.gentle,
     ),
     RewardStage(
       spriteAsset: AssetPaths.kMysteryEggStage(3),
-      message: "A small crack has appeared on the egg's shell. Whatever's "
+      message:
+          "A small crack has appeared on the egg's shell. Whatever's "
           "inside is getting restless — don't stop now!",
       ambient: RewardAmbient.gentle,
     ),
     RewardStage(
       spriteAsset: AssetPaths.kMysteryEggStage(4),
-      message: "The crack is bigger and the egg shakes when you're "
+      message:
+          "The crack is bigger and the egg shakes when you're "
           'not looking. Keep going!',
       ambient: RewardAmbient.moderate,
     ),
     RewardStage(
       spriteAsset: AssetPaths.kMysteryEggStage(5),
-      message: 'Something inside is tapping! What could it be? '
+      message:
+          'Something inside is tapping! What could it be? '
           'Keep your studies up.',
       ambient: RewardAmbient.moderate,
     ),
     RewardStage(
       spriteAsset: AssetPaths.kMysteryEggStage(6),
-      message: 'The egg trembles and you hear faint chirps. '
+      message:
+          'The egg trembles and you hear faint chirps. '
           'Almost there...',
       ambient: RewardAmbient.energetic,
     ),
     RewardStage(
       spriteAsset: AssetPaths.kMysteryEggStage(7),
-      message: 'The egg is rocking and a tiny snout has poked through! '
+      message:
+          'The egg is rocking and a tiny snout has poked through! '
           'Just a little more learning to do.',
       ambient: RewardAmbient.energetic,
     ),
     RewardStage(
       spriteAsset: AssetPaths.kMysteryEggStage(8),
-      message: "It's about to hatch any second! Finish your last lesson "
+      message:
+          "It's about to hatch any second! Finish your last lesson "
           "to find out what's inside!",
       ambient: RewardAmbient.energetic,
     ),
@@ -246,7 +254,8 @@ final RewardTrack kMysteryEggTrack = RewardTrack(
   },
   completeStage: const RewardStage(
     spriteAsset: AssetPaths.kMysteryEggComplete,
-    message: 'Your baby dragon is exploring the Sanctuary. '
+    message:
+        'Your baby dragon is exploring the Sanctuary. '
         'Visit your home to find them!',
     ambient: RewardAmbient.gentleHatched,
   ),

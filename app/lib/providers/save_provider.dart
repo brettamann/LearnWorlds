@@ -109,7 +109,9 @@ final List<SaveSlot> kSaveSlots = <SaveSlot>[
     key: 'exploration',
     watch: explorationProvider,
     write: (ref) => ref.read(explorationProvider).toList()..sort(),
-    read: (ref, save) => ref.read(explorationProvider.notifier).replaceAll(
+    read: (ref, save) => ref
+        .read(explorationProvider.notifier)
+        .replaceAll(
           ((save['exploration'] as List<dynamic>?) ?? const [])
               .map((e) => (e as num).toInt())
               .toSet(),
@@ -184,8 +186,9 @@ final List<SaveSlot> kSaveSlots = <SaveSlot>[
   SaveSlot(
     key: 'decorPlacements',
     watch: sanctuaryDecorProvider,
-    write: (ref) =>
-        [for (final p in ref.read(sanctuaryDecorProvider)) p.toJson()],
+    write: (ref) => [
+      for (final p in ref.read(sanctuaryDecorProvider)) p.toJson(),
+    ],
     // Malformed rows are dropped, not thrown on. A save is the one file that
     // must never fail to load, and losing the whole sanctuary over one bad
     // decoration row would be far worse than losing one mushroom.
@@ -240,9 +243,9 @@ final List<SaveSlot> kSaveSlots = <SaveSlot>[
     key: 'musicVolume',
     watch: musicVolumeProvider,
     write: (ref) => ref.read(musicVolumeProvider),
-    read: (ref, save) => ref.read(musicVolumeProvider.notifier).set(
-          hydrateMusicVolume((save['musicVolume'] as num?)?.toDouble()),
-        ),
+    read: (ref, save) => ref
+        .read(musicVolumeProvider.notifier)
+        .set(hydrateMusicVolume((save['musicVolume'] as num?)?.toDouble())),
   ),
 ];
 
@@ -267,11 +270,11 @@ double hydrateMusicVolume(double? stored) {
 }
 
 Map<String, dynamic> _rewardStateToJson(RewardTrackState s) => {
-      'completed': _sorted(s.completedActivities),
-      'events': _sorted(s.completionEvents),
-      'lastSeenStage': s.lastSeenStage,
-      'graduated': s.graduated,
-    };
+  'completed': _sorted(s.completedActivities),
+  'events': _sorted(s.completionEvents),
+  'lastSeenStage': s.lastSeenStage,
+  'graduated': s.graduated,
+};
 
 RewardTrackState _rewardStateFromJson(Map<String, dynamic> json) =>
     RewardTrackState(
@@ -285,45 +288,46 @@ RewardTrackState _rewardStateFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _conceptStateToJson(ConceptState s) => {
-      'conceptId': s.conceptId,
-      'instanceKey': s.instanceKey,
-      'status': s.status.name,
-      'currentLayer': s.currentLayer.name,
-      'currentStreak': s.currentStreak,
-      'consecutiveFailures': s.consecutiveFailures,
-      'abstractSuccessCount': s.abstractSuccessCount,
-      'sessionIds': s.sessionIds.toList(),
-      'daysTouched': s.daysTouched.toList(),
-      'firstTouchedAt': s.firstTouchedAt?.toIso8601String(),
-      'lastTouchedAt': s.lastTouchedAt?.toIso8601String(),
-    };
+  'conceptId': s.conceptId,
+  'instanceKey': s.instanceKey,
+  'status': s.status.name,
+  'currentLayer': s.currentLayer.name,
+  'currentStreak': s.currentStreak,
+  'consecutiveFailures': s.consecutiveFailures,
+  'abstractSuccessCount': s.abstractSuccessCount,
+  'sessionIds': s.sessionIds.toList(),
+  'daysTouched': s.daysTouched.toList(),
+  'firstTouchedAt': s.firstTouchedAt?.toIso8601String(),
+  'lastTouchedAt': s.lastTouchedAt?.toIso8601String(),
+};
 
 ConceptState _conceptStateFromJson(Map<String, dynamic> json) => ConceptState(
-      conceptId: json['conceptId'] as String,
-      instanceKey: json['instanceKey'] as String?,
-      status: MasteryStatus.values
-          .byName(json['status'] as String? ?? 'notStarted'),
-      currentLayer:
-          CpaLayer.values.byName(json['currentLayer'] as String? ?? 'concrete'),
-      currentStreak: (json['currentStreak'] as num?)?.toInt() ?? 0,
-      // Absent in saves written before demotion existed; 0 is the correct
-      // migration value (nobody was mid-struggle under the old engine).
-      consecutiveFailures: (json['consecutiveFailures'] as num?)?.toInt() ?? 0,
-      abstractSuccessCount:
-          (json['abstractSuccessCount'] as num?)?.toInt() ?? 0,
-      sessionIds: _stringSet(json['sessionIds']),
-      daysTouched: _stringSet(json['daysTouched']),
-      firstTouchedAt: json['firstTouchedAt'] != null
-          ? DateTime.parse(json['firstTouchedAt'] as String)
-          : null,
-      lastTouchedAt: json['lastTouchedAt'] != null
-          ? DateTime.parse(json['lastTouchedAt'] as String)
-          : null,
-    );
+  conceptId: json['conceptId'] as String,
+  instanceKey: json['instanceKey'] as String?,
+  status: MasteryStatus.values.byName(
+    json['status'] as String? ?? 'notStarted',
+  ),
+  currentLayer: CpaLayer.values.byName(
+    json['currentLayer'] as String? ?? 'concrete',
+  ),
+  currentStreak: (json['currentStreak'] as num?)?.toInt() ?? 0,
+  // Absent in saves written before demotion existed; 0 is the correct
+  // migration value (nobody was mid-struggle under the old engine).
+  consecutiveFailures: (json['consecutiveFailures'] as num?)?.toInt() ?? 0,
+  abstractSuccessCount: (json['abstractSuccessCount'] as num?)?.toInt() ?? 0,
+  sessionIds: _stringSet(json['sessionIds']),
+  daysTouched: _stringSet(json['daysTouched']),
+  firstTouchedAt: json['firstTouchedAt'] != null
+      ? DateTime.parse(json['firstTouchedAt'] as String)
+      : null,
+  lastTouchedAt: json['lastTouchedAt'] != null
+      ? DateTime.parse(json['lastTouchedAt'] as String)
+      : null,
+);
 
 class SaveCoordinator {
   SaveCoordinator(this._ref, {List<SaveSlot>? slots})
-      : _slots = slots ?? kSaveSlots;
+    : _slots = slots ?? kSaveSlots;
 
   final Ref _ref;
   final List<SaveSlot> _slots;

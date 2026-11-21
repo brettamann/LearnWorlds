@@ -60,11 +60,7 @@ enum Sfx {
 }
 
 class SfxClip {
-  const SfxClip({
-    required this.asset,
-    this.poolSize = 2,
-    this.gain = 1.0,
-  });
+  const SfxClip({required this.asset, this.poolSize = 2, this.gain = 1.0});
 
   final String asset;
 
@@ -82,12 +78,16 @@ const Map<Sfx, SfxClip> kSfxCatalog = <Sfx, SfxClip>{
   Sfx.uiTap: SfxClip(asset: 'assets/audio/sfx/ui/tap.wav', gain: 0.55),
   Sfx.whoosh: SfxClip(asset: 'assets/audio/sfx/ui/whoosh.wav', gain: 0.45),
   Sfx.bubbleIn: SfxClip(asset: 'assets/audio/sfx/ui/bubble-in.wav', gain: 0.6),
-  Sfx.correct:
-      SfxClip(asset: 'assets/audio/sfx/feedback/correct-chime.wav', gain: 0.8),
+  Sfx.correct: SfxClip(
+    asset: 'assets/audio/sfx/feedback/correct-chime.wav',
+    gain: 0.8,
+  ),
   // Deliberately quiet. A wrong answer needs to be *noticed*, not punished —
   // specs/shared/art-direction.md calls for a soft puff, never a buzzer.
-  Sfx.wrongSoft:
-      SfxClip(asset: 'assets/audio/sfx/feedback/wrong-soft.wav', gain: 0.5),
+  Sfx.wrongSoft: SfxClip(
+    asset: 'assets/audio/sfx/feedback/wrong-soft.wav',
+    gain: 0.5,
+  ),
   Sfx.hint: SfxClip(asset: 'assets/audio/sfx/feedback/hint.wav', gain: 0.6),
   Sfx.coin: SfxClip(
     asset: 'assets/audio/sfx/reward/coin.wav',
@@ -104,17 +104,29 @@ const Map<Sfx, SfxClip> kSfxCatalog = <Sfx, SfxClip>{
     poolSize: 1,
     gain: 0.8,
   ),
-  Sfx.buddyHappy:
-      SfxClip(asset: 'assets/audio/sfx/buddy/happy.wav', gain: 0.65),
-  Sfx.buddyCurious:
-      SfxClip(asset: 'assets/audio/sfx/buddy/curious.wav', gain: 0.6),
-  Sfx.pop:
-      SfxClip(asset: 'assets/audio/sfx/sprite/pop.wav', poolSize: 3, gain: 0.5),
+  Sfx.buddyHappy: SfxClip(
+    asset: 'assets/audio/sfx/buddy/happy.wav',
+    gain: 0.65,
+  ),
+  Sfx.buddyCurious: SfxClip(
+    asset: 'assets/audio/sfx/buddy/curious.wav',
+    gain: 0.6,
+  ),
+  Sfx.pop: SfxClip(
+    asset: 'assets/audio/sfx/sprite/pop.wav',
+    poolSize: 3,
+    gain: 0.5,
+  ),
   Sfx.drop: SfxClip(asset: 'assets/audio/sfx/sprite/drop.wav', gain: 0.6),
-  Sfx.sparkle:
-      SfxClip(asset: 'assets/audio/sfx/sprite/sparkle.wav', gain: 0.45),
-  Sfx.silence:
-      SfxClip(asset: 'assets/audio/sfx/silence.wav', poolSize: 1, gain: 0.0),
+  Sfx.sparkle: SfxClip(
+    asset: 'assets/audio/sfx/sprite/sparkle.wav',
+    gain: 0.45,
+  ),
+  Sfx.silence: SfxClip(
+    asset: 'assets/audio/sfx/silence.wav',
+    poolSize: 1,
+    gain: 0.0,
+  ),
 };
 
 /// The counting ladder: one note per counted object, climbing a C-major scale.

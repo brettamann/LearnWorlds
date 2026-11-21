@@ -141,15 +141,15 @@ class _WheresBuddyRoundBodyState extends ConsumerState<WheresBuddyRoundBody>
   bool get _open => !_done && !widget.c.locked;
 
   String get _prompt => wheresBuddyRoundPrompt(
-        _r,
-        placing: widget.mode == WheresBuddyModes.placeMode,
-      );
+    _r,
+    placing: widget.mode == WheresBuddyModes.placeMode,
+  );
 
   /// The landmarks this round is about — one, or two on the challenge.
   Set<String> get _highlightLandmarkIds => <String>{
-        _r.landmarkId,
-        if (_r.secondLandmarkId != null) _r.secondLandmarkId!,
-      };
+    _r.landmarkId,
+    if (_r.secondLandmarkId != null) _r.secondLandmarkId!,
+  };
 
   /// Target the kid is aiming for, in normalized coords.
   ///

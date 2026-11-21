@@ -264,8 +264,9 @@ class _ClusterCard extends StatelessWidget {
                 duration: const Duration(milliseconds: 250),
                 padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
                 decoration: BoxDecoration(
-                  color: Colors.white
-                      .withValues(alpha: tapped || hinted ? 0.75 : 0.55),
+                  color: Colors.white.withValues(
+                    alpha: tapped || hinted ? 0.75 : 0.55,
+                  ),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: tapped || hinted
                       ? const [

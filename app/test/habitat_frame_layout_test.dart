@@ -91,9 +91,11 @@ void main() {
         xs.add(layout.corner(i).dx);
         ys.add(layout.corner(i).dy);
       }
-      final spanX = xs.reduce((a, b) => a > b ? a : b) -
+      final spanX =
+          xs.reduce((a, b) => a > b ? a : b) -
           xs.reduce((a, b) => a < b ? a : b);
-      final spanY = ys.reduce((a, b) => a > b ? a : b) -
+      final spanY =
+          ys.reduce((a, b) => a > b ? a : b) -
           ys.reduce((a, b) => a < b ? a : b);
       // The longer side fills 90% of the box; the shorter one is whatever the
       // shape says it is, never stretched to match.

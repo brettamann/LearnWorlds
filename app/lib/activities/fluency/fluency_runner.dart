@@ -130,10 +130,10 @@ class _FluencyRoundBodyState extends ConsumerState<FluencyRoundBody>
   late List<int> _choices = _choicesFor(0);
 
   List<int> _choicesFor(int i) => numberChoicesFor(
-        widget.facts[i].answer,
-        seed: widget.c.index * 7 + i,
-        max: 5,
-      );
+    widget.facts[i].answer,
+    seed: widget.c.index * 7 + i,
+    max: 5,
+  );
 
   @override
   void initState() {
@@ -189,9 +189,7 @@ class _FluencyRoundBodyState extends ConsumerState<FluencyRoundBody>
       _done = true;
       _hints?.pause();
       final helped = (_hints?.hintsUsed ?? 0) > 0;
-      widget.c.finish(
-        gradeRound(misses: _misses, helped: helped, failAt: 4),
-      );
+      widget.c.finish(gradeRound(misses: _misses, helped: helped, failAt: 4));
       return;
     }
     after(const Duration(milliseconds: 1700), () {
@@ -248,8 +246,9 @@ class _FluencyRoundBodyState extends ConsumerState<FluencyRoundBody>
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 6),
                     child: Opacity(
-                      opacity:
-                          k < _i || (k == _i && _answered != null) ? 1 : 0.3,
+                      opacity: k < _i || (k == _i && _answered != null)
+                          ? 1
+                          : 0.3,
                       child: Image.asset(
                         AssetPaths.carePantryAcorn,
                         width: 34,
@@ -312,30 +311,30 @@ class _Puzzle extends StatelessWidget {
       height: 1,
     );
     Widget group(int n, {int takenAway = 0}) => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (showAcorns)
-              SizedBox(
-                key: const ValueKey('fluency-acorns'),
-                height: acorn * 1.1,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    for (var k = 0; k < n; k++)
-                      Opacity(
-                        opacity: k >= n - takenAway ? 0.22 : 1,
-                        child: Image.asset(
-                          AssetPaths.carePantryAcorn,
-                          width: acorn,
-                          height: acorn,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            Text('$n', style: numeral),
-          ],
-        );
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (showAcorns)
+          SizedBox(
+            key: const ValueKey('fluency-acorns'),
+            height: acorn * 1.1,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (var k = 0; k < n; k++)
+                  Opacity(
+                    opacity: k >= n - takenAway ? 0.22 : 1,
+                    child: Image.asset(
+                      AssetPaths.carePantryAcorn,
+                      width: acorn,
+                      height: acorn,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        Text('$n', style: numeral),
+      ],
+    );
     final Widget body;
     if (fact.plus) {
       body = Row(

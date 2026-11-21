@@ -150,10 +150,7 @@ class _CountOutRoundBodyState extends ConsumerState<CountOutRoundBody> {
       });
       _hints?.poke();
       ref.read(feedbackEngineProvider).wrong();
-      widget.c.say(
-        countOutNOverCapLine(_round, _missRotation),
-        replay: false,
-      );
+      widget.c.say(countOutNOverCapLine(_round, _missRotation), replay: false);
       return;
     }
     setState(() {
@@ -182,10 +179,7 @@ class _CountOutRoundBodyState extends ConsumerState<CountOutRoundBody> {
     // a genuine miss the mastery ladder should see. One or two, or a
     // demonstration, resolves soft: she got there, with help.
     widget.c.finish(
-      gradeRound(
-        misses: _overCapDrops,
-        helped: (_hints?.hintsUsed ?? 0) > 0,
-      ),
+      gradeRound(misses: _overCapDrops, helped: (_hints?.hintsUsed ?? 0) > 0),
     );
   }
 
@@ -279,10 +273,7 @@ class _CountOutLayer extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 10,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           decoration: AppDecor.card(radius: 18, shadow: AppShadows.soft),
           child: Text(
             'Bring me $targetN $plural!',
@@ -332,9 +323,7 @@ class _CountOutLayer extends StatelessWidget {
                       for (var i = 0; i < poolSize; i++)
                         if (!placedIndices.contains(i))
                           _PoolCreature(
-                            key: ValueKey(
-                              'count-out-r$roundIndex-pool-$i',
-                            ),
+                            key: ValueKey('count-out-r$roundIndex-pool-$i'),
                             index: i,
                             spriteAsset: spriteAsset,
                             position:
@@ -757,8 +746,10 @@ class _CountOutDemoState extends State<_CountOutDemo>
                       horizontal: 20,
                       vertical: 10,
                     ),
-                    decoration:
-                        AppDecor.card(radius: 18, shadow: AppShadows.soft),
+                    decoration: AppDecor.card(
+                      radius: 18,
+                      shadow: AppShadows.soft,
+                    ),
                     child: const Text(
                       'Watch — drag creatures into the basket!',
                       style: TextStyle(

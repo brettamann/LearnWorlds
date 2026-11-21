@@ -119,187 +119,187 @@ class PantryRound {
 /// the most" with two crates of four has no answer a child can find.
 const Map<String, List<PantryRound>> kPantryRounds =
     <String, List<PantryRound>>{
-  CarePantryModes.categorizeOnly: <PantryRound>[
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'apples', count: 3, kind: kPantryApple),
-        PantryCrate(name: 'acorns', count: 2, kind: kPantryAcorn),
+      CarePantryModes.categorizeOnly: <PantryRound>[
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'apples', count: 3, kind: kPantryApple),
+            PantryCrate(name: 'acorns', count: 2, kind: kPantryAcorn),
+          ],
+          askMost: false,
+        ),
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'carrots', count: 2, kind: kPantryCarrot),
+            PantryCrate(name: 'apples', count: 4, kind: kPantryApple),
+          ],
+          askMost: false,
+        ),
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'acorns', count: 4, kind: kPantryAcorn),
+            PantryCrate(name: 'carrots', count: 3, kind: kPantryCarrot),
+          ],
+          askMost: false,
+        ),
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'cherries', count: 2, kind: kPantryCherries),
+            PantryCrate(name: 'carrots', count: 3, kind: kPantryCarrot),
+          ],
+          askMost: false,
+        ),
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'apples', count: 2, kind: kPantryApple),
+            PantryCrate(name: 'cherries', count: 3, kind: kPantryCherries),
+          ],
+          askMost: false,
+        ),
       ],
-      askMost: false,
-    ),
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'carrots', count: 2, kind: kPantryCarrot),
-        PantryCrate(name: 'apples', count: 4, kind: kPantryApple),
+      CarePantryModes.simplePantry: <PantryRound>[
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'apples', count: 2, kind: kPantryApple),
+            PantryCrate(name: 'acorns', count: 4, kind: kPantryAcorn),
+          ],
+        ),
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'carrots', count: 3, kind: kPantryCarrot),
+            PantryCrate(name: 'apples', count: 1, kind: kPantryApple),
+            PantryCrate(name: 'acorns', count: 2, kind: kPantryAcorn),
+          ],
+        ),
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'acorns', count: 2, kind: kPantryAcorn),
+            PantryCrate(name: 'cherries', count: 3, kind: kPantryCherries),
+            PantryCrate(name: 'carrots', count: 5, kind: kPantryCarrot),
+          ],
+        ),
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'apples', count: 4, kind: kPantryApple),
+            PantryCrate(name: 'cherries', count: 2, kind: kPantryCherries),
+            PantryCrate(name: 'acorns', count: 3, kind: kPantryAcorn),
+          ],
+        ),
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'cherries', count: 3, kind: kPantryCherries),
+            PantryCrate(name: 'apples', count: 5, kind: kPantryApple),
+          ],
+        ),
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'carrots', count: 4, kind: kPantryCarrot),
+            PantryCrate(name: 'acorns', count: 1, kind: kPantryAcorn),
+            PantryCrate(name: 'cherries', count: 2, kind: kPantryCherries),
+          ],
+        ),
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'apples', count: 3, kind: kPantryApple),
+            PantryCrate(name: 'carrots', count: 2, kind: kPantryCarrot),
+            PantryCrate(name: 'acorns', count: 5, kind: kPantryAcorn),
+          ],
+        ),
       ],
-      askMost: false,
-    ),
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'acorns', count: 4, kind: kPantryAcorn),
-        PantryCrate(name: 'carrots', count: 3, kind: kPantryCarrot),
+      CarePantryModes.fullPantry: <PantryRound>[
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'apples', count: 3, kind: kPantryApple),
+            PantryCrate(name: 'carrots', count: 5, kind: kPantryCarrot),
+            PantryCrate(name: 'acorns', count: 1, kind: kPantryAcorn),
+            PantryCrate(name: 'cherries', count: 2, kind: kPantryCherries),
+          ],
+          askFewest: true,
+        ),
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'acorns', count: 6, kind: kPantryAcorn),
+            PantryCrate(name: 'cherries', count: 4, kind: kPantryCherries),
+            PantryCrate(name: 'apples', count: 2, kind: kPantryApple),
+            PantryCrate(name: 'carrots', count: 3, kind: kPantryCarrot),
+          ],
+          askFewest: true,
+        ),
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'carrots', count: 2, kind: kPantryCarrot),
+            PantryCrate(name: 'apples', count: 4, kind: kPantryApple),
+            PantryCrate(name: 'cherries', count: 1, kind: kPantryCherries),
+            PantryCrate(name: 'acorns', count: 5, kind: kPantryAcorn),
+          ],
+          askFewest: true,
+        ),
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'cherries', count: 5, kind: kPantryCherries),
+            PantryCrate(name: 'acorns', count: 2, kind: kPantryAcorn),
+            PantryCrate(name: 'carrots', count: 4, kind: kPantryCarrot),
+            PantryCrate(name: 'apples', count: 1, kind: kPantryApple),
+          ],
+          askFewest: true,
+        ),
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'apples', count: 6, kind: kPantryApple),
+            PantryCrate(name: 'carrots', count: 1, kind: kPantryCarrot),
+            PantryCrate(name: 'acorns', count: 3, kind: kPantryAcorn),
+            PantryCrate(name: 'cherries', count: 4, kind: kPantryCherries),
+          ],
+          askFewest: true,
+        ),
       ],
-      askMost: false,
-    ),
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'cherries', count: 2, kind: kPantryCherries),
-        PantryCrate(name: 'carrots', count: 3, kind: kPantryCarrot),
+      // The challenge sorts by colour, which is a rule she has to hold in her
+      // head against the pictures - two red things that are not the same thing
+      // go in one crate.
+      CarePantryModes.unfamiliarRules: <PantryRound>[
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'red things', count: 3),
+            PantryCrate(name: 'orange things', count: 2),
+          ],
+          items: <PantryKind>[
+            kPantryApple,
+            kPantryCarrot,
+            kPantryCherries,
+            kPantryPumpkin,
+            kPantryApple,
+          ],
+        ),
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'green things', count: 3),
+            PantryCrate(name: 'red things', count: 2),
+            PantryCrate(name: 'orange things', count: 1),
+          ],
+          items: <PantryKind>[
+            kPantryLeaf,
+            kPantryCherries,
+            kPantryWatermelon,
+            kPantryCarrot,
+            kPantryApple,
+            kPantryLeaf,
+          ],
+        ),
+        PantryRound(
+          crates: <PantryCrate>[
+            PantryCrate(name: 'orange things', count: 4),
+            PantryCrate(name: 'green things', count: 2),
+          ],
+          items: <PantryKind>[
+            kPantryPumpkin,
+            kPantryWatermelon,
+            kPantryCarrot,
+            kPantryCarrot,
+            kPantryLeaf,
+            kPantryPumpkin,
+          ],
+        ),
       ],
-      askMost: false,
-    ),
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'apples', count: 2, kind: kPantryApple),
-        PantryCrate(name: 'cherries', count: 3, kind: kPantryCherries),
-      ],
-      askMost: false,
-    ),
-  ],
-  CarePantryModes.simplePantry: <PantryRound>[
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'apples', count: 2, kind: kPantryApple),
-        PantryCrate(name: 'acorns', count: 4, kind: kPantryAcorn),
-      ],
-    ),
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'carrots', count: 3, kind: kPantryCarrot),
-        PantryCrate(name: 'apples', count: 1, kind: kPantryApple),
-        PantryCrate(name: 'acorns', count: 2, kind: kPantryAcorn),
-      ],
-    ),
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'acorns', count: 2, kind: kPantryAcorn),
-        PantryCrate(name: 'cherries', count: 3, kind: kPantryCherries),
-        PantryCrate(name: 'carrots', count: 5, kind: kPantryCarrot),
-      ],
-    ),
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'apples', count: 4, kind: kPantryApple),
-        PantryCrate(name: 'cherries', count: 2, kind: kPantryCherries),
-        PantryCrate(name: 'acorns', count: 3, kind: kPantryAcorn),
-      ],
-    ),
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'cherries', count: 3, kind: kPantryCherries),
-        PantryCrate(name: 'apples', count: 5, kind: kPantryApple),
-      ],
-    ),
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'carrots', count: 4, kind: kPantryCarrot),
-        PantryCrate(name: 'acorns', count: 1, kind: kPantryAcorn),
-        PantryCrate(name: 'cherries', count: 2, kind: kPantryCherries),
-      ],
-    ),
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'apples', count: 3, kind: kPantryApple),
-        PantryCrate(name: 'carrots', count: 2, kind: kPantryCarrot),
-        PantryCrate(name: 'acorns', count: 5, kind: kPantryAcorn),
-      ],
-    ),
-  ],
-  CarePantryModes.fullPantry: <PantryRound>[
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'apples', count: 3, kind: kPantryApple),
-        PantryCrate(name: 'carrots', count: 5, kind: kPantryCarrot),
-        PantryCrate(name: 'acorns', count: 1, kind: kPantryAcorn),
-        PantryCrate(name: 'cherries', count: 2, kind: kPantryCherries),
-      ],
-      askFewest: true,
-    ),
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'acorns', count: 6, kind: kPantryAcorn),
-        PantryCrate(name: 'cherries', count: 4, kind: kPantryCherries),
-        PantryCrate(name: 'apples', count: 2, kind: kPantryApple),
-        PantryCrate(name: 'carrots', count: 3, kind: kPantryCarrot),
-      ],
-      askFewest: true,
-    ),
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'carrots', count: 2, kind: kPantryCarrot),
-        PantryCrate(name: 'apples', count: 4, kind: kPantryApple),
-        PantryCrate(name: 'cherries', count: 1, kind: kPantryCherries),
-        PantryCrate(name: 'acorns', count: 5, kind: kPantryAcorn),
-      ],
-      askFewest: true,
-    ),
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'cherries', count: 5, kind: kPantryCherries),
-        PantryCrate(name: 'acorns', count: 2, kind: kPantryAcorn),
-        PantryCrate(name: 'carrots', count: 4, kind: kPantryCarrot),
-        PantryCrate(name: 'apples', count: 1, kind: kPantryApple),
-      ],
-      askFewest: true,
-    ),
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'apples', count: 6, kind: kPantryApple),
-        PantryCrate(name: 'carrots', count: 1, kind: kPantryCarrot),
-        PantryCrate(name: 'acorns', count: 3, kind: kPantryAcorn),
-        PantryCrate(name: 'cherries', count: 4, kind: kPantryCherries),
-      ],
-      askFewest: true,
-    ),
-  ],
-  // The challenge sorts by colour, which is a rule she has to hold in her
-  // head against the pictures - two red things that are not the same thing
-  // go in one crate.
-  CarePantryModes.unfamiliarRules: <PantryRound>[
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'red things', count: 3),
-        PantryCrate(name: 'orange things', count: 2),
-      ],
-      items: <PantryKind>[
-        kPantryApple,
-        kPantryCarrot,
-        kPantryCherries,
-        kPantryPumpkin,
-        kPantryApple,
-      ],
-    ),
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'green things', count: 3),
-        PantryCrate(name: 'red things', count: 2),
-        PantryCrate(name: 'orange things', count: 1),
-      ],
-      items: <PantryKind>[
-        kPantryLeaf,
-        kPantryCherries,
-        kPantryWatermelon,
-        kPantryCarrot,
-        kPantryApple,
-        kPantryLeaf,
-      ],
-    ),
-    PantryRound(
-      crates: <PantryCrate>[
-        PantryCrate(name: 'orange things', count: 4),
-        PantryCrate(name: 'green things', count: 2),
-      ],
-      items: <PantryKind>[
-        kPantryPumpkin,
-        kPantryWatermelon,
-        kPantryCarrot,
-        kPantryCarrot,
-        kPantryLeaf,
-        kPantryPumpkin,
-      ],
-    ),
-  ],
-};
+    };
 
 /// The rounds for one visit, the fewest things on the floor first.
 List<PantryRound> pantryRoundsFor(String subMode, {int seed = 0}) {
@@ -322,13 +322,15 @@ bool pantryBelongs(PantryKind item, PantryCrate crate) => crate.byColour
 
 // ---- words ----------------------------------------------------------------
 
-const String kPantryIntro = 'Oh dear, the supply hut is in a muddle! Let us '
+const String kPantryIntro =
+    'Oh dear, the supply hut is in a muddle! Let us '
     'put everything away in the right crate.';
 const String kPantryDemo = 'Watch. Tap one, and in it goes!';
 const String kPantryDemoBack = 'Oops, back it comes. Now you try.';
 const String kPantryAskMost = 'Which crate has the most?';
 const String kPantryAskFewest = 'And which crate has the fewest?';
-const String kPantryFinal = 'The pantry is so tidy! The creatures will find '
+const String kPantryFinal =
+    'The pantry is so tidy! The creatures will find '
     'their food so easily now. Here are some coins, with thanks.';
 
 const List<String> kPantryKeeperLines = <String>[

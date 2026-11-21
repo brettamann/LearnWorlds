@@ -130,8 +130,10 @@ class _StoryRoundBodyState extends ConsumerState<StoryRoundBody>
   int? _ringed;
   bool _ringCheck = false;
 
-  late final List<int> _choices =
-      numberChoicesFor(widget.story.answer, seed: widget.c.index + 5);
+  late final List<int> _choices = numberChoicesFor(
+    widget.story.answer,
+    seed: widget.c.index + 5,
+  );
   int? _answered;
   int? _hintedCard;
   final Map<int, int> _wrongCards = <int, int>{};
@@ -142,10 +144,7 @@ class _StoryRoundBodyState extends ConsumerState<StoryRoundBody>
   /// Dots on the cards at concrete, and for the rest of the question once
   /// she has missed or been helped.
   bool get _cardDots =>
-      supportLayer(
-        widget.c.layer,
-        misses: _misses > 0 || _askHelped ? 1 : 0,
-      ) ==
+      supportLayer(widget.c.layer, misses: _misses > 0 || _askHelped ? 1 : 0) ==
       CpaLayer.concrete;
 
   /// The number sentence, once the story is solved, at the abstract layer.
@@ -193,9 +192,7 @@ class _StoryRoundBodyState extends ConsumerState<StoryRoundBody>
           _critters.add(_Critter(id++, asset, _Zone.water));
         }
         for (var i = 0; i < _s.b; i++) {
-          _critters.add(
-            _Critter(id++, _s.other!.asset, _Zone.water, group: 1),
-          );
+          _critters.add(_Critter(id++, _s.other!.asset, _Zone.water, group: 1));
         }
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -398,9 +395,7 @@ class _StoryRoundBodyState extends ConsumerState<StoryRoundBody>
     setState(() => _step = _Step.done);
     _hints?.pause();
     final helped = (_hints?.hintsUsed ?? 0) > 0;
-    widget.c.finish(
-      gradeRound(misses: _misses, helped: helped),
-    );
+    widget.c.finish(gradeRound(misses: _misses, helped: helped));
   }
 
   void _onHint(HintLevel level) {
@@ -458,7 +453,8 @@ class _StoryRoundBodyState extends ConsumerState<StoryRoundBody>
       builder: (context, box) {
         final geo = _StoryGeometry(box.biggest);
         _geo = geo;
-        final canCheck = _s.kind == StoryKind.takeApart &&
+        final canCheck =
+            _s.kind == StoryKind.takeApart &&
             _inWater >= 1 &&
             _inWater < _s.a &&
             _step == _Step.act;

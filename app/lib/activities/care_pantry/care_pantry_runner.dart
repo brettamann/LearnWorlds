@@ -337,9 +337,7 @@ class _PantryRoundBodyState extends ConsumerState<PantryRoundBody>
     _stage = _Stage.done;
     _hints?.pause();
     final helped = (_hints?.hintsUsed ?? 0) > 0;
-    widget.c.finish(
-      gradeRound(misses: _misses, helped: helped),
-    );
+    widget.c.finish(gradeRound(misses: _misses, helped: helped));
   }
 
   void _onHint(HintLevel level) {
@@ -411,7 +409,8 @@ class _PantryRoundBodyState extends ConsumerState<PantryRoundBody>
                           .where((it) => it.crate == i && !it.flying)
                           .map((it) => it.kind.asset)
                           .toList(),
-                      lit: (_stage == _Stage.sorting && i == _active) ||
+                      lit:
+                          (_stage == _Stage.sorting && i == _active) ||
                           _rightCrate == i,
                       askable: asking,
                       ringed: _ringedCrate == i,

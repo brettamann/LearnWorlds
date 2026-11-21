@@ -96,10 +96,11 @@ class _CountingChallengeLayerState extends ConsumerState<CountingChallengeLayer>
     final width = _stageSize?.width ?? 0;
     // The untapped creature most fully on screen, so the ring has time to be
     // seen before it flies off.
-    final candidates = _creatures
-        .where((c) => !c.tapped && c.x > c.size && c.x < width - c.size)
-        .toList()
-      ..sort((a, b) => b.x.compareTo(a.x));
+    final candidates =
+        _creatures
+            .where((c) => !c.tapped && c.x > c.size && c.x < width - c.size)
+            .toList()
+          ..sort((a, b) => b.x.compareTo(a.x));
     if (candidates.isEmpty) return;
     final next = candidates.first;
     answerTargetHint(
@@ -217,8 +218,10 @@ class _CountingChallengeLayerState extends ConsumerState<CountingChallengeLayer>
                         Transform.scale(
                           scaleX: 1 + math.sin(c.wigglePhase * 1.5) * 0.07,
                           scaleY: 1 - math.sin(c.wigglePhase * 1.5) * 0.07,
-                          child:
-                              Image.asset(c.spriteAsset, fit: BoxFit.contain),
+                          child: Image.asset(
+                            c.spriteAsset,
+                            fit: BoxFit.contain,
+                          ),
                         ),
                         if (_ringed == c.id)
                           const Positioned.fill(child: TouchHereRing()),

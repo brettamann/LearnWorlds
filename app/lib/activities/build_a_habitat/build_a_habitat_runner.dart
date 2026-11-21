@@ -503,12 +503,14 @@ class _EdgeWidget extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: Colors.amber.withValues(alpha: 0.20),
                               border: Border.all(
-                                color: Colors.amber.shade400
-                                    .withValues(alpha: 0.85),
+                                color: Colors.amber.shade400.withValues(
+                                  alpha: 0.85,
+                                ),
                                 width: 2,
                               ),
-                              borderRadius:
-                                  BorderRadius.circular(stickThickness / 2),
+                              borderRadius: BorderRadius.circular(
+                                stickThickness / 2,
+                              ),
                             ),
                           ),
                   ),
@@ -568,9 +570,7 @@ class _RoofPieceWidget extends StatelessWidget {
             if (placed) Image.asset(piece.placedAsset, fit: BoxFit.contain),
             if (placed)
               const Positioned.fill(
-                child: IgnorePointer(
-                  child: GlitterBurst(maxRadius: 60),
-                ),
+                child: IgnorePointer(child: GlitterBurst(maxRadius: 60)),
               ),
             if (hinted) TouchHereRingOutside(around: Size.square(size)),
           ],

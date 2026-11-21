@@ -21,20 +21,41 @@ class BenchThing {
   String get capName => name[0].toUpperCase() + name.substring(1);
 }
 
-const BenchThing kBenchPumpkin =
-    BenchThing('the pumpkin', AssetPaths.caretakersPumpkin, 8);
-const BenchThing kBenchWatermelon =
-    BenchThing('the watermelon', AssetPaths.caretakersWatermelon, 9);
-const BenchThing kBenchRock =
-    BenchThing('the rock', AssetPaths.caretakersRock, 7);
-const BenchThing kBenchApple =
-    BenchThing('the apple', AssetPaths.carePantryApple, 3);
-const BenchThing kBenchAcorn =
-    BenchThing('the acorn', AssetPaths.carePantryAcorn, 1);
-const BenchThing kBenchFeather =
-    BenchThing('the feather', AssetPaths.rewardFeather, 0.2);
-const BenchThing kBenchLeaf =
-    BenchThing('the leaf', AssetPaths.caretakersLeaf, 0.3);
+const BenchThing kBenchPumpkin = BenchThing(
+  'the pumpkin',
+  AssetPaths.caretakersPumpkin,
+  8,
+);
+const BenchThing kBenchWatermelon = BenchThing(
+  'the watermelon',
+  AssetPaths.caretakersWatermelon,
+  9,
+);
+const BenchThing kBenchRock = BenchThing(
+  'the rock',
+  AssetPaths.caretakersRock,
+  7,
+);
+const BenchThing kBenchApple = BenchThing(
+  'the apple',
+  AssetPaths.carePantryApple,
+  3,
+);
+const BenchThing kBenchAcorn = BenchThing(
+  'the acorn',
+  AssetPaths.carePantryAcorn,
+  1,
+);
+const BenchThing kBenchFeather = BenchThing(
+  'the feather',
+  AssetPaths.rewardFeather,
+  0.2,
+);
+const BenchThing kBenchLeaf = BenchThing(
+  'the leaf',
+  AssetPaths.caretakersLeaf,
+  0.3,
+);
 
 /// A caterpillar, measured in round segments. Drawn in code, so its length is
 /// exactly what the round says it is.
@@ -215,7 +236,8 @@ final Map<String, List<BenchRound>> kBenchRounds = <String, List<BenchRound>>{
 /// and alternating keeps "heavy" and "long" from blurring into one word for
 /// "big". The biggest difference goes first within each.
 List<BenchRound> benchRoundsFor(String subMode, {int seed = 0}) {
-  final pool = kBenchRounds[subMode] ??
+  final pool =
+      kBenchRounds[subMode] ??
       kBenchRounds[CaretakersBenchModes.describeAttributes]!;
   if (subMode == CaretakersBenchModes.orderThreeByLength) {
     return pickRounds(
@@ -255,11 +277,13 @@ double _spread(Iterable<double> xs) {
 
 // ---- words ----------------------------------------------------------------
 
-const String kBenchIntro = "Welcome to the Caretaker's bench! We have things "
+const String kBenchIntro =
+    "Welcome to the Caretaker's bench! We have things "
     'to weigh and caterpillars to measure. Let us find out which is which.';
 const String kBenchDownSide = 'Look at the scale. The heavy side goes down.';
 const String kBenchLookEnds = 'Look where they end.';
-const String kBenchFinal = 'Everything is weighed and measured. What a '
+const String kBenchFinal =
+    'Everything is weighed and measured. What a '
     'careful caretaker you are! Here are some coins.';
 
 const List<String> kBenchOrderLines = <String>[
@@ -337,11 +361,11 @@ String benchDone(BenchRound r) {
 
 /// What to look at - the half of a miss line that is advice.
 String benchLookHint(BenchRound r) => switch (r.task) {
-      BenchTask.weighHeavier || BenchTask.weighLighter => kBenchDownSide,
-      BenchTask.orderThree => 'Find the shortest one left.',
-      BenchTask.pickHeavy || BenchTask.pickLight => 'Think about lifting it.',
-      _ => kBenchLookEnds,
-    };
+  BenchTask.weighHeavier || BenchTask.weighLighter => kBenchDownSide,
+  BenchTask.orderThree => 'Find the shortest one left.',
+  BenchTask.pickHeavy || BenchTask.pickLight => 'Think about lifting it.',
+  _ => kBenchLookEnds,
+};
 
 String benchMiss(BenchRound r, int rotation) =>
     '${warmMissLine(rotation)} ${benchLookHint(r)}';

@@ -103,17 +103,17 @@ class SortBinExemplar {
 ///     to sort by shape instead.
 const Map<String, List<SortBinExemplar>> kSortBinExemplars =
     <String, List<SortBinExemplar>>{
-  '3-sides': <SortBinExemplar>[SortBinExemplar(kind: 'triangle')],
-  '4-sides': <SortBinExemplar>[SortBinExemplar(kind: 'square')],
-  '5plus-sides': <SortBinExemplar>[
-    SortBinExemplar(kind: 'pentagon'),
-    SortBinExemplar(kind: 'hexagon'),
-  ],
-  'small': <SortBinExemplar>[SortBinExemplar(kind: 'circle', scale: 0.55)],
-  'big': <SortBinExemplar>[SortBinExemplar(kind: 'circle')],
-  'round': <SortBinExemplar>[SortBinExemplar(kind: 'circle')],
-  'pointy': <SortBinExemplar>[SortBinExemplar(kind: 'triangle')],
-};
+      '3-sides': <SortBinExemplar>[SortBinExemplar(kind: 'triangle')],
+      '4-sides': <SortBinExemplar>[SortBinExemplar(kind: 'square')],
+      '5plus-sides': <SortBinExemplar>[
+        SortBinExemplar(kind: 'pentagon'),
+        SortBinExemplar(kind: 'hexagon'),
+      ],
+      'small': <SortBinExemplar>[SortBinExemplar(kind: 'circle', scale: 0.55)],
+      'big': <SortBinExemplar>[SortBinExemplar(kind: 'circle')],
+      'round': <SortBinExemplar>[SortBinExemplar(kind: 'circle')],
+      'pointy': <SortBinExemplar>[SortBinExemplar(kind: 'triangle')],
+    };
 
 /// The full spoken prompt for a round sorting by [attributeId].
 ///
@@ -312,7 +312,8 @@ const List<SortRound> kSortAttributeRounds = <SortRound>[
         targetBinId: 'pointy',
       ),
     ],
-    keeperLine: 'Round things together, pointy things together. '
+    keeperLine:
+        'Round things together, pointy things together. '
         "That's grouping by curves.",
   ),
 ];
@@ -328,5 +329,6 @@ const String kSortAttributeFinal =
 
 /// The [n]th wrong-basket line of a round: a rotating warm line, then the
 /// attribute again.
-String sortAttributeMissLine(int n, String attributeId) => '${warmMissLine(n)} '
+String sortAttributeMissLine(int n, String attributeId) =>
+    '${warmMissLine(n)} '
     'Sort by ${kSortAttributeWords[attributeId] ?? attributeId}.';

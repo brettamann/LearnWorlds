@@ -19,8 +19,9 @@ import '../data/sfx_catalog.dart';
 import 'setting_notifiers.dart';
 
 final sfxEnabledProvider = NotifierProvider<BoolSetting, bool>(BoolSetting.new);
-final musicEnabledProvider =
-    NotifierProvider<BoolSetting, bool>(BoolSetting.new);
+final musicEnabledProvider = NotifierProvider<BoolSetting, bool>(
+  BoolSetting.new,
+);
 final sfxVolumeProvider = NotifierProvider<VolumeSetting, double>(
   () => VolumeSetting(kDefaultSfxVolume),
 );

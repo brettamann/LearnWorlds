@@ -71,10 +71,9 @@ String wheresBuddyPrompt({
   required String preposition,
   required String landmark,
   required bool placing,
-}) =>
-    placing
-        ? 'Put Buddy $preposition $landmark.'
-        : 'Find Buddy — they are $preposition $landmark.';
+}) => placing
+    ? 'Put Buddy $preposition $landmark.'
+    : 'Find Buddy — they are $preposition $landmark.';
 
 /// The challenge sub-mode's one extra position word.
 ///
@@ -129,8 +128,7 @@ String wheresBuddyRelationalRestate(String landmarkIdA, String landmarkIdB) =>
 String wheresBuddyRestate({
   required String preposition,
   required String landmark,
-}) =>
-    'Here — Buddy is $preposition $landmark. Right there.';
+}) => 'Here — Buddy is $preposition $landmark. Right there.';
 
 /// One round.
 ///
@@ -225,10 +223,10 @@ const int kWheresBuddyRoundsPerSitting = 4;
 /// unrecognised: dragging Buddy somewhere is the safer thing to hand a child
 /// than a mode she cannot finish.
 String wheresBuddyMode(String subMode) => switch (subMode) {
-      WheresBuddyModes.findMode => WheresBuddyModes.findMode,
-      WheresBuddyModes.relationalMode => WheresBuddyModes.relationalMode,
-      _ => WheresBuddyModes.placeMode,
-    };
+  WheresBuddyModes.findMode => WheresBuddyModes.findMode,
+  WheresBuddyModes.relationalMode => WheresBuddyModes.relationalMode,
+  _ => WheresBuddyModes.placeMode,
+};
 
 /// The rounds this sub-mode plays, offset by mode.
 ///
@@ -260,12 +258,12 @@ String _landmarkOf(String id) => kWheresBuddyLandmarkNames[id] ?? id;
 /// The round's instruction - the whole task, since nothing on screen says it.
 String wheresBuddyRoundPrompt(WheresBuddyRound r, {required bool placing}) =>
     r.isRelational
-        ? wheresBuddyRelationalPrompt(r.landmarkId, r.secondLandmarkId!)
-        : wheresBuddyPrompt(
-            preposition: _prepositionOf(r),
-            landmark: _landmarkOf(r.landmarkId),
-            placing: placing,
-          );
+    ? wheresBuddyRelationalPrompt(r.landmarkId, r.secondLandmarkId!)
+    : wheresBuddyPrompt(
+        preposition: _prepositionOf(r),
+        landmark: _landmarkOf(r.landmarkId),
+        placing: placing,
+      );
 
 /// What the narrator says while showing her the answer.
 String wheresBuddyRoundRestate(WheresBuddyRound r) => r.isRelational
@@ -276,27 +274,28 @@ String wheresBuddyRoundRestate(WheresBuddyRound r) => r.isRelational
       );
 
 String wheresBuddyIntro(String subMode) => switch (wheresBuddyMode(subMode)) {
-      WheresBuddyModes.findMode =>
-        "The Buddy loves to play hide-and-seek. I'll tell you "
-            'where they are hiding — tap the right spot!',
-      WheresBuddyModes.relationalMode =>
-        'Here is a tricky one. I will name two things, and you put '
-            'Buddy right in the middle of them.',
-      _ => "I'll tell you where the Buddy should go. Drag the "
-          'Buddy next to, above, or behind the things in the meadow.',
-    };
+  WheresBuddyModes.findMode =>
+    "The Buddy loves to play hide-and-seek. I'll tell you "
+        'where they are hiding — tap the right spot!',
+  WheresBuddyModes.relationalMode =>
+    'Here is a tricky one. I will name two things, and you put '
+        'Buddy right in the middle of them.',
+  _ =>
+    "I'll tell you where the Buddy should go. Drag the "
+        'Buddy next to, above, or behind the things in the meadow.',
+};
 
 String wheresBuddyFinal(String subMode) =>
     wheresBuddyMode(subMode) == WheresBuddyModes.relationalMode
-        ? 'Every middle found. Between is a hard one, and you have it.'
-        : 'Every position found! You really know your above, below, and '
-            'beside.';
+    ? 'Every middle found. Between is a hard one, and you have it.'
+    : 'Every position found! You really know your above, below, and '
+          'beside.';
 
 /// Every keeper line the activity can say, for the recording script.
 List<String> wheresBuddyKeeperScriptLines() => <String>[
-      for (final mode in WheresBuddyModes.all) wheresBuddyIntro(mode),
-      wheresBuddyFinal(WheresBuddyModes.placeMode),
-      wheresBuddyFinal(WheresBuddyModes.relationalMode),
-      for (final r in kWheresBuddyRounds) r.keeperLine,
-      for (final r in kWheresBuddyRelationalRounds) r.keeperLine,
-    ];
+  for (final mode in WheresBuddyModes.all) wheresBuddyIntro(mode),
+  wheresBuddyFinal(WheresBuddyModes.placeMode),
+  wheresBuddyFinal(WheresBuddyModes.relationalMode),
+  for (final r in kWheresBuddyRounds) r.keeperLine,
+  for (final r in kWheresBuddyRelationalRounds) r.keeperLine,
+];

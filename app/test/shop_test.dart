@@ -40,13 +40,11 @@ void main() {
   test('an item she cannot afford is refused whole', () {
     final c = ProviderContainer();
     addTearDown(c.dispose);
-    final priced =
-        kSanctuaryDecor.map((d) => d.id).firstWhere((id) => decorPrice(id) > 0);
+    final priced = kSanctuaryDecor
+        .map((d) => d.id)
+        .firstWhere((id) => decorPrice(id) > 0);
     c.read(walletProvider.notifier).set(decorPrice(priced) - 1);
-    expect(
-      c.read(shopProvider).buyDecor(priced),
-      PurchaseOutcome.cannotAfford,
-    );
+    expect(c.read(shopProvider).buyDecor(priced), PurchaseOutcome.cannotAfford);
     expect(c.read(walletProvider), decorPrice(priced) - 1);
     expect(c.read(decorOwnershipProvider.notifier).owns(priced), isFalse);
   });

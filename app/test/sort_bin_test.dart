@@ -43,7 +43,8 @@ void main() {
         expect(
           kSortBinExemplars[id],
           isNotNull,
-          reason: '$id has a label and no picture, so the only way to tell it '
+          reason:
+              '$id has a label and no picture, so the only way to tell it '
               'from the basket beside it is to read it',
         );
         expect(kSortBinExemplars[id], isNotEmpty, reason: '$id draws nothing');

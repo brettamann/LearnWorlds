@@ -6,10 +6,7 @@
 // Schema: schemas/activity-registry.schema.json
 
 class ConceptRef {
-  const ConceptRef({
-    required this.conceptId,
-    required this.role,
-  });
+  const ConceptRef({required this.conceptId, required this.role});
 
   factory ConceptRef.fromJson(Map<String, dynamic> json) {
     return ConceptRef(
@@ -137,8 +134,8 @@ class Activity {
   /// concept, else the activity's first.
   String entryConceptIdFor(SubMode? subMode) =>
       subMode != null && subMode.primaryConcepts.isNotEmpty
-          ? subMode.primaryConcepts.first
-          : concepts.first.conceptId;
+      ? subMode.primaryConcepts.first
+      : concepts.first.conceptId;
 
   /// The sub-mode one step simpler than [subModeId], for a child who is
   /// struggling at the simplest layer of it - step two of the staggered

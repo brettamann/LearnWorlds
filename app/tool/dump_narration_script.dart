@@ -78,13 +78,10 @@ List<String> lessonNarrationLines() {
   }
 
   final files = dir.listSync().whereType<File>().where(
-        (f) => f.path.endsWith('.json'),
-      );
+    (f) => f.path.endsWith('.json'),
+  );
   for (final file in files) {
-    collect(
-      jsonDecode(file.readAsStringSync()),
-      inNarrationScript: false,
-    );
+    collect(jsonDecode(file.readAsStringSync()), inNarrationScript: false);
   }
 
   // Sorted so the dump is stable across filesystem ordering and the diff is
@@ -110,8 +107,8 @@ List<String> activityDisplayNames() {
 
   final seen = <String>{};
   final files = dir.listSync().whereType<File>().where(
-        (f) => f.path.endsWith('.json'),
-      );
+    (f) => f.path.endsWith('.json'),
+  );
   for (final file in files) {
     final decoded = jsonDecode(file.readAsStringSync());
     if (decoded is! Map) continue;
@@ -144,12 +141,13 @@ void main() {
     ...lessonLines,
     ...activityNames,
   };
-  final literalLines = dartNarrationLiterals('lib')
-      .map(narrationTextNormalize)
-      .where((t) => t.isNotEmpty && !known.contains(t))
-      .toSet()
-      .toList()
-    ..sort();
+  final literalLines =
+      dartNarrationLiterals('lib')
+          .map(narrationTextNormalize)
+          .where((t) => t.isNotEmpty && !known.contains(t))
+          .toSet()
+          .toList()
+        ..sort();
 
   final payload = <String, dynamic>{
     'version': 1,
@@ -166,17 +164,15 @@ void main() {
           'complete': batch.isComplete,
           'lines': <Map<String, String>>[
             for (final text in batch.lines)
-              <String, String>{
-                'text': text,
-                'clipKey': narrationClipKey(text),
-              },
+              <String, String>{'text': text, 'clipKey': narrationClipKey(text)},
           ],
         },
       if (literalLines.isNotEmpty)
         <String, dynamic>{
           'id': 'dart-literals',
           'title': 'Lines written directly in Dart',
-          'note': 'Swept out of lib/ by tool/narration_sources.dart: the '
+          'note':
+              'Swept out of lib/ by tool/narration_sources.dart: the '
               'sanctuary prologue, const round keeperLines, reward dialog. '
               'Interpolated templates are excluded - their variants have to '
               'come from the catalog that fills the slot.',
@@ -184,44 +180,37 @@ void main() {
           'complete': true,
           'lines': <Map<String, String>>[
             for (final text in literalLines)
-              <String, String>{
-                'text': text,
-                'clipKey': narrationClipKey(text),
-              },
+              <String, String>{'text': text, 'clipKey': narrationClipKey(text)},
           ],
         },
       if (activityNames.isNotEmpty)
         <String, dynamic>{
           'id': 'activity-names',
           'title': 'The Sanctuary map - the name of a lesson, on tap',
-          'note': 'Authored in data/activity-registry/*.json and spoken by '
+          'note':
+              'Authored in data/activity-registry/*.json and spoken by '
               'the banner beside each lesson node. Same direction as the '
               'map-labels batch: naming a place, not announcing it.',
           'variants': activityNames.length,
           'complete': true,
           'lines': <Map<String, String>>[
             for (final text in activityNames)
-              <String, String>{
-                'text': text,
-                'clipKey': narrationClipKey(text),
-              },
+              <String, String>{'text': text, 'clipKey': narrationClipKey(text)},
           ],
         },
       if (lessonLines.isNotEmpty)
         <String, dynamic>{
           'id': 'lesson-json',
           'title': 'Lesson narration (I Show / We Try)',
-          'note': 'Authored in data/lesson-runtime/*.json and spoken by '
+          'note':
+              'Authored in data/lesson-runtime/*.json and spoken by '
               'LessonRuntime. Not enumerable from narration_script.dart, '
               'which only sees what the Dart runners compose.',
           'variants': lessonLines.length,
           'complete': true,
           'lines': <Map<String, String>>[
             for (final text in lessonLines)
-              <String, String>{
-                'text': text,
-                'clipKey': narrationClipKey(text),
-              },
+              <String, String>{'text': text, 'clipKey': narrationClipKey(text)},
           ],
         },
     ],

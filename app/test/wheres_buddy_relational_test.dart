@@ -60,7 +60,8 @@ void main() {
         expect(
           gap,
           greaterThan(0.4),
-          reason: '$a and $b are ${gap.toStringAsFixed(2)} apart — the '
+          reason:
+              '$a and $b are ${gap.toStringAsFixed(2)} apart — the '
               'midpoint is inside the tolerance of both ends',
         );
       }
@@ -156,8 +157,9 @@ void main() {
       }
     }
 
-    testWidgets('opens on the between prompt, not a place-mode one',
-        (tester) async {
+    testWidgets('opens on the between prompt, not a place-mode one', (
+      tester,
+    ) async {
       await pumpChallenge(tester);
       expect(tester.takeException(), isNull);
 
@@ -242,8 +244,9 @@ void main() {
       );
     }
 
-    testWidgets('Buddy can be dragged, and the middle is the answer',
-        (tester) async {
+    testWidgets('Buddy can be dragged, and the middle is the answer', (
+      tester,
+    ) async {
       // Both halves of this shipped broken in the first cut. The runner asked
       // "is this place-mode?" in four separate places to mean "can she move
       // Buddy?", so the challenge put an instruction over a Buddy nailed to
@@ -267,8 +270,9 @@ void main() {
       await close(tester);
     });
 
-    testWidgets('dropping on one of the two named things is not the answer',
-        (tester) async {
+    testWidgets('dropping on one of the two named things is not the answer', (
+      tester,
+    ) async {
       // The failure that would make this a re-skin: if either end counted,
       // "between" would be satisfied by "at", and she could pass every round
       // without the word meaning anything.

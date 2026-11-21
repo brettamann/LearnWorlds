@@ -76,14 +76,16 @@ List<ScribeRound> scribeRoundsFor(String subMode, {required int seed}) {
 
 // ---- words ----------------------------------------------------------------
 
-const String kScribeIntro = 'Welcome to the Scribe\'s Tower! The fireflies '
+const String kScribeIntro =
+    'Welcome to the Scribe\'s Tower! The fireflies '
     'need help writing their numbers. Trace with your finger, and the ink '
     'will glow.';
 const String kScribeDemo = 'Watch the firefly. It shows you the way.';
 const String kScribeStartHere = 'Start at the green dot.';
 const String kScribeFollow = 'Follow the path with your finger.';
 const String kScribeNextPart = 'Now this part.';
-const String kScribeFinal = 'What lovely numbers! The whole tower is '
+const String kScribeFinal =
+    'What lovely numbers! The whole tower is '
     'glowing. Here are some coins for your writing.';
 
 const List<String> kScribeKeeperLines = <String>[
@@ -99,16 +101,16 @@ String scribeKeeperLine(int round) =>
 String _cap(String s) => s[0].toUpperCase() + s.substring(1);
 
 String scribePrompt(ScribeRound r) => switch (r.task) {
-      ScribeTask.trace =>
-        'Let us write ${spellNumber(r.numeral)}. Start at the green dot.',
-      ScribeTask.writeFromCue => 'Count the fireflies. Then write that number.',
-      ScribeTask.match => 'Find the number ${spellNumber(r.numeral)}.',
-    };
+  ScribeTask.trace =>
+    'Let us write ${spellNumber(r.numeral)}. Start at the green dot.',
+  ScribeTask.writeFromCue => 'Count the fireflies. Then write that number.',
+  ScribeTask.match => 'Find the number ${spellNumber(r.numeral)}.',
+};
 
 String scribeDone(ScribeRound r) => r.task == ScribeTask.match
     ? 'Yes! That says ${spellNumber(r.numeral)}.'
     : '${_cap(spellNumber(r.numeral))}! You wrote '
-        '${spellNumber(r.numeral)}.';
+          '${spellNumber(r.numeral)}.';
 
 /// Said once she has counted the fireflies in write-from-cue, so that the
 /// writing is of a number she knows rather than a shape she is copying.

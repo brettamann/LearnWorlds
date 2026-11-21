@@ -69,11 +69,7 @@ const List<String> kShapeIntroSequence = <String>[
 ];
 
 class LessonScreen extends ConsumerStatefulWidget {
-  const LessonScreen({
-    super.key,
-    required this.lessonId,
-    this.subModeOverride,
-  });
+  const LessonScreen({super.key, required this.lessonId, this.subModeOverride});
 
   final String lessonId;
 
@@ -274,17 +270,18 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
       _skipEnabled = false;
     });
     final feedback = ref.read(feedbackEngineProvider);
-    _weTry = WeTryRunner(
-      phase: runtime.weTry,
-      scene: _scene,
-      say: (text, cueId) => ref.narration.say(text, cueId: cueId),
-      chime: feedback.hint,
-      pop: feedback.correct,
-      hits: _targets.hits,
-      onFinished: _goToYouDo,
-    )
-      ..addListener(_onSceneChanged)
-      ..start();
+    _weTry =
+        WeTryRunner(
+            phase: runtime.weTry,
+            scene: _scene,
+            say: (text, cueId) => ref.narration.say(text, cueId: cueId),
+            chime: feedback.hint,
+            pop: feedback.correct,
+            hits: _targets.hits,
+            onFinished: _goToYouDo,
+          )
+          ..addListener(_onSceneChanged)
+          ..start();
   }
 
   /// End of the demonstration. Her turn, unless this lesson does its own.
@@ -341,10 +338,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            _backgroundAsset(_runtime),
-            fit: BoxFit.cover,
-          ),
+          Image.asset(_backgroundAsset(_runtime), fit: BoxFit.cover),
           FutureBuilder<LessonRuntime>(
             future: _future,
             builder: (context, snap) {
@@ -400,8 +394,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
               if (_phase == _LessonPhase.shapeFindRound &&
                   _currentShapeIdx < kShapeIntroSequence.length) {
                 final kind = kShapeIntroSequence[_currentShapeIdx];
-                final previousKinds =
-                    kShapeIntroSequence.sublist(0, _currentShapeIdx);
+                final previousKinds = kShapeIntroSequence.sublist(
+                  0,
+                  _currentShapeIdx,
+                );
                 return ShapeFindRound(
                   key: ValueKey('shape-find-$kind'),
                   targetKind: kind,
@@ -446,11 +442,13 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
                     // K.G.6 opens on the frame the kid just laid in K.G.5 -
                     // "the frame is the base, we add shapes on top" - so its
                     // sticks and clay start down rather than as ghosts.
-                    placedCorners: runtime.iShow.framePrebuilt &&
+                    placedCorners:
+                        runtime.iShow.framePrebuilt &&
                             _phase != _LessonPhase.weTry
                         ? <int>{0, 1, 2}
                         : _scene.placedCorners,
-                    placedEdges: runtime.iShow.framePrebuilt &&
+                    placedEdges:
+                        runtime.iShow.framePrebuilt &&
                             _phase != _LessonPhase.weTry
                         ? <int>{0, 1, 2}
                         : _scene.placedEdges,
@@ -473,8 +471,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
                     spot: _scene.buddySpot,
                     pointerVisible: _scene.pointerVisible,
                     targets: _targets,
-                    zoneIds:
-                        _phase == _LessonPhase.weTry ? _scene.haloed : const {},
+                    zoneIds: _phase == _LessonPhase.weTry
+                        ? _scene.haloed
+                        : const {},
                   );
                 // The three shape stages are drawn by their own phases above
                 // and never reach here.
@@ -554,8 +553,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
                   child: NextArrowButton(
                     key: const ValueKey('lesson-continue-arrow'),
                     idleHintEnabled: true,
-                    onPressed:
-                        _phase == _LessonPhase.iShow ? _afterIShow : _goToYouDo,
+                    onPressed: _phase == _LessonPhase.iShow
+                        ? _afterIShow
+                        : _goToYouDo,
                     label: kLabelContinue,
                   ),
                 ),

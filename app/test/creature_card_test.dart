@@ -39,8 +39,9 @@ class _FixedChance implements math.Random {
 }
 
 /// The cards an ordinary passed round can actually yield.
-final List<CreatureCard> _roundDropCards =
-    kCreatureCards.where((c) => c.source == CardSource.roundDrop).toList();
+final List<CreatureCard> _roundDropCards = kCreatureCards
+    .where((c) => c.source == CardSource.roundDrop)
+    .toList();
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -65,7 +66,9 @@ void main() {
     RoundResult result = RoundResult.success,
     String activityId = 'counting-parade',
   }) {
-    container.read(roundCoordinatorProvider).resolveRound(
+    container
+        .read(roundCoordinatorProvider)
+        .resolveRound(
           activityId: activityId,
           conceptId: 'K.CC.4a',
           result: result,
@@ -126,7 +129,8 @@ void main() {
         expect(
           File(card.spriteAsset).existsSync(),
           isTrue,
-          reason: '${card.id} points at ${card.spriteAsset}, which is not '
+          reason:
+              '${card.id} points at ${card.spriteAsset}, which is not '
               'on disk — run `node tools/artgen/artgen.mjs install`',
         );
       }
@@ -136,9 +140,13 @@ void main() {
       // The catalog JSON is the authority and this list is its runtime view.
       // A card added here but not there would drop something the reward
       // system has never heard of.
-      final json = jsonDecode(
-        File('assets/data/reward-catalog/kindergarten.json').readAsStringSync(),
-      ) as Map<String, dynamic>;
+      final json =
+          jsonDecode(
+                File(
+                  'assets/data/reward-catalog/kindergarten.json',
+                ).readAsStringSync(),
+              )
+              as Map<String, dynamic>;
       final authored = <String>{
         for (final item in json['items'] as List<dynamic>)
           (item as Map<String, dynamic>)['id'] as String,

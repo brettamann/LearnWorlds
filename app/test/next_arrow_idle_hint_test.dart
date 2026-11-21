@@ -22,17 +22,17 @@ void main() {
   const hint = 'Tap the arrow to continue!';
 
   Widget arrow(String text) => MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: NextArrowButton(
-              idleHintEnabled: true,
-              idleHintText: text,
-              onPressed: () {},
-              label: 'Continue',
-            ),
-          ),
+    home: Scaffold(
+      body: Center(
+        child: NextArrowButton(
+          idleHintEnabled: true,
+          idleHintText: text,
+          onPressed: () {},
+          label: 'Continue',
         ),
-      );
+      ),
+    ),
+  );
 
   /// Counts how many times [text] is actually spoken.
   ///
@@ -61,8 +61,9 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
-  testWidgets('gives up after five rather than calling out forever',
-      (tester) async {
+  testWidgets('gives up after five rather than calling out forever', (
+    tester,
+  ) async {
     final w = watch(hint);
     await tester.pumpWidget(
       UncontrolledProviderScope(container: w.container, child: arrow(hint)),
@@ -101,14 +102,17 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
-  testWidgets('the arrow is ringed so it does not dissolve into the meadow',
-      (tester) async {
+  testWidgets('the arrow is ringed so it does not dissolve into the meadow', (
+    tester,
+  ) async {
     final w = watch(hint);
     await tester.pumpWidget(
       UncontrolledProviderScope(container: w.container, child: arrow(hint)),
     );
     await tester.pump();
-    final ringed = tester.widgetList<Material>(find.byType(Material)).where(
+    final ringed = tester
+        .widgetList<Material>(find.byType(Material))
+        .where(
           (m) =>
               m.shape is CircleBorder &&
               (m.shape! as CircleBorder).side.width >= 3 &&

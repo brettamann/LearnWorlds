@@ -392,10 +392,7 @@ class _HuntShapeSprite extends StatelessWidget {
   Widget build(BuildContext context) {
     final cx = shape.x * canvasW;
     final cy = shape.y * canvasH;
-    final sprite = AssetPaths.shapeGarden2dSprite(
-      shape.kind,
-      shape.variant,
-    );
+    final sprite = AssetPaths.shapeGarden2dSprite(shape.kind, shape.variant);
     return Positioned(
       left: cx - size / 2,
       top: cy - size / 2,
@@ -419,10 +416,11 @@ class _HuntShapeSprite extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: (demoHaloKind == 'match'
-                                  ? Colors.amber.shade400
-                                  : Colors.redAccent.shade200)
-                              .withValues(alpha: 0.7),
+                          color:
+                              (demoHaloKind == 'match'
+                                      ? Colors.amber.shade400
+                                      : Colors.redAccent.shade200)
+                                  .withValues(alpha: 0.7),
                           blurRadius: 28,
                           spreadRadius: 6,
                         ),

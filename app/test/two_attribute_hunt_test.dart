@@ -79,7 +79,8 @@ void main() {
         expect(
           round.matches.difference(ids),
           isEmpty,
-          reason: 'an answer that is not on the board can never be tapped, so '
+          reason:
+              'an answer that is not on the board can never be tapped, so '
               'the round would never resolve',
         );
         expect(
@@ -91,8 +92,10 @@ void main() {
 
       test('${round.title}: every sprite it names exists', () {
         for (final shape in round.shapes) {
-          final path =
-              AssetPaths.shapeGarden2dSprite(shape.kind, shape.variant);
+          final path = AssetPaths.shapeGarden2dSprite(
+            shape.kind,
+            shape.variant,
+          );
           expect(
             File(path).existsSync(),
             isTrue,
@@ -106,7 +109,8 @@ void main() {
           expect(
             kShapeVariantColor,
             contains(shape.variant),
-            reason: '${shape.variant} has no row in shape_colors.dart, so no '
+            reason:
+                '${shape.variant} has no row in shape_colors.dart, so no '
                 'round can ask for its colour and be checked',
           );
         }
@@ -120,7 +124,8 @@ void main() {
         expect(
           onBoard,
           isNotEmpty,
-          reason: 'the round asks for $asked and nothing on the board is '
+          reason:
+              'the round asks for $asked and nothing on the board is '
               '$asked. She cannot answer it by looking.',
         );
       });
@@ -131,7 +136,8 @@ void main() {
           expect(
             shape.color,
             asked,
-            reason: '$id is drawn as ${shape.variant} - '
+            reason:
+                '$id is drawn as ${shape.variant} - '
                 '${shape.color} - in the round that asks for $asked',
           );
         }
@@ -145,14 +151,16 @@ void main() {
         for (final shape in round.shapes) {
           if (round.matches.contains(shape.id)) continue;
           if (shape.color != asked) continue;
-          final answers = round.matches
-              .map((id) => round.shapes.firstWhere((s) => s.id == id));
+          final answers = round.matches.map(
+            (id) => round.shapes.firstWhere((s) => s.id == id),
+          );
           expect(
             answers.every(
               (a) => a.kind != shape.kind || a.isLarge != shape.isLarge,
             ),
             isTrue,
-            reason: '${shape.id} is $asked and is a ${shape.kind}, the same '
+            reason:
+                '${shape.id} is $asked and is a ${shape.kind}, the same '
                 'as an answer. A child tapping it is right and is told she '
                 'is wrong.',
           );
@@ -161,44 +169,46 @@ void main() {
     }
   });
 
-  testWidgets('the bonus is paid once per visit, however often she plays again',
-      (tester) async {
-    // "Again!" used to go through the same Continue that paid the bonus, so
-    // every replay of the challenge paid another 50 coins.
-    SharedPreferences.setMockInitialValues({});
-    useViewSize(tester);
-    final container = testContainer(sessionId: 'two-attr-bonus');
-    addTearDown(container.dispose);
-    await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: MaterialApp(
-          home: Scaffold(
-            body: TwoAttributeHuntRunner(
-              onSequenceComplete: () {},
-              skipIntro: true,
+  testWidgets(
+    'the bonus is paid once per visit, however often she plays again',
+    (tester) async {
+      // "Again!" used to go through the same Continue that paid the bonus, so
+      // every replay of the challenge paid another 50 coins.
+      SharedPreferences.setMockInitialValues({});
+      useViewSize(tester);
+      final container = testContainer(sessionId: 'two-attr-bonus');
+      addTearDown(container.dispose);
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            home: Scaffold(
+              body: TwoAttributeHuntRunner(
+                onSequenceComplete: () {},
+                skipIntro: true,
+              ),
             ),
           ),
         ),
-      ),
-    );
-
-    await _playAllRounds(tester);
-    expect(container.read(walletProvider), kTwoAttributeHuntBonus);
-
-    for (var replay = 0; replay < 2; replay++) {
-      await tester.tap(find.byKey(const ValueKey('2attr-repeat')));
-      await tester.pump();
-      await _playAllRounds(tester);
-      expect(
-        container.read(walletProvider),
-        kTwoAttributeHuntBonus,
-        reason: 'replay ${replay + 1} paid the bonus again',
       );
-      // And the replay's finale does not promise coins it is not paying.
-      expect(find.text(kTwoAttributeHuntReward), findsNothing);
-    }
 
-    await unmountAndDrain(tester);
-  });
+      await _playAllRounds(tester);
+      expect(container.read(walletProvider), kTwoAttributeHuntBonus);
+
+      for (var replay = 0; replay < 2; replay++) {
+        await tester.tap(find.byKey(const ValueKey('2attr-repeat')));
+        await tester.pump();
+        await _playAllRounds(tester);
+        expect(
+          container.read(walletProvider),
+          kTwoAttributeHuntBonus,
+          reason: 'replay ${replay + 1} paid the bonus again',
+        );
+        // And the replay's finale does not promise coins it is not paying.
+        expect(find.text(kTwoAttributeHuntReward), findsNothing);
+      }
+
+      await unmountAndDrain(tester);
+    },
+  );
 }

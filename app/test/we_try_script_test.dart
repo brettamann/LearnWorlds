@@ -22,34 +22,29 @@ WeTryScript compile(
   List<Map<String, dynamic>> choreography, {
   Map<String, String> narration = const {},
   Map<String, dynamic>? hesitation,
-}) =>
-    WeTryScript.compile(
-      choreography: choreography,
-      narrationByCueId: narration,
-      hesitationRule: hesitation,
-    );
+}) => WeTryScript.compile(
+  choreography: choreography,
+  narrationByCueId: narration,
+  hesitationRule: hesitation,
+);
 
 Map<String, dynamic> say(String at, String cueId) => {
-      'at': at,
-      'type': 'system-action',
-      'params': {'action': 'narration', 'cueId': cueId},
-    };
+  'at': at,
+  'type': 'system-action',
+  'params': {'action': 'narration', 'cueId': cueId},
+};
 
 Map<String, dynamic> kid(String at, Map<String, dynamic> params) => {
-      'at': at,
-      'type': 'kid-action-expected',
-      'params': params,
-    };
+  'at': at,
+  'type': 'kid-action-expected',
+  'params': params,
+};
 
 void main() {
   group('timing', () {
     test('absolute times are gaps from the start of the phase', () {
       final s = compile(
-        [
-          say('0s', 'a'),
-          say('4s', 'b'),
-          say('7s', 'c'),
-        ],
+        [say('0s', 'a'), say('4s', 'b'), say('7s', 'c')],
         narration: {'a': 'One.', 'b': 'Two.', 'c': 'Three.'},
       );
       expect(s.beats.map((b) => b.delay.inMilliseconds), [0, 4000, 3000]);
@@ -57,11 +52,7 @@ void main() {
 
     test('relative times are gaps from the beat before', () {
       final s = compile(
-        [
-          say('10s', 'a'),
-          say('+0.5s', 'b'),
-          say('+1.5s', 'c'),
-        ],
+        [say('10s', 'a'), say('+0.5s', 'b'), say('+1.5s', 'c')],
         narration: {'a': 'One.', 'b': 'Two.', 'c': 'Three.'},
       );
       expect(s.beats.map((b) => b.delay.inMilliseconds), [10000, 500, 1500]);
@@ -87,7 +78,8 @@ void main() {
       expect(
         s.beats.last.delay,
         Duration.zero,
-        reason: 'the 22s deadline is a wall clock she has already overtaken; '
+        reason:
+            'the 22s deadline is a wall clock she has already overtaken; '
             'honouring it strands her on a finished scene',
       );
     });

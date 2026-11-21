@@ -129,13 +129,15 @@ void main() {
       expect(
         tester.takeException(),
         isNull,
-        reason: 'threw while opening, or laid out illegally once the intro '
+        reason:
+            'threw while opening, or laid out illegally once the intro '
             'was out of the way',
       );
       expect(
         find.textContaining('lands in a later sprint'),
         findsNothing,
-        reason: 'the picker offers this and the dispatcher does not know it — '
+        reason:
+            'the picker offers this and the dispatcher does not know it — '
             'a pre-reader gets a sentence in English on a blank screen',
       );
       // Something to touch. Every runner opens either on the keeper's intro

@@ -11,5 +11,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'setting_notifiers.dart';
 
-final readAloudGateEnabledProvider =
-    NotifierProvider<BoolSetting, bool>(BoolSetting.new);
+final readAloudGateEnabledProvider = NotifierProvider<BoolSetting, bool>(
+  BoolSetting.new,
+);

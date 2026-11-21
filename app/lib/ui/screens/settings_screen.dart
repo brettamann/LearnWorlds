@@ -210,7 +210,7 @@ class SettingsScreen extends ConsumerWidget {
     final extra = coverage.orphaned == 0
         ? ''
         : ' ${coverage.orphaned} more cover lesson narration and lines heard '
-            'while playing.';
+              'while playing.';
 
     return 'The full script as JSON for the harness at tools/tts/record/. '
         'Most of it is enumerated from the catalogs, so you can record '
@@ -247,19 +247,19 @@ class SettingsScreen extends ConsumerWidget {
   /// doesn't need to wait on async asset enumeration.
   static const List<({String id, String label})> _kLessonLauncherEntries =
       <({String id, String label})>[
-    (
-      id: 'lesson-k-cc-4a-one-to-one',
-      label: 'K.CC.4a — Counting Parade (one-to-one)'
-    ),
-    (
-      id: 'lesson-k-g-2-shape-recognition',
-      label: 'K.G.2 — Shape Garden (find the shape)'
-    ),
-    (
-      id: 'lesson-k-g-3-flat-or-solid',
-      label: 'K.G.3 — Shape Garden (flat or solid)'
-    ),
-  ];
+        (
+          id: 'lesson-k-cc-4a-one-to-one',
+          label: 'K.CC.4a — Counting Parade (one-to-one)',
+        ),
+        (
+          id: 'lesson-k-g-2-shape-recognition',
+          label: 'K.G.2 — Shape Garden (find the shape)',
+        ),
+        (
+          id: 'lesson-k-g-3-flat-or-solid',
+          label: 'K.G.3 — Shape Garden (flat or solid)',
+        ),
+      ];
 
   Future<void> _openLessonLauncher(BuildContext context) async {
     final picked = await showModalBottomSheet<String>(
@@ -274,10 +274,7 @@ class SettingsScreen extends ConsumerWidget {
                 padding: EdgeInsets.fromLTRB(20, 16, 20, 8),
                 child: Text(
                   'Launch which lesson?',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
               ),
               const Padding(
@@ -311,8 +308,9 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   Future<void> _openJumpPicker(BuildContext context, WidgetRef ref) async {
-    final options =
-        devAdvanceOptions(ref.read(activityRegistryProvider).valueOrNull);
+    final options = devAdvanceOptions(
+      ref.read(activityRegistryProvider).valueOrNull,
+    );
     final picked = await showModalBottomSheet<DevAdvanceOption>(
       context: context,
       isScrollControlled: true,
@@ -325,10 +323,7 @@ class SettingsScreen extends ConsumerWidget {
                 padding: EdgeInsets.fromLTRB(20, 16, 20, 8),
                 child: Text(
                   'Jump to which Sanctuary lesson?',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
               ),
               const Padding(
@@ -413,9 +408,9 @@ class SettingsScreen extends ConsumerWidget {
     if (!context.mounted) return;
     await resetDevAdvance(ref);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Lesson progress reset.')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Lesson progress reset.')));
   }
 }
 

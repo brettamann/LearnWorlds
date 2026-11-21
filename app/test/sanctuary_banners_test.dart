@@ -38,8 +38,7 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   for (final window in _windows) {
-    testWidgets(
-        'with every place explored, no two banners overlap at '
+    testWidgets('with every place explored, no two banners overlap at '
         '${window.width.toInt()}x${window.height.toInt()}', (tester) async {
       useViewSize(tester, window);
       final container = ProviderContainer(

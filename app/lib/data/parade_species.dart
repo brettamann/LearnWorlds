@@ -121,9 +121,9 @@ const List<String> kAllParadeSpeciesIds = <String>[
 /// lesson JSON should degrade to a playable round, not a crash in a child's
 /// hands.
 ParadeSpecies paradeSpeciesById(String id) => kParadeSpecies.firstWhere(
-      (s) => s.id == id,
-      orElse: () => kParadeSpecies.first,
-    );
+  (s) => s.id == id,
+  orElse: () => kParadeSpecies.first,
+);
 
 /// The keeper's between-round line: celebratory and species-specific, per
 /// specs/shared/counting-sequence.md.

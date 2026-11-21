@@ -39,9 +39,6 @@ Future<void> main() async {
   // finishes. Waiting on it would just delay first paint.
   unawaited(container.read(sfxEngineProvider).warmUp());
   runApp(
-    UncontrolledProviderScope(
-      container: container,
-      child: const CritMathApp(),
-    ),
+    UncontrolledProviderScope(container: container, child: const CritMathApp()),
   );
 }

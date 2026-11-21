@@ -25,10 +25,8 @@ class BuddyReaction {
   /// hops, not one.
   final int token;
 
-  BuddyReaction copyWith({BuddyMood? mood, int? token}) => BuddyReaction(
-        mood: mood ?? this.mood,
-        token: token ?? this.token,
-      );
+  BuddyReaction copyWith({BuddyMood? mood, int? token}) =>
+      BuddyReaction(mood: mood ?? this.mood, token: token ?? this.token);
 }
 
 class BuddyReactionController extends Notifier<BuddyReaction> {
@@ -69,5 +67,5 @@ class BuddyReactionController extends Notifier<BuddyReaction> {
 
 final buddyReactionProvider =
     NotifierProvider<BuddyReactionController, BuddyReaction>(
-  BuddyReactionController.new,
-);
+      BuddyReactionController.new,
+    );

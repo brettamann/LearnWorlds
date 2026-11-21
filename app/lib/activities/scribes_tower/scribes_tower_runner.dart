@@ -160,9 +160,7 @@ class _ScribeRoundBodyState extends ConsumerState<ScribeRoundBody>
     _hints?.pause();
     ref.read(feedbackEngineProvider).correct();
     widget.c.say(scribeDone(_r), replay: false);
-    widget.c.finish(
-      gradeRound(helped: (_hints?.hintsUsed ?? 0) > 0),
-    );
+    widget.c.finish(gradeRound(helped: (_hints?.hintsUsed ?? 0) > 0));
   }
 
   // ---- counting fireflies -----------------------------------------------
@@ -240,8 +238,10 @@ class _ScribeRoundBodyState extends ConsumerState<ScribeRoundBody>
       return;
     }
     if (_counting && !_allCounted) {
-      final next = List<int>.generate(_r.numeral, (i) => i)
-          .firstWhere((i) => !_counted.contains(i), orElse: () => -1);
+      final next = List<int>.generate(
+        _r.numeral,
+        (i) => i,
+      ).firstWhere((i) => !_counted.contains(i), orElse: () => -1);
       if (next < 0) return;
       switch (level) {
         case HintLevel.none:

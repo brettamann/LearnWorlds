@@ -163,8 +163,9 @@ class CountTheParadeRunner extends ConsumerStatefulWidget {
 }
 
 class _CountTheParadeRunnerState extends ConsumerState<CountTheParadeRunner> {
-  late final ParadeRoundParameters _params =
-      ParadeRoundParameters.fromJson(widget.roundParameters);
+  late final ParadeRoundParameters _params = ParadeRoundParameters.fromJson(
+    widget.roundParameters,
+  );
 
   /// The rounds for this visit, planned once. Seeding off the session means
   /// the order is stable for the whole visit (a rebuild cannot reshuffle
@@ -472,10 +473,7 @@ class _ParadeRoundBodyState extends ConsumerState<ParadeRoundBody>
     // demonstration is a soft success (coins, no progress toward the next
     // layer); three wrong taps fail it, and two failures demote a layer.
     widget.c.finish(
-      gradeRound(
-        misses: _wrongTaps,
-        helped: (_hints?.hintsUsed ?? 0) > 0,
-      ),
+      gradeRound(misses: _wrongTaps, helped: (_hints?.hintsUsed ?? 0) > 0),
     );
   }
 
@@ -521,10 +519,12 @@ class _ParadeRoundBodyState extends ConsumerState<ParadeRoundBody>
                                     'fawn-${cells[slot].creatureIndex}',
                                   ),
                                   spriteAsset: _species.spriteAsset,
-                                  tapped: _tapped
-                                      .contains(cells[slot].creatureIndex),
-                                  gone: _exited
-                                      .contains(cells[slot].creatureIndex),
+                                  tapped: _tapped.contains(
+                                    cells[slot].creatureIndex,
+                                  ),
+                                  gone: _exited.contains(
+                                    cells[slot].creatureIndex,
+                                  ),
                                   pointed: _hinted == cells[slot].creatureIndex,
                                   onTap: () => _tap(cells[slot].creatureIndex!),
                                 ),

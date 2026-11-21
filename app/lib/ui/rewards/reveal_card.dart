@@ -83,10 +83,7 @@ class RevealCardFace extends StatelessWidget {
               color: AppColors.parchmentInk,
             ),
           ),
-          if (footer != null) ...[
-            const SizedBox(height: 14),
-            footer!,
-          ],
+          if (footer != null) ...[const SizedBox(height: 14), footer!],
         ],
       ),
     );
@@ -193,11 +190,7 @@ class _TapAnywherePromptState extends State<TapAnywherePrompt>
             children: [
               Transform.translate(
                 offset: Offset(0, -3 * t),
-                child: Icon(
-                  Icons.touch_app,
-                  size: 26,
-                  color: widget.accent,
-                ),
+                child: Icon(Icons.touch_app, size: 26, color: widget.accent),
               ),
               const SizedBox(width: 8),
               const Text(

@@ -55,7 +55,7 @@ class SfxEngine {
   /// [playerFactory] is a test seam: inject a fake so unit tests can assert
   /// what would have been played without needing the audio plugin.
   SfxEngine({AudioPlayer Function()? playerFactory})
-      : _newPlayer = playerFactory ?? AudioPlayer.new;
+    : _newPlayer = playerFactory ?? AudioPlayer.new;
 
   final AudioPlayer Function() _newPlayer;
 
@@ -201,13 +201,11 @@ class SfxEngine {
         // On its way out anyway; restarting it here would fight the fade.
         if (_bedRelease != null) return;
         unawaited(
-          _guard(
-            () async {
-              await music.seek(Duration.zero);
-              await music.setVolume(_musicVolume);
-              unawaited(_guard(music.play()));
-            }(),
-          ),
+          _guard(() async {
+            await music.seek(Duration.zero);
+            await music.setVolume(_musicVolume);
+            unawaited(_guard(music.play()));
+          }()),
         );
       });
     } catch (_) {
@@ -217,15 +215,15 @@ class SfxEngine {
 
   /// Every player the unlock pass should bless, ladder first.
   List<AudioPlayer> get _allPlayers => <AudioPlayer>[
-        ..._ladder,
-        ..._pools.values.expand((List<AudioPlayer> p) => p),
-        // The music player is skipped while a bed is actually playing.
-        // Blessing pauses and rewinds, so an unlock that only succeeds on the
-        // third or fourth gesture - which is the whole point of retrying -
-        // would otherwise stop the music the child is listening to. It needs
-        // no grant in that state anyway: it could not be playing without one.
-        if (_music != null && _bedAsset == null) _music!,
-      ];
+    ..._ladder,
+    ..._pools.values.expand((List<AudioPlayer> p) => p),
+    // The music player is skipped while a bed is actually playing.
+    // Blessing pauses and rewinds, so an unlock that only succeeds on the
+    // third or fourth gesture - which is the whole point of retrying -
+    // would otherwise stop the music the child is listening to. It needs
+    // no grant in that state anyway: it could not be playing without one.
+    if (_music != null && _bedAsset == null) _music!,
+  ];
 
   /// Claim the browser's per-element autoplay grant for one player.
   ///
@@ -475,13 +473,11 @@ class SfxEngine {
     // Fire-and-forget: a tap sound must never make a caller await. Rewinding
     // first is what lets the same player retrigger mid-clip.
     unawaited(
-      _guard(
-        () async {
-          await player.setVolume(volume.clamp(0.0, 1.0));
-          await player.seek(Duration.zero);
-          await player.play();
-        }(),
-      ),
+      _guard(() async {
+        await player.setVolume(volume.clamp(0.0, 1.0));
+        await player.seek(Duration.zero);
+        await player.play();
+      }()),
     );
   }
 

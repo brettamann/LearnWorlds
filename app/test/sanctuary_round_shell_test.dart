@@ -20,38 +20,37 @@ Widget _shell({
   Widget Function(BuildContext, VoidCallback)? finale,
   VoidCallback? onFinale,
   VoidCallback? onDone,
-}) =>
-    SanctuaryRoundShell(
-      activityId: 'test',
-      roundCount: rounds,
-      conceptIdFor: (_) => 'K.T.1',
-      introLine: 'Hello.',
-      keeperLineFor: (_) => 'Next one.',
-      finalLine: 'All done.',
-      background: const ColoredBox(color: Colors.green),
-      skipIntro: intro == null,
-      celebrationHold: hold,
-      gradeRounds: gradeRounds,
-      introBuilder: intro,
-      finaleBuilder: finale,
-      onFinale: onFinale,
-      onSequenceComplete: onDone ?? () {},
-      showBuddy: false,
-      roundBuilder: (context, c) => Column(
-        children: [
-          TextButton(
-            key: ValueKey('finish-${c.index}'),
-            onPressed: () => c.finish(RoundResult.success),
-            child: const Text('finish'),
-          ),
-          TextButton(
-            key: ValueKey('extra-${c.index}'),
-            onPressed: () => c.grade('K.T.2', RoundResult.success),
-            child: const Text('extra'),
-          ),
-        ],
+}) => SanctuaryRoundShell(
+  activityId: 'test',
+  roundCount: rounds,
+  conceptIdFor: (_) => 'K.T.1',
+  introLine: 'Hello.',
+  keeperLineFor: (_) => 'Next one.',
+  finalLine: 'All done.',
+  background: const ColoredBox(color: Colors.green),
+  skipIntro: intro == null,
+  celebrationHold: hold,
+  gradeRounds: gradeRounds,
+  introBuilder: intro,
+  finaleBuilder: finale,
+  onFinale: onFinale,
+  onSequenceComplete: onDone ?? () {},
+  showBuddy: false,
+  roundBuilder: (context, c) => Column(
+    children: [
+      TextButton(
+        key: ValueKey('finish-${c.index}'),
+        onPressed: () => c.finish(RoundResult.success),
+        child: const Text('finish'),
       ),
-    );
+      TextButton(
+        key: ValueKey('extra-${c.index}'),
+        onPressed: () => c.grade('K.T.2', RoundResult.success),
+        child: const Text('extra'),
+      ),
+    ],
+  ),
+);
 
 Future<ProviderContainer> _pump(WidgetTester tester, Widget shell) async {
   useViewSize(tester);
@@ -70,8 +69,9 @@ Future<ProviderContainer> _pump(WidgetTester tester, Widget shell) async {
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  testWidgets('the keeper speaks only after the celebration hold',
-      (tester) async {
+  testWidgets('the keeper speaks only after the celebration hold', (
+    tester,
+  ) async {
     await _pump(tester, _shell(hold: const Duration(milliseconds: 1000)));
     await tester.tap(find.byKey(const ValueKey('finish-0')));
     await tester.pump(const Duration(milliseconds: 900));
@@ -81,8 +81,9 @@ void main() {
     await unmountAndDrain(tester);
   });
 
-  testWidgets('a graded round pays, an ungraded visit does not',
-      (tester) async {
+  testWidgets('a graded round pays, an ungraded visit does not', (
+    tester,
+  ) async {
     var c = await _pump(tester, _shell());
     await tester.tap(find.byKey(const ValueKey('finish-0')));
     await tester.pump();
@@ -96,8 +97,9 @@ void main() {
     await unmountAndDrain(tester);
   });
 
-  testWidgets('grade() grades a second concept in the same round',
-      (tester) async {
+  testWidgets('grade() grades a second concept in the same round', (
+    tester,
+  ) async {
     final c = await _pump(tester, _shell());
     await tester.tap(find.byKey(const ValueKey('extra-0')));
     await tester.tap(find.byKey(const ValueKey('finish-0')));
@@ -106,8 +108,9 @@ void main() {
     await unmountAndDrain(tester);
   });
 
-  testWidgets('a custom intro starts the visit when it says so',
-      (tester) async {
+  testWidgets('a custom intro starts the visit when it says so', (
+    tester,
+  ) async {
     await _pump(
       tester,
       _shell(
@@ -125,8 +128,9 @@ void main() {
     await unmountAndDrain(tester);
   });
 
-  testWidgets('a custom finale replaces the overlay and fires onFinale once',
-      (tester) async {
+  testWidgets('a custom finale replaces the overlay and fires onFinale once', (
+    tester,
+  ) async {
     var finales = 0;
     var done = false;
     await _pump(

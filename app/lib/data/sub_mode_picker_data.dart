@@ -109,8 +109,8 @@ class PickerSceneLayer {
     required this.x,
     required this.y,
     required this.size,
-  })  : asset = null,
-        flip = false;
+  }) : asset = null,
+       flip = false;
 
   /// Null means "draw Buddy here".
   final String? asset;
@@ -143,10 +143,7 @@ class PickerHabitat extends PickerSymbol {
 }
 
 class SubModePickerOption {
-  const SubModePickerOption({
-    required this.label,
-    required this.symbol,
-  });
+  const SubModePickerOption({required this.label, required this.symbol});
 
   /// Short button label shown beneath the symbol, and spoken.
   final String label;
@@ -159,13 +156,14 @@ class SubModePickerOption {
 /// Picker metadata keyed by `(activityId, subModeId)`. A missing entry
 /// means we draw a generic placeholder — keeps the picker forgiving of
 /// sub-modes whose runtime hasn't shipped yet.
-final Map<String, Map<String, SubModePickerOption>> kSubModePickerData =
-    <String, Map<String, SubModePickerOption>>{
+final Map<String, Map<String, SubModePickerOption>>
+kSubModePickerData = <String, Map<String, SubModePickerOption>>{
   ActivityIds.shapeGarden: <String, SubModePickerOption>{
     ShapeGardenModes.findShape: SubModePickerOption(
       label: 'Find the shape',
-      symbol:
-          PickerSprite(AssetPaths.shapeGarden2dSprite('triangle', 'yellow')),
+      symbol: PickerSprite(
+        AssetPaths.shapeGarden2dSprite('triangle', 'yellow'),
+      ),
     ),
     ShapeGardenModes.flatOrSolid: SubModePickerOption(
       label: 'Flat or solid',
@@ -564,13 +562,12 @@ const String kSubModePickerQuestion = 'What do you want to play?';
 /// first because nothing stops two activities from agreeing on a label, and
 /// clips are keyed by their words, so a duplicate is one clip, not two.
 List<String> spokenSubModeLabels() => <String>[
-      kSubModePickerQuestion,
-      ...<String>{
-        for (final activity in kSubModePickerData.values)
-          for (final option in activity.values) option.label,
-      }.toList()
-        ..sort(),
-    ];
+  kSubModePickerQuestion,
+  ...<String>{
+    for (final activity in kSubModePickerData.values)
+      for (final option in activity.values) option.label,
+  }.toList()..sort(),
+];
 
 /// Every sprite path the picker draws directly, for the test that checks the
 /// files are really there.
@@ -579,14 +576,14 @@ List<String> spokenSubModeLabels() => <String>[
 /// `kHabitatBlueprints`, which lives behind a Flutter import. The test walks
 /// those itself.
 List<String> pickerSpriteAssets() => <String>[
-      for (final activity in kSubModePickerData.values)
-        for (final option in activity.values)
-          ...switch (option.symbol) {
-            PickerSprite(:final asset) => <String>[asset],
-            PickerScene(:final layers) => <String>[
-                for (final layer in layers)
-                  if (layer.asset != null) layer.asset!,
-              ],
-            PickerHabitat() => <String>[],
-          },
-    ];
+  for (final activity in kSubModePickerData.values)
+    for (final option in activity.values)
+      ...switch (option.symbol) {
+        PickerSprite(:final asset) => <String>[asset],
+        PickerScene(:final layers) => <String>[
+          for (final layer in layers)
+            if (layer.asset != null) layer.asset!,
+        ],
+        PickerHabitat() => <String>[],
+      },
+];

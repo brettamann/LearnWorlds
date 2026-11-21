@@ -72,8 +72,9 @@ void main() {
     return engine;
   }
 
-  testWidgets('the island has music from the moment the app opens',
-      (tester) async {
+  testWidgets('the island has music from the moment the app opens', (
+    tester,
+  ) async {
     final engine = await pumpMap(tester);
     expect(
       engine.claimed,
@@ -83,8 +84,9 @@ void main() {
     expect(find.byType(MusicBedScope), findsOneWidget);
   });
 
-  testWidgets('the controls are on the rail, not in the corner',
-      (tester) async {
+  testWidgets('the controls are on the rail, not in the corner', (
+    tester,
+  ) async {
     await pumpMap(tester);
 
     expect(find.byType(MapSideRail), findsOneWidget);
@@ -110,8 +112,9 @@ void main() {
     Rect regionRect(WidgetTester tester, String id) =>
         tester.getRect(find.byKey(ValueKey('map-region-$id')));
 
-    testWidgets('a place that is not built yet says so, out loud',
-        (tester) async {
+    testWidgets('a place that is not built yet says so, out loud', (
+      tester,
+    ) async {
       // It said nothing at all. `enabled: false` gave the region `onTap: null`
       // under an *opaque* hit test, so the touch was swallowed and returned
       // no sound, no voice and no movement - on two of the four places a
@@ -154,8 +157,9 @@ void main() {
       );
     });
 
-    testWidgets('and the rail button speaks the caption under it',
-        (tester) async {
+    testWidgets('and the rail button speaks the caption under it', (
+      tester,
+    ) async {
       // All five rail buttons across both maps were a bare InkWell: no tap
       // sound, because Sfx.uiTap lives inside ReadAloudGate, and no voice,
       // under a caption she cannot read. Two of the five are the entire
@@ -171,8 +175,9 @@ void main() {
     });
   });
 
-  testWidgets('the rail sits beside the map rather than over it',
-      (tester) async {
+  testWidgets('the rail sits beside the map rather than over it', (
+    tester,
+  ) async {
     // Region rectangles are normalised against the image, so anything that
     // changes the box the map is drawn in drags every hit box off the artwork
     // it was authored against. The rail has to take its width from the empty

@@ -94,19 +94,13 @@ class RewardProgress extends Notifier<Map<String, RewardTrackState>> {
   void markStageSeen({required String trackId, required int stage}) {
     final current = stateFor(trackId);
     if (current.lastSeenStage >= stage) return;
-    state = {
-      ...state,
-      trackId: current.copyWith(lastSeenStage: stage),
-    };
+    state = {...state, trackId: current.copyWith(lastSeenStage: stage)};
   }
 
   void markGraduated({required String trackId}) {
     final current = stateFor(trackId);
     if (current.graduated) return;
-    state = {
-      ...state,
-      trackId: current.copyWith(graduated: true),
-    };
+    state = {...state, trackId: current.copyWith(graduated: true)};
   }
 
   void replaceAll(Map<String, RewardTrackState> snapshot) {
@@ -116,5 +110,5 @@ class RewardProgress extends Notifier<Map<String, RewardTrackState>> {
 
 final rewardProgressProvider =
     NotifierProvider<RewardProgress, Map<String, RewardTrackState>>(
-  RewardProgress.new,
-);
+      RewardProgress.new,
+    );

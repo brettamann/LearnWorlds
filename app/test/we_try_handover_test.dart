@@ -63,10 +63,10 @@ Map<String, dynamic> _params(dynamic beat) =>
     const <String, dynamic>{};
 
 Set<String> _named(Map<String, dynamic> params) => <String>{
-      if (params['target'] is String) params['target'] as String,
-      for (final t in params['targets'] as List<dynamic>? ?? const [])
-        if (t is String) t,
-    };
+  if (params['target'] is String) params['target'] as String,
+  for (final t in params['targets'] as List<dynamic>? ?? const [])
+    if (t is String) t,
+};
 
 void main() {
   final lessons = _weTrys();
@@ -90,7 +90,8 @@ void main() {
         expect(
           offenders,
           isEmpty,
-          reason: 'a `pointer-auto-*` that names targets is the system doing '
+          reason:
+              'a `pointer-auto-*` that names targets is the system doing '
               'her turn on specific objects. Give each one a '
               '`kid-action-expected` instead and let the hesitation rule be '
               'the safety net - it is three rungs deep and it demonstrates '
@@ -122,7 +123,8 @@ void main() {
         expect(
           unasked,
           isEmpty,
-          reason: 'these react as though touched, and she was never asked to '
+          reason:
+              'these react as though touched, and she was never asked to '
               'touch them. From her side a thing she was counting counted '
               'itself. (Haloing something she is not asked for is fine - a '
               'halo is context. Sparkling it is not.)',

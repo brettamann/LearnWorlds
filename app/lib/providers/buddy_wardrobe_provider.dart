@@ -18,13 +18,13 @@ import '../models/buddy_appearance.dart';
 
 /// The ownership keys a given appearance is currently wearing.
 Set<String> buddyAppearanceKeys(BuddyAppearance a) => <String>{
-      buddyOwnershipKey(BuddyPartKind.body, a.bodyId),
-      buddyOwnershipKey(BuddyPartKind.eyes, a.eyesId),
-      buddyOwnershipKey(BuddyPartKind.mouth, a.mouthId),
-      buddyOwnershipKey(BuddyPartKind.arms, a.armsId),
-      buddyOwnershipKey(BuddyPartKind.legs, a.legsId),
-      if (a.hatId != null) buddyOwnershipKey(BuddyPartKind.hat, a.hatId!),
-    };
+  buddyOwnershipKey(BuddyPartKind.body, a.bodyId),
+  buddyOwnershipKey(BuddyPartKind.eyes, a.eyesId),
+  buddyOwnershipKey(BuddyPartKind.mouth, a.mouthId),
+  buddyOwnershipKey(BuddyPartKind.arms, a.armsId),
+  buddyOwnershipKey(BuddyPartKind.legs, a.legsId),
+  if (a.hatId != null) buddyOwnershipKey(BuddyPartKind.hat, a.hatId!),
+};
 
 class BuddyWardrobe extends Notifier<Set<String>> {
   @override
@@ -45,12 +45,11 @@ class BuddyWardrobe extends Notifier<Set<String>> {
   /// before the shop existed keeps every part it is wearing. Free parts are
   /// filtered out so the save doesn't accumulate rows it never needed.
   void hydrate(Set<String> owned, {required BuddyAppearance appearance}) {
-    state = <String>{
-      ...owned,
-      ...buddyAppearanceKeys(appearance),
-    }..removeWhere(kBuddyFreeParts.contains);
+    state = <String>{...owned, ...buddyAppearanceKeys(appearance)}
+      ..removeWhere(kBuddyFreeParts.contains);
   }
 }
 
-final buddyWardrobeProvider =
-    NotifierProvider<BuddyWardrobe, Set<String>>(BuddyWardrobe.new);
+final buddyWardrobeProvider = NotifierProvider<BuddyWardrobe, Set<String>>(
+  BuddyWardrobe.new,
+);

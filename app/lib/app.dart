@@ -119,9 +119,8 @@ final _appRouterProvider = Provider<GoRouter>((ref) {
       // the creator so the shop is linkable and the back arrow behaves.
       GoRoute(
         path: Routes.buddyShop,
-        builder: (context, state) => const CharacterCreatorScreen(
-          mode: BuddyScreenMode.shop,
-        ),
+        builder: (context, state) =>
+            const CharacterCreatorScreen(mode: BuddyScreenMode.shop),
       ),
       GoRoute(
         path: Routes.collection,

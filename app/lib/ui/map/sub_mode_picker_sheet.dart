@@ -76,10 +76,7 @@ class SubModePickerEntry {
 /// One function rather than one lookup in the card and another in the
 /// read-through: the voice and the caption saying different things is the
 /// exact confusion this screen exists to remove.
-String pickerLabelFor({
-  required String activityId,
-  required String subModeId,
-}) {
+String pickerLabelFor({required String activityId, required String subModeId}) {
   final option = pickerOptionFor(activityId: activityId, subModeId: subModeId);
   if (option != null) return option.label;
   // A backstop, not a design. `sub_mode_picker_test.dart` asserts every
@@ -258,10 +255,7 @@ class _SubModePickerSheetState extends ConsumerState<SubModePickerSheet> {
                   const SizedBox(height: 4),
                   Text(
                     widget.activityDisplayName,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.black54,
-                    ),
+                    style: const TextStyle(fontSize: 14, color: Colors.black54),
                   ),
                   const SizedBox(height: 16),
                   Wrap(
@@ -274,8 +268,9 @@ class _SubModePickerSheetState extends ConsumerState<SubModePickerSheet> {
                           activityId: widget.activityId,
                           entry: widget.entries[i],
                           isSpotlit: _spotlight == i,
-                          onTap: () => Navigator.of(context)
-                              .pop(widget.entries[i].subMode.id),
+                          onTap: () => Navigator.of(
+                            context,
+                          ).pop(widget.entries[i].subMode.id),
                         ),
                     ],
                   ),
@@ -326,15 +321,15 @@ class _OptionCard extends StatelessWidget {
     final chipLabel = entry.isChallenge
         ? 'Challenge!'
         : entry.isNext
-            ? 'New!'
-            : entry.isCompleted
-                ? 'Replay'
-                : null;
+        ? 'New!'
+        : entry.isCompleted
+        ? 'Replay'
+        : null;
     final chipColor = entry.isChallenge
         ? Colors.deepPurple.shade100
         : entry.isNext
-            ? Colors.green.shade100
-            : Colors.amber.shade100;
+        ? Colors.green.shade100
+        : Colors.amber.shade100;
     return SizedBox(
       width: _cardWidth,
       child: ReadAloudGate(

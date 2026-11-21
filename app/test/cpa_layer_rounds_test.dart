@@ -73,9 +73,9 @@ Future<void> _unmount(WidgetTester tester) async {
 
 Finder get _acorns => find.byKey(const ValueKey('fluency-acorns'));
 Finder get _dots => find.descendant(
-      of: find.byType(NumberCard),
-      matching: find.byType(DotFrame),
-    );
+  of: find.byType(NumberCard),
+  matching: find.byType(DotFrame),
+);
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -100,10 +100,8 @@ void main() {
       seed: _session.hashCode,
     ).first.first;
 
-    Widget runner() => FluencyRunner(
-          skipIntro: true,
-          onSequenceComplete: () {},
-        );
+    Widget runner() =>
+        FluencyRunner(skipIntro: true, onSequenceComplete: () {});
 
     int wrongChoice(WidgetTester tester) {
       for (final e in find.byType(NumberCard).evaluate()) {
@@ -113,8 +111,9 @@ void main() {
       throw StateError('no wrong card on the board');
     }
 
-    testWidgets('concrete: acorns over the numbers, dots on the cards',
-        (tester) async {
+    testWidgets('concrete: acorns over the numbers, dots on the cards', (
+      tester,
+    ) async {
       await _mount(
         tester,
         runner(),
@@ -126,8 +125,9 @@ void main() {
       await _unmount(tester);
     });
 
-    testWidgets('pictorial: acorns stay, the dots go until she misses',
-        (tester) async {
+    testWidgets('pictorial: acorns stay, the dots go until she misses', (
+      tester,
+    ) async {
       await _mount(
         tester,
         runner(),
@@ -144,8 +144,9 @@ void main() {
       await _unmount(tester);
     });
 
-    testWidgets('abstract: just the numbers, and a miss brings the acorns',
-        (tester) async {
+    testWidgets('abstract: just the numbers, and a miss brings the acorns', (
+      tester,
+    ) async {
       await _mount(
         tester,
         runner(),
@@ -161,7 +162,8 @@ void main() {
       expect(
         _acorns,
         findsWidgets,
-        reason: 'stuck at abstract is who they '
+        reason:
+            'stuck at abstract is who they '
             'are for',
       );
       expect(_dots, findsNothing, reason: 'one layer down, not two');
@@ -190,10 +192,8 @@ void main() {
       seed: roundSeed(_session, StorytellersPondModes.addTo),
     ).first;
 
-    Widget runner() => StorytellersPondRunner(
-          skipIntro: true,
-          onSequenceComplete: () {},
-        );
+    Widget runner() =>
+        StorytellersPondRunner(skipIntro: true, onSequenceComplete: () {});
 
     /// Calls every waiting duckling over, which brings up the question.
     Future<void> actItOut(WidgetTester tester) async {
@@ -225,8 +225,9 @@ void main() {
       await _unmount(tester);
     });
 
-    testWidgets('abstract: the solved story is written as a number sentence',
-        (tester) async {
+    testWidgets('abstract: the solved story is written as a number sentence', (
+      tester,
+    ) async {
       await _mount(
         tester,
         runner(),
@@ -260,8 +261,9 @@ void main() {
     });
   });
 
-  testWidgets('the layer is read per round, after the last one was graded',
-      (tester) async {
+  testWidgets('the layer is read per round, after the last one was graded', (
+    tester,
+  ) async {
     // Three clean rounds promote. The round after the promotion has to be
     // drawn at the new layer - and the round being celebrated must not be
     // redrawn under her.
@@ -284,7 +286,8 @@ void main() {
           expect(
             c.layer,
             seen[c.index],
-            reason: 'round ${c.index} changed '
+            reason:
+                'round ${c.index} changed '
                 'layer while on screen',
           );
           return TextButton(

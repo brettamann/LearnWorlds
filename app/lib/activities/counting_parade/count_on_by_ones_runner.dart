@@ -147,11 +147,7 @@ class _CompletedClusterCard extends StatelessWidget {
         color: Colors.white.withValues(alpha: 0.65),
         borderRadius: BorderRadius.circular(14),
         boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 6,
-            offset: Offset(0, 2),
-          ),
+          BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 2)),
         ],
       ),
       child: Column(

@@ -89,10 +89,7 @@ class _SanctuaryCutsceneScreenState
         body: Stack(
           fit: StackFit.expand,
           children: [
-            Image.asset(
-              AssetPaths.countingParadeMeadow,
-              fit: BoxFit.cover,
-            ),
+            Image.asset(AssetPaths.countingParadeMeadow, fit: BoxFit.cover),
             SafeArea(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),

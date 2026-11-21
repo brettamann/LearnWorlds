@@ -33,10 +33,7 @@ import 'lesson_hand_pointer.dart';
 enum _LessonBeat { pairingIntro, sortDemo, sortRound, done }
 
 class Kg3FlatOrSolidLessonLayer extends ConsumerStatefulWidget {
-  const Kg3FlatOrSolidLessonLayer({
-    super.key,
-    required this.onComplete,
-  });
+  const Kg3FlatOrSolidLessonLayer({super.key, required this.onComplete});
 
   /// Fires after the last pairing's sort round completes. The
   /// LessonScreen routes from here to the Shape Garden activity in
@@ -102,9 +99,7 @@ class _Kg3FlatOrSolidLessonLayerState
     // and only include older pairings.) High instance numbers keep these
     // ids distinct from any focus-set ids.
     for (var i = pairingIdx - 1; i >= 0 && shapes.length < 8; i--) {
-      shapes.add(
-        flatShapeFromPairing(kFlatSolidPairings[i], 100 + pairingIdx),
-      );
+      shapes.add(flatShapeFromPairing(kFlatSolidPairings[i], 100 + pairingIdx));
       if (shapes.length >= 8) break;
       shapes.add(
         solidShapeFromPairing(kFlatSolidPairings[i], 100 + pairingIdx),
@@ -316,8 +311,10 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody>
                     horizontal: 20,
                     vertical: 10,
                   ),
-                  decoration:
-                      AppDecor.card(radius: 18, shadow: AppShadows.soft),
+                  decoration: AppDecor.card(
+                    radius: 18,
+                    shadow: AppShadows.soft,
+                  ),
                   child: const Text(
                     'Watch — how to sort flat vs solid!',
                     style: TextStyle(
@@ -352,16 +349,16 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody>
                 curve: Curves.easeInOutCubic,
                 left:
                     (_step == _DemoStep.carryFlat || _step == _DemoStep.dropFlat
-                                ? _carriedShapePos.dx
-                                : flatSlot.dx) *
-                            w -
-                        _shapeSize / 2,
+                            ? _carriedShapePos.dx
+                            : flatSlot.dx) *
+                        w -
+                    _shapeSize / 2,
                 top:
                     (_step == _DemoStep.carryFlat || _step == _DemoStep.dropFlat
-                                ? _carriedShapePos.dy
-                                : flatSlot.dy) *
-                            h -
-                        _shapeSize / 2,
+                            ? _carriedShapePos.dy
+                            : flatSlot.dy) *
+                        h -
+                    _shapeSize / 2,
                 width: _shapeSize,
                 height: _shapeSize,
                 child: Image.asset(_flatAsset, fit: BoxFit.contain),
@@ -371,13 +368,15 @@ class _SortDemoBodyState extends ConsumerState<_SortDemoBody>
               AnimatedPositioned(
                 duration: const Duration(milliseconds: 900),
                 curve: Curves.easeInOutCubic,
-                left: (_step == _DemoStep.carrySolid ||
+                left:
+                    (_step == _DemoStep.carrySolid ||
                                 _step == _DemoStep.dropSolid
                             ? _carriedShapePos.dx
                             : solidSlot.dx) *
                         w -
                     _shapeSize / 2,
-                top: (_step == _DemoStep.carrySolid ||
+                top:
+                    (_step == _DemoStep.carrySolid ||
                                 _step == _DemoStep.dropSolid
                             ? _carriedShapePos.dy
                             : solidSlot.dy) *
@@ -429,9 +428,7 @@ class _DemoBin extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                child: Image.asset(assetPath, fit: BoxFit.contain),
-              ),
+              Expanded(child: Image.asset(assetPath, fit: BoxFit.contain)),
               Text(
                 label,
                 style: const TextStyle(

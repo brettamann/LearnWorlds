@@ -72,8 +72,9 @@ Future<void> _trace(
     final n = ((b - a).distance / 16).ceil().clamp(1, 1000);
     for (var k = 1; k <= n; k++) {
       final side = (step++ % 8 < 4) ? wobble : -wobble;
-      await g
-          .moveTo(Offset.lerp(a, b, k / n)! + Offset(side * 0.7, side * 0.7));
+      await g.moveTo(
+        Offset.lerp(a, b, k / n)! + Offset(side * 0.7, side * 0.7),
+      );
     }
     await tester.pump(const Duration(milliseconds: 8));
   }
@@ -115,21 +116,24 @@ void main() {
         expect(
           done,
           isFalse,
-          reason: 'accepted $n written backwards - that is drawing a picture '
+          reason:
+              'accepted $n written backwards - that is drawing a picture '
               'of a number, not writing it',
         );
       });
     }
   });
 
-  testWidgets('a finger that jumps to the end has not traced the middle',
-      (tester) async {
+  testWidgets('a finger that jumps to the end has not traced the middle', (
+    tester,
+  ) async {
     var done = false;
     await _mount(tester, 7, onDone: () => done = true);
     final s = numeralStrokes(7).single;
     final origin = tester.getTopLeft(find.byType(NumeralTracer));
-    final g =
-        await tester.startGesture(origin + numeralPointIn(_box, 7, s.first));
+    final g = await tester.startGesture(
+      origin + numeralPointIn(_box, 7, s.first),
+    );
     await g.moveTo(origin + numeralPointIn(_box, 7, s.last));
     await tester.pump();
     await g.up();

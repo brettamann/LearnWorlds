@@ -72,7 +72,8 @@ void main() {
     expect(
       wrong,
       isEmpty,
-      reason: 'a claim never given back means the music outlives every screen; '
+      reason:
+          'a claim never given back means the music outlives every screen; '
           'a release never claimed cuts short the next screen\'s music',
     );
   });
@@ -93,7 +94,8 @@ void main() {
     expect(
       offenders,
       isEmpty,
-      reason: 'claim it in initState instead, next to the engine reference '
+      reason:
+          'claim it in initState instead, next to the engine reference '
           'kept for dispose',
     );
   });

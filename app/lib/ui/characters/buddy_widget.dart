@@ -136,16 +136,13 @@ class _BuddyWidgetState extends ConsumerState<BuddyWidget>
   /// a random gap reads as something that happens to be alive.
   void _scheduleBlink() {
     _blinkTimer?.cancel();
-    _blinkTimer = Timer(
-      Duration(milliseconds: 3500 + _rng.nextInt(4500)),
-      () {
-        if (!mounted) return;
-        _blink.forward(from: 0).whenComplete(() {
-          if (mounted) _blink.reverse();
-        });
-        _scheduleBlink();
-      },
-    );
+    _blinkTimer = Timer(Duration(milliseconds: 3500 + _rng.nextInt(4500)), () {
+      if (!mounted) return;
+      _blink.forward(from: 0).whenComplete(() {
+        if (mounted) _blink.reverse();
+      });
+      _scheduleBlink();
+    });
   }
 
   @override
@@ -391,10 +388,7 @@ class _BuddyLayers extends StatelessWidget {
           top: 0.15,
           width: 0.70,
           height: 0.70,
-          child: Image.asset(
-            buddyBodyAsset(shown.bodyId),
-            fit: BoxFit.contain,
-          ),
+          child: Image.asset(buddyBodyAsset(shown.bodyId), fit: BoxFit.contain),
         ),
         // ---- Legs -----------------------------------------------
         _frac(
@@ -464,10 +458,7 @@ class _BuddyLayers extends StatelessWidget {
           height: 0.14,
           child: Transform.scale(
             scale: pose.mouthScale,
-            child: Image.asset(
-              buddyMouthAsset(mouthId),
-              fit: BoxFit.contain,
-            ),
+            child: Image.asset(buddyMouthAsset(mouthId), fit: BoxFit.contain),
           ),
         ),
         // ---- Hat (optional, top of stack) ----------------------

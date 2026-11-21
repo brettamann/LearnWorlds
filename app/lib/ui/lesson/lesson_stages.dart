@@ -105,8 +105,9 @@ class LessonFawnStage extends StatelessWidget {
           (i) => (i + 0.5) * slotW,
         );
 
-        final targetIdx =
-            pointerTargetId == null ? null : _indexFor(pointerTargetId!);
+        final targetIdx = pointerTargetId == null
+            ? null
+            : _indexFor(pointerTargetId!);
         Offset handTarget;
         if (targetIdx == null) {
           handTarget = Offset(-_handSize - 20, fawnTop - 40);
@@ -318,7 +319,8 @@ class LessonClusterStage extends StatelessWidget {
                             key: targets.keyFor('cluster-${c + 1}'),
                             label: decadeLabel(c),
                             spriteAsset: AssetPaths.countingParadeBabyGryphon,
-                            highlight: badgeValue != null &&
+                            highlight:
+                                badgeValue != null &&
                                 badgeValue! >= (c + 1) * 10,
                           ),
                       ],

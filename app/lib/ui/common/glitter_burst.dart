@@ -43,10 +43,8 @@ class _GlitterBurstState extends State<GlitterBurst>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    )..forward();
+    _controller = AnimationController(duration: widget.duration, vsync: this)
+      ..forward();
     final rnd = math.Random();
     _particles = List<_Particle>.generate(widget.particleCount, (i) {
       // Even angular distribution with a small jitter so it doesn't look
@@ -97,10 +95,7 @@ class _GlitterBurstState extends State<GlitterBurst>
                         size: p.size,
                         color: widget.color,
                         shadows: const [
-                          Shadow(
-                            blurRadius: 6,
-                            color: Colors.black38,
-                          ),
+                          Shadow(blurRadius: 6, color: Colors.black38),
                         ],
                       ),
                     ),

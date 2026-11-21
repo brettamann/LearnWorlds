@@ -60,10 +60,10 @@ const List<String> kHabitatBlueprintIds = <String>[
 /// `grand-habitat` runs the pentagon; `frame-only` runs the triangle but
 /// skips the roof.
 List<String> habitatBlueprintIdsFor(String subMode) => switch (subMode) {
-      BuildAHabitatModes.creatureHome => kHabitatBlueprintIds,
-      BuildAHabitatModes.grandHabitat => <String>[kHabitatBlueprintIds[2]],
-      _ => <String>[kHabitatBlueprintIds[0]],
-    };
+  BuildAHabitatModes.creatureHome => kHabitatBlueprintIds,
+  BuildAHabitatModes.grandHabitat => <String>[kHabitatBlueprintIds[2]],
+  _ => <String>[kHabitatBlueprintIds[0]],
+};
 
 /// True for the demotion sub-mode: frame only, no roof (K.G.5 alone).
 bool habitatSkipsRoof(String subMode) =>
@@ -117,13 +117,13 @@ String habitatRoofLine(String kind) => 'A $kind. It goes on top.';
 /// Every line the activity speaks apart from the build prompt, for the
 /// recording script.
 List<String> habitatScriptLines() => <String>[
-      kHabitatIntro,
-      kHabitatRaisePrompt,
-      kHabitatFinal,
-      for (final id in kHabitatBlueprintIds) kHabitatKeeperLines[id]!,
-      kHabitatCornerLine,
-      kHabitatStickLine,
-      habitatStickBlockedLine(1),
-      habitatStickBlockedLine(0),
-      for (final kind in kHabitatRoofKinds) habitatRoofLine(kind),
-    ];
+  kHabitatIntro,
+  kHabitatRaisePrompt,
+  kHabitatFinal,
+  for (final id in kHabitatBlueprintIds) kHabitatKeeperLines[id]!,
+  kHabitatCornerLine,
+  kHabitatStickLine,
+  habitatStickBlockedLine(1),
+  habitatStickBlockedLine(0),
+  for (final kind in kHabitatRoofKinds) habitatRoofLine(kind),
+];

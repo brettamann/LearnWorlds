@@ -9,20 +9,14 @@ sealed class ScaffoldDecision {
 }
 
 class PlayLesson extends ScaffoldDecision {
-  const PlayLesson({
-    required this.lessonId,
-    required this.conceptId,
-  });
+  const PlayLesson({required this.lessonId, required this.conceptId});
 
   final String lessonId;
   final String conceptId;
 }
 
 class ProceedAtLayer extends ScaffoldDecision {
-  const ProceedAtLayer({
-    required this.conceptId,
-    required this.layer,
-  });
+  const ProceedAtLayer({required this.conceptId, required this.layer});
 
   final String conceptId;
   final CpaLayer layer;

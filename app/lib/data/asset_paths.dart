@@ -293,9 +293,7 @@ class AssetPaths {
   // K mystery egg, 8 progressive stages + 1 "hatched" complete state.
   static String kMysteryEggStage(int stage) {
     if (stage < 1 || stage > 8) {
-      throw ArgumentError(
-        'K mystery egg has stages 1..8; got $stage',
-      );
+      throw ArgumentError('K mystery egg has stages 1..8; got $stage');
     }
     return 'assets/rewards/k-mystery-egg/egg-reward-stage-$stage.png';
   }

@@ -156,9 +156,11 @@ String decorNameLine(DecorItem item) => '${item.displayName}.';
 /// Warm, and never a refusal. `specs/shared/ui-affordances.md` keeps locked
 /// items visible precisely so there is something to want, which only works if
 /// wanting it is a pleasant experience.
-const String kDecorTooExpensiveLine = 'Not enough coins for that one yet. '
+const String kDecorTooExpensiveLine =
+    'Not enough coins for that one yet. '
     'Play a round and come back!';
 
 /// Spoken the first time she opens the tray in a session.
-const String kDecorInviteLine = 'This is your sanctuary. '
+const String kDecorInviteLine =
+    'This is your sanctuary. '
     'Put things wherever you like — there is no wrong place.';

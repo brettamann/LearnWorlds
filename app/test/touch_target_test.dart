@@ -87,16 +87,16 @@ List<String> undersizedTargets(WidgetTester tester) {
 }
 
 MapAnchors _fakeAnchors() => MapAnchors(
-      anchors: <int, Offset>{
-        for (var i = 0; i < kSanctuarySequence.length; i++)
-          kSanctuarySequence[i]: Offset(
-            0.13 + 0.33 * (i % 3),
-            0.11 + 0.22 * (i ~/ 3),
-          ),
-      },
-      imageWidth: 1024,
-      imageHeight: 1024,
-    );
+  anchors: <int, Offset>{
+    for (var i = 0; i < kSanctuarySequence.length; i++)
+      kSanctuarySequence[i]: Offset(
+        0.13 + 0.33 * (i % 3),
+        0.11 + 0.22 * (i ~/ 3),
+      ),
+  },
+  imageWidth: 1024,
+  imageHeight: 1024,
+);
 
 class _QuietEngine extends SfxEngine {
   @override
@@ -183,10 +183,7 @@ void main() {
       await tester.pumpWidget(
         UncontrolledProviderScope(
           container: container,
-          child: MaterialApp.router(
-            theme: critMathTheme,
-            routerConfig: router,
-          ),
+          child: MaterialApp.router(theme: critMathTheme, routerConfig: router),
         ),
       );
       for (var i = 0; i < 40; i++) {
@@ -194,8 +191,9 @@ void main() {
       }
     }
 
-    testWidgets('the Sanctuary nodes and their banners are reachable',
-        (tester) async {
+    testWidgets('the Sanctuary nodes and their banners are reachable', (
+      tester,
+    ) async {
       await pumpMap(tester, const SanctuaryMapScreen());
       expect(undersizedTargets(tester), isEmpty);
       for (var i = 0; i < 20; i++) {

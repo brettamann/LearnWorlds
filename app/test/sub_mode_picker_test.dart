@@ -159,12 +159,10 @@ void main() {
         for (final subMode in activity.subModes) {
           if (subMode.isChainStep || subMode.isChallenge) continue;
           expect(
-            pickerOptionFor(
-              activityId: activity.id,
-              subModeId: subMode.id,
-            ),
+            pickerOptionFor(activityId: activity.id, subModeId: subMode.id),
             isNull,
-            reason: '${activity.id}/${subMode.id} is a floor below the entry '
+            reason:
+                '${activity.id}/${subMode.id} is a floor below the entry '
                 'point and is never chosen, so drawing it is a picker entry '
                 'with no way to be reached',
           );
@@ -180,7 +178,8 @@ void main() {
         expect(
           script,
           contains(narrationTextNormalize(line)),
-          reason: '"$line" is read aloud but the renderer will never see it, '
+          reason:
+              '"$line" is read aloud but the renderer will never see it, '
               'so it will speak in the browser voice',
         );
       }
@@ -191,7 +190,8 @@ void main() {
         expect(
           narrationClipFor(line),
           isNotNull,
-          reason: 'no clip for "$line". Re-render:\n'
+          reason:
+              'no clip for "$line". Re-render:\n'
               '  cd app && dart run tool/dump_narration_script.dart '
               '> ../tools/tts/kokoro/script.json\n'
               '  node tools/tts/kokoro/render.mjs render',
@@ -204,12 +204,14 @@ void main() {
       // A label written here rather than in the catalog is unreachable by the
       // enumeration, so it renders fine, speaks fine, and speaks in the wrong
       // voice — the only symptom is a change of narrator mid-sentence.
-      final source =
-          File('lib/ui/map/sub_mode_picker_sheet.dart').readAsStringSync();
+      final source = File(
+        'lib/ui/map/sub_mode_picker_sheet.dart',
+      ).readAsStringSync();
       expect(
         RegExp(r'''label:\s*['"]''').hasMatch(source),
         isFalse,
-        reason: 'picker labels are spoken, so they belong in '
+        reason:
+            'picker labels are spoken, so they belong in '
             'data/sub_mode_picker_data.dart',
       );
     });
@@ -273,7 +275,8 @@ void main() {
       expect(
         spoken(),
         contains(narrationTextNormalize(kSubModePickerQuestion)),
-        reason: 'the one screen in the game that asks her something and then '
+        reason:
+            'the one screen in the game that asks her something and then '
             'waits, and she cannot read it',
       );
       await drainReadThrough(tester, 2);
@@ -293,8 +296,7 @@ void main() {
       final label = pickerOptionFor(
         activityId: 'shape-garden',
         subModeId: 'flat-or-solid',
-      )!
-          .label;
+      )!.label;
       expect(spoken(), contains(narrationTextNormalize(label)));
     });
 
@@ -356,12 +358,12 @@ void main() {
     );
 
     String said(String subModeId) => narrationTextNormalize(
-          pickerOptionFor(activityId: 'shape-garden', subModeId: subModeId)!
-              .label,
-        );
+      pickerOptionFor(activityId: 'shape-garden', subModeId: subModeId)!.label,
+    );
 
-    testWidgets('names each option in turn, after the question',
-        (tester) async {
+    testWidgets('names each option in turn, after the question', (
+      tester,
+    ) async {
       await open(tester, const [findShape, flatOrSolid, sortThemOut]);
       // The question, and nothing named yet - she is being asked before she
       // is being given the answers.
@@ -378,7 +380,8 @@ void main() {
       expect(
         spoken(),
         isNot(contains(said('flat-or-solid'))),
-        reason: 'two names at once is worse than none - she cannot tell which '
+        reason:
+            'two names at once is worse than none - she cannot tell which '
             'card either belongs to',
       );
 
@@ -417,13 +420,15 @@ void main() {
       expect(
         spoken(),
         isNot(contains(said('flat-or-solid'))),
-        reason: 'the sheet went on reading its menu out after she had already '
+        reason:
+            'the sheet went on reading its menu out after she had already '
             'started choosing',
       );
     });
 
-    testWidgets('fits a small screen without a card going out of reach',
-        (tester) async {
+    testWidgets('fits a small screen without a card going out of reach', (
+      tester,
+    ) async {
       // The cards got bigger when the symbols stopped being borrowed sprites
       // - 96 was not enough box for a scene to read in - and Counting Parade
       // offers six of them. On a short or narrow viewport that is three rows,
@@ -489,8 +494,9 @@ void main() {
       await drainReadThrough(tester, 6);
     });
 
-    testWidgets('and says nothing at all when read-aloud is off',
-        (tester) async {
+    testWidgets('and says nothing at all when read-aloud is off', (
+      tester,
+    ) async {
       // A travelling highlight with no voice under it is not a quieter
       // version of this feature - it is a light moving across the screen for
       // no stated reason. Nothing is scheduled, so nothing needs draining
@@ -511,7 +517,8 @@ void main() {
       expect(
         spoken(),
         isNot(contains(narrationTextNormalize(kSubModePickerQuestion))),
-        reason: 'read-aloud off means the game does not narrate, and the '
+        reason:
+            'read-aloud off means the game does not narrate, and the '
             'question is narration',
       );
     });
@@ -547,10 +554,11 @@ void main() {
       // the blueprints in a different order and all three quietly start
       // showing the wrong build, which is exactly the failure the old
       // borrowed sprites had.
-      expect(
-        kHabitatBlueprints.map((b) => b.corners.length).toList(),
-        <int>[3, 4, 5],
-      );
+      expect(kHabitatBlueprints.map((b) => b.corners.length).toList(), <int>[
+        3,
+        4,
+        5,
+      ]);
     });
 
     test('and a roof piece names one sprite, not two', () {
@@ -595,7 +603,8 @@ void main() {
           expect(
             subMode.isChainStep,
             isTrue,
-            reason: '${activity.id} would open a picker without its own '
+            reason:
+                '${activity.id} would open a picker without its own '
                 'default sub-mode in it',
           );
         }
@@ -610,7 +619,8 @@ void main() {
           expect(
             subMode.isChainStep,
             isFalse,
-            reason: '${activity.id}/${subMode.id} would make a struggling '
+            reason:
+                '${activity.id}/${subMode.id} would make a struggling '
                 'kid clear the remedial drill to finish the activity',
           );
         }

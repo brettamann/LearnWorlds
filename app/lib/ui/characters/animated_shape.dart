@@ -76,56 +76,76 @@ class _AnimatedShapeState extends State<AnimatedShape>
 
     _scaleY = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 0.75)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween(
+          begin: 1.0,
+          end: 0.75,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 18,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 0.75, end: 1.15)
-            .chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween(
+          begin: 0.75,
+          end: 1.15,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 22,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 1.15, end: 1.0)
-            .chain(CurveTween(curve: Curves.easeInOut)),
+        tween: Tween(
+          begin: 1.15,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeInOut)),
         weight: 30,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 0.88)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween(
+          begin: 1.0,
+          end: 0.88,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 15,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 0.88, end: 1.0)
-            .chain(CurveTween(curve: Curves.elasticOut)),
+        tween: Tween(
+          begin: 0.88,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.elasticOut)),
         weight: 15,
       ),
     ]).animate(_hop);
 
     _scaleX = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 1.18)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween(
+          begin: 1.0,
+          end: 1.18,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 18,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 1.18, end: 0.9)
-            .chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween(
+          begin: 1.18,
+          end: 0.9,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 22,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 0.9, end: 1.0)
-            .chain(CurveTween(curve: Curves.easeInOut)),
+        tween: Tween(
+          begin: 0.9,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeInOut)),
         weight: 30,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 1.08)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween(
+          begin: 1.0,
+          end: 1.08,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 15,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 1.08, end: 1.0)
-            .chain(CurveTween(curve: Curves.elasticOut)),
+        tween: Tween(
+          begin: 1.08,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.elasticOut)),
         weight: 15,
       ),
     ]).animate(_hop);
@@ -133,13 +153,17 @@ class _AnimatedShapeState extends State<AnimatedShape>
     _translateY = TweenSequence<double>([
       TweenSequenceItem(tween: ConstantTween<double>(0), weight: 18),
       TweenSequenceItem(
-        tween: Tween(begin: 0.0, end: -widget.hopHeight)
-            .chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween(
+          begin: 0.0,
+          end: -widget.hopHeight,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 22,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: -widget.hopHeight, end: 0.0)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween(
+          begin: -widget.hopHeight,
+          end: 0.0,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 30,
       ),
       TweenSequenceItem(tween: ConstantTween<double>(0), weight: 15),
@@ -197,8 +221,8 @@ class _AnimatedShapeState extends State<AnimatedShape>
               opacity: widget.active
                   ? 1.0
                   : widget.pointed
-                      ? 0.6
-                      : 0.0,
+                  ? 0.6
+                  : 0.0,
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -213,10 +237,7 @@ class _AnimatedShapeState extends State<AnimatedShape>
                 ),
               ),
             ),
-            Image.asset(
-              widget.spriteAsset,
-              fit: BoxFit.contain,
-            ),
+            Image.asset(widget.spriteAsset, fit: BoxFit.contain),
             if (widget.active)
               const Positioned(
                 top: 0,
@@ -225,9 +246,7 @@ class _AnimatedShapeState extends State<AnimatedShape>
                   Icons.auto_awesome,
                   color: Colors.amber,
                   size: 24,
-                  shadows: [
-                    Shadow(blurRadius: 6, color: Colors.black54),
-                  ],
+                  shadows: [Shadow(blurRadius: 6, color: Colors.black54)],
                 ),
               ),
           ],

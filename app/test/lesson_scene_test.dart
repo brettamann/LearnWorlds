@@ -143,8 +143,9 @@ void main() {
   }
 
   group('a lesson shows the activity it introduces', () {
-    testWidgets('the position lesson stands Buddy in the real clearing',
-        (tester) async {
+    testWidgets('the position lesson stands Buddy in the real clearing', (
+      tester,
+    ) async {
       await openLesson(tester, 'lesson-k-g-1-positional-language');
 
       expect(
@@ -167,8 +168,9 @@ void main() {
       await drainLesson(tester);
     });
 
-    testWidgets('the habitat lesson builds the shelter it is about',
-        (tester) async {
+    testWidgets('the habitat lesson builds the shelter it is about', (
+      tester,
+    ) async {
       // K.G.5 authors a ghost triangle, a pool of clay and sticks, and a fawn
       // waiting at the edge of the clearing for somewhere to live. It drew
       // three fawns standing in a meadow.
@@ -177,15 +179,17 @@ void main() {
       await drainLesson(tester);
     });
 
-    testWidgets('and the second phase raises it on the frame already laid',
-        (tester) async {
+    testWidgets('and the second phase raises it on the frame already laid', (
+      tester,
+    ) async {
       await openLesson(tester, 'lesson-k-g-6-compose-3d');
       expect(find.byType(HabitatLessonStage), findsOneWidget);
       await drainLesson(tester);
     });
 
-    testWidgets('the counting lesson still shows fawns, which is right',
-        (tester) async {
+    testWidgets('the counting lesson still shows fawns, which is right', (
+      tester,
+    ) async {
       // The fall-through is not wrong; it is only wrong as a *default*. This
       // is the lesson it was built for.
       await openLesson(tester, 'lesson-k-cc-4a-one-to-one');
@@ -202,7 +206,8 @@ void main() {
       final wrong = <String>[];
       for (final (conceptId, lessonId, scene) in _reachableLessons()) {
         final hasCreatures = scene.containsKey('creatures');
-        final handled = hasCreatures ||
+        final handled =
+            hasCreatures ||
             scene.containsKey('shapes') ||
             scene.containsKey('landmarks') ||
             scene.containsKey('bins') ||
@@ -227,13 +232,15 @@ void main() {
         expect(
           match,
           isNotEmpty,
-          reason: '$conceptId is on the fallback ledger and is not a '
+          reason:
+              '$conceptId is on the fallback ledger and is not a '
               'reachable lesson at all',
         );
         expect(
           match.first.$3.containsKey('creatures'),
           isFalse,
-          reason: '$conceptId now has a creature scene, so it is not on the '
+          reason:
+              '$conceptId now has a creature scene, so it is not on the '
               'fallback any more - take it off the ledger',
         );
       }
@@ -254,8 +261,9 @@ void main() {
     test('its landmarks are the round\'s landmarks', () {
       final known = kWheresBuddyLandmarks.map((l) => l.id).toSet();
       for (final file in files) {
-        final scene = ((_lesson(file)['phases']
-            as Map<String, dynamic>)['iShow'] as Map<String, dynamic>)['scene'];
+        final scene =
+            ((_lesson(file)['phases'] as Map<String, dynamic>)['iShow']
+                as Map<String, dynamic>)['scene'];
         final ids = ((scene as Map<String, dynamic>)['landmarks'] as List)
             .cast<String>();
         expect(ids, isNotEmpty);
@@ -263,7 +271,8 @@ void main() {
           expect(
             known,
             contains(id),
-            reason: '$file stands the kid in front of "$id", which the round '
+            reason:
+                '$file stands the kid in front of "$id", which the round '
                 'has never heard of',
           );
         }
@@ -274,8 +283,9 @@ void main() {
       final landmarks = kWheresBuddyLandmarks.map((l) => l.id).toSet();
       final positions = kWheresBuddyPositions.map((p) => p.id).toSet();
       for (final file in files) {
-        final iShow = (_lesson(file)['phases'] as Map<String, dynamic>)['iShow']
-            as Map<String, dynamic>;
+        final iShow =
+            (_lesson(file)['phases'] as Map<String, dynamic>)['iShow']
+                as Map<String, dynamic>;
         var moves = 0;
         for (final step in iShow['animationSteps'] as List) {
           final map = step as Map<String, dynamic>;
@@ -295,8 +305,9 @@ void main() {
       // right thing, which is worse than teaching her nothing.
       final names = kWheresBuddyLandmarkNames.values.toSet();
       for (final file in files) {
-        final iShow = (_lesson(file)['phases'] as Map<String, dynamic>)['iShow']
-            as Map<String, dynamic>;
+        final iShow =
+            (_lesson(file)['phases'] as Map<String, dynamic>)['iShow']
+                as Map<String, dynamic>;
         final spoken = <String>[
           for (final cue in iShow['narrationScript'] as List)
             (cue as Map<String, dynamic>)['text'] as String,
@@ -311,7 +322,8 @@ void main() {
           expect(
             spoken,
             contains(name),
-            reason: '$file mentions the ${name.split(' ').last} but not by '
+            reason:
+                '$file mentions the ${name.split(' ').last} but not by '
                 'the name the round uses ("$name")',
           );
         }

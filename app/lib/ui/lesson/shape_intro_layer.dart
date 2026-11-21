@@ -68,24 +68,26 @@ const Map<String, String> _kIntroOpening = {
       "This is a circle! A circle has no sides — it's smooth all the way around.",
   'triangle': 'This is a triangle! A triangle has three sides. Look —',
   // The K.G.2 invariance message: a right triangle still *is* a triangle.
-  'triangle-right': 'This is a right triangle. It looks a little different — '
+  'triangle-right':
+      'This is a right triangle. It looks a little different — '
       'but it is still a triangle, because it has three sides. Look —',
   'square':
       'This is a square! A square has four sides — and all four sides are '
-          'the same length. Look —',
+      'the same length. Look —',
   // K-level "square vs rectangle" framing — both have four sides, but a
   // rectangle has two long sides and two short sides.
-  'rectangle': 'This is a rectangle! A rectangle has four sides, just like a '
+  'rectangle':
+      'This is a rectangle! A rectangle has four sides, just like a '
       'square. But two of the sides are long, and two of the sides are short. '
       'Look —',
   'pentagon': 'This is a pentagon! A pentagon has five sides. Look —',
   'hexagon': 'This is a hexagon! A hexagon has six sides. Look —',
   'semicircle_half':
       'This is a half circle! It has two sides — one flat side, and one '
-          'round side. Look —',
+      'round side. Look —',
   'semicircle_quarter':
       'This is a quarter circle! It has three sides — two flat sides, and '
-          'one round side. Look —',
+      'one round side. Look —',
 };
 
 /// Spelled-out cardinals for the narration. Long enough for any future
@@ -152,14 +154,17 @@ class _ShapeIntroLayerState extends ConsumerState<ShapeIntroLayer>
     // Beat 1 — sprite fades + scales in.
     afterMs(100, () => setState(() => _shapeVisible = true));
 
-    final opening = _kIntroOpening[widget.shapeKind] ??
+    final opening =
+        _kIntroOpening[widget.shapeKind] ??
         'This is a ${kShapeDisplayName[widget.shapeKind] ?? widget.shapeKind}!';
 
     // Beat 2 — opening sentence ("This is a ...!").
     afterMs(
       800,
-      () => ref.narration
-          .say(opening, cueId: 'intro:${widget.shapeKind}:opening'),
+      () => ref.narration.say(
+        opening,
+        cueId: 'intro:${widget.shapeKind}:opening',
+      ),
     );
 
     if (_sides == 0 || _resolvedSides.isEmpty) {
@@ -267,11 +272,8 @@ class _ShapeIntroLayerState extends ConsumerState<ShapeIntroLayer>
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final shapeBoxSize = math.min(
-              constraints.maxWidth,
-              constraints.maxHeight,
-            ) *
-            0.55;
+        final shapeBoxSize =
+            math.min(constraints.maxWidth, constraints.maxHeight) * 0.55;
         final shapeBoxLeft = (constraints.maxWidth - shapeBoxSize) / 2;
         final shapeBoxTop = (constraints.maxHeight - shapeBoxSize) / 2;
 
@@ -311,8 +313,10 @@ class _ShapeIntroLayerState extends ConsumerState<ShapeIntroLayer>
           handTarget = Offset(-handSize - 80, shapeBoxTop + shapeBoxSize * 0.2);
         } else {
           final mid = dotToScreen(_resolvedSides[_currentSideIndex!]);
-          handTarget =
-              Offset(mid.dx - handSize * 0.4, mid.dy - handSize * 0.85);
+          handTarget = Offset(
+            mid.dx - handSize * 0.4,
+            mid.dy - handSize * 0.85,
+          );
         }
 
         return Stack(

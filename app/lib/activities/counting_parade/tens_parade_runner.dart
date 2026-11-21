@@ -100,8 +100,9 @@ class _TensParadeRunnerState extends ConsumerState<TensParadeRunner> {
 
   @override
   Widget build(BuildContext context) {
-    final owned =
-        ref.watch(cardCollectionProvider).contains(kTensParadeChallengeCardId);
+    final owned = ref
+        .watch(cardCollectionProvider)
+        .contains(kTensParadeChallengeCardId);
     final finalLine = _finalLine(owned);
     return SanctuaryRoundShell(
       key: ValueKey('tens-parade-run-$_run'),
@@ -112,10 +113,8 @@ class _TensParadeRunnerState extends ConsumerState<TensParadeRunner> {
       gradeRounds: false,
       // Never spoken by the shell: the demo is the opening and says it.
       introLine: kTensParadeDemoLine,
-      introBuilder: (context, start) => _DemoLayer(
-        spriteAsset: kParadeFawn.spriteAsset,
-        onComplete: start,
-      ),
+      introBuilder: (context, start) =>
+          _DemoLayer(spriteAsset: kParadeFawn.spriteAsset, onComplete: start),
       // A repeat run goes straight back to the meadow.
       skipIntro: widget.skipIntro || _run > 0,
       // One round, so there is no between-round aside.
@@ -197,10 +196,7 @@ class _ChallengeBodyState extends State<_ChallengeBody> {
 /// narrator says [kTensParadeDemoLine] once, then the kid taps the Start
 /// arrow to begin.
 class _DemoLayer extends ConsumerStatefulWidget {
-  const _DemoLayer({
-    required this.spriteAsset,
-    required this.onComplete,
-  });
+  const _DemoLayer({required this.spriteAsset, required this.onComplete});
 
   final String spriteAsset;
   final VoidCallback onComplete;
@@ -226,14 +222,15 @@ class _DemoLayerState extends ConsumerState<_DemoLayer>
   @override
   void initState() {
     super.initState();
-    _drift = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 4200),
-    )..addStatusListener((status) {
-        if (status == AnimationStatus.completed && mounted) {
-          setState(() => _readyToStart = true);
-        }
-      });
+    _drift =
+        AnimationController(
+          vsync: this,
+          duration: const Duration(milliseconds: 4200),
+        )..addStatusListener((status) {
+          if (status == AnimationStatus.completed && mounted) {
+            setState(() => _readyToStart = true);
+          }
+        });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       ref.narration.say(kTensParadeDemoLine, cueId: 'tens-parade:demo');
@@ -289,10 +286,7 @@ class _DemoLayerState extends ConsumerState<_DemoLayer>
                   top: spriteY,
                   width: _spriteSize,
                   height: _spriteSize,
-                  child: Image.asset(
-                    widget.spriteAsset,
-                    fit: BoxFit.contain,
-                  ),
+                  child: Image.asset(widget.spriteAsset, fit: BoxFit.contain),
                 ),
                 LessonHandPointer(
                   visible: _pokeFired && !_readyToStart,

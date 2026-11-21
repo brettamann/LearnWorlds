@@ -171,10 +171,7 @@ class NumberCard extends StatelessWidget {
               ),
             if (showNumeral && showDots) SizedBox(height: w * 0.06),
             if (showDots)
-              DotFrame(
-                count: value,
-                cell: w * (showNumeral ? 0.13 : 0.17),
-              ),
+              DotFrame(count: value, cell: w * (showNumeral ? 0.13 : 0.17)),
           ],
         ),
       ),
@@ -282,10 +279,12 @@ List<int> numberChoicesFor(
   final rng = math.Random(seed * 7919 + answer * 31);
   // Near misses - one or two either side - because that is the confusion a
   // child actually has. A far distractor teaches nothing.
-  final near = <int>[answer - 1, answer + 1, answer - 2, answer + 2]
-      .where((n) => n >= min && n <= max)
-      .toList()
-    ..shuffle(rng);
+  final near = <int>[
+    answer - 1,
+    answer + 1,
+    answer - 2,
+    answer + 2,
+  ].where((n) => n >= min && n <= max).toList()..shuffle(rng);
   final out = <int>[answer, ...near.take(2)];
   for (var n = min; out.length < 3 && n <= max; n++) {
     if (!out.contains(n)) out.add(n);

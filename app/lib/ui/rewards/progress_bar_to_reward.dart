@@ -112,10 +112,7 @@ class _ProgressBarToRewardState extends State<ProgressBarToReward>
                       child: Container(
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [
-                              AppColors.glitter,
-                              AppColors.buttonGold,
-                            ],
+                            colors: [AppColors.glitter, AppColors.buttonGold],
                           ),
                         ),
                       ),
@@ -138,10 +135,7 @@ class _ProgressBarToRewardState extends State<ProgressBarToReward>
                 final dy = widget.celebrate ? -t * 18 : 0.0;
                 return Transform.translate(
                   offset: Offset(0, dy),
-                  child: Transform.scale(
-                    scale: scale,
-                    child: child,
-                  ),
+                  child: Transform.scale(scale: scale, child: child),
                 );
               },
               child: Container(
@@ -161,9 +155,7 @@ class _ProgressBarToRewardState extends State<ProgressBarToReward>
                   Icons.monetization_on,
                   size: widget.coinSize,
                   color: AppColors.buttonGold,
-                  shadows: const [
-                    Shadow(color: Colors.black38, blurRadius: 4),
-                  ],
+                  shadows: const [Shadow(color: Colors.black38, blurRadius: 4)],
                 ),
               ),
             ),

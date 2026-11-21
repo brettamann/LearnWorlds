@@ -177,17 +177,11 @@ const String kBuddyDefaultLegsId = 'leg-1';
 /// default if the id has been removed or never existed. The fallback
 /// keeps a save migration from breaking the Hub.
 String buddyBodyAsset(String id) => kBuddyBodies
-    .firstWhere(
-      (o) => o.id == id,
-      orElse: () => kBuddyBodies.first,
-    )
+    .firstWhere((o) => o.id == id, orElse: () => kBuddyBodies.first)
     .assetPath;
 
 String buddyEyesAsset(String id) => kBuddyEyes
-    .firstWhere(
-      (o) => o.id == id,
-      orElse: () => kBuddyEyes.first,
-    )
+    .firstWhere((o) => o.id == id, orElse: () => kBuddyEyes.first)
     .assetPath;
 
 /// Cosmetic mouths first, then the mood-driven expression set.
@@ -195,28 +189,16 @@ String buddyEyesAsset(String id) => kBuddyEyes
 /// Falls back to the default rather than throwing, so a mood can name a mouth
 /// whose art has not been drawn yet without ever rendering a missing asset.
 String buddyMouthAsset(String id) => <BuddyOption>[
-      ...kBuddyMouths,
-      ...kBuddyExpressionMouths,
-    ]
-        .firstWhere(
-          (o) => o.id == id,
-          orElse: () => kBuddyMouths.first,
-        )
-        .assetPath;
+  ...kBuddyMouths,
+  ...kBuddyExpressionMouths,
+].firstWhere((o) => o.id == id, orElse: () => kBuddyMouths.first).assetPath;
 
 String buddyHatAsset(String id) => kBuddyHats
-    .firstWhere(
-      (o) => o.id == id,
-      orElse: () => kBuddyHats.first,
-    )
+    .firstWhere((o) => o.id == id, orElse: () => kBuddyHats.first)
     .assetPath;
 
-BuddyPairOption buddyArms(String id) => kBuddyArms.firstWhere(
-      (o) => o.id == id,
-      orElse: () => kBuddyArms.first,
-    );
+BuddyPairOption buddyArms(String id) =>
+    kBuddyArms.firstWhere((o) => o.id == id, orElse: () => kBuddyArms.first);
 
-BuddyPairOption buddyLegs(String id) => kBuddyLegs.firstWhere(
-      (o) => o.id == id,
-      orElse: () => kBuddyLegs.first,
-    );
+BuddyPairOption buddyLegs(String id) =>
+    kBuddyLegs.firstWhere((o) => o.id == id, orElse: () => kBuddyLegs.first);

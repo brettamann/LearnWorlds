@@ -17,10 +17,7 @@ void main() {
     test('stage grants alone still decide the stage when no events exist', () {
       // This is the pre-existing save shape: `completed` populated, `events`
       // absent. It must land exactly where it always did.
-      expect(
-        kMysteryEggTrack.computeTargetStage({'counting-parade'}),
-        1,
-      );
+      expect(kMysteryEggTrack.computeTargetStage({'counting-parade'}), 1);
       expect(
         kMysteryEggTrack.computeTargetStage({'counting-parade', 'care-pantry'}),
         2,
@@ -69,9 +66,7 @@ void main() {
     });
 
     test('never exceeds the final stage', () {
-      final many = <String>{
-        for (var i = 0; i < 100; i++) 'activity/sub-$i',
-      };
+      final many = <String>{for (var i = 0; i < 100; i++) 'activity/sub-$i'};
       expect(
         kMysteryEggTrack.computeTargetStage(const {}, many),
         kMysteryEggTrack.finalStage,
@@ -141,9 +136,13 @@ final RewardTrack _twoPerStage = RewardTrack(
 final RewardTrack _bothSources = RewardTrack(
   id: 'test-both',
   name: 'Test',
-  stages: List<RewardStage>.unmodifiable(
-    const [_stage, _stage, _stage, _stage, _stage],
-  ),
+  stages: List<RewardStage>.unmodifiable(const [
+    _stage,
+    _stage,
+    _stage,
+    _stage,
+    _stage,
+  ]),
   stageGrants: const {'granted-three': 3},
   eventsPerStage: 2,
   completeStage: _stage,

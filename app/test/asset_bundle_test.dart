@@ -59,10 +59,11 @@ List<String> _declared() {
 Set<String> _referenced() {
   final out = <String>{};
   final pattern = RegExp(r"'(assets/[^'$]*)");
-  for (final file in Directory('lib')
-      .listSync(recursive: true)
-      .whereType<File>()
-      .where((f) => f.path.endsWith('.dart'))) {
+  for (final file
+      in Directory('lib')
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((f) => f.path.endsWith('.dart'))) {
     for (final m in pattern.allMatches(file.readAsStringSync())) {
       out.add(m.group(1)!);
     }
@@ -91,7 +92,8 @@ void main() {
     expect(
       uncovered,
       isEmpty,
-      reason: 'built in lib/ and not in the bundle. This throws "Unable to '
+      reason:
+          'built in lib/ and not in the bundle. This throws "Unable to '
           'load asset" on the one screen that opens it, so a test run that '
           'does not reach that screen will not notice.',
     );
@@ -108,7 +110,8 @@ void main() {
     expect(
       unopened,
       isEmpty,
-      reason: 'declared and never opened. Either something should load it, '
+      reason:
+          'declared and never opened. Either something should load it, '
           'or it is repo material rather than runtime content and the entry '
           'should go - a bundle that claims to carry narration the app has '
           'never read is how a whole refactor got planned around it.',
@@ -120,8 +123,9 @@ void main() {
     // a slow way to find out; the pubspec says so in a comment and this says
     // so in a second.
     for (final entry in declared) {
-      final path =
-          entry.endsWith('/') ? entry.substring(0, entry.length - 1) : entry;
+      final path = entry.endsWith('/')
+          ? entry.substring(0, entry.length - 1)
+          : entry;
       expect(
         Directory(path).existsSync() || File(path).existsSync(),
         isTrue,

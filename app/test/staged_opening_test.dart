@@ -172,39 +172,43 @@ void main() {
 
   for (final c in _cases) {
     group(c.name, () {
-      testWidgets('the newcomers are off-stage while the counted row is named',
-          (tester) async {
-        await pump(tester, c);
+      testWidgets(
+        'the newcomers are off-stage while the counted row is named',
+        (tester) async {
+          await pump(tester, c);
 
-        expect(find.text(c.badgeAtRest), findsOneWidget);
-        // Full strength: this is what is being talked about right now.
-        expect(opacityAbove(tester, find.text(c.countedMarker)), 1.0);
-        expect(
-          opacityAbove(tester, find.text(c.rowLabel)),
-          0.0,
-          reason: 'the label belongs to a row that has not walked on yet',
-        );
-        expect(
-          arrivalTap(tester, c, 0),
-          isNull,
-          reason: 'tapping before the go signal would teach her that the game '
-              'ignores her',
-        );
+          expect(find.text(c.badgeAtRest), findsOneWidget);
+          // Full strength: this is what is being talked about right now.
+          expect(opacityAbove(tester, find.text(c.countedMarker)), 1.0);
+          expect(
+            opacityAbove(tester, find.text(c.rowLabel)),
+            0.0,
+            reason: 'the label belongs to a row that has not walked on yet',
+          );
+          expect(
+            arrivalTap(tester, c, 0),
+            isNull,
+            reason:
+                'tapping before the go signal would teach her that the game '
+                'ignores her',
+          );
 
-        await tester.pump(opening);
-        // One more frame for the rebuild. Not pumpAndSettle: the Buddy
-        // breathes on a repeating controller, so nothing here ever settles.
-        await tester.pump();
+          await tester.pump(opening);
+          // One more frame for the rebuild. Not pumpAndSettle: the Buddy
+          // breathes on a repeating controller, so nothing here ever settles.
+          await tester.pump();
 
-        expect(opacityAbove(tester, find.text(c.countedMarker)), c.dimmedTo);
-        expect(opacityAbove(tester, find.text(c.rowLabel)), 1.0);
-        expect(arrivalTap(tester, c, 0), isNotNull);
+          expect(opacityAbove(tester, find.text(c.countedMarker)), c.dimmedTo);
+          expect(opacityAbove(tester, find.text(c.rowLabel)), 1.0);
+          expect(arrivalTap(tester, c, 0), isNotNull);
 
-        await tearDownTree(tester);
-      });
+          await tearDownTree(tester);
+        },
+      );
 
-      testWidgets('both halves of the opening are spoken, in order',
-          (tester) async {
+      testWidgets('both halves of the opening are spoken, in order', (
+        tester,
+      ) async {
         final container = await pump(tester, c);
         // Past the opening and past the first line finishing. The narration
         // queue drains on its own clock, not the arrival timers: input opens
@@ -222,7 +226,8 @@ void main() {
         expect(
           spoken,
           containsAllInOrder(c.spokenBeats.map(narrationTextNormalize)),
-          reason: 'the second line is enqueued behind the first rather than '
+          reason:
+              'the second line is enqueued behind the first rather than '
               'cutting it off — see NarrationPlayer.enqueue',
         );
 

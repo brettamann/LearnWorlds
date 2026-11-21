@@ -299,8 +299,9 @@ const String kFlatOrSolidDoneLine = 'Nicely done! You sorted them all.';
 /// Said when [shape] lands in the right basket: "Triangle — flat!".
 String flatOrSolidHitLine(FlatOrSolidShape shape) {
   final name = shape.displayName;
-  final capitalized =
-      name.isEmpty ? name : name[0].toUpperCase() + name.substring(1);
+  final capitalized = name.isEmpty
+      ? name
+      : name[0].toUpperCase() + name.substring(1);
   return '$capitalized — ${shape.isFlat ? 'flat' : 'solid'}!';
 }
 

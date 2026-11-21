@@ -149,7 +149,8 @@ void main() {
       expect(
         seconds,
         greaterThan(120),
-        reason: '$asset is only ${seconds.toStringAsFixed(0)}s at 320 kbps. A '
+        reason:
+            '$asset is only ${seconds.toStringAsFixed(0)}s at 320 kbps. A '
             'short MP3 bed needs the gapless treatment the WAVs get; render '
             'it as a WAV loop instead.',
       );
@@ -171,7 +172,8 @@ void main() {
       expect(
         trailingSeconds,
         lessThan(0.05),
-        reason: 'the bed ends in ${trailingSeconds.toStringAsFixed(3)}s of '
+        reason:
+            'the bed ends in ${trailingSeconds.toStringAsFixed(3)}s of '
             'silence, which is a hole in the music every '
             '${wav.seconds.toStringAsFixed(1)}s. Re-run '
             'tools/audio/generate_placeholder_sfx.py — fold_tail_into_head '

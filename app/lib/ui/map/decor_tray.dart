@@ -220,8 +220,9 @@ class _PriceChip extends StatelessWidget {
           Icon(
             Icons.monetization_on,
             size: 13,
-            color:
-                affordable ? AppColors.parchmentInk : const Color(0xFF9A8F7C),
+            color: affordable
+                ? AppColors.parchmentInk
+                : const Color(0xFF9A8F7C),
           ),
           const SizedBox(width: 3),
           Text(
@@ -229,8 +230,9 @@ class _PriceChip extends StatelessWidget {
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w800,
-              color:
-                  affordable ? AppColors.parchmentInk : const Color(0xFF9A8F7C),
+              color: affordable
+                  ? AppColors.parchmentInk
+                  : const Color(0xFF9A8F7C),
             ),
           ),
         ],

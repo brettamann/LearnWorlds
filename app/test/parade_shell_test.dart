@@ -53,8 +53,9 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   group('count forward from n', () {
-    testWidgets('Done grades the round once, and then goes away',
-        (tester) async {
+    testWidgets('Done grades the round once, and then goes away', (
+      tester,
+    ) async {
       // The arrow used to stay up through the celebration, and a second tap
       // resolved the round - and paid - a second time.
       final c = await _pump(
@@ -77,29 +78,28 @@ void main() {
   });
 
   group('count on by ones', () {
-    testWidgets('the animated demo is the opening, and Start begins round one',
-        (tester) async {
-      await _pump(
-        tester,
-        CountOnByOnesRunner(onSequenceComplete: () {}),
-      );
-      expect(
-        find.byType(KeeperIntroOverlay),
-        findsNothing,
-        reason: 'the demo stands in for the keeper intro',
-      );
-      // Ten counts, the fold, nine decades, the kick-off.
-      for (var i = 0; i < 25; i++) {
-        await tester.pump(const Duration(seconds: 1));
-      }
-      await _tapKey(tester, 'count-on-ones-demo-start');
-      await tester.pump(const Duration(seconds: 2));
-      expect(
-        find.byKey(const ValueKey('count-on-ones-r0-arrival-0')),
-        findsOneWidget,
-      );
-      await unmountAndDrain(tester);
-    });
+    testWidgets(
+      'the animated demo is the opening, and Start begins round one',
+      (tester) async {
+        await _pump(tester, CountOnByOnesRunner(onSequenceComplete: () {}));
+        expect(
+          find.byType(KeeperIntroOverlay),
+          findsNothing,
+          reason: 'the demo stands in for the keeper intro',
+        );
+        // Ten counts, the fold, nine decades, the kick-off.
+        for (var i = 0; i < 25; i++) {
+          await tester.pump(const Duration(seconds: 1));
+        }
+        await _tapKey(tester, 'count-on-ones-demo-start');
+        await tester.pump(const Duration(seconds: 2));
+        expect(
+          find.byKey(const ValueKey('count-on-ones-r0-arrival-0')),
+          findsOneWidget,
+        );
+        await unmountAndDrain(tester);
+      },
+    );
   });
 
   group('count out n', () {
@@ -155,20 +155,23 @@ void main() {
       return c;
     }
 
-    testWidgets('the keeper waits for the last count instead of cutting it off',
-        (tester) async {
-      final c = await countRound(tester, const <int>[3, 5]);
-      // No hold between rounds: the aside is up a frame later...
-      await tester.pump(const Duration(milliseconds: 16));
-      await tester.pump();
-      expect(find.byType(KeeperAside), findsOneWidget);
-      // ...and her line is queued behind "Three.", not spoken over it.
-      expect(c.read(narrationPlayerProvider.notifier).queuedCount, 1);
-      await unmountAndDrain(tester);
-    });
+    testWidgets(
+      'the keeper waits for the last count instead of cutting it off',
+      (tester) async {
+        final c = await countRound(tester, const <int>[3, 5]);
+        // No hold between rounds: the aside is up a frame later...
+        await tester.pump(const Duration(milliseconds: 16));
+        await tester.pump();
+        expect(find.byType(KeeperAside), findsOneWidget);
+        // ...and her line is queued behind "Three.", not spoken over it.
+        expect(c.read(narrationPlayerProvider.notifier).queuedCount, 1);
+        await unmountAndDrain(tester);
+      },
+    );
 
-    testWidgets('the last beat holds two seconds, then says "some coins"',
-        (tester) async {
+    testWidgets('the last beat holds two seconds, then says "some coins"', (
+      tester,
+    ) async {
       // It used to announce rounds x 5 coins, whatever was actually paid.
       final c = await countRound(tester, const <int>[3]);
       await tester.pump(const Duration(milliseconds: 1900));
@@ -229,8 +232,9 @@ void main() {
       fail('the challenge never reached its finale');
     }
 
-    testWidgets('pays its bonus and card once per visit, not again on Again',
-        (tester) async {
+    testWidgets('pays its bonus and card once per visit, not again on Again', (
+      tester,
+    ) async {
       final c = await _pump(
         tester,
         TensParadeRunner(skipIntro: true, onSequenceComplete: () {}),
@@ -244,11 +248,7 @@ void main() {
       // The reward line is queued behind "One hundred.", so wait for it to
       // be said rather than a fixed time: how long the line ahead takes
       // varies, and a fixed wait made this fail one run in three.
-      await pumpUntilSaid(
-        tester,
-        c,
-        tensParadeRewardLine(earnedCard: true),
-      );
+      await pumpUntilSaid(tester, c, tensParadeRewardLine(earnedCard: true));
 
       await _tapKey(tester, 'tens-parade-repeat');
       await countToAHundred(tester);
@@ -262,8 +262,9 @@ void main() {
       await unmountAndDrain(tester);
     });
 
-    testWidgets('the challenge stays clear of the caption band',
-        (tester) async {
+    testWidgets('the challenge stays clear of the caption band', (
+      tester,
+    ) async {
       // It used to hand-roll its frame and fill to the bottom of the window,
       // so creatures drifted through the strip under the subtitles.
       await _pump(
@@ -291,10 +292,7 @@ void main() {
     testWidgets('the demo creature drifts every frame', (tester) async {
       // Its position used to be read outside the AnimatedBuilder, so it sat
       // off-stage until something else rebuilt the layout.
-      await _pump(
-        tester,
-        TensParadeRunner(onSequenceComplete: () {}),
-      );
+      await _pump(tester, TensParadeRunner(onSequenceComplete: () {}));
       final sprite = find.byWidgetPredicate(
         (w) =>
             w is Image &&

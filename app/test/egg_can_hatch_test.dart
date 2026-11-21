@@ -46,7 +46,8 @@ import 'support/fixtures.dart';
       // marked (`SubMode.isChainStep`): most activities' default is also their
       // floor. Treating those as optional left eight places' first sub-mode
       // out of the count.
-      final optIn = !(subMode['isDefault'] as bool? ?? false) &&
+      final optIn =
+          !(subMode['isDefault'] as bool? ?? false) &&
           ((subMode['isChallenge'] as bool? ?? false) ||
               (subMode['isDemotionFloor'] as bool? ?? false));
       (optIn ? optional : required).add(key);
@@ -56,20 +57,23 @@ import 'support/fixtures.dart';
 }
 
 void main() {
-  test('clearing the game hatches the egg, without the optional challenges',
-      () {
-    final subModes = _subModes();
-    final earned = subModes.required.toSet();
+  test(
+    'clearing the game hatches the egg, without the optional challenges',
+    () {
+      final subModes = _subModes();
+      final earned = subModes.required.toSet();
 
-    expect(
-      kMysteryEggTrack.computeTargetStage(const <String>{}, earned),
-      kMysteryEggTrack.finalStage,
-      reason: 'every non-optional sub-mode in the game is '
-          '${earned.length} events, and the egg needs '
-          '${kMysteryEggTrack.finalStage * kMysteryEggTrack.eventsPerStage}. '
-          'The payoff the whole track exists for cannot happen.',
-    );
-  });
+      expect(
+        kMysteryEggTrack.computeTargetStage(const <String>{}, earned),
+        kMysteryEggTrack.finalStage,
+        reason:
+            'every non-optional sub-mode in the game is '
+            '${earned.length} events, and the egg needs '
+            '${kMysteryEggTrack.finalStage * kMysteryEggTrack.eventsPerStage}. '
+            'The payoff the whole track exists for cannot happen.',
+      );
+    },
+  );
 
   test('the gift lands at the end of the first sitting', () {
     // `isFirstEggMoment` in activity_screen.dart fires the moment the track
@@ -103,36 +107,37 @@ void main() {
       isNotEmpty,
       reason: 'the split is reading nothing',
     );
-    final withoutChallenges =
-        kMysteryEggTrack.computeTargetStage(const <String>{}, {
-      ...subModes.required,
-    });
-    final withChallenges =
-        kMysteryEggTrack.computeTargetStage(const <String>{}, {
-      ...subModes.required,
-      ...subModes.optional,
-    });
+    final withoutChallenges = kMysteryEggTrack.computeTargetStage(
+      const <String>{},
+      {...subModes.required},
+    );
+    final withChallenges = kMysteryEggTrack.computeTargetStage(
+      const <String>{},
+      {...subModes.required, ...subModes.optional},
+    );
     expect(withoutChallenges, withChallenges);
   });
 
-  test('the stage-grant floor only hatches the egg for the whole Sanctuary',
-      () {
-    // stageGrants was written when six of its eight activities did not exist,
-    // and this used to check that the table could not carry the track on its
-    // own. Every Sanctuary place is built now, so finishing all of them
-    // legitimately hatches the egg; what must still hold is that nothing
-    // short of all of them does - the events path is what paces the arc.
-    final last = kSanctuaryActivityByCode[kSanctuarySequence.last]!;
-    final allButLast = <String>{
-      for (final id in kPlayableActivities)
-        if (id != last) id,
-    };
-    expect(
-      kMysteryEggTrack.computeTargetStage(allButLast),
-      lessThan(kMysteryEggTrack.finalStage),
-      reason: 'the grant table is doing work the events path should do',
-    );
-  });
+  test(
+    'the stage-grant floor only hatches the egg for the whole Sanctuary',
+    () {
+      // stageGrants was written when six of its eight activities did not exist,
+      // and this used to check that the table could not carry the track on its
+      // own. Every Sanctuary place is built now, so finishing all of them
+      // legitimately hatches the egg; what must still hold is that nothing
+      // short of all of them does - the events path is what paces the arc.
+      final last = kSanctuaryActivityByCode[kSanctuarySequence.last]!;
+      final allButLast = <String>{
+        for (final id in kPlayableActivities)
+          if (id != last) id,
+      };
+      expect(
+        kMysteryEggTrack.computeTargetStage(allButLast),
+        lessThan(kMysteryEggTrack.finalStage),
+        reason: 'the grant table is doing work the events path should do',
+      );
+    },
+  );
 
   test('it hatches near the end of the path, not the middle', () {
     // Walk the Sanctuary in map order, clearing every chain sub-mode of each
@@ -154,7 +159,8 @@ void main() {
       place += 1;
       for (final raw in byId[id]!['subModes'] as List<dynamic>) {
         final m = raw as Map<String, dynamic>;
-        final chain = (m['isDefault'] as bool? ?? false) ||
+        final chain =
+            (m['isDefault'] as bool? ?? false) ||
             (!(m['isChallenge'] as bool? ?? false) &&
                 !(m['isDemotionFloor'] as bool? ?? false));
         if (chain) events.add('$id/${m['id']}');

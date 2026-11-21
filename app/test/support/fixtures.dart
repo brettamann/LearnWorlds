@@ -25,16 +25,17 @@ Map<String, dynamic> rewardCatalogJson() => readJsonFile(kRewardCatalogPath);
 
 /// One lesson runtime by file name, with or without `.json`.
 Map<String, dynamic> lessonRuntimeJson(String name) => readJsonFile(
-      '$kLessonRuntimeDir/${name.endsWith('.json') ? name : '$name.json'}',
-    );
+  '$kLessonRuntimeDir/${name.endsWith('.json') ? name : '$name.json'}',
+);
 
 /// Every lesson runtime file, sorted by name for stable test order.
-List<File> lessonRuntimeFiles() => Directory(kLessonRuntimeDir)
-    .listSync()
-    .whereType<File>()
-    .where((f) => f.path.endsWith('.json'))
-    .toList()
-  ..sort((a, b) => a.path.compareTo(b.path));
+List<File> lessonRuntimeFiles() =>
+    Directory(kLessonRuntimeDir)
+        .listSync()
+        .whereType<File>()
+        .where((f) => f.path.endsWith('.json'))
+        .toList()
+      ..sort((a, b) => a.path.compareTo(b.path));
 
 /// The rendered narration clip for [text], or null if none exists.
 File? narrationClipFor(String text) {

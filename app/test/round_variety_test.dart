@@ -20,33 +20,33 @@ import 'package:flutter_test/flutter_test.dart';
 /// Every place's visit, as something comparable, keyed by activity/sub-mode.
 final Map<String, List<Object> Function(int seed)> _visits =
     <String, List<Object> Function(int seed)>{
-  for (final m in kStories.keys)
-    'storytellers-pond/$m': (seed) => <Object>[
+      for (final m in kStories.keys)
+        'storytellers-pond/$m': (seed) => <Object>[
           for (final s in storiesFor(m, seed: seed))
             '${s.kind}${s.creature.singular}${s.a}${s.b}${s.c}',
         ],
-  for (final m in kPondRounds.keys)
-    'ten-frame-pond/$m': (seed) => <Object>[
+      for (final m in kPondRounds.keys)
+        'ten-frame-pond/$m': (seed) => <Object>[
           for (final r in pondRoundsFor(m, seed: seed))
             '${r.target}/${r.preset}/${r.differentWay}',
         ],
-  for (final m in kPicnicRounds.keys)
-    'picnic-baskets/$m': (seed) => <Object>[
+      for (final m in kPicnicRounds.keys)
+        'picnic-baskets/$m': (seed) => <Object>[
           for (final r in picnicRoundsFor(m, seed: seed))
             '${r.treat.plural}${r.counts}',
         ],
-  for (final m in kPantryRounds.keys)
-    'care-pantry/$m': (seed) => <Object>[
+      for (final m in kPantryRounds.keys)
+        'care-pantry/$m': (seed) => <Object>[
           for (final r in pantryRoundsFor(m, seed: seed))
             r.crates.map((c) => '${c.name}${c.count}').join(','),
         ],
-  for (final m in kBenchRounds.keys)
-    'caretakers-bench/$m': (seed) => <Object>[
+      for (final m in kBenchRounds.keys)
+        'caretakers-bench/$m': (seed) => <Object>[
           for (final r in benchRoundsFor(m, seed: seed))
             '${r.task}${r.things.map((t) => t.name)}'
                 '${r.cats.map((c) => c.segments)}',
         ],
-};
+    };
 
 void main() {
   const seeds = <int>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];

@@ -51,46 +51,48 @@ void main() {
     expect(second.read(sfxVolumeProvider), 0.4);
   });
 
-  test('a change made while a write is in flight still reaches the disk',
-      () async {
-    // The bug: a persist() during a write was handed that write's future, and
-    // that write had already taken its snapshot - so the change was not on
-    // disk until some unrelated later save. Here a slot changes the coins and
-    // asks for a save in the middle of being written, after the coins slot
-    // has been read: exactly the window the old code dropped.
-    late final SaveCoordinator save;
-    var interrupted = false;
-    final c = ProviderContainer(
-      overrides: [
-        saveCoordinatorProvider.overrideWith(
-          (ref) => SaveCoordinator(
-            ref,
-            slots: [
-              kSaveSlots.firstWhere((s) => s.key == 'coins'),
-              SaveSlot(
-                key: 'interrupt',
-                watch: walletProvider,
-                write: (ref) {
-                  if (!interrupted) {
-                    interrupted = true;
-                    ref.read(walletProvider.notifier).set(8);
-                    unawaited(save.persist());
-                  }
-                  return null;
-                },
-                read: (_, __) {},
-              ),
-            ],
+  test(
+    'a change made while a write is in flight still reaches the disk',
+    () async {
+      // The bug: a persist() during a write was handed that write's future, and
+      // that write had already taken its snapshot - so the change was not on
+      // disk until some unrelated later save. Here a slot changes the coins and
+      // asks for a save in the middle of being written, after the coins slot
+      // has been read: exactly the window the old code dropped.
+      late final SaveCoordinator save;
+      var interrupted = false;
+      final c = ProviderContainer(
+        overrides: [
+          saveCoordinatorProvider.overrideWith(
+            (ref) => SaveCoordinator(
+              ref,
+              slots: [
+                kSaveSlots.firstWhere((s) => s.key == 'coins'),
+                SaveSlot(
+                  key: 'interrupt',
+                  watch: walletProvider,
+                  write: (ref) {
+                    if (!interrupted) {
+                      interrupted = true;
+                      ref.read(walletProvider.notifier).set(8);
+                      unawaited(save.persist());
+                    }
+                    return null;
+                  },
+                  read: (_, __) {},
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    );
-    addTearDown(c.dispose);
-    save = c.read(saveCoordinatorProvider);
-    c.read(walletProvider.notifier).set(5);
-    await save.persist();
-    expect((await _onDisk())['coins'], 8);
-  });
+        ],
+      );
+      addTearDown(c.dispose);
+      save = c.read(saveCoordinatorProvider);
+      c.read(walletProvider.notifier).set(5);
+      await save.persist();
+      expect((await _onDisk())['coins'], 8);
+    },
+  );
 
   test('autosave writes a change nobody asked it to save', () async {
     final c = ProviderContainer();

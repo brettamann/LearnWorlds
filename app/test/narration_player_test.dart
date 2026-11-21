@@ -19,11 +19,15 @@ void main() {
     test('speak() replaces the active line', () {
       final container = ProviderContainer();
       addTearDown(container.dispose);
-      container.read(narrationPlayerProvider.notifier).speak(
+      container
+          .read(narrationPlayerProvider.notifier)
+          .speak(
             const NarrationLine(text: 'One.', cueId: 'we-try-after-tap-1'),
           );
       expect(container.read(narrationPlayerProvider)?.text, 'One.');
-      container.read(narrationPlayerProvider.notifier).speak(
+      container
+          .read(narrationPlayerProvider.notifier)
+          .speak(
             const NarrationLine(text: 'Two.', cueId: 'we-try-after-tap-2'),
           );
       expect(container.read(narrationPlayerProvider)?.text, 'Two.');
@@ -32,9 +36,9 @@ void main() {
     test('clear() removes the active line', () {
       final container = ProviderContainer();
       addTearDown(container.dispose);
-      container.read(narrationPlayerProvider.notifier).speak(
-            const NarrationLine(text: 'One.'),
-          );
+      container
+          .read(narrationPlayerProvider.notifier)
+          .speak(const NarrationLine(text: 'One.'));
       container.read(narrationPlayerProvider.notifier).clear();
       expect(container.read(narrationPlayerProvider), isNull);
     });
@@ -117,8 +121,9 @@ void main() {
         final player = container.read(narrationPlayerProvider.notifier);
 
         player.speak(const NarrationLine(text: 'Five fawns! Well counted.'));
-        player
-            .enqueue(const NarrationLine(text: 'A new friend! Cloud Unicorn.'));
+        player.enqueue(
+          const NarrationLine(text: 'A new friend! Cloud Unicorn.'),
+        );
 
         expect(player.queuedCount, 1);
         expect(
@@ -148,23 +153,25 @@ void main() {
       });
     });
 
-    test('speak() drops the queue rather than talking over the interruption',
-        () {
-      fakeAsync((async) {
-        final container = ProviderContainer();
-        addTearDown(container.dispose);
-        final player = container.read(narrationPlayerProvider.notifier);
+    test(
+      'speak() drops the queue rather than talking over the interruption',
+      () {
+        fakeAsync((async) {
+          final container = ProviderContainer();
+          addTearDown(container.dispose);
+          final player = container.read(narrationPlayerProvider.notifier);
 
-        player.speak(const NarrationLine(text: 'First.'));
-        player.enqueue(const NarrationLine(text: 'Queued.'));
-        // She tapped. Whatever was going to be said next is stale.
-        player.speak(const NarrationLine(text: 'Three.'));
+          player.speak(const NarrationLine(text: 'First.'));
+          player.enqueue(const NarrationLine(text: 'Queued.'));
+          // She tapped. Whatever was going to be said next is stale.
+          player.speak(const NarrationLine(text: 'Three.'));
 
-        expect(player.queuedCount, 0);
-        async.elapse(const Duration(seconds: 30));
-        expect(container.read(narrationPlayerProvider)?.text, 'Three.');
-      });
-    });
+          expect(player.queuedCount, 0);
+          async.elapse(const Duration(seconds: 30));
+          expect(container.read(narrationPlayerProvider)?.text, 'Three.');
+        });
+      },
+    );
 
     test('clear() drops the queue too', () {
       fakeAsync((async) {
@@ -180,20 +187,22 @@ void main() {
       });
     });
 
-    test('the queue is bounded, so nothing answers a tap from a minute ago',
-        () {
-      fakeAsync((async) {
-        final container = ProviderContainer();
-        addTearDown(container.dispose);
-        final player = container.read(narrationPlayerProvider.notifier);
-        player.speak(const NarrationLine(text: 'First.'));
-        for (var i = 0; i < 8; i++) {
-          player.enqueue(NarrationLine(text: 'Queued $i.'));
-        }
-        expect(player.queuedCount, lessThanOrEqualTo(2));
-        async.elapse(const Duration(seconds: 60));
-      });
-    });
+    test(
+      'the queue is bounded, so nothing answers a tap from a minute ago',
+      () {
+        fakeAsync((async) {
+          final container = ProviderContainer();
+          addTearDown(container.dispose);
+          final player = container.read(narrationPlayerProvider.notifier);
+          player.speak(const NarrationLine(text: 'First.'));
+          for (var i = 0; i < 8; i++) {
+            player.enqueue(NarrationLine(text: 'Queued $i.'));
+          }
+          expect(player.queuedCount, lessThanOrEqualTo(2));
+          async.elapse(const Duration(seconds: 60));
+        });
+      },
+    );
 
     test('a longer line is estimated to take longer', () {
       // The estimate is what orders the queue on the synth path, so it has to

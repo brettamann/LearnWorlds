@@ -31,18 +31,18 @@ class DecorPlacement {
   final double y;
 
   DecorPlacement moveTo(double newX, double newY) => DecorPlacement(
-        instanceId: instanceId,
-        decorId: decorId,
-        x: newX,
-        y: newY,
-      );
+    instanceId: instanceId,
+    decorId: decorId,
+    x: newX,
+    y: newY,
+  );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'instanceId': instanceId,
-        'decorId': decorId,
-        'x': x,
-        'y': y,
-      };
+    'instanceId': instanceId,
+    'decorId': decorId,
+    'x': x,
+    'y': y,
+  };
 
   /// Returns null for a row that cannot be read rather than throwing.
   ///

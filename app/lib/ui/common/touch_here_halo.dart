@@ -23,11 +23,7 @@ import 'package:flutter/material.dart';
 /// them from outside. When the ring can simply be a sibling of the thing, use
 /// [TouchHereRing] and let the layout do the positioning.
 class TouchHereHalo extends StatelessWidget {
-  const TouchHereHalo({
-    super.key,
-    required this.rect,
-    this.urgent = false,
-  });
+  const TouchHereHalo({super.key, required this.rect, this.urgent = false});
 
   /// Where the stage drew the target, in this overlay's coordinate space.
   final Rect rect;

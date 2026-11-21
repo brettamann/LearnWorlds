@@ -59,32 +59,37 @@ class _LessonHandPointerState extends State<LessonHandPointer>
   @override
   void initState() {
     super.initState();
-    _poke = AnimationController(
-      duration: widget.pokeDuration,
-      vsync: this,
-    );
+    _poke = AnimationController(duration: widget.pokeDuration, vsync: this);
     // Poke: thrust down ~18px and back, with a slight scale-down on impact.
     _pokeOffset = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween(begin: 0.0, end: 18.0)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween(
+          begin: 0.0,
+          end: 18.0,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 45,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 18.0, end: 0.0)
-            .chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween(
+          begin: 18.0,
+          end: 0.0,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 55,
       ),
     ]).animate(_poke);
     _pokeScale = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 0.92)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween(
+          begin: 1.0,
+          end: 0.92,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 45,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 0.92, end: 1.0)
-            .chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween(
+          begin: 0.92,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 55,
       ),
     ]).animate(_poke);
@@ -120,10 +125,7 @@ class _LessonHandPointerState extends State<LessonHandPointer>
             builder: (context, child) {
               return Transform.translate(
                 offset: Offset(0, _pokeOffset.value),
-                child: Transform.scale(
-                  scale: _pokeScale.value,
-                  child: child,
-                ),
+                child: Transform.scale(scale: _pokeScale.value, child: child),
               );
             },
             child: Image.asset(

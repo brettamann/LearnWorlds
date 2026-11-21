@@ -78,7 +78,8 @@ void main() {
       expect(
         c.read(decorOwnershipProvider),
         isEmpty,
-        reason: 'free items are checked, never stored — so the free set can '
+        reason:
+            'free items are checked, never stored — so the free set can '
             'change later without leaving stale grants in old saves',
       );
     });
@@ -94,9 +95,10 @@ void main() {
 
     test('hydrate drops free items rather than storing them', () {
       final c = container();
-      c
-          .read(decorOwnershipProvider.notifier)
-          .hydrate({'toadstool-cluster', 'lily-pond'});
+      c.read(decorOwnershipProvider.notifier).hydrate({
+        'toadstool-cluster',
+        'lily-pond',
+      });
       expect(c.read(decorOwnershipProvider), {'lily-pond'});
     });
   });
@@ -113,8 +115,10 @@ void main() {
         ..place('toadstool-cluster', 0.9, 0.2);
       expect(c.read(sanctuaryDecorProvider), hasLength(3));
       expect(decor.countOf('toadstool-cluster'), 3);
-      final ids =
-          c.read(sanctuaryDecorProvider).map((p) => p.instanceId).toSet();
+      final ids = c
+          .read(sanctuaryDecorProvider)
+          .map((p) => p.instanceId)
+          .toSet();
       expect(ids, hasLength(3), reason: 'instance ids must be distinct');
     });
 
@@ -145,10 +149,9 @@ void main() {
       final a = decor.place('flower-patch', 0.1, 0.1)!;
       final b = decor.place('lily-pond', 0.2, 0.2)!;
       decor.remove(a.instanceId);
-      expect(
-        c.read(sanctuaryDecorProvider).map((p) => p.instanceId),
-        [b.instanceId],
-      );
+      expect(c.read(sanctuaryDecorProvider).map((p) => p.instanceId), [
+        b.instanceId,
+      ]);
     });
 
     test('an instance id is never reused after a delete', () {
@@ -177,27 +180,29 @@ void main() {
   });
 
   group('hydrate', () {
-    test('a row naming an item that no longer exists is dropped, not fatal',
-        () {
-      final c = container();
-      c.read(sanctuaryDecorProvider.notifier).hydrate([
-        const DecorPlacement(
-          instanceId: 1,
-          decorId: 'a-decoration-we-removed',
-          x: 0.5,
-          y: 0.5,
-        ),
-        const DecorPlacement(
-          instanceId: 2,
-          decorId: 'lily-pond',
-          x: 0.5,
-          y: 0.5,
-        ),
-      ]);
-      expect(c.read(sanctuaryDecorProvider).map((p) => p.decorId), [
-        'lily-pond',
-      ]);
-    });
+    test(
+      'a row naming an item that no longer exists is dropped, not fatal',
+      () {
+        final c = container();
+        c.read(sanctuaryDecorProvider.notifier).hydrate([
+          const DecorPlacement(
+            instanceId: 1,
+            decorId: 'a-decoration-we-removed',
+            x: 0.5,
+            y: 0.5,
+          ),
+          const DecorPlacement(
+            instanceId: 2,
+            decorId: 'lily-pond',
+            x: 0.5,
+            y: 0.5,
+          ),
+        ]);
+        expect(c.read(sanctuaryDecorProvider).map((p) => p.decorId), [
+          'lily-pond',
+        ]);
+      },
+    );
 
     test('ids continue past the highest one restored', () {
       final c = container();

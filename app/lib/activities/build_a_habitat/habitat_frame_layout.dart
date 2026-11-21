@@ -62,10 +62,8 @@ class HabitatFrameLayout {
   final double offsetY;
 
   /// A normalized blueprint coordinate in box pixels.
-  Offset place(Offset normalized) => Offset(
-        normalized.dx * scale + offsetX,
-        normalized.dy * scale + offsetY,
-      );
+  Offset place(Offset normalized) =>
+      Offset(normalized.dx * scale + offsetX, normalized.dy * scale + offsetY);
 
   Offset corner(int index) => place(blueprint.corners[index]);
 

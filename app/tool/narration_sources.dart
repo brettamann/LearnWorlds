@@ -215,7 +215,8 @@ List<String> dartNarrationLiterals(String root) {
     // elsewhere: `build_a_habitat_blueprints.dart` holds keeperLines the
     // habitat runner speaks, and `wheres_buddy_words.dart` holds the position
     // phrases. Neither file mentions narration at all.
-    final speaks = source.contains('NarrationLine(') ||
+    final speaks =
+        source.contains('NarrationLine(') ||
         source.contains('narrationPlayerProvider') ||
         source.contains('narration.say(');
     // Windows reports lib\data\...; normalise before matching.

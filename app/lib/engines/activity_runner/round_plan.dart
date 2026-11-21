@@ -196,8 +196,9 @@ class ParadeRoundPlanner {
     int streak = 0,
   }) {
     final rng = math.Random(seed);
-    final pool =
-        params.speciesPool.isEmpty ? kAllParadeSpeciesIds : params.speciesPool;
+    final pool = params.speciesPool.isEmpty
+        ? kAllParadeSpeciesIds
+        : params.speciesPool;
 
     // The first entry stays put: lessons that name a species expect the round
     // they hand off to to feature it. Everything after it is fair game.
@@ -211,8 +212,10 @@ class ParadeRoundPlanner {
     return <ParadeRound>[
       for (var i = 0; i < params.counts.length; i++)
         () {
-          final count =
-              (params.counts[i] + bump).clamp(kMinParadeCount, kMaxParadeCount);
+          final count = (params.counts[i] + bump).clamp(
+            kMinParadeCount,
+            kMaxParadeCount,
+          );
           return ParadeRound(
             index: i,
             targetCount: count,

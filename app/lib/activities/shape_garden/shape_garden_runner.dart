@@ -225,10 +225,7 @@ class _GardenFindRoundBodyState extends ConsumerState<GardenFindRoundBody> {
       _done = true;
       _hints?.pause();
       widget.c.finish(
-        gradeRound(
-          misses: _wrongTaps,
-          helped: (_hints?.hintsUsed ?? 0) > 0,
-        ),
+        gradeRound(misses: _wrongTaps, helped: (_hints?.hintsUsed ?? 0) > 0),
       );
       return;
     }
@@ -307,8 +304,9 @@ class GardenSortRoundBody extends StatefulWidget {
 }
 
 class _GardenSortRoundBodyState extends State<GardenSortRoundBody> {
-  late final List<FlatOrSolidShape> _shapes =
-      gardenSortingShapes(widget.c.index);
+  late final List<FlatOrSolidShape> _shapes = gardenSortingShapes(
+    widget.c.index,
+  );
   int _wrongDrops = 0;
   bool _helped = false;
 

@@ -174,7 +174,8 @@ void main() {
       expect(
         rig.music.playing,
         isTrue,
-        reason: 'still inside the grace window — this is the frame a route '
+        reason:
+            'still inside the grace window — this is the frame a route '
             'change lives in',
       );
 

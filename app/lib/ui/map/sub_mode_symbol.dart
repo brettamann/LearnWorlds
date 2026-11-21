@@ -35,11 +35,7 @@ import '../../data/sub_mode_picker_data.dart';
 import '../characters/buddy_widget.dart';
 
 class SubModeSymbol extends StatelessWidget {
-  const SubModeSymbol({
-    super.key,
-    required this.symbol,
-    required this.size,
-  });
+  const SubModeSymbol({super.key, required this.symbol, required this.size});
 
   final PickerSymbol symbol;
 
@@ -55,9 +51,9 @@ class SubModeSymbol extends StatelessWidget {
         PickerSprite(:final asset) => Image.asset(asset, fit: BoxFit.contain),
         PickerScene(:final layers) => _Scene(layers: layers, size: size),
         PickerHabitat(:final blueprintIndex) => _HabitatThumb(
-            blueprint: kHabitatBlueprints[blueprintIndex],
-            size: size,
-          ),
+          blueprint: kHabitatBlueprints[blueprintIndex],
+          size: size,
+        ),
       },
     );
   }

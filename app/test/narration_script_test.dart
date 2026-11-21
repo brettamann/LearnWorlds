@@ -193,14 +193,16 @@ void main() {
         expect(
           batch.isComplete,
           isTrue,
-          reason: '${batch.id} enumerates ${batch.lines.length} of '
+          reason:
+              '${batch.id} enumerates ${batch.lines.length} of '
               '${batch.variants} variants. Collapse the template instead of '
               'sampling it - see paradeTransitionLine for how.',
         );
         expect(
           batch.variants,
           lessThan(300),
-          reason: '${batch.id} has ${batch.variants} variants, which is too '
+          reason:
+              '${batch.id} has ${batch.variants} variants, which is too '
               'many to record and a sign the line names one thing too many',
         );
       }
@@ -225,8 +227,10 @@ void main() {
         if (!file.existsSync()) return;
         final source = file.readAsStringSync();
 
-        for (final match in RegExp(r"^import\s+'([^']+)'", multiLine: true)
-            .allMatches(source)) {
+        for (final match in RegExp(
+          r"^import\s+'([^']+)'",
+          multiLine: true,
+        ).allMatches(source)) {
           final target = match.group(1)!;
           if (target.startsWith('package:flutter') ||
               target.startsWith('package:just_audio') ||
@@ -245,7 +249,8 @@ void main() {
       expect(
         offenders,
         isEmpty,
-        reason: 'these imports break `dart run '
+        reason:
+            'these imports break `dart run '
             'tool/dump_narration_script.dart`: '
             '${offenders.join(", ")}',
       );
@@ -276,10 +281,7 @@ void main() {
         clipKeys: recordedTwo,
       );
       expect(export['orphans'], ['some-retired-line__deadbeef']);
-      expect(
-        (export['coverage'] as Map<String, int>)['recorded'],
-        2,
-      );
+      expect((export['coverage'] as Map<String, int>)['recorded'], 2);
     });
 
     test('lines heard while playing land in their own batch', () {
@@ -295,9 +297,11 @@ void main() {
         clipKeys: const <String>{},
       );
       final batches = export['batches'] as List<dynamic>;
-      final observed = batches.firstWhere(
-        (b) => (b as Map<String, dynamic>)['id'] == 'observed',
-      ) as Map<String, dynamic>;
+      final observed =
+          batches.firstWhere(
+                (b) => (b as Map<String, dynamic>)['id'] == 'observed',
+              )
+              as Map<String, dynamic>;
       final lines = observed['lines'] as List<dynamic>;
       expect(lines.length, 1);
       expect(

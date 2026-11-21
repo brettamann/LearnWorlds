@@ -247,10 +247,7 @@ class WeTryRunner extends ChangeNotifier {
   void touch(Offset globalPosition) {
     final gate = _gate;
     if (gate == null) return;
-    _resolveGate(
-      passed: hits(_targetsOf(gate), globalPosition),
-      byHer: true,
-    );
+    _resolveGate(passed: hits(_targetsOf(gate), globalPosition), byHer: true);
   }
 
   void _resolveGate({required bool passed, required bool byHer}) {

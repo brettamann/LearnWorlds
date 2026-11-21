@@ -218,9 +218,7 @@ class _BenchRoundBodyState extends ConsumerState<BenchRoundBody>
     _done = true;
     _hints?.pause();
     final helped = (_hints?.hintsUsed ?? 0) > 0;
-    widget.c.finish(
-      gradeRound(misses: _misses, helped: helped),
-    );
+    widget.c.finish(gradeRound(misses: _misses, helped: helped));
   }
 
   void _onHint(HintLevel level) {
