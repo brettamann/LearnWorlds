@@ -21,9 +21,8 @@
 //   node tools/scripts/validate-data.mjs [--repo-root PATH] [--quiet] [-v]
 //
 // Dependencies:
-//   ajv (peer; install via `npm install --no-save ajv ajv-formats`)
-//   No package.json required — this script auto-installs deps in a sibling
-//   node_modules/ if not found.
+//   ajv + ajv-formats, pinned in tools/scripts/package-lock.json. Installed
+//   with `npm ci` on first run if node_modules/ is missing.
 
 import { readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
@@ -64,15 +63,17 @@ async function ensureAjv() {
   const ajvDir = path.join(localNodeModules, 'ajv');
 
   if (!existsSync(ajvDir)) {
-    console.log('Installing ajv + ajv-formats (one-time setup in tools/scripts/node_modules/)...');
+    // Installs exactly what package-lock.json pins, so a CI run and a laptop
+    // validate against the same ajv.
+    console.log('Installing pinned validator deps (npm ci in tools/scripts)...');
     try {
-      execSync('npm install --no-save --prefix . ajv@8 ajv-formats@3', {
+      execSync('npm ci --no-audit --no-fund', {
         cwd: __dirname,
         stdio: 'inherit',
       });
     } catch (e) {
       console.error('Failed to install ajv. Run manually:');
-      console.error('  cd tools/scripts && npm install --no-save ajv@8 ajv-formats@3');
+      console.error('  cd tools/scripts && npm ci');
       process.exit(2);
     }
   }

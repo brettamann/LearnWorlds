@@ -1,6 +1,5 @@
 # Auto-installed deps for tooling scripts.
 tools/scripts/node_modules/
-tools/scripts/package*.json
 
 # Tool outputs (regenerated; not source-of-truth).
 tools/tts/harvest-manifest.json

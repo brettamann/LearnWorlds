@@ -1,0 +1,13 @@
+{
+  "name": "critmath-data-scripts",
+  "private": true,
+  "description": "Data validation and map checks for app/assets/data. Install with `npm ci`.",
+  "type": "module",
+  "scripts": {
+    "validate": "node validate-data.mjs"
+  },
+  "dependencies": {
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1"
+  }
+}

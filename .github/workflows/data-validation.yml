@@ -19,9 +19,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: npm
+          cache-dependency-path: tools/scripts/package-lock.json
+
+      - name: Install pinned validator dependencies
+        run: npm ci --no-audit --no-fund
+        working-directory: tools/scripts
 
       - name: Validate all data files against their schemas
         # Walks app/assets/data/**/*.json and app/assets/content/**/*.json and
-        # validates each against its declared $schema. Auto-installs ajv into
-        # tools/scripts/node_modules/ on first run.
+        # validates each against its declared $schema.
         run: node tools/scripts/validate-data.mjs --quiet
