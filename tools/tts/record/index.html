@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CritMath — Narration Recorder</title>
+<style>
+  :root {
+    --bg: #1c1b19; --panel: #262421; --line: #3a3733; --ink: #f4efe4;
+    --dim: #a49b8a; --gold: #ffc53d; --green: #63b46a; --red: #e2645a;
+    --blue: #6ba8d0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.5 system-ui, -apple-system, Segoe UI, sans-serif;
+    display: grid; grid-template-columns: 340px 1fr; height: 100vh;
+  }
+  aside {
+    background: var(--panel); border-right: 1px solid var(--line);
+    overflow-y: auto; padding: 16px;
+  }
+  main { padding: 28px 36px; overflow-y: auto; display: flex;
+         flex-direction: column; gap: 20px; }
+  h1 { font-size: 17px; margin: 0 0 10px; letter-spacing: .02em; }
+  h2 { font-size: 15px; margin: 0; }
+  .hint { color: var(--dim); font-size: 13px; }
+  .warn { color: var(--gold); font-size: 13px; }
+  textarea {
+    width: 100%; height: 120px; background: #141312; color: var(--ink);
+    border: 1px solid var(--line); border-radius: 8px; padding: 10px;
+    font: 12px/1.4 ui-monospace, Consolas, monospace; resize: vertical;
+  }
+  button {
+    background: #34302b; color: var(--ink); border: 1px solid var(--line);
+    border-radius: 999px; padding: 9px 18px; font-size: 15px;
+    font-weight: 600; cursor: pointer;
+  }
+  button:hover:not(:disabled) { background: #423d36; }
+  button:disabled { opacity: .4; cursor: default; }
+  button.primary { background: var(--gold); color: #221c0a; border-color: #eaa916; }
+  button.rec { background: var(--red); border-color: #b94b42; color: #fff; }
+  button.small { padding: 4px 12px; font-size: 13px; font-weight: 500; }
+  ul, ol { list-style: none; margin: 10px 0 0; padding: 0; }
+  li.batch {
+    padding: 8px 10px; border-radius: 6px; cursor: pointer; font-size: 13px;
+    display: flex; gap: 8px; align-items: baseline; justify-content: space-between;
+  }
+  li.batch:hover { background: #2f2c28; }
+  li.batch.active { background: #3d382f; outline: 1px solid var(--gold); }
+  li.batch .n { color: var(--dim); font: 12px ui-monospace, Consolas, monospace; }
+  li.batch.partial .n { color: var(--blue); }
+  li.batch.done .n { color: var(--green); }
+  .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .meter {
+    height: 10px; width: 240px; background: #141312; border-radius: 999px;
+    overflow: hidden; border: 1px solid var(--line);
+  }
+  .meter > i { display: block; height: 100%; width: 0; background: var(--green); }
+  .status { color: var(--dim); font-size: 14px; min-height: 1.4em; }
+  .note {
+    background: #201f1c; border-left: 3px solid var(--gold);
+    padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 14px;
+    color: #d9d0bd;
+  }
+  .prompter {
+    background: #141312; border: 1px solid var(--line); border-radius: 10px;
+    padding: 16px 20px; max-height: 46vh; overflow-y: auto;
+  }
+  .prompter div {
+    font-size: 26px; line-height: 1.5; padding: 4px 0; font-weight: 600;
+    display: flex; gap: 14px; align-items: baseline;
+  }
+  .prompter div.cur { color: var(--gold); }
+  .prompter div.recorded { color: var(--dim); font-weight: 500; }
+  .prompter span.i {
+    font: 13px ui-monospace, Consolas, monospace; color: var(--dim);
+    min-width: 3.5ch; text-align: right; flex: none;
+  }
+  .script { font-size: 40px; line-height: 1.3; font-weight: 700; max-width: 22ch;
+            min-height: 2.4em; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--line); }
+  th { color: var(--dim); font-weight: 500; font-size: 12px; }
+  td.dur { font: 12px ui-monospace, Consolas, monospace; color: var(--dim); }
+  tr.bad td { background: #2e2320; }
+  input[type=range] { width: 220px; }
+  .seg-count { font-size: 20px; font-weight: 700; }
+  .seg-count.ok { color: var(--green); }
+  .seg-count.bad { color: var(--red); }
+  .tabs { display: flex; gap: 6px; }
+  .tabs button.on { background: var(--gold); color: #221c0a; border-color: #eaa916; }
+  code { font: 12px ui-monospace, Consolas, monospace; color: var(--gold); }
+</style>
+</head>
+<body>
+<aside>
+  <h1>Narration Recorder</h1>
+  <p class="hint">
+    In the app: <strong>Settings &rarr; Copy recording script</strong>, then paste
+    here. Most of the script is enumerated from the game's catalogs, so you do not
+    have to play through anything first.
+  </p>
+  <textarea id="paste" placeholder="Paste the script JSON here"></textarea>
+  <div class="row" style="margin-top:10px">
+    <button id="load" class="primary">Load script</button>
+  </div>
+
+  <div id="folder-box" style="margin-top:16px">
+    <button id="pick-folder">Choose output folder</button>
+    <p class="hint" id="folder-status" style="margin:6px 0 0">
+      Pick <code>app/assets/audio/narration/</code> and takes are written
+      straight in. Otherwise they download one by one.
+    </p>
+  </div>
+
+  <div id="coverage" class="hint" style="margin-top:16px"></div>
+  <ul id="batches"></ul>
+</aside>
+
+<main>
+  <div id="empty" class="hint">Load a script to begin.</div>
+
+  <div id="work" hidden>
+    <div class="row" style="justify-content:space-between">
+      <h2 id="batch-title"></h2>
+      <div class="tabs">
+        <button id="mode-batch" class="small on">Continuous take</button>
+        <button id="mode-single" class="small">One at a time</button>
+      </div>
+    </div>
+    <div class="note" id="batch-note"></div>
+
+    <!-- Continuous ------------------------------------------------------ -->
+    <section id="pane-batch">
+      <p class="hint">
+        Hit record once and read the whole list, leaving about a second of
+        silence between lines. Stop when you reach the end. The take is split on
+        those silences and each piece is named for you.
+      </p>
+      <div class="prompter" id="prompter"></div>
+      <div class="row" style="margin-top:16px">
+        <button id="rec-batch" class="rec">Record take</button>
+        <div class="meter"><i id="meter-b"></i></div>
+        <span class="status" id="status-b"></span>
+      </div>
+
+      <div id="split-box" hidden style="margin-top:20px">
+        <div class="row">
+          <span class="seg-count" id="seg-count"></span>
+          <label class="hint">
+            Silence threshold
+            <input type="range" id="thresh" min="-60" max="-20" value="-42" step="1">
+            <span id="thresh-val" class="hint"></span>
+          </label>
+          <label class="hint">
+            Gap
+            <input type="range" id="gap" min="150" max="900" value="350" step="25">
+            <span id="gap-val" class="hint"></span>
+          </label>
+        </div>
+        <p class="hint" id="split-help"></p>
+        <div class="row">
+          <button id="save-all" class="primary">Save all</button>
+          <button id="discard">Discard take</button>
+        </div>
+        <table id="segs"><thead><tr>
+          <th>#</th><th>Line</th><th>Length</th><th></th>
+        </tr></thead><tbody></tbody></table>
+      </div>
+    </section>
+
+    <!-- Single ---------------------------------------------------------- -->
+    <section id="pane-single" hidden>
+      <p class="hint">
+        <code>space</code> records and stops &middot; <code>enter</code> saves and
+        moves on. Use this to redo anything the split got wrong.
+      </p>
+      <div class="script" id="script"></div>
+      <div class="row">
+        <button id="rec-one" class="rec">Record</button>
+        <button id="play-one" disabled>Play</button>
+        <button id="save-one" class="primary" disabled>Save &amp; next</button>
+        <button id="skip-one">Skip</button>
+        <div class="meter"><i id="meter-s"></i></div>
+      </div>
+      <div class="status" id="status-s"></div>
+      <div class="prompter" id="single-list" style="font-size:14px"></div>
+    </section>
+  </div>
+</main>
+
+<script>
+'use strict';
+
+// ---------------------------------------------------------------------------
+// Clip key. Mirrors narrationClipKey() in app/lib/platform/narration_audio.dart.
+//
+// The export already carries a `file` for every line, so this is not strictly
+// needed to name anything — it exists to CHECK. A script exported from a build
+// older than the app you are recording for would name files the app no longer
+// looks up, and there is no way to notice that by ear. Recomputing the key and
+// comparing catches it before a whole session goes in the bin.
+// ---------------------------------------------------------------------------
+const normalize = (t) => t.trim().replace(/\s+/g, ' ');
+
+function fnv1a32(text) {
+  const bytes = new TextEncoder().encode(text);
+  let h = 0x811c9dc5;
+  for (const b of bytes) {
+    h ^= b;
+    // 32-bit multiply by the FNV prime via 16-bit halves — the straightforward
+    // version loses precision past 2^53, exactly as it would in Dart on web.
+    const aLo = h & 0xffff, aHi = (h >>> 16) & 0xffff;
+    const bLo = 0x0193, bHi = 0x0100;
+    const mid = ((aLo * bHi) + (aHi * bLo)) & 0xffff;
+    h = (((aLo * bLo) + (mid * 65536)) >>> 0);
+  }
+  return h >>> 0;
+}
+
+function clipKey(text) {
+  const n = normalize(text);
+  let slug = n.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  if (slug.length > 48) slug = slug.slice(0, 48).replace(/-+$/, '');
+  if (!slug) slug = 'line';
+  return slug + '__' + fnv1a32(n).toString(16).padStart(8, '0');
+}
+
+// Shared vectors, pinned identically in app/test/narration_script_test.dart.
+// If either side drifts, one of the two shouts.
+(function selfCheck() {
+  const vectors = [
+    ['One.', 'one__ccbaa073'],
+    ['Not that one. Look again.', 'not-that-one-look-again__c6dc8490'],
+    ['Touch each fawn — and count out loud with me!',
+     'touch-each-fawn-and-count-out-loud-with-me__4a5087aa'],
+  ];
+  for (const [text, want] of vectors) {
+    const got = clipKey(text);
+    if (got !== want) {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.body.innerHTML =
+          '<pre style="padding:40px;color:#e2645a;font-size:16px">' +
+          'Clip-key self-check FAILED.\n\n  text: ' + text +
+          '\n  want: ' + want + '\n  got:  ' + got +
+          '\n\nThis harness disagrees with the app about filenames. Recording ' +
+          'now would produce clips the game never plays.</pre>';
+      });
+      throw new Error('clip key mismatch');
+    }
+  }
+})();
+
+// ---------------------------------------------------------------------------
+// State
+// ---------------------------------------------------------------------------
+const $ = (id) => document.getElementById(id);
+let script = null;      // parsed export
+let batch = null;       // active batch
+let cursor = 0;         // index within the batch, for single mode
+let dirHandle = null;   // chosen output folder, if the browser allows one
+let saved = new Set();  // clip keys written this session
+let takeBuffer = null;  // decoded continuous take
+let segments = [];      // [{start, end}] in samples
+let singleBuffer = null;
+
+let media = null, recorder = null, chunks = [], analyser = null, meterRaf = 0;
+let recordingFor = null; // 'batch' | 'single' | null
+
+// ---------------------------------------------------------------------------
+// Script loading
+// ---------------------------------------------------------------------------
+$('load').onclick = () => {
+  let parsed;
+  try {
+    parsed = JSON.parse($('paste').value);
+  } catch (e) {
+    alert('That is not valid JSON.\n\n' + e.message);
+    return;
+  }
+  if (!parsed || !Array.isArray(parsed.batches)) {
+    alert('Expected a v2 script with a "batches" array. Use Settings → ' +
+          'Copy recording script in the app.');
+    return;
+  }
+  const mismatched = [];
+  for (const b of parsed.batches) {
+    for (const line of b.lines) {
+      if (clipKey(line.text) !== line.file) mismatched.push(line);
+    }
+  }
+  if (mismatched.length) {
+    alert('This script names ' + mismatched.length + ' file(s) differently ' +
+          'than this harness would. The app and the harness are out of sync — ' +
+          'update one of them before recording.\n\nFirst: ' +
+          mismatched[0].text + '\n  script: ' + mismatched[0].file +
+          '\n  harness: ' + clipKey(mismatched[0].text));
+    return;
+  }
+  script = parsed;
+  // Lines the app already has a clip for count as done.
+  saved = new Set();
+  for (const b of parsed.batches) {
+    for (const line of b.lines) if (line.recorded) saved.add(line.file);
+  }
+  const c = parsed.coverage || {};
+  $('coverage').innerHTML =
+    '<strong>' + (c.recorded || 0) + ' of ' + (c.lines || 0) + '</strong> ' +
+    'lines already recorded.' +
+    (c.orphaned ? '<br><span class="warn">' + c.orphaned + ' clip(s) in the ' +
+      'folder match no current line — those were reworded and want re-cutting.' +
+      '</span>' : '');
+  renderBatches();
+  selectBatch(parsed.batches[0]);
+};
+
+function batchProgress(b) {
+  let done = 0;
+  for (const line of b.lines) if (saved.has(line.file)) done++;
+  return done;
+}
+
+function renderBatches() {
+  const ul = $('batches');
+  ul.innerHTML = '';
+  for (const b of script.batches) {
+    const done = batchProgress(b);
+    const li = document.createElement('li');
+    li.className = 'batch' +
+      (batch === b ? ' active' : '') +
+      (done === b.lines.length ? ' done' : done > 0 ? ' partial' : '');
+    li.innerHTML = '<span>' + b.title + '</span>' +
+      '<span class="n">' + done + '/' + b.lines.length + '</span>';
+    li.onclick = () => selectBatch(b);
+    ul.appendChild(li);
+  }
+}
+
+function selectBatch(b) {
+  batch = b;
+  cursor = 0;
+  discardTake();
+  $('empty').hidden = true;
+  $('work').hidden = false;
+  $('batch-title').textContent = b.title;
+  let note = b.note;
+  if (b.complete === false) {
+    note += '  (' + b.lines.length + ' of ' + b.variants + ' shown.)';
+  }
+  $('batch-note').textContent = note;
+  renderBatches();
+  renderPrompter();
+  renderSingle();
+}
+
+function renderPrompter() {
+  const el = $('prompter');
+  el.innerHTML = '';
+  batch.lines.forEach((line, i) => {
+    const d = document.createElement('div');
+    if (saved.has(line.file)) d.className = 'recorded';
+    d.innerHTML = '<span class="i">' + (i + 1) + '</span><span>' +
+      escapeHtml(line.text) + '</span>';
+    el.appendChild(d);
+  });
+}
+
+const escapeHtml = (s) => s.replace(/[&<>]/g, (c) =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+
+// ---------------------------------------------------------------------------
+// Output folder
+// ---------------------------------------------------------------------------
+$('pick-folder').onclick = async () => {
+  if (!window.showDirectoryPicker) {
+    alert('This browser cannot write to a folder directly. Takes will download ' +
+          'instead — move them into app/assets/audio/narration/ afterwards.\n\n' +
+          'Chrome over http://localhost supports direct writing; file:// does not.');
+    return;
+  }
+  try {
+    dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+    $('folder-status').innerHTML =
+      'Writing into <code>' + dirHandle.name + '</code>.';
+  } catch (e) { /* cancelled */ }
+};
+
+async function writeClip(name, blob) {
+  if (dirHandle) {
+    const fh = await dirHandle.getFileHandle(name, { create: true });
+    const w = await fh.createWritable();
+    await w.write(blob);
+    await w.close();
+    return;
+  }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+
+// ---------------------------------------------------------------------------
+// Microphone
+// ---------------------------------------------------------------------------
+async function ensureMic() {
+  if (media) return media;
+  media = await navigator.mediaDevices.getUserMedia({
+    audio: {
+      channelCount: 1,
+      echoCancellation: false,
+      noiseSuppression: false,
+      autoGainControl: false,
+    },
+  });
+  const ctx = new AudioContext();
+  analyser = ctx.createAnalyser();
+  analyser.fftSize = 1024;
+  ctx.createMediaStreamSource(media).connect(analyser);
+  return media;
+}
+
+function runMeter(barId) {
+  const buf = new Float32Array(analyser.fftSize);
+  const bar = $(barId);
+  const tick = () => {
+    analyser.getFloatTimeDomainData(buf);
+    let peak = 0;
+    for (const v of buf) peak = Math.max(peak, Math.abs(v));
+    bar.style.width = Math.min(100, peak * 140) + '%';
+    bar.style.background = peak > 0.97 ? 'var(--red)' : 'var(--green)';
+    meterRaf = requestAnimationFrame(tick);
+  };
+  tick();
+}
+
+function stopMeter(barId) {
+  cancelAnimationFrame(meterRaf);
+  $(barId).style.width = '0';
+}
+
+async function startRecording(which) {
+  await ensureMic();
+  chunks = [];
+  recorder = new MediaRecorder(media);
+  recorder.ondataavailable = (e) => chunks.push(e.data);
+  recordingFor = which;
+  recorder.start();
+  runMeter(which === 'batch' ? 'meter-b' : 'meter-s');
+}
+
+function stopRecording() {
+  return new Promise((resolve) => {
+    recorder.onstop = async () => {
+      stopMeter(recordingFor === 'batch' ? 'meter-b' : 'meter-s');
+      const blob = new Blob(chunks, { type: chunks[0] ? chunks[0].type : 'audio/webm' });
+      const ctx = new AudioContext();
+      const decoded = await ctx.decodeAudioData(await blob.arrayBuffer());
+      resolve(decoded);
+    };
+    recorder.stop();
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Continuous take
+// ---------------------------------------------------------------------------
+$('rec-batch').onclick = async () => {
+  const btn = $('rec-batch');
+  if (recordingFor === 'batch') {
+    btn.disabled = true;
+    $('status-b').textContent = 'Decoding…';
+    const decoded = await stopRecording();
+    recordingFor = null;
+    takeBuffer = toMono(decoded);
+    btn.disabled = false;
+    btn.textContent = 'Record take';
+    btn.classList.add('rec');
+    resplit();
+    return;
+  }
+  try {
+    await startRecording('batch');
+  } catch (e) {
+    $('status-b').textContent = 'No microphone: ' + e.message;
+    return;
+  }
+  $('split-box').hidden = true;
+  btn.textContent = 'Stop';
+  btn.classList.remove('rec');
+  $('status-b').textContent = 'Recording — read the list top to bottom.';
+};
+
+function toMono(buffer) {
+  const n = buffer.length;
+  const out = new Float32Array(n);
+  for (let c = 0; c < buffer.numberOfChannels; c++) {
+    const d = buffer.getChannelData(c);
+    for (let i = 0; i < n; i++) out[i] += d[i];
+  }
+  if (buffer.numberOfChannels > 1) {
+    for (let i = 0; i < n; i++) out[i] /= buffer.numberOfChannels;
+  }
+  return { data: out, rate: buffer.sampleRate };
+}
+
+/// Split on silence. Frame-wise RMS, runs of voiced frames merged across gaps
+/// shorter than `minGap`, then padded outward so nothing clips a consonant.
+function splitOnSilence(take, { thresholdDb, minGapMs }) {
+  const { data, rate } = take;
+  const frame = Math.max(1, Math.round(rate * 0.01));
+  const thresh = Math.pow(10, thresholdDb / 20);
+  const voiced = [];
+  for (let i = 0; i < data.length; i += frame) {
+    let sum = 0;
+    const end = Math.min(i + frame, data.length);
+    for (let j = i; j < end; j++) sum += data[j] * data[j];
+    voiced.push(Math.sqrt(sum / (end - i)) > thresh);
+  }
+  const minGapFrames = Math.round(minGapMs / 10);
+  const minLenFrames = 12;   // 120ms — shorter than any real line
+  const padFrames = 8;       // 80ms of air on each side
+
+  const out = [];
+  let i = 0;
+  while (i < voiced.length) {
+    if (!voiced[i]) { i++; continue; }
+    let j = i, lastVoiced = i;
+    while (j < voiced.length) {
+      if (voiced[j]) lastVoiced = j;
+      else if (j - lastVoiced >= minGapFrames) break;
+      j++;
+    }
+    if (lastVoiced - i + 1 >= minLenFrames) {
+      out.push({
+        start: Math.max(0, (i - padFrames) * frame),
+        end: Math.min(data.length, (lastVoiced + 1 + padFrames) * frame),
+      });
+    }
+    i = j + 1;
+  }
+  return out;
+}
+
+function resplit() {
+  if (!takeBuffer) return;
+  const thresholdDb = Number($('thresh').value);
+  const minGapMs = Number($('gap').value);
+  $('thresh-val').textContent = thresholdDb + ' dB';
+  $('gap-val').textContent = minGapMs + ' ms';
+  segments = splitOnSilence(takeBuffer, { thresholdDb, minGapMs });
+  $('split-box').hidden = false;
+
+  const want = batch.lines.length;
+  const got = segments.length;
+  const el = $('seg-count');
+  el.textContent = got + ' of ' + want + ' lines found';
+  el.className = 'seg-count ' + (got === want ? 'ok' : 'bad');
+  $('split-help').textContent = got === want
+    ? 'Check a few below, then save. Nothing is written until you do.'
+    : got < want
+      ? 'Too few — you either skipped lines, or ran them together. Try a ' +
+        'shorter gap or a lower threshold. If that fails, re-record; the ' +
+        'sliders cannot invent a pause that is not there.'
+      : 'Too many — a breath or a stumble split a line in two. Try a longer ' +
+        'gap or a higher threshold.';
+  $('save-all').disabled = got !== want;
+  renderSegments();
+}
+
+$('thresh').oninput = resplit;
+$('gap').oninput = resplit;
+$('discard').onclick = discardTake;
+
+function discardTake() {
+  takeBuffer = null;
+  segments = [];
+  $('split-box').hidden = true;
+  $('status-b').textContent = '';
+}
+
+function renderSegments() {
+  const tb = $('segs').querySelector('tbody');
+  tb.innerHTML = '';
+  const n = Math.max(segments.length, batch.lines.length);
+  for (let i = 0; i < n; i++) {
+    const seg = segments[i];
+    const line = batch.lines[i];
+    const tr = document.createElement('tr');
+    if (!seg || !line) tr.className = 'bad';
+    const secs = seg
+      ? ((seg.end - seg.start) / takeBuffer.rate).toFixed(2) + 's'
+      : '—';
+    tr.innerHTML =
+      '<td class="dur">' + (i + 1) + '</td>' +
+      '<td>' + (line ? escapeHtml(line.text) : '<em>no line</em>') + '</td>' +
+      '<td class="dur">' + secs + '</td>' +
+      '<td></td>';
+    if (seg) {
+      const b = document.createElement('button');
+      b.className = 'small';
+      b.textContent = 'Play';
+      b.onclick = () => playSamples(sliceSegment(i));
+      tr.lastElementChild.appendChild(b);
+    }
+    tb.appendChild(tr);
+  }
+}
+
+function sliceSegment(i) {
+  const seg = segments[i];
+  return normalizePeak(takeBuffer.data.slice(seg.start, seg.end));
+}
+
+$('save-all').onclick = async () => {
+  const btn = $('save-all');
+  btn.disabled = true;
+  for (let i = 0; i < batch.lines.length; i++) {
+    const line = batch.lines[i];
+    btn.textContent = 'Saving ' + (i + 1) + '/' + batch.lines.length + '…';
+    await writeClip(line.file + '.wav',
+      encodeWav(sliceSegment(i), takeBuffer.rate));
+    saved.add(line.file);
+  }
+  btn.textContent = 'Save all';
+  $('status-b').textContent = 'Saved ' + batch.lines.length + ' clips.';
+  discardTake();
+  renderBatches();
+  renderPrompter();
+  renderSingle();
+};
+
+// ---------------------------------------------------------------------------
+// One at a time
+// ---------------------------------------------------------------------------
+$('mode-batch').onclick = () => setMode('batch');
+$('mode-single').onclick = () => setMode('single');
+
+function setMode(m) {
+  $('mode-batch').classList.toggle('on', m === 'batch');
+  $('mode-single').classList.toggle('on', m === 'single');
+  $('pane-batch').hidden = m !== 'batch';
+  $('pane-single').hidden = m !== 'single';
+}
+
+function renderSingle() {
+  if (!batch) return;
+  const line = batch.lines[cursor];
+  $('script').textContent = line ? line.text : 'Batch complete.';
+  const el = $('single-list');
+  el.innerHTML = '';
+  batch.lines.forEach((l, i) => {
+    const d = document.createElement('div');
+    d.className = i === cursor ? 'cur' : saved.has(l.file) ? 'recorded' : '';
+    d.style.fontSize = '14px';
+    d.innerHTML = '<span class="i">' + (i + 1) + '</span><span>' +
+      escapeHtml(l.text) + '</span>';
+    if (i === cursor) setTimeout(() => d.scrollIntoView({ block: 'center' }), 0);
+    d.onclick = () => { cursor = i; singleBuffer = null; renderSingle(); };
+    el.appendChild(d);
+  });
+  $('play-one').disabled = !singleBuffer;
+  $('save-one').disabled = !singleBuffer;
+}
+
+$('rec-one').onclick = async () => {
+  const btn = $('rec-one');
+  if (recordingFor === 'single') {
+    const decoded = await stopRecording();
+    recordingFor = null;
+    const mono = toMono(decoded);
+    singleBuffer = normalizePeak(trimSilence(mono));
+    btn.textContent = 'Record';
+    btn.classList.add('rec');
+    $('status-s').textContent =
+      (singleBuffer.length / mono.rate).toFixed(2) + 's — playing back';
+    playSamples(singleBuffer, mono.rate);
+    renderSingle();
+    return;
+  }
+  try {
+    await startRecording('single');
+  } catch (e) {
+    $('status-s').textContent = 'No microphone: ' + e.message;
+    return;
+  }
+  btn.textContent = 'Stop';
+  btn.classList.remove('rec');
+  $('status-s').textContent = 'Recording…';
+};
+
+$('play-one').onclick = () => singleBuffer && playSamples(singleBuffer);
+$('skip-one').onclick = () => { cursor++; singleBuffer = null; renderSingle(); };
+$('save-one').onclick = async () => {
+  const line = batch.lines[cursor];
+  await writeClip(line.file + '.wav', encodeWav(singleBuffer, 48000));
+  saved.add(line.file);
+  cursor++;
+  singleBuffer = null;
+  renderBatches();
+  renderPrompter();
+  renderSingle();
+  $('status-s').textContent = 'Saved.';
+};
+
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'TEXTAREA' || $('pane-single').hidden) return;
+  if (e.code === 'Space') { e.preventDefault(); $('rec-one').click(); }
+  if (e.code === 'Enter' && !$('save-one').disabled) {
+    e.preventDefault();
+    $('save-one').click();
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Audio helpers
+// ---------------------------------------------------------------------------
+function trimSilence(take) {
+  const { data } = take;
+  const gate = 0.012;
+  let a = 0, b = data.length - 1;
+  while (a < b && Math.abs(data[a]) < gate) a++;
+  while (b > a && Math.abs(data[b]) < gate) b--;
+  const pad = Math.round(take.rate * 0.08);
+  return data.slice(Math.max(0, a - pad), Math.min(data.length, b + pad));
+}
+
+function normalizePeak(samples) {
+  let peak = 0;
+  for (const v of samples) peak = Math.max(peak, Math.abs(v));
+  if (peak < 1e-4) return samples;
+  const gain = 0.9 / peak;
+  const out = new Float32Array(samples.length);
+  for (let i = 0; i < samples.length; i++) out[i] = samples[i] * gain;
+  return out;
+}
+
+function encodeWav(samples, rate) {
+  const buf = new ArrayBuffer(44 + samples.length * 2);
+  const view = new DataView(buf);
+  const str = (off, s) => {
+    for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i));
+  };
+  str(0, 'RIFF');
+  view.setUint32(4, 36 + samples.length * 2, true);
+  str(8, 'WAVEfmt ');
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, 1, true);
+  view.setUint32(24, rate, true);
+  view.setUint32(28, rate * 2, true);
+  view.setUint16(32, 2, true);
+  view.setUint16(34, 16, true);
+  str(36, 'data');
+  view.setUint32(40, samples.length * 2, true);
+  for (let i = 0; i < samples.length; i++) {
+    const s = Math.max(-1, Math.min(1, samples[i]));
+    view.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+  }
+  return new Blob([buf], { type: 'audio/wav' });
+}
+
+function playSamples(samples, rate) {
+  const r = rate || (takeBuffer ? takeBuffer.rate : 48000);
+  const ctx = new AudioContext();
+  const buf = ctx.createBuffer(1, samples.length, r);
+  buf.getChannelData(0).set(samples);
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  src.connect(ctx.destination);
+  src.start();
+}
+</script>
+</body>
+</html>

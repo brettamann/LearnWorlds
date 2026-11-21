@@ -1,12 +1,7 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
-  errors:
-    # Some lints we treat as warnings, not errors:
-    invalid_annotation_target: ignore
   exclude:
-    - "**/*.g.dart"
-    - "**/*.freezed.dart"
     - "build/**"
   language:
     strict-casts: true
@@ -16,7 +11,7 @@ analyzer:
 linter:
   rules:
     - always_declare_return_types
-    - avoid_print                            # use logger instead
+    - avoid_print                            # use debugPrint instead
     - prefer_final_locals
     - prefer_final_in_for_each
     - prefer_const_constructors

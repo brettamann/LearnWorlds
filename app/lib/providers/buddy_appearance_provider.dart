@@ -43,5 +43,5 @@ class BuddyAppearanceNotifier extends Notifier<BuddyAppearance> {
 
 final buddyAppearanceProvider =
     NotifierProvider<BuddyAppearanceNotifier, BuddyAppearance>(
-  BuddyAppearanceNotifier.new,
-);
+      BuddyAppearanceNotifier.new,
+    );

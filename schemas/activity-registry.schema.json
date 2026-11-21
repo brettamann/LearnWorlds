@@ -3,24 +3,44 @@
   "$id": "https://critmath/schemas/activity-registry.schema.json",
   "title": "Activity Registry",
   "description": "Canonical declaration of all activities — their concepts, sub-modes, mechanics, lesson chain settings, and reward emissions. Captures the structural bits from /specs/activities/<grade>/<slug>.md; free-text design content stays in the markdown specs.",
-
   "type": "object",
-  "required": ["version", "activities"],
+  "required": [
+    "version",
+    "activities"
+  ],
   "additionalProperties": false,
   "properties": {
-    "$schema": { "type": "string" },
-    "version": { "type": "integer" },
-    "lastUpdated": { "type": "string", "format": "date" },
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "type": "integer"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date"
+    },
     "activities": {
       "type": "array",
-      "items": { "$ref": "#/$defs/ActivityEntry" }
+      "items": {
+        "$ref": "#/$defs/ActivityEntry"
+      }
     }
   },
-
   "$defs": {
     "ActivityEntry": {
       "type": "object",
-      "required": ["id", "displayName", "region", "grade", "status", "specRef", "concepts", "subModes", "stylusMechanics"],
+      "required": [
+        "id",
+        "displayName",
+        "region",
+        "grade",
+        "status",
+        "specRef",
+        "concepts",
+        "subModes",
+        "stylusMechanics"
+      ],
       "additionalProperties": false,
       "properties": {
         "id": {
@@ -34,17 +54,43 @@
         },
         "region": {
           "type": "string",
-          "enum": ["sanctuary", "wundletown", "mathopolis", "foundry", "portal-pirate-planet", "portal-dino-dig", "portal-atlantis", "portal-corona-castle", "portal-gooblon", "portal-bakery", "portal-port", "portal-botanical-garden", "portal-farmers-market", "portal-factory", "portal-insect-biosphere"],
+          "enum": [
+            "sanctuary",
+            "wundletown",
+            "mathopolis",
+            "foundry",
+            "portal-pirate-planet",
+            "portal-dino-dig",
+            "portal-atlantis",
+            "portal-corona-castle",
+            "portal-gooblon",
+            "portal-bakery",
+            "portal-port",
+            "portal-botanical-garden",
+            "portal-farmers-market",
+            "portal-factory",
+            "portal-insect-biosphere"
+          ],
           "description": "The region this activity lives in. Grade regions are sanctuary/wundletown/mathopolis. The Foundry is a making location. Portals are themed worlds."
         },
         "grade": {
           "type": "string",
-          "enum": ["K", "1", "2", "any"],
+          "enum": [
+            "K",
+            "1",
+            "2",
+            "any"
+          ],
           "description": "Grade level. 'any' for universal portals that auto-target the kid's current grade."
         },
         "status": {
           "type": "string",
-          "enum": ["draft", "reviewed", "ready-to-build", "built"],
+          "enum": [
+            "draft",
+            "reviewed",
+            "ready-to-build",
+            "built"
+          ],
           "description": "Authoring status."
         },
         "specRef": {
@@ -58,7 +104,9 @@
         "concepts": {
           "type": "array",
           "description": "Concepts this activity touches, with role.",
-          "items": { "$ref": "#/$defs/ConceptTouch" }
+          "items": {
+            "$ref": "#/$defs/ConceptTouch"
+          }
         },
         "intraRoundLessonChain": {
           "$ref": "#/$defs/IntraRoundLessonChain",
@@ -67,12 +115,16 @@
         "subModes": {
           "type": "array",
           "description": "Sub-modes the activity supports. Each sub-mode is an alternative round shape (varies across rounds, not within).",
-          "items": { "$ref": "#/$defs/SubMode" }
+          "items": {
+            "$ref": "#/$defs/SubMode"
+          }
         },
         "phases": {
           "type": "array",
           "description": "Phases present in every round of this activity. Present iff the activity uses the two-phase round structure per k-activity-patterns.md.",
-          "items": { "$ref": "#/$defs/Phase" }
+          "items": {
+            "$ref": "#/$defs/Phase"
+          }
         },
         "stylusMechanics": {
           "type": "array",
@@ -99,12 +151,21 @@
           "description": "Number-writing modes used (per number-writing-modes.md). Omit if the activity doesn't ask for numerals.",
           "items": {
             "type": "string",
-            "enum": ["trace", "prompted-free-write", "blind-free-write"]
+            "enum": [
+              "trace",
+              "prompted-free-write",
+              "blind-free-write"
+            ]
           }
         },
         "mathNotebookRelationship": {
           "type": "string",
-          "enum": ["optional", "encouraged", "required", "primary-surface"],
+          "enum": [
+            "optional",
+            "encouraged",
+            "required",
+            "primary-surface"
+          ],
           "description": "How this activity uses the math notebook per math-notebook.md."
         },
         "challengeVariant": {
@@ -128,10 +189,12 @@
         }
       }
     },
-
     "ConceptTouch": {
       "type": "object",
-      "required": ["conceptId", "role"],
+      "required": [
+        "conceptId",
+        "role"
+      ],
       "additionalProperties": false,
       "properties": {
         "conceptId": {
@@ -140,7 +203,11 @@
         },
         "role": {
           "type": "string",
-          "enum": ["introduces", "exercises", "exercises-no-introducer"],
+          "enum": [
+            "introduces",
+            "exercises",
+            "exercises-no-introducer"
+          ],
           "description": "Per the activity-spec template. 'introduces' = canonical introducer. 'exercises' = uses the concept, introduced elsewhere. 'exercises-no-introducer' = concept has no introducer anywhere (coverage-based mastery)."
         },
         "isInLessonChain": {
@@ -154,17 +221,25 @@
         }
       }
     },
-
     "IntraRoundLessonChain": {
       "type": "object",
-      "required": ["enabled", "concepts", "rationale"],
+      "required": [
+        "enabled",
+        "concepts",
+        "rationale"
+      ],
       "additionalProperties": false,
       "properties": {
-        "enabled": { "type": "boolean", "const": true },
+        "enabled": {
+          "type": "boolean",
+          "const": true
+        },
         "concepts": {
           "type": "array",
           "description": "Ordered list of conceptIds in chain order.",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "minItems": 2
         },
         "rationale": {
@@ -173,44 +248,77 @@
         }
       }
     },
-
     "SubMode": {
       "type": "object",
-      "required": ["id", "primaryConcepts"],
+      "required": [
+        "id",
+        "primaryConcepts"
+      ],
       "additionalProperties": false,
       "properties": {
-        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
-        "isDefault": { "type": "boolean" },
-        "isChallenge": { "type": "boolean" },
-        "isDemotionFloor": { "type": "boolean", "description": "True if this sub-mode is the simplest, target of staggered demotion when sub-mode demote fires." },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "isDefault": {
+          "type": "boolean"
+        },
+        "isChallenge": {
+          "type": "boolean"
+        },
+        "isDemotionFloor": {
+          "type": "boolean",
+          "description": "True if this sub-mode is the simplest, target of staggered demotion when sub-mode demote fires."
+        },
         "primaryConcepts": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "minItems": 1,
           "description": "Concept IDs this sub-mode primarily targets."
+        },
+        "ownsIntro": {
+          "type": "boolean",
+          "description": "True if this sub-mode plays its own intro/demo, so the ScaffoldEngine routes straight to the activity instead of inserting the concept's MicroLesson. Read by SanctuaryMapScreen._routeForSubMode."
         }
       }
     },
-
     "Phase": {
       "type": "object",
-      "required": ["id", "order", "primaryConcepts"],
+      "required": [
+        "id",
+        "order",
+        "primaryConcepts"
+      ],
       "additionalProperties": false,
       "properties": {
-        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
-        "order": { "type": "integer", "minimum": 1 },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
         "primaryConcepts": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "minItems": 1
         },
-        "displayName": { "type": "string" }
+        "displayName": {
+          "type": "string"
+        }
       }
     },
-
     "ChallengeVariant": {
       "type": "object",
-      "required": ["subModeId", "entryFrequency"],
+      "required": [
+        "subModeId",
+        "entryFrequency"
+      ],
       "additionalProperties": false,
       "properties": {
         "subModeId": {
@@ -219,17 +327,26 @@
         },
         "entryFrequency": {
           "type": "string",
-          "enum": ["1-per-day", "1-per-session", "always-available", "milestone-unlocked"],
+          "enum": [
+            "1-per-day",
+            "1-per-session",
+            "always-available",
+            "milestone-unlocked"
+          ],
           "description": "How often the kid can enter the challenge."
         },
         "rewardChestTier": {
           "type": "string",
-          "enum": ["small", "medium", "large", "prestige"],
+          "enum": [
+            "small",
+            "medium",
+            "large",
+            "prestige"
+          ],
           "description": "Chest tier per reward-economy.md."
         }
       }
     },
-
     "RewardsBlock": {
       "type": "object",
       "additionalProperties": false,
@@ -237,16 +354,22 @@
         "canonicalEvents": {
           "type": "array",
           "description": "Canonical reward events this activity emits, referencing reward-economy.md event names.",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "activityDefinedEvents": {
           "type": "array",
           "description": "Activity-defined custom reward events, per the extension point in reward-economy.md.",
-          "items": { "$ref": "#/$defs/ActivityDefinedEvent" }
+          "items": {
+            "$ref": "#/$defs/ActivityDefinedEvent"
+          }
         },
         "collectibleSets": {
           "type": "array",
-          "items": { "$ref": "#/$defs/CollectibleSet" }
+          "items": {
+            "$ref": "#/$defs/CollectibleSet"
+          }
         },
         "permanentFixtureType": {
           "type": "string",
@@ -254,10 +377,12 @@
         }
       }
     },
-
     "ActivityDefinedEvent": {
       "type": "object",
-      "required": ["eventName", "rewardType"],
+      "required": [
+        "eventName",
+        "rewardType"
+      ],
       "additionalProperties": false,
       "properties": {
         "eventName": {
@@ -267,24 +392,46 @@
         },
         "rewardType": {
           "type": "string",
-          "enum": ["coins", "chest", "collectible", "blueprint", "special-part", "permanent-fixture", "library-entry", "stamp"]
+          "enum": [
+            "coins",
+            "chest",
+            "collectible",
+            "blueprint",
+            "special-part",
+            "permanent-fixture",
+            "library-entry",
+            "stamp"
+          ]
         },
-        "description": { "type": "string" }
+        "description": {
+          "type": "string"
+        }
       }
     },
-
     "CollectibleSet": {
       "type": "object",
-      "required": ["setName", "itemCount"],
+      "required": [
+        "setName",
+        "itemCount"
+      ],
       "additionalProperties": false,
       "properties": {
-        "setName": { "type": "string" },
-        "itemCount": { "type": "integer", "minimum": 1 },
-        "isRare": { "type": "boolean" },
-        "unlocksTrophy": { "type": "string", "description": "Hub trophy unlocked by completing the set." }
+        "setName": {
+          "type": "string"
+        },
+        "itemCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "isRare": {
+          "type": "boolean"
+        },
+        "unlocksTrophy": {
+          "type": "string",
+          "description": "Hub trophy unlocked by completing the set."
+        }
       }
     },
-
     "ContentTemplatesBlock": {
       "type": "object",
       "additionalProperties": false,
@@ -301,7 +448,9 @@
         },
         "templatePaths": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Directory paths in data/templates/ where this activity's templates live."
         }
       }

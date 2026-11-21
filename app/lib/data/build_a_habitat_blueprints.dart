@@ -11,6 +11,9 @@
 
 import 'package:flutter/material.dart';
 
+import 'asset_paths.dart';
+import 'habitat_words.dart';
+
 /// One 3D shape placement for Phase 2 (K.G.6). The shape sits on top
 /// of the assembled frame and contributes to the resident creature's
 /// shelter.
@@ -31,17 +34,41 @@ class HabitatRoofPiece {
 
   /// Diameter as a fraction of the shortest canvas side.
   final double size;
+
+  /// The sprite this piece shows once it has been placed.
+  ///
+  /// The mapping used to be a private const inside `build_a_habitat_runner`,
+  /// which was fine while the runner was the only thing that drew a habitat.
+  /// The picker card draws one too, from this same blueprint - and a card
+  /// showing a turtle where the round puts a gnome is exactly the kind of
+  /// quiet drift a five-year-old learning "which picture is which game"
+  /// cannot afford. One mapping, both callers.
+  String get placedAsset => AssetPaths.shapeGarden3dCreature(
+    kind,
+    _kCreatureByKind[kind] ?? 'turtle',
+  );
+
+  /// Unplaced, the piece shows its hollow outline instead.
+  String get outlineAsset => AssetPaths.shapeGarden3dOutline(kind);
 }
+
+/// Kind -> creature theming, so the roof reuses the Shape Garden 3D pool
+/// rather than needing art of its own.
+const Map<String, String> _kCreatureByKind = <String, String>{
+  'cube': 'turtle',
+  'sphere': 'jellyfish',
+  'cylinder': 'golem',
+  'cone': 'gnome',
+  'pyramid': 'fish',
+};
 
 class HabitatBlueprint {
   const HabitatBlueprint({
     required this.id,
-    required this.displayName,
     required this.residentSpecies,
     required this.corners,
     required this.edges,
     required this.roof,
-    required this.keeperLine,
     required this.rewardAsset,
   });
 
@@ -49,7 +76,11 @@ class HabitatBlueprint {
   final String id;
 
   /// Title shown in narration ("a fawn shelter", "a unicorn gazebo").
-  final String displayName;
+  ///
+  /// Read back out of habitat_words.dart rather than stored, so the recording
+  /// script and the game name the habitat with the same string. See that
+  /// file for why the words cannot live here.
+  String get displayName => habitatDisplayName(id);
 
   /// Resident creature kind — used to pick the thank-you collectible
   /// theming (feather / gem) at round end.
@@ -64,8 +95,9 @@ class HabitatBlueprint {
   /// 3D pieces to place on top in Phase 2 (K.G.6).
   final List<HabitatRoofPiece> roof;
 
-  /// Short keeper line after this habitat is finished.
-  final String keeperLine;
+  /// Short keeper line after this habitat is finished. Read from
+  /// habitat_words.dart, like [displayName].
+  String get keeperLine => kHabitatKeeperLines[id] ?? '';
 
   /// Reward sprite asset path (feather, gem, etc.).
   final String rewardAsset;
@@ -77,7 +109,6 @@ class HabitatBlueprint {
 const List<HabitatBlueprint> kHabitatBlueprints = <HabitatBlueprint>[
   HabitatBlueprint(
     id: 'fawn-triangle-shelter',
-    displayName: 'a fawn shelter',
     residentSpecies: 'fawn',
     corners: <Offset>[
       Offset(0.5, 0.20),
@@ -90,18 +121,12 @@ const List<HabitatBlueprint> kHabitatBlueprints = <HabitatBlueprint>[
       <int>[2, 0],
     ],
     roof: <HabitatRoofPiece>[
-      HabitatRoofPiece(
-        kind: 'cube',
-        position: Offset(0.5, 0.40),
-        size: 0.22,
-      ),
+      HabitatRoofPiece(kind: 'cube', position: Offset(0.5, 0.40), size: 0.22),
     ],
-    keeperLine: 'A fawn shelter! Beautifully built.',
     rewardAsset: 'assets/rewards/general/reward-feather.png',
   ),
   HabitatBlueprint(
     id: 'gryphon-square-roost',
-    displayName: 'a gryphon roost',
     residentSpecies: 'gryphon',
     corners: <Offset>[
       Offset(0.25, 0.25),
@@ -116,28 +141,14 @@ const List<HabitatBlueprint> kHabitatBlueprints = <HabitatBlueprint>[
       <int>[3, 0],
     ],
     roof: <HabitatRoofPiece>[
-      HabitatRoofPiece(
-        kind: 'cone',
-        position: Offset(0.32, 0.36),
-        size: 0.20,
-      ),
-      HabitatRoofPiece(
-        kind: 'cone',
-        position: Offset(0.68, 0.36),
-        size: 0.20,
-      ),
-      HabitatRoofPiece(
-        kind: 'cube',
-        position: Offset(0.5, 0.50),
-        size: 0.24,
-      ),
+      HabitatRoofPiece(kind: 'cone', position: Offset(0.32, 0.36), size: 0.20),
+      HabitatRoofPiece(kind: 'cone', position: Offset(0.68, 0.36), size: 0.20),
+      HabitatRoofPiece(kind: 'cube', position: Offset(0.5, 0.50), size: 0.24),
     ],
-    keeperLine: 'A gryphon roost — four sides and a peaked roof!',
     rewardAsset: 'assets/rewards/general/reward-gem.png',
   ),
   HabitatBlueprint(
     id: 'unicorn-pentagon-gazebo',
-    displayName: 'a unicorn gazebo',
     residentSpecies: 'unicorn',
     corners: <Offset>[
       Offset(0.50, 0.18),
@@ -154,11 +165,7 @@ const List<HabitatBlueprint> kHabitatBlueprints = <HabitatBlueprint>[
       <int>[4, 0],
     ],
     roof: <HabitatRoofPiece>[
-      HabitatRoofPiece(
-        kind: 'sphere',
-        position: Offset(0.5, 0.38),
-        size: 0.22,
-      ),
+      HabitatRoofPiece(kind: 'sphere', position: Offset(0.5, 0.38), size: 0.22),
       HabitatRoofPiece(
         kind: 'cylinder',
         position: Offset(0.32, 0.56),
@@ -170,8 +177,6 @@ const List<HabitatBlueprint> kHabitatBlueprints = <HabitatBlueprint>[
         size: 0.18,
       ),
     ],
-    keeperLine:
-        'A unicorn gazebo — five sides and a starlit dome on top!',
     rewardAsset: 'assets/rewards/general/reward-gem.png',
   ),
 ];

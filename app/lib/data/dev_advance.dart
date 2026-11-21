@@ -26,6 +26,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../engines/mastery/round_outcome.dart';
 import '../models/reward_track.dart';
 import '../providers/app_providers.dart';
 import '../providers/exploration_provider.dart';
@@ -33,12 +34,13 @@ import '../providers/reward_progress_provider.dart';
 import '../providers/save_provider.dart';
 import '../providers/sub_mode_progress_provider.dart';
 import '../providers/wallet_provider.dart';
+import 'activity_registry.dart';
+import 'playable_activities.dart';
 import 'sanctuary_sequence.dart';
 
-/// Production coin grant per round pass. Mirrors
-/// `RoundCoordinator._coinsPerRoundPass`. Kept here as a constant so the
-/// dev tool grants the same amount honest play would.
-const int kDevAdvanceCoinsPerActivity = 5;
+/// Production coin grant per round pass, so the dev tool grants the same
+/// amount honest play would.
+const int kDevAdvanceCoinsPerActivity = kCoinsForCleanRound;
 
 class DevAdvanceOption {
   const DevAdvanceOption({
@@ -66,22 +68,9 @@ class DevAdvanceOption {
 }
 
 /// Builds the picker list — every non-cutscene Sanctuary entry in order.
-/// Display names use a tiny hardcoded map so the picker doesn't need to
-/// wait on the activity registry future at open time.
-List<DevAdvanceOption> devAdvanceOptions() {
-  const displayNames = <String, String>{
-    'counting-parade': 'Counting Parade',
-    'shape-garden': 'Shape Garden',
-    'ten-frame-pond': 'Ten-Frame Pond',
-    'build-a-habitat': 'Build-a-Habitat',
-    'care-pantry': 'Care Pantry',
-    'scribes-tower': "Scribe's Tower",
-    'storytellers-pond': "Storyteller's Pond",
-    'wheres-buddy': "Where's Buddy?",
-    'caretakers-bench': "Caretaker's Bench",
-    'picnic-baskets': 'Picnic Baskets',
-    'fluency-within-5': 'Fluency Within 5',
-  };
+/// Names come from [registry]; a node it does not name (or a registry not yet
+/// loaded) gets a readable name made from its id.
+List<DevAdvanceOption> devAdvanceOptions(ActivityRegistry? registry) {
   final out = <DevAdvanceOption>[];
   for (var i = 0; i < kSanctuarySequence.length; i++) {
     final code = kSanctuarySequence[i];
@@ -91,7 +80,9 @@ List<DevAdvanceOption> devAdvanceOptions() {
       DevAdvanceOption(
         code: code,
         activityId: activityId,
-        displayName: displayNames[activityId] ?? activityId,
+        displayName:
+            registry?.byIdOrNull(activityId)?.displayName ??
+            placeholderActivityName(activityId),
         sequenceIndex: i,
       ),
     );
@@ -129,8 +120,8 @@ Future<DevAdvanceResult> applyDevAdvance(
   // egg's stage grants are static — adding to `completedActivities`
   // produces the correct target stage on next map mount.
   //
-  // Sub-mode progress: mark every non-challenge sub-mode of each
-  // preceding activity completed too, so the Sanctuary picker treats
+  // Sub-mode progress: mark every chain sub-mode of each preceding
+  // activity completed too, so the Sanctuary picker treats
   // those nodes as "fully cleared" (no `next` chip, replays only). The
   // target activity itself is left untouched so the picker shows it cold.
   final rewardNotifier = ref.read(rewardProgressProvider.notifier);
@@ -148,7 +139,7 @@ Future<DevAdvanceResult> applyDevAdvance(
     final activity = registry?.byIdOrNull(activityId);
     if (activity != null) {
       for (final subMode in activity.subModes) {
-        if (subMode.isChallenge) continue;
+        if (!subMode.isChainStep) continue;
         subModeNotifier.markCompleted(
           activityId: activityId,
           subModeId: subMode.id,
@@ -178,12 +169,12 @@ Future<DevAdvanceResult> applyDevAdvance(
 /// Sanctuary node. Use this to undo a previous dev jump.
 Future<void> resetDevAdvance(WidgetRef ref) async {
   ref.read(explorationProvider.notifier).replaceAll(const <int>{});
-  ref.read(rewardProgressProvider.notifier).replaceAll(
-        const <String, RewardTrackState>{},
-      );
-  ref.read(subModeProgressProvider.notifier).replaceAll(
-        const <String, Set<String>>{},
-      );
+  ref
+      .read(rewardProgressProvider.notifier)
+      .replaceAll(const <String, RewardTrackState>{});
+  ref
+      .read(subModeProgressProvider.notifier)
+      .replaceAll(const <String, Set<String>>{});
   ref.read(walletProvider.notifier).set(0);
   await ref.read(saveCoordinatorProvider).persist();
 }

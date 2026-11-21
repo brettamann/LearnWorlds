@@ -20,12 +20,12 @@ class BuddyAppearance {
   /// before they tap the character creator. No hat by default — the
   /// kid opts into hats explicitly.
   factory BuddyAppearance.defaults() => const BuddyAppearance(
-        bodyId: kBuddyDefaultBodyId,
-        eyesId: kBuddyDefaultEyesId,
-        mouthId: kBuddyDefaultMouthId,
-        armsId: kBuddyDefaultArmsId,
-        legsId: kBuddyDefaultLegsId,
-      );
+    bodyId: kBuddyDefaultBodyId,
+    eyesId: kBuddyDefaultEyesId,
+    mouthId: kBuddyDefaultMouthId,
+    armsId: kBuddyDefaultArmsId,
+    legsId: kBuddyDefaultLegsId,
+  );
 
   factory BuddyAppearance.fromJson(Map<String, dynamic> json) {
     return BuddyAppearance(
@@ -68,11 +68,11 @@ class BuddyAppearance {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'bodyId': bodyId,
-        'eyesId': eyesId,
-        'mouthId': mouthId,
-        'armsId': armsId,
-        'legsId': legsId,
-        if (hatId != null) 'hatId': hatId,
-      };
+    'bodyId': bodyId,
+    'eyesId': eyesId,
+    'mouthId': mouthId,
+    'armsId': armsId,
+    'legsId': legsId,
+    if (hatId != null) 'hatId': hatId,
+  };
 }

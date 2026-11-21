@@ -13,25 +13,24 @@ void main() {
   group('ScaffoldEngine', () {
     const engine = ScaffoldEngine();
 
-    test('first encounter with canonical introducer → PlayLesson(K.CC.4a)',
-        () async {
-      final activities = await ActivityRegistry.loadKindergarten();
-      final concepts = await ConceptRegistry.loadKindergarten();
-      final activity = activities.byId('counting-parade');
-      final concept = concepts.byId('K.CC.4a');
+    test(
+      'first encounter with canonical introducer → PlayLesson(K.CC.4a)',
+      () async {
+        final activities = await ActivityRegistry.loadKindergarten();
+        final concepts = await ConceptRegistry.loadKindergarten();
+        final activity = activities.byId('counting-parade');
+        final concept = concepts.byId('K.CC.4a');
 
-      final decision = engine.decide(
-        activity: activity,
-        concept: concept,
-        state: const ConceptState(conceptId: 'K.CC.4a'),
-      );
+        final decision = engine.decide(
+          activity: activity,
+          concept: concept,
+          state: const ConceptState(conceptId: 'K.CC.4a'),
+        );
 
-      expect(decision, isA<PlayLesson>());
-      expect(
-        (decision as PlayLesson).lessonId,
-        'lesson-k-cc-4a-one-to-one',
-      );
-    });
+        expect(decision, isA<PlayLesson>());
+        expect((decision as PlayLesson).lessonId, 'lesson-k-cc-4a-one-to-one');
+      },
+    );
 
     test('subsequent encounter (Practicing) → ProceedAtLayer', () async {
       final activities = await ActivityRegistry.loadKindergarten();
@@ -53,20 +52,22 @@ void main() {
       expect((decision as ProceedAtLayer).layer, CpaLayer.concrete);
     });
 
-    test('concept without lessonId → ProceedAtLayer even on first encounter',
-        () async {
-      final activities = await ActivityRegistry.loadKindergarten();
-      final concepts = await ConceptRegistry.loadKindergarten();
-      final activity = activities.byId('counting-parade');
-      final concept = concepts.byId('K.CC.4c'); // exercises-no-introducer
+    test(
+      'concept without lessonId → ProceedAtLayer even on first encounter',
+      () async {
+        final activities = await ActivityRegistry.loadKindergarten();
+        final concepts = await ConceptRegistry.loadKindergarten();
+        final activity = activities.byId('counting-parade');
+        final concept = concepts.byId('K.CC.4c'); // exercises-no-introducer
 
-      final decision = engine.decide(
-        activity: activity,
-        concept: concept,
-        state: const ConceptState(conceptId: 'K.CC.4c'),
-      );
+        final decision = engine.decide(
+          activity: activity,
+          concept: concept,
+          state: const ConceptState(conceptId: 'K.CC.4c'),
+        );
 
-      expect(decision, isA<ProceedAtLayer>());
-    });
+        expect(decision, isA<ProceedAtLayer>());
+      },
+    );
   });
 }

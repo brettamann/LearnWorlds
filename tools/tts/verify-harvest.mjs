@@ -226,7 +226,7 @@ function harvestActivityNarration(doc, source, defaultLocale, warnings, errors) 
 }
 
 async function walkActivityNarration(repoRoot, locale, verbose, warnings, errors) {
-  const dir = path.join(repoRoot, 'content', 'strings', locale, 'activities');
+  const dir = path.join(repoRoot, 'app', 'assets', 'content', 'strings', locale, 'activities');
   if (!existsSync(dir)) {
     warnings.push(`Activity narration directory not found: ${dir} (skipping)`);
     return [];
@@ -256,7 +256,7 @@ async function walkActivityNarration(repoRoot, locale, verbose, warnings, errors
 }
 
 async function walkLessonRuntimes(repoRoot, locale, verbose, warnings, errors) {
-  const dir = path.join(repoRoot, 'data', 'lesson-runtime');
+  const dir = path.join(repoRoot, 'app', 'assets', 'data', 'lesson-runtime');
   if (!existsSync(dir)) {
     errors.push(`Lesson runtime directory not found: ${dir}`);
     return [];

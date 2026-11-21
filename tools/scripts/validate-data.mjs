@@ -2,8 +2,8 @@
 // Validate every JSON data file in the repo against its declared $schema.
 //
 // Walks:
-//   data/**/*.json
-//   content/**/*.json
+//   app/assets/data/**/*.json
+//   app/assets/content/**/*.json
 //
 // For each file:
 //   1. Parse JSON
@@ -21,9 +21,8 @@
 //   node tools/scripts/validate-data.mjs [--repo-root PATH] [--quiet] [-v]
 //
 // Dependencies:
-//   ajv (peer; install via `npm install --no-save ajv ajv-formats`)
-//   No package.json required — this script auto-installs deps in a sibling
-//   node_modules/ if not found.
+//   ajv + ajv-formats, pinned in tools/scripts/package-lock.json. Installed
+//   with `npm ci` on first run if node_modules/ is missing.
 
 import { readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
@@ -64,15 +63,17 @@ async function ensureAjv() {
   const ajvDir = path.join(localNodeModules, 'ajv');
 
   if (!existsSync(ajvDir)) {
-    console.log('Installing ajv + ajv-formats (one-time setup in tools/scripts/node_modules/)...');
+    // Installs exactly what package-lock.json pins, so a CI run and a laptop
+    // validate against the same ajv.
+    console.log('Installing pinned validator deps (npm ci in tools/scripts)...');
     try {
-      execSync('npm install --no-save --prefix . ajv@8 ajv-formats@3', {
+      execSync('npm ci --no-audit --no-fund', {
         cwd: __dirname,
         stdio: 'inherit',
       });
     } catch (e) {
       console.error('Failed to install ajv. Run manually:');
-      console.error('  cd tools/scripts && npm install --no-save ajv@8 ajv-formats@3');
+      console.error('  cd tools/scripts && npm ci');
       process.exit(2);
     }
   }
@@ -129,12 +130,20 @@ class SchemaCache {
   resolveSchemaPath(dataFilePath, schemaRef) {
     const dataDir = path.dirname(dataFilePath);
     const abs = path.resolve(dataDir, schemaRef);
-    // Normalize for cross-platform stable caching.
-    return path.normalize(abs).replace(/\\/g, '/').toLowerCase();
+    return path.normalize(abs);
+  }
+
+  // The cache key folds case only where the filesystem does. The real path is
+  // what gets opened: lowercasing it broke every lookup on Linux CI, where the
+  // checkout folder is LearnWorlds/LearnWorlds.
+  cacheKey(schemaPath) {
+    const key = schemaPath.replace(/\\/g, '/');
+    return process.platform === 'win32' ? key.toLowerCase() : key;
   }
 
   async getValidator(schemaPath) {
-    if (this.validators.has(schemaPath)) return this.validators.get(schemaPath);
+    const key = this.cacheKey(schemaPath);
+    if (this.validators.has(key)) return this.validators.get(key);
     if (!existsSync(schemaPath)) {
       throw new Error(`Schema file not found: ${schemaPath}`);
     }
@@ -157,7 +166,7 @@ class SchemaCache {
         throw new Error(`Failed to compile schema ${schemaPath}: ${e.message}`);
       }
     }
-    this.validators.set(schemaPath, validate);
+    this.validators.set(key, validate);
     return validate;
   }
 }
@@ -184,17 +193,17 @@ async function main() {
 
   // Walk data/ and content/.
   const dataFiles = [
-    ...(await walkJsonFiles(path.join(args.repoRoot, 'data'))),
-    ...(await walkJsonFiles(path.join(args.repoRoot, 'content'))),
+    ...(await walkJsonFiles(path.join(args.repoRoot, 'app', 'assets', 'data'))),
+    ...(await walkJsonFiles(path.join(args.repoRoot, 'app', 'assets', 'content'))),
   ];
 
   if (dataFiles.length === 0) {
-    console.error('No JSON files found under data/ or content/.');
+    console.error('No JSON files found under app/assets/data/ or app/assets/content/.');
     process.exit(2);
   }
 
   if (!args.quiet) {
-    console.log(`Validating ${dataFiles.length} JSON file(s) under data/ and content/...`);
+    console.log(`Validating ${dataFiles.length} JSON file(s) under app/assets/data/ and app/assets/content/...`);
     console.log('');
   }
 

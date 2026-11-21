@@ -51,17 +51,17 @@ The kid watches. The phase shows multiple triangles in different orientations an
 
 ### Narration script
 
-> *(0:02)* "Watch the triangles in this garden."
+> *(0:02)* "Look at the triangles in this garden."
 >
-> *(0:05)* "Triangle." *(upright small)*
+> *(0:05)* "This is a triangle. It has 3 sides!" *(upright small)*
 >
-> *(0:08)* "Still a triangle." *(point-down)*
+> *(0:08)* "This is also a triangle." *(point-down)*
 >
 > *(0:11)* "Still a triangle." *(upright large)*
 >
 > *(0:14)* "Still a triangle." *(rotated)*
 >
-> *(0:19)* "Triangles can be big or small, point up or point down. They're all triangles."
+> *(0:19)* "Triangles can be big or small, point up or point down, but they're all triangles."
 
 ### Notes for the narrator
 - The repetition of "still a triangle" lands the invariance principle without ever using the word "invariance." Each repetition slightly different in inflection.

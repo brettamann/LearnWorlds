@@ -77,8 +77,9 @@ class ExampleDotScanner {
     final frame = await codec.getNextFrame();
     final image = frame.image;
     try {
-      final byteData =
-          await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+      final byteData = await image.toByteData(
+        format: ui.ImageByteFormat.rawRgba,
+      );
       if (byteData == null) {
         throw StateError(
           'Failed to read pixels from $assetPath (toByteData returned null)',
@@ -168,15 +169,17 @@ class ExampleDotScanner {
     for (var i = 0; i < pixels.length; i++) {
       buckets.putIfAbsent(find(i), () => <_Pixel>[]).add(pixels[i]);
     }
-    return buckets.values.map((cluster) {
-      var sx = 0.0;
-      var sy = 0.0;
-      for (final p in cluster) {
-        sx += p.x;
-        sy += p.y;
-      }
-      return ui.Offset(sx / cluster.length, sy / cluster.length);
-    }).toList(growable: false);
+    return buckets.values
+        .map((cluster) {
+          var sx = 0.0;
+          var sy = 0.0;
+          for (final p in cluster) {
+            sx += p.x;
+            sy += p.y;
+          }
+          return ui.Offset(sx / cluster.length, sy / cluster.length);
+        })
+        .toList(growable: false);
   }
 
   /// Sorts dots clockwise around their centroid starting from the topmost

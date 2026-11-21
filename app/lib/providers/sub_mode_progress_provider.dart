@@ -18,10 +18,7 @@ class SubModeProgress extends Notifier<Map<String, Set<String>>> {
   Map<String, Set<String>> build() => const <String, Set<String>>{};
 
   /// Record that `subModeId` has been completed for `activityId`. Idempotent.
-  void markCompleted({
-    required String activityId,
-    required String subModeId,
-  }) {
+  void markCompleted({required String activityId, required String subModeId}) {
     final current = state[activityId] ?? const <String>{};
     if (current.contains(subModeId)) return;
     state = {
@@ -35,21 +32,19 @@ class SubModeProgress extends Notifier<Map<String, Set<String>>> {
   Set<String> completedFor(String activityId) =>
       state[activityId] ?? const <String>{};
 
-  bool hasCompleted({
-    required String activityId,
-    required String subModeId,
-  }) =>
+  bool hasCompleted({required String activityId, required String subModeId}) =>
       completedFor(activityId).contains(subModeId);
 
   /// Boot-time hydration from disk via SaveCoordinator.
   void replaceAll(Map<String, Set<String>> snapshot) {
     state = {
-      for (final entry in snapshot.entries) entry.key: Set<String>.from(entry.value),
+      for (final entry in snapshot.entries)
+        entry.key: Set<String>.from(entry.value),
     };
   }
 }
 
 final subModeProgressProvider =
     NotifierProvider<SubModeProgress, Map<String, Set<String>>>(
-  SubModeProgress.new,
-);
+      SubModeProgress.new,
+    );

@@ -16,10 +16,13 @@ import 'package:go_router/go_router.dart';
 import '../../data/asset_paths.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
+import '../../navigation/routes.dart';
 import '../../providers/exploration_provider.dart';
-import '../../providers/save_provider.dart';
-import '../widgets/caption_overlay.dart';
-import '../widgets/next_arrow_button.dart';
+import '../../theme/app_decor.dart';
+import '../common/caption_overlay.dart';
+import '../common/next_arrow_button.dart';
+import '../common/round_back_button.dart';
+import '../scopes/music_bed_scope.dart';
 
 /// Code of the Sanctuary's "story kickoff" anchor (the magenta `#FF00F0`).
 /// Marked explored after this screen's final page advances.
@@ -57,13 +60,12 @@ class _SanctuaryCutsceneScreenState
 
   void _speakCurrentPage() {
     if (!mounted) return;
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          NarrationLine(
-            text: _pages[_page],
-            cueId: 'sanctuary:kickoff-p$_page',
-            speaker: 'sanctuary-keeper-mystic',
-          ),
-        );
+    ref.narration.say(
+      _pages[_page],
+      cueId: 'sanctuary:kickoff-p$_page',
+      speaker: kKeeperSpeaker,
+      caption: false,
+    );
   }
 
   void _advance() {
@@ -73,89 +75,89 @@ class _SanctuaryCutsceneScreenState
       return;
     }
     // Final page — mark explored and return to the map.
-    ref.read(narrationPlayerProvider.notifier).clear();
+    ref.narration.clear();
     ref.read(explorationProvider.notifier).markCompleted(kSanctuaryKickoffCode);
-    ref.read(saveCoordinatorProvider).persist();
-    context.go('/sanctuary');
+    context.go(Routes.sanctuary);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.asset(
-            AssetPaths.countingParadeMeadow,
-            fit: BoxFit.cover,
-          ),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Image.asset(
-                            AssetPaths.sanctuaryKeeperMystic,
-                            height: 360,
-                            fit: BoxFit.contain,
+    // The cutscene is the Sanctuary's own opening beat; it should not be the
+    // one screen in the region that plays silent.
+    return MusicBedScope(
+      child: Scaffold(
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(AssetPaths.countingParadeMeadow, fit: BoxFit.cover),
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Image.asset(
+                              AssetPaths.sanctuaryKeeperMystic,
+                              height: 360,
+                              fit: BoxFit.contain,
+                            ),
                           ),
-                        ),
-                        const Align(
-                          alignment: Alignment.bottomRight,
-                          child: _BouncingDragon(),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    flex: 2,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        _SpeechBubble(text: _pages[_page]),
-                        const SizedBox(height: 24),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: NextArrowButton(
-                            key: const ValueKey('cutscene-next'),
-                            onPressed: _advance,
-                            label: _page < _pages.length - 1
-                                ? 'Next'
-                                : "Let's explore!",
+                          const Align(
+                            alignment: Alignment.bottomRight,
+                            child: _BouncingDragon(),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 16),
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _SpeechBubble(text: _pages[_page]),
+                          const SizedBox(height: 24),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: NextArrowButton(
+                              key: const ValueKey('cutscene-next'),
+                              onPressed: _advance,
+                              label: _page < _pages.length - 1
+                                  ? 'Next'
+                                  : "Let's explore!",
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          // Persistent back-to-Sanctuary affordance, same as the lesson
-          // screen, so the kid can bail out mid-cutscene.
-          Positioned(
-            top: 12,
-            left: 12,
-            child: SafeArea(
-              child: _BackButton(
-                onPressed: () {
-                  ref.read(narrationPlayerProvider.notifier).clear();
-                  context.go('/sanctuary');
-                },
+            // Persistent back-to-Sanctuary affordance, same as the lesson
+            // screen, so the kid can bail out mid-cutscene.
+            Positioned(
+              top: 12,
+              left: 12,
+              child: SafeArea(
+                child: RoundBackButton(
+                  onPressed: () {
+                    ref.narration.clear();
+                    context.go(Routes.sanctuary);
+                  },
+                ),
               ),
             ),
-          ),
-          const CaptionOverlay(),
-        ],
+            const CaptionOverlay(),
+          ],
+        ),
       ),
     );
   }
@@ -231,51 +233,13 @@ class _SpeechBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
+      decoration: AppDecor.card(radius: 20, shadow: AppShadows.raised),
       child: Text(
         text,
         style: const TextStyle(
           fontSize: 22,
           height: 1.35,
           color: Colors.black87,
-        ),
-      ),
-    );
-  }
-}
-
-class _BackButton extends StatelessWidget {
-  const _BackButton({required this.onPressed});
-
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      shape: const CircleBorder(),
-      color: Colors.white.withValues(alpha: 0.88),
-      elevation: 3,
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onPressed,
-        child: const Padding(
-          padding: EdgeInsets.all(10),
-          child: Icon(
-            Icons.arrow_back,
-            size: 28,
-            color: Colors.black87,
-            semanticLabel: 'Back to the Sanctuary',
-          ),
         ),
       ),
     );

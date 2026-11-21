@@ -184,7 +184,7 @@ class Harvester {
   }
 
   Future<List<Cue>> _walkLessonRuntimes() async {
-    final dirPath = p.join(repoRoot, 'data', 'lesson-runtime');
+    final dirPath = p.join(repoRoot, 'app', 'assets', 'data', 'lesson-runtime');
     final dir = Directory(dirPath);
 
     if (!await dir.exists()) {
@@ -322,7 +322,7 @@ class Harvester {
   }
 
   Future<List<Cue>> _walkActivityNarration() async {
-    final dirPath = p.join(repoRoot, 'content', 'strings', locale, 'activities');
+    final dirPath = p.join(repoRoot, 'app', 'assets', 'content', 'strings', locale, 'activities');
     final dir = Directory(dirPath);
 
     if (!await dir.exists()) {

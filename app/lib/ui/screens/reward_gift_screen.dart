@@ -15,14 +15,21 @@
 // this widget should generalise to take a RewardTrack + first-stage
 // presentation parameters.
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../data/asset_paths.dart';
+import '../../data/button_labels.dart';
+import '../../data/sfx_catalog.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
-import '../widgets/next_arrow_button.dart';
+import '../../navigation/routes.dart';
+import '../../platform/sfx_engine.dart';
+import '../../theme/app_decor.dart';
+import '../common/next_arrow_button.dart';
 
 class RewardGiftScreen extends ConsumerStatefulWidget {
   const RewardGiftScreen({super.key});
@@ -39,10 +46,31 @@ class RewardGiftScreen extends ConsumerStatefulWidget {
 class _RewardGiftScreenState extends ConsumerState<RewardGiftScreen> {
   bool _narrated = false;
 
+  /// Read eagerly — `ref.read` is illegal once dispose() has begun.
+  SfxEngine? _sfxForDispose;
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _narrateOnce());
+    _sfxForDispose = ref.read(sfxEngineProvider);
+    // Claimed here, not in the post-frame callback below: the release in
+    // dispose() is unconditional, so the claim has to be too, or a teardown
+    // before the first frame gives back a claim it never took. See
+    // SfxEngine.releaseMusicBed for what that costs.
+    // The gift lands mid-visit, between two rounds. Claiming the bed the
+    // round was already playing keeps this beat inside the same piece of
+    // music rather than dropping it into silence.
+    unawaited(_sfxForDispose!.startMusicBed(kDefaultMusicBed));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _narrateOnce();
+    });
+  }
+
+  @override
+  void dispose() {
+    _sfxForDispose?.releaseMusicBed();
+    super.dispose();
   }
 
   void _narrateOnce() {
@@ -50,18 +78,17 @@ class _RewardGiftScreenState extends ConsumerState<RewardGiftScreen> {
     _narrated = true;
     // Speech bubble already shows the line on screen — use the no-caption
     // variant so the bottom caption bar doesn't double up.
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          const NarrationLine(
-            text: RewardGiftScreen.kMysteryEggDialog,
-            cueId: 'reward:k-mystery-egg:gift',
-            speaker: 'sanctuary-keeper-mystic',
-          ),
-        );
+    ref.narration.say(
+      RewardGiftScreen.kMysteryEggDialog,
+      cueId: 'reward:k-mystery-egg:gift',
+      speaker: kKeeperSpeaker,
+      caption: false,
+    );
   }
 
   void _onContinue() {
-    ref.read(narrationPlayerProvider.notifier).clear();
-    context.go('/sanctuary');
+    ref.narration.clear();
+    context.go(Routes.sanctuary);
   }
 
   @override
@@ -72,10 +99,7 @@ class _RewardGiftScreenState extends ConsumerState<RewardGiftScreen> {
         children: [
           // Same meadow background as the lesson + parade so this scene
           // reads as a direct continuation rather than a separate place.
-          Image.asset(
-            AssetPaths.countingParadeMeadow,
-            fit: BoxFit.cover,
-          ),
+          Image.asset(AssetPaths.countingParadeMeadow, fit: BoxFit.cover),
           // Soft dim so the keeper + egg pop forward against the meadow.
           Container(color: Colors.black.withValues(alpha: 0.18)),
           SafeArea(
@@ -90,17 +114,7 @@ class _RewardGiftScreenState extends ConsumerState<RewardGiftScreen> {
                         horizontal: 20,
                         vertical: 10,
                       ),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.92),
-                        borderRadius: BorderRadius.circular(18),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 8,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
-                      ),
+                      decoration: AppDecor.card(radius: 18),
                       child: const Text(
                         'Nicely counted!',
                         style: TextStyle(
@@ -175,7 +189,7 @@ class _RewardGiftScreenState extends ConsumerState<RewardGiftScreen> {
                     child: NextArrowButton(
                       key: const ValueKey('reward-gift-continue'),
                       onPressed: _onContinue,
-                      label: 'Continue',
+                      label: kLabelContinue,
                     ),
                   ),
                 ],

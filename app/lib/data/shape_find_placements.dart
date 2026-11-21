@@ -76,16 +76,21 @@ class ShapeFindPlacement {
 /// Pool of decor assets used for non-shape distractors. Returned in a
 /// stable order; callers shuffle with their own seed.
 List<String> _decorPool() => <String>[
-      AssetPaths.shapeGardenButterfly('blue'),
-      AssetPaths.shapeGardenButterfly('pink'),
-      AssetPaths.shapeGardenButterfly('purple'),
-      AssetPaths.shapeGardenButterfly('yellow'),
-      AssetPaths.shapeGardenFrog('green'),
-      AssetPaths.shapeGardenFrog('orange'),
-      AssetPaths.shapeGardenFrog('red'),
-      AssetPaths.shapeGardenFrog('teal'),
-      AssetPaths.shapeGardenWateringCan,
-    ];
+  AssetPaths.shapeGardenButterfly('blue'),
+  AssetPaths.shapeGardenButterfly('pink'),
+  AssetPaths.shapeGardenButterfly('purple'),
+  AssetPaths.shapeGardenButterfly('yellow'),
+  AssetPaths.shapeGardenFrog('green'),
+  AssetPaths.shapeGardenFrog('orange'),
+  AssetPaths.shapeGardenFrog('red'),
+  AssetPaths.shapeGardenFrog('teal'),
+  AssetPaths.shapeGardenWateringCan,
+];
+
+/// The scatter seed for round [round] of a hunt for [kind]: each round of a
+/// shape lays out differently, and each (kind, round) pair is reproducible.
+int shapeFindSeed(String kind, int round) =>
+    kind.hashCode ^ (round + 1) * 0x9E3779B1;
 
 /// Builds a one-round scatter of placements. The whole thing is
 /// seedable — pass the same `seed` and the layout is identical.
@@ -120,8 +125,9 @@ List<ShapeFindPlacement> buildShapeFindPlacements({
 
   // Pool of shape-kind distractors — anything in the pool that isn't the
   // target kind. The runner controls which kinds the kid has already met.
-  final eligibleKinds =
-      distractorKindPool.where((k) => k != targetKind).toList();
+  final eligibleKinds = distractorKindPool
+      .where((k) => k != targetKind)
+      .toList();
   final shapeDistractorCount = math.min(
     distractorCount,
     eligibleKinds.length * 2,

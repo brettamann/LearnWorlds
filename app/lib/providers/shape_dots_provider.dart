@@ -16,9 +16,10 @@ import '../data/example_dot_scanner.dart';
 /// `kind` is the canonical shape key as used by AssetPaths.shapeGarden2dSprite
 /// (`triangle`, `triangle-right`, `circle`, `square`, `rectangle`, `pentagon`,
 /// `hexagon`, `semicircle_half`, `semicircle_quarter`).
-final shapeDotsProvider = FutureProvider.family<ShapeDots, String>(
-  (ref, kind) async {
-    final path = AssetPaths.shapeGarden2dExample(kind);
-    return const ExampleDotScanner().scan(path);
-  },
-);
+final shapeDotsProvider = FutureProvider.family<ShapeDots, String>((
+  ref,
+  kind,
+) async {
+  final path = AssetPaths.shapeGarden2dExample(kind);
+  return const ExampleDotScanner().scan(path);
+});

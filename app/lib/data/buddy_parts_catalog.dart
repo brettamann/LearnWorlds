@@ -4,7 +4,7 @@
 // the selected pieces at render time.
 //
 // Adding a new variant: drop the sprite under
-// `app/assets/buddy/<category>/<id>.png` (run sync-assets afterward)
+// `app/assets/buddy/<category>/<id>.png`
 // and append an entry below. Mirror arms / legs L+R pairs share a
 // single catalog id and the loader picks both sides at render time.
 //
@@ -90,6 +90,25 @@ const List<BuddyOption> kBuddyMouths = <BuddyOption>[
 ];
 
 // ---------------------------------------------------------------------
+// Expression mouths - driven by mood, never chosen by the child.
+//
+// Deliberately NOT in kBuddyMouths. That list is the cosmetic one: the
+// creator offers it and buddy_shop_catalog.dart turns every entry into a
+// purchasable item. These three are not cosmetics - `buddyMouthIdForMood`
+// swaps them in for a beat and swaps them back - so putting them there would
+// sell a child a flat line for 20 coins and then leave it on Buddy's resting
+// face if she equipped it.
+//
+// `buddyMouthAsset` resolves across both lists, so the mood swap finds them
+// and the shop does not.
+// ---------------------------------------------------------------------
+const List<BuddyOption> kBuddyExpressionMouths = <BuddyOption>[
+  BuddyOption(id: 'v2', assetPath: 'assets/buddy/mouths/v2.png'),
+  BuddyOption(id: 'v3', assetPath: 'assets/buddy/mouths/v3.png'),
+  BuddyOption(id: 'v4', assetPath: 'assets/buddy/mouths/v4.png'),
+];
+
+// ---------------------------------------------------------------------
 // Hats — optional accessory layered on top. Selecting null = no hat.
 // ---------------------------------------------------------------------
 const List<BuddyOption> kBuddyHats = <BuddyOption>[
@@ -106,6 +125,21 @@ const List<BuddyPairOption> kBuddyArms = <BuddyPairOption>[
     leftAsset: 'assets/buddy/arms/arm-1-l.png',
     rightAsset: 'assets/buddy/arms/arm-1-r.png',
   ),
+  BuddyPairOption(
+    id: 'arm-2',
+    leftAsset: 'assets/buddy/arms/arm-2-l.png',
+    rightAsset: 'assets/buddy/arms/arm-2-r.png',
+  ),
+  BuddyPairOption(
+    id: 'arm-3',
+    leftAsset: 'assets/buddy/arms/arm-3-l.png',
+    rightAsset: 'assets/buddy/arms/arm-3-r.png',
+  ),
+  BuddyPairOption(
+    id: 'arm-4',
+    leftAsset: 'assets/buddy/arms/arm-4-l.png',
+    rightAsset: 'assets/buddy/arms/arm-4-r.png',
+  ),
 ];
 
 const List<BuddyPairOption> kBuddyLegs = <BuddyPairOption>[
@@ -113,6 +147,21 @@ const List<BuddyPairOption> kBuddyLegs = <BuddyPairOption>[
     id: 'leg-1',
     leftAsset: 'assets/buddy/legs/leg-1-l.png',
     rightAsset: 'assets/buddy/legs/leg-1-r.png',
+  ),
+  BuddyPairOption(
+    id: 'leg-2',
+    leftAsset: 'assets/buddy/legs/leg-2-l.png',
+    rightAsset: 'assets/buddy/legs/leg-2-r.png',
+  ),
+  BuddyPairOption(
+    id: 'leg-3',
+    leftAsset: 'assets/buddy/legs/leg-3-l.png',
+    rightAsset: 'assets/buddy/legs/leg-3-r.png',
+  ),
+  BuddyPairOption(
+    id: 'leg-4',
+    leftAsset: 'assets/buddy/legs/leg-4-l.png',
+    rightAsset: 'assets/buddy/legs/leg-4-r.png',
   ),
 ];
 
@@ -127,36 +176,29 @@ const String kBuddyDefaultLegsId = 'leg-1';
 /// Returns the sprite path for a given catalog id; falls back to the
 /// default if the id has been removed or never existed. The fallback
 /// keeps a save migration from breaking the Hub.
-String buddyBodyAsset(String id) =>
-    kBuddyBodies.firstWhere(
-      (o) => o.id == id,
-      orElse: () => kBuddyBodies.first,
-    ).assetPath;
+String buddyBodyAsset(String id) => kBuddyBodies
+    .firstWhere((o) => o.id == id, orElse: () => kBuddyBodies.first)
+    .assetPath;
 
-String buddyEyesAsset(String id) =>
-    kBuddyEyes.firstWhere(
-      (o) => o.id == id,
-      orElse: () => kBuddyEyes.first,
-    ).assetPath;
+String buddyEyesAsset(String id) => kBuddyEyes
+    .firstWhere((o) => o.id == id, orElse: () => kBuddyEyes.first)
+    .assetPath;
 
-String buddyMouthAsset(String id) =>
-    kBuddyMouths.firstWhere(
-      (o) => o.id == id,
-      orElse: () => kBuddyMouths.first,
-    ).assetPath;
+/// Cosmetic mouths first, then the mood-driven expression set.
+///
+/// Falls back to the default rather than throwing, so a mood can name a mouth
+/// whose art has not been drawn yet without ever rendering a missing asset.
+String buddyMouthAsset(String id) => <BuddyOption>[
+  ...kBuddyMouths,
+  ...kBuddyExpressionMouths,
+].firstWhere((o) => o.id == id, orElse: () => kBuddyMouths.first).assetPath;
 
-String buddyHatAsset(String id) =>
-    kBuddyHats.firstWhere(
-      (o) => o.id == id,
-      orElse: () => kBuddyHats.first,
-    ).assetPath;
+String buddyHatAsset(String id) => kBuddyHats
+    .firstWhere((o) => o.id == id, orElse: () => kBuddyHats.first)
+    .assetPath;
 
-BuddyPairOption buddyArms(String id) => kBuddyArms.firstWhere(
-      (o) => o.id == id,
-      orElse: () => kBuddyArms.first,
-    );
+BuddyPairOption buddyArms(String id) =>
+    kBuddyArms.firstWhere((o) => o.id == id, orElse: () => kBuddyArms.first);
 
-BuddyPairOption buddyLegs(String id) => kBuddyLegs.firstWhere(
-      (o) => o.id == id,
-      orElse: () => kBuddyLegs.first,
-    );
+BuddyPairOption buddyLegs(String id) =>
+    kBuddyLegs.firstWhere((o) => o.id == id, orElse: () => kBuddyLegs.first);

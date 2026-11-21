@@ -1,7 +1,5 @@
-// Asset path constants. The repo-root data/ and content/ trees are mirrored
-// under app/assets/ via scripts/sync-assets.ps1, so rootBundle keys live
-// under assets/. (Direct `../` paths bundle fine but break Flutter web's URL
-// normalization at runtime.)
+// Asset path constants. All bundled data (registries, lessons, strings) lives
+// under app/assets/, so every rootBundle key starts with assets/.
 
 class AssetPaths {
   AssetPaths._();
@@ -22,10 +20,6 @@ class AssetPaths {
         : lessonId;
     return 'assets/data/lesson-runtime/$stem.json';
   }
-
-  // Activity content strings (en-US for now)
-  static String activityStrings(String activityId) =>
-      'assets/content/strings/en-US/activities/$activityId.json';
 
   // Art assets (placeholder until specs/shared/art-direction.md ships
   // official versions; paths follow specs/shared/asset-paths.md).
@@ -50,6 +44,46 @@ class AssetPaths {
       'assets/activities/counting-parade/sprites/toucan_baby.png';
   static const String countingParadeGoldenEgg =
       'assets/activities/counting-parade/sprites/golden_egg.png';
+
+  /// Not a parade species. This is the Tens Parade challenge reward, and it
+  /// is deliberately absent from every round sequence so the only place a kid
+  /// ever sees it is the card she earns by counting to a hundred.
+  // The fifteen cards that complete sanctuary-creature-cards-set. Card art
+  // only: unlike the eight above, these creatures never walk in the parade,
+  // so nothing outside creature_card_catalog.dart reaches for them.
+  static const String countingParadeMossBunny =
+      'assets/activities/counting-parade/sprites/moss_bunny.png';
+  static const String countingParadeAcornSquirrel =
+      'assets/activities/counting-parade/sprites/acorn_squirrel.png';
+  static const String countingParadeBerryHedgehog =
+      'assets/activities/counting-parade/sprites/berry_hedgehog.png';
+  static const String countingParadeMeadowFrog =
+      'assets/activities/counting-parade/sprites/meadow_frog.png';
+  static const String countingParadeStarTurtle =
+      'assets/activities/counting-parade/sprites/star_turtle.png';
+  static const String countingParadeHoneyCub =
+      'assets/activities/counting-parade/sprites/honey_cub.png';
+  static const String countingParadePebbleMouse =
+      'assets/activities/counting-parade/sprites/pebble_mouse.png';
+  static const String countingParadeFireflySprite =
+      'assets/activities/counting-parade/sprites/firefly_sprite.png';
+  static const String countingParadeBabyPegasus =
+      'assets/activities/counting-parade/sprites/baby_pegasus.png';
+  static const String countingParadeCrystalDeer =
+      'assets/activities/counting-parade/sprites/crystal_deer.png';
+  static const String countingParadeLanternMoth =
+      'assets/activities/counting-parade/sprites/lantern_moth.png';
+  static const String countingParadeSnowFox =
+      'assets/activities/counting-parade/sprites/snow_fox.png';
+  static const String countingParadeRainbowChameleon =
+      'assets/activities/counting-parade/sprites/rainbow_chameleon.png';
+  static const String countingParadeMoonlightOwl =
+      'assets/activities/counting-parade/sprites/moonlight_owl.png';
+  static const String countingParadeSunbeamStag =
+      'assets/activities/counting-parade/sprites/sunbeam_stag.png';
+
+  static const String countingParadeCloudUnicorn =
+      'assets/activities/counting-parade/sprites/cloud_unicorn.png';
   static const String sanctuaryKeeperMystic =
       'assets/shared/region-characters/sanctuary/keeper-mystic.png';
 
@@ -68,7 +102,8 @@ class AssetPaths {
   // World maps — the navigation grammar of the island. Placeholder art; see
   // specs/shared/map-screens.md for the clickable-region pattern.
   static const String homeScreenMap = 'assets/maps/home_screen_map.png';
-  static const String mysticSanctuaryMap = 'assets/maps/mystic_sanctuary_map.png';
+  static const String mysticSanctuaryMap =
+      'assets/maps/mystic_sanctuary_map.png';
 
   // Ten-Frame Pond placeholder sprite (Sprint 2+ activity).
   static const String tenFramePondFrog =
@@ -146,23 +181,119 @@ class AssetPaths {
       'assets/activities/shape-garden/shape_3d_sphere-clay.png';
 
   // ------- Where's Buddy? (K.G.1) -------
-  // Background reuses the Shape Garden illustration until a dedicated
-  // Sanctuary-clearing scene ships.
-  static const String wheresBuddyBackground = shapeGardenBackground;
+
+  /// The clearing the six landmarks stand on.
+  ///
+  /// It borrowed the Shape Garden courtyard for a long time, which is the
+  /// right aesthetic and the wrong shape: two thirds of that frame is sky and
+  /// treeline and the ground is a strip across the bottom. That was invisible
+  /// while the landmarks were pills of text, which float anywhere. It stopped
+  /// being invisible the moment they became a pond and a cottage - at the
+  /// positions this activity has always used, half of them stood in the sky.
+  ///
+  /// Pushing every landmark down into the band of ground that courtyard has
+  /// does not work: the band that is both on grass and still leaves room for
+  /// the above/below vectors is about 0.16 of the playfield, and six landmarks
+  /// inside it cannot satisfy the two rules "between" depends on - a pair more
+  /// than 0.4 apart, and a midpoint that does not land on a third landmark.
+  /// So the geometry was right and the ground was wrong. This one is grass
+  /// from a high horizon down, and deliberately empty in the middle.
+  static const String wheresBuddyBackground =
+      'assets/activities/wheres-buddy/clearing-background.png';
+
+  /// Sprite for each of the six named places on the clearing, by landmark id.
+  ///
+  /// The activity teaches position words *relative to a landmark* - above the
+  /// hollow tree, behind the cottage - and until now it drew no landmarks at
+  /// all. `wheres_buddy_landmarks.dart` had a position and a name for each
+  /// place and the runner rendered the name: six identical white pills of text
+  /// over a courtyard illustration containing no fountain, no tree and no
+  /// cottage. For a child who cannot read there was nothing on screen to be
+  /// above or behind, which makes the whole activity a guess.
+  ///
+  /// Three reuse the decor sprites rather than paying for near-duplicates.
+  /// That is not only thrift: those are the same objects she can buy and place
+  /// on her own Sanctuary map, so the pond in the clearing is *her* pond, and
+  /// one visual vocabulary across two screens is worth more than two.
+  static const Map<String, String> wheresBuddyLandmarks = <String, String>{
+    'fountain': 'assets/sanctuary/decor/star-fountain.png',
+    'pond': 'assets/sanctuary/decor/lily-pond.png',
+    'mushroom': 'assets/sanctuary/decor/toadstool-cluster.png',
+    'hollow-tree': 'assets/activities/wheres-buddy/landmark-hollow-tree.png',
+    'cottage': 'assets/activities/wheres-buddy/landmark-cottage.png',
+    'rock-cluster': 'assets/activities/wheres-buddy/landmark-rock-cluster.png',
+  };
+
+  // ------- The Sanctuary, woken up (2026-09-24) -------
+  // Generated through tools/artgen - see the "Waking the Sanctuary" block in
+  // catalog.mjs for the prompts, and why every background's middle is empty.
+
+  // Ten-Frame Pond
+  static const String tenFramePondBackground =
+      'assets/activities/ten-frame-pond/backgrounds/pond.png';
+  static const String tenFrameLilyPad =
+      'assets/activities/ten-frame-pond/sprites/lily-pad.png';
+  static const String tenFrameFrogGreen =
+      'assets/activities/ten-frame-pond/sprites/frog-green.png';
+  static const String tenFrameFrogOrange =
+      'assets/activities/ten-frame-pond/sprites/frog-orange.png';
+  static const String tenFrameFrogWaving =
+      'assets/activities/ten-frame-pond/sprites/frog.png';
+
+  // Care Pantry
+  static const String carePantryBackground =
+      'assets/activities/care-pantry/backgrounds/pantry.png';
+  static const String carePantryCrate =
+      'assets/activities/care-pantry/sprites/crate.png';
+  static const String carePantryAcorn =
+      'assets/activities/care-pantry/sprites/acorn.png';
+  static const String carePantryBerries =
+      'assets/activities/care-pantry/sprites/berries.png';
+  static const String carePantryCarrot =
+      'assets/activities/care-pantry/sprites/carrot.png';
+  static const String carePantryApple =
+      'assets/activities/care-pantry/sprites/apple.png';
+
+  // Scribe's Tower
+  static const String scribesTowerBackground =
+      'assets/activities/scribes-tower/backgrounds/tower.png';
+
+  // Storyteller's Pond
+  static const String storytellersPondBackground =
+      'assets/activities/storytellers-pond/backgrounds/pond-dusk.png';
+  static const String storytellersDuckling =
+      'assets/activities/storytellers-pond/sprites/duckling.png';
+
+  // Caretaker's Bench
+  static const String caretakersBenchBackground =
+      'assets/activities/caretakers-bench/backgrounds/bench.png';
+  static const String caretakersScaleStand =
+      'assets/activities/caretakers-bench/sprites/scale-stand.png';
+  static const String caretakersPumpkin =
+      'assets/activities/caretakers-bench/sprites/pumpkin.png';
+  static const String caretakersWatermelon =
+      'assets/activities/caretakers-bench/sprites/watermelon.png';
+  static const String caretakersRock =
+      'assets/activities/caretakers-bench/sprites/rock.png';
+  static const String caretakersLeaf =
+      'assets/activities/caretakers-bench/sprites/leaf.png';
+
+  // Picnic Baskets
+  static const String picnicBackground =
+      'assets/activities/picnic-baskets/backgrounds/picnic.png';
+  static const String picnicBasket =
+      'assets/activities/picnic-baskets/sprites/basket.png';
 
   // ------- General reward icons -------
   static const String rewardFeather =
       'assets/rewards/general/reward-feather.png';
-  static const String rewardGem =
-      'assets/rewards/general/reward-gem.png';
+  static const String rewardGem = 'assets/rewards/general/reward-gem.png';
 
   // Reward track sprites — see specs/shared/reward-tracks.md.
   // K mystery egg, 8 progressive stages + 1 "hatched" complete state.
   static String kMysteryEggStage(int stage) {
     if (stage < 1 || stage > 8) {
-      throw ArgumentError(
-        'K mystery egg has stages 1..8; got $stage',
-      );
+      throw ArgumentError('K mystery egg has stages 1..8; got $stage');
     }
     return 'assets/rewards/k-mystery-egg/egg-reward-stage-$stage.png';
   }

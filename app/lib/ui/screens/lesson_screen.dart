@@ -22,22 +22,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../activities/activity_launch.dart';
 import '../../data/asset_paths.dart';
+import '../../data/build_a_habitat_blueprints.dart';
+import '../../data/button_labels.dart';
 import '../../data/lesson_loader.dart';
+import '../../data/sfx_catalog.dart';
+import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../models/lesson_runtime.dart';
-import '../widgets/animated_fawn.dart';
-import '../widgets/caption_overlay.dart';
-import '../widgets/glitter_burst.dart';
-import '../widgets/keeper_intro_overlay.dart';
-import '../widgets/kg3_flat_or_solid_lesson_layer.dart';
-import '../widgets/kg4_sort_by_attribute_lesson_layer.dart';
-import '../widgets/lesson_hand_pointer.dart';
-import '../widgets/next_arrow_button.dart';
-import '../widgets/shape_find_demo.dart';
-import '../widgets/shape_find_round.dart';
-import '../widgets/shape_intro_layer.dart';
+import '../../navigation/routes.dart';
+import '../../platform/sfx_engine.dart';
+import '../common/caption_overlay.dart';
+import '../common/next_arrow_button.dart';
+import '../common/round_back_button.dart';
+import '../lesson/clearing_lesson_stage.dart';
+import '../lesson/habitat_lesson_stage.dart';
+import '../lesson/ishow_timeline.dart';
+import '../lesson/kg3_flat_or_solid_lesson_layer.dart';
+import '../lesson/kg4_sort_by_attribute_lesson_layer.dart';
+import '../lesson/lesson_scene.dart';
+import '../lesson/lesson_stages.dart';
+import '../lesson/lesson_target_registry.dart';
+import '../lesson/shape_find_demo.dart';
+import '../lesson/shape_find_round.dart';
+import '../lesson/shape_intro_layer.dart';
+import '../lesson/we_try_halo.dart';
+import '../lesson/we_try_runner.dart';
+import '../round/keeper_intro_overlay.dart';
 
 /// Order the K.G.2 lesson introduces shapes in. Simple → complex; circles
 /// first (no sides, easiest), then the polygon ladder, then the imperfect
@@ -56,11 +69,7 @@ const List<String> kShapeIntroSequence = <String>[
 ];
 
 class LessonScreen extends ConsumerStatefulWidget {
-  const LessonScreen({
-    super.key,
-    required this.lessonId,
-    this.subModeOverride,
-  });
+  const LessonScreen({super.key, required this.lessonId, this.subModeOverride});
 
   final String lessonId;
 
@@ -86,75 +95,38 @@ enum _LessonPhase {
   flatOrSolidLesson,
   sortByAttributeLesson,
   iShow,
+
+  /// Guided practice. Authored in all 22 lessons since the content was
+  /// written; until now the screen went straight from `iShow` to You-Do, so
+  /// the middle third of every lesson existed only on disk.
+  weTry,
 }
 
 class _LessonScreenState extends ConsumerState<LessonScreen> {
   Future<LessonRuntime>? _future;
-  final List<Timer> _timers = [];
   bool _continueEnabled = false;
   bool _skipEnabled = false;
   LessonRuntime? _runtime;
   _LessonPhase _phase = _LessonPhase.keeperIntro;
+  bool _musicClaimed = false;
+
+  /// Read eagerly — `ref.read` is illegal once dispose() has begun.
+  SfxEngine? _sfxForDispose;
 
   // Per-shape sequence cursor (K.G.2 only). Indexes kShapeIntroSequence.
   int _currentShapeIdx = 0;
 
-  // Generic iShow scene state — used by the K.CC.4a fawn stage. Untouched
-  // by the shape sequence.
-  final Set<String> _sparkled = <String>{};
-  int? _badgeValue; // null = hidden
-  bool _pointerVisible = false;
-  String? _pointerTargetId;
-  bool _handAtTarget = false;
-  int _pokeCounter = 0;
-  final Map<String, int> _burstCounters = <String, int>{};
+  /// What the stage shows, and the rules for moving it. Driven by the I-Show
+  /// timeline and the We-Try beats; observed here.
+  final LessonScene _scene = LessonScene();
 
-  /// Concept-specific keeper dialogue. Kept here so every introducing
-  /// activity's keeper line lives in one place. The fawns line is the
-  /// K.CC.4a default — every other concept that uses LessonScreen needs
-  /// its own case so the kid doesn't hear "the fawns wander off" before
-  /// a lesson about clusters or counting on.
-  String _keeperIntroDialog(LessonRuntime? runtime) {
-    switch (runtime?.conceptId) {
-      case 'K.G.2':
-        return 'Look — some plants in the garden have grown into shapes! '
-            "Help me find them all, won't you?";
-      case 'K.G.3':
-        return 'Some shapes are flat — like drawings on a page. Others are '
-            'solid — you can hold them in your hand. Help me sort them into '
-            'the right baskets!';
-      case 'K.G.4':
-        return "Shapes can group by how many sides they have. Let's put "
-            'the three-sided ones together, the four-sided ones together, '
-            'and the ones with five or more sides together.';
-      case 'K.CC.1':
-        return "Today the parade is HUGE. Don't worry — we can count by "
-            'tens! Watch how a big group of ten becomes one easy count.';
-      case 'K.CC.2':
-        return "We don't always start at one. When some are already counted, "
-            'we can keep going from there. Let me show you.';
-      default:
-        return "Oh, thank goodness you're here. The fawns wander off every "
-            'time I blink. Can you help me make sure all three are still '
-            'in the meadow?';
-    }
-  }
+  /// The I-Show's clock, while it runs.
+  IShowTimeline? _iShow;
 
-  String _keeperIntroStartLabel(LessonRuntime? runtime) {
-    switch (runtime?.conceptId) {
-      case 'K.G.2':
-        return "Let's look!";
-      case 'K.G.3':
-        return "Let's sort!";
-      case 'K.G.4':
-        return "Let's sort!";
-      case 'K.CC.1':
-      case 'K.CC.2':
-        return "Let's count!";
-      default:
-        return "Let's count!";
-    }
-  }
+  /// The We-Try's interpreter, while it runs.
+  WeTryRunner? _weTry;
+
+  final LessonTargetRegistry _targets = LessonTargetRegistry();
 
   /// Idempotent keeper-intro narration. The post-frame callback in the
   /// FutureBuilder calls this on every rebuild; the flag makes it a no-op
@@ -164,47 +136,64 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   @override
   void initState() {
     super.initState();
+    _sfxForDispose = ref.read(sfxEngineProvider);
     _future = const LessonLoader().load(widget.lessonId);
+    _scene.addListener(_onSceneChanged);
+  }
+
+  void _onSceneChanged() {
+    if (mounted) setState(() {});
+  }
+
+  /// Claim the scene's bed as soon as the lesson has loaded.
+  ///
+  /// The kid usually arrives here from a runner that was already playing this
+  /// same file, so this is normally a no-op that cancels that runner's pending
+  /// release — the music simply keeps going across the route change instead of
+  /// fading out for the length of the lesson and starting over afterwards.
+  void _claimMusicOnce(LessonRuntime runtime) {
+    if (_musicClaimed) return;
+    _musicClaimed = true;
+    unawaited(
+      ref
+          .read(sfxEngineProvider)
+          .startMusicBed(runtime.iShow.musicBed ?? kDefaultMusicBed),
+    );
   }
 
   void _speakKeeperIntroOnce(LessonRuntime runtime) {
     if (_keeperIntroSpoken) return;
     _keeperIntroSpoken = true;
-    ref.read(narrationPlayerProvider.notifier).speakWithoutCaption(
-          NarrationLine(
-            text: _keeperIntroDialog(runtime),
-            cueId: 'lesson:keeper-intro',
-            speaker: 'sanctuary-keeper-mystic',
-          ),
-        );
+    ref.narration.say(
+      runtime.presentation.keeperIntro,
+      cueId: 'lesson:keeper-intro',
+      speaker: kKeeperSpeaker,
+      caption: false,
+    );
   }
 
-  /// True for lessons whose iShow scene includes painted shapes (K.G.2).
-  /// We use this rather than the conceptId switch so adjacent shape-recog
-  /// lessons get the same treatment without touching this file.
-  bool _isShapeLesson(LessonRuntime runtime) =>
-      runtime.iShow.shapes.isNotEmpty;
-
+  /// Where the lesson opens, from the stage it is authored onto.
   void _onKeeperStartPressed() {
     final runtime = _runtime;
     if (runtime == null) return;
-    if (runtime.conceptId == 'K.G.3') {
-      setState(() => _phase = _LessonPhase.flatOrSolidLesson);
-      return;
+    switch (runtime.presentation.stage) {
+      case LessonStage.flatOrSolid:
+        setState(() => _phase = _LessonPhase.flatOrSolidLesson);
+      case LessonStage.sortByAttribute:
+        setState(() => _phase = _LessonPhase.sortByAttributeLesson);
+      case LessonStage.shapeSequence:
+        setState(() {
+          _currentShapeIdx = 0;
+          _phase = _LessonPhase.shapeIntro;
+        });
+      case LessonStage.fawns:
+      case LessonStage.clusters:
+      case LessonStage.countOn:
+      case LessonStage.habitat:
+      case LessonStage.clearing:
+        setState(() => _phase = _LessonPhase.iShow);
+        _scheduleIShow(runtime);
     }
-    if (runtime.conceptId == 'K.G.4') {
-      setState(() => _phase = _LessonPhase.sortByAttributeLesson);
-      return;
-    }
-    if (_isShapeLesson(runtime)) {
-      setState(() {
-        _currentShapeIdx = 0;
-        _phase = _LessonPhase.shapeIntro;
-      });
-      return;
-    }
-    setState(() => _phase = _LessonPhase.iShow);
-    _scheduleIShow(runtime);
   }
 
   void _onFlatOrSolidLessonComplete() {
@@ -240,12 +229,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     if (next >= kShapeIntroSequence.length) {
       // All 9 shapes done — celebratory beat, then hand off via the
       // Continue arrow.
-      ref.read(narrationPlayerProvider.notifier).speak(
-            const NarrationLine(
-              text: 'Wow! You learned every shape in the garden.',
-              cueId: 'lesson:shapes-done',
-            ),
-          );
+      ref.narration.say(
+        'Wow! You learned every shape in the garden.',
+        cueId: 'lesson:shapes-done',
+      );
       setState(() {
         _phase = _LessonPhase.shapesDone;
         _continueEnabled = true;
@@ -259,157 +246,91 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   }
 
   void _scheduleIShow(LessonRuntime runtime) {
-    final player = ref.read(narrationPlayerProvider.notifier);
-
-    // Narration cues.
-    for (final cue in runtime.iShow.narrationScript) {
-      final at = _parseSeconds(cue.at);
-      _timers.add(
-        Timer(Duration(seconds: at), () {
-          if (!mounted) return;
-          player.speak(
-            NarrationLine(text: cue.text, cueId: 'ishow:${cue.at}'),
-          );
-        }),
-      );
-    }
-
-    // Animation steps.
-    for (final step in runtime.iShow.animationSteps) {
-      final at = _parseSeconds(step.at);
-      _timers.add(
-        Timer(Duration(seconds: at), () {
-          if (!mounted) return;
-          _applyAnimationStep(step);
-        }),
-      );
-    }
-
-    // Pre-glide the hand to each `pointer-touch` target so the poke +
-    // sparkle + narration land in sync at the touch moment. The first
-    // touch is arranged by the upstream `pointer-appear` step (or starts
-    // mid-screen if there isn't one); we only need 2nd onward.
-    final touches = runtime.iShow.animationSteps
-        .where((s) => s.action == 'pointer-touch')
-        .toList();
-    for (var i = 1; i < touches.length; i++) {
-      final touch = touches[i];
-      final targetId = _resolveTargetId(touch.params['target']);
-      if (targetId == null) continue;
-      final touchAtMs = _parseSeconds(touch.at) * 1000;
-      final preGlideAtMs = touchAtMs - handPointerGlideDuration.inMilliseconds;
-      if (preGlideAtMs <= 0) continue;
-      _timers.add(
-        Timer(Duration(milliseconds: preGlideAtMs), () {
-          if (!mounted) return;
-          setState(() {
-            _pointerTargetId = targetId;
-            _handAtTarget = true;
-          });
-        }),
-      );
-    }
-
-    final skipAt = runtime.iShow.skipAvailableAfterSec;
-    if (skipAt > 0) {
-      _timers.add(
-        Timer(Duration(seconds: skipAt), () {
-          if (!mounted) return;
-          setState(() => _skipEnabled = true);
-        }),
-      );
-    }
-    _timers.add(
-      Timer(Duration(seconds: runtime.iShow.durationSec), () {
-        if (!mounted) return;
-        setState(() => _continueEnabled = true);
-      }),
-    );
+    _iShow?.dispose();
+    _iShow = IShowTimeline(
+      show: runtime.iShow,
+      scene: _scene,
+      say: (text, cueId) => ref.narration.say(text, cueId: cueId),
+      onSkipAvailable: () {
+        if (mounted) setState(() => _skipEnabled = true);
+      },
+      onContinueAvailable: () {
+        if (mounted) setState(() => _continueEnabled = true);
+      },
+    )..start();
   }
 
-  /// Resolves a JSON `target` / `position` value into a scene target id.
-  /// Strips the `left-of-` prefix that some `pointer-appear` steps use.
-  String? _resolveTargetId(Object? raw) {
-    if (raw is! String) return null;
-    final stripped = raw.startsWith('left-of-') ? raw.substring(8) : raw;
-    return stripped.isEmpty ? null : stripped;
-  }
-
-  void _applyAnimationStep(AnimationStep step) {
+  /// Her turn: guided practice, run by WeTryRunner.
+  void _startWeTry(LessonRuntime runtime) {
+    _iShow?.dispose();
+    _iShow = null;
     setState(() {
-      switch (step.action) {
-        case 'pointer-appear':
-          _pointerVisible = true;
-          _handAtTarget = false;
-          final t = _resolveTargetId(step.params['position']) ??
-              _resolveTargetId(step.params['target']);
-          if (t != null) _pointerTargetId = t;
-        case 'pointer-touch':
-          _pointerVisible = true;
-          _handAtTarget = true;
-          final t = _resolveTargetId(step.params['target']);
-          if (t != null) _pointerTargetId = t;
-          _pokeCounter++;
-        case 'pointer-fade-out':
-          _pointerVisible = false;
-          _handAtTarget = false;
-          _pointerTargetId = null;
-        case 'sparkle':
-          final t = _resolveTargetId(step.params['target']);
-          if (t != null) {
-            _sparkled.add(t);
-            _burstCounters[t] = (_burstCounters[t] ?? 0) + 1;
-          }
-        case 'count-badge-show':
-        case 'count-badge-update':
-          final v = step.params['value'];
-          if (v is num) _badgeValue = v.toInt();
-        default:
-          break;
-      }
+      _phase = _LessonPhase.weTry;
+      _continueEnabled = false;
+      _skipEnabled = false;
     });
+    final feedback = ref.read(feedbackEngineProvider);
+    _weTry =
+        WeTryRunner(
+            phase: runtime.weTry,
+            scene: _scene,
+            say: (text, cueId) => ref.narration.say(text, cueId: cueId),
+            chime: feedback.hint,
+            pop: feedback.correct,
+            hits: _targets.hits,
+            onFinished: _goToYouDo,
+          )
+          ..addListener(_onSceneChanged)
+          ..start();
   }
 
-  int _parseSeconds(String at) {
-    final trimmed = at.endsWith('s') ? at.substring(0, at.length - 1) : at;
-    return int.tryParse(trimmed) ?? 0;
+  /// End of the demonstration. Her turn, unless this lesson does its own.
+  void _afterIShow() {
+    final runtime = _runtime;
+    if (runtime == null) return;
+    // A stage that is its own guided practice (the shape lessons) must not
+    // also run the generic one: she would do the same thing twice in a row.
+    if (runtime.presentation.stage.ownsPractice ||
+        !runtime.weTry.script.hasGate) {
+      _goToYouDo();
+      return;
+    }
+    _startWeTry(runtime);
   }
 
   void _goToYouDo() {
     final runtime = _runtime;
     if (runtime == null) return;
-    ref.read(narrationPlayerProvider.notifier).clear();
+    ref.narration.clear();
     final subMode = widget.subModeOverride ?? runtime.youDo.subMode;
-    context.go(
-      '/activity/${runtime.youDo.activityId}',
-      extra: {
-        'fromLesson': widget.lessonId,
-        'subMode': subMode,
-        'roundParameters': runtime.youDo.roundParameters,
-      },
+    context.goActivity(
+      runtime.youDo.activityId,
+      ActivityLaunch(
+        subModeId: subMode,
+        fromLessonId: widget.lessonId,
+        roundParameters: runtime.youDo.roundParameters,
+      ),
     );
   }
 
   @override
   void dispose() {
-    for (final t in _timers) {
-      t.cancel();
-    }
+    _iShow?.dispose();
+    _weTry?.dispose();
+    // Only if it was actually claimed. The claim happens from build(), once a
+    // runtime has loaded, so a lesson closed before that never took one — and
+    // SfxEngine counts claims, so releasing without claiming would give away
+    // the next screen's music instead.
+    if (_musicClaimed) _sfxForDispose?.releaseMusicBed();
+    _scene.dispose();
     super.dispose();
   }
 
-  /// Background asset chosen per concept. Shape Garden gets the garden art;
-  /// Counting Parade (default) keeps the meadow.
-  String _backgroundAsset(LessonRuntime? runtime) {
-    switch (runtime?.conceptId) {
-      case 'K.G.2':
-      case 'K.G.3':
-      case 'K.G.4':
-        return AssetPaths.shapeGardenBackground;
-      default:
-        return AssetPaths.countingParadeMeadow;
-    }
-  }
+  String _backgroundAsset(LessonRuntime? runtime) =>
+      switch (runtime?.presentation.backdrop) {
+        LessonBackdrop.garden => AssetPaths.shapeGardenBackground,
+        LessonBackdrop.meadow || null => AssetPaths.countingParadeMeadow,
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -417,10 +338,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            _backgroundAsset(_runtime),
-            fit: BoxFit.cover,
-          ),
+          Image.asset(_backgroundAsset(_runtime), fit: BoxFit.cover),
           FutureBuilder<LessonRuntime>(
             future: _future,
             builder: (context, snap) {
@@ -440,15 +358,15 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
               _runtime ??= runtime;
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (!mounted) return;
+                _claimMusicOnce(runtime);
                 _speakKeeperIntroOnce(runtime);
               });
 
               if (_phase == _LessonPhase.keeperIntro) {
                 return KeeperIntroOverlay(
-                  dialog: _keeperIntroDialog(runtime),
-                  startLabel: _keeperIntroStartLabel(runtime),
-                  startButtonKey:
-                      const ValueKey('lesson-keeper-start-button'),
+                  dialog: runtime.presentation.keeperIntro,
+                  startLabel: runtime.presentation.startLabel,
+                  startButtonKey: const ValueKey('lesson-keeper-start-button'),
                   onStart: _onKeeperStartPressed,
                 );
               }
@@ -476,8 +394,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
               if (_phase == _LessonPhase.shapeFindRound &&
                   _currentShapeIdx < kShapeIntroSequence.length) {
                 final kind = kShapeIntroSequence[_currentShapeIdx];
-                final previousKinds =
-                    kShapeIntroSequence.sublist(0, _currentShapeIdx);
+                final previousKinds = kShapeIntroSequence.sublist(
+                  0,
+                  _currentShapeIdx,
+                );
                 return ShapeFindRound(
                   key: ValueKey('shape-find-$kind'),
                   targetKind: kind,
@@ -487,7 +407,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
               }
 
               if (_phase == _LessonPhase.shapesDone) {
-                return const _ShapesDoneCelebration();
+                return const ShapesDoneCelebration();
               }
 
               if (_phase == _LessonPhase.flatOrSolidLesson) {
@@ -505,23 +425,96 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
               }
 
               // Fawn / iShow path — K.CC.4a-style lessons.
-              switch (runtime.conceptId) {
-                case 'K.CC.1':
-                  return _ClusterStage(badgeValue: _badgeValue);
-                case 'K.CC.2':
-                  return _CountOnStage(badgeValue: _badgeValue);
+              switch (runtime.presentation.stage) {
+                case LessonStage.clusters:
+                  return LessonClusterStage(
+                    badgeValue: _scene.badgeValue,
+                    targets: _targets,
+                  );
+                case LessonStage.countOn:
+                  return LessonCountOnStage(
+                    badgeValue: _scene.badgeValue,
+                    targets: _targets,
+                  );
+                case LessonStage.habitat:
+                  return HabitatLessonStage(
+                    blueprint: kHabitatBlueprints[0],
+                    // K.G.6 opens on the frame the kid just laid in K.G.5 -
+                    // "the frame is the base, we add shapes on top" - so its
+                    // sticks and clay start down rather than as ghosts.
+                    placedCorners:
+                        runtime.iShow.framePrebuilt &&
+                            _phase != _LessonPhase.weTry
+                        ? <int>{0, 1, 2}
+                        : _scene.placedCorners,
+                    placedEdges:
+                        runtime.iShow.framePrebuilt &&
+                            _phase != _LessonPhase.weTry
+                        ? <int>{0, 1, 2}
+                        : _scene.placedEdges,
+                    placedRoof: _scene.placedRoof,
+                    showRoof: _phase == _LessonPhase.weTry
+                        ? runtime.weTry.showsRoof
+                        : runtime.iShow.showsRoof,
+                    carrying: _scene.carrying,
+                    handVisible: _scene.handVisible,
+                    pointerTarget: _scene.handTarget,
+                    fawnHome: _scene.fawnHome,
+                    targets: _targets,
+                  );
+                case LessonStage.clearing:
+                  return ClearingLessonStage(
+                    landmarkIds: _phase == _LessonPhase.weTry
+                        ? runtime.weTry.landmarkIds
+                        : runtime.iShow.landmarkIds,
+                    facingLandmarkId: _scene.facingLandmarkId,
+                    spot: _scene.buddySpot,
+                    pointerVisible: _scene.pointerVisible,
+                    targets: _targets,
+                    zoneIds: _phase == _LessonPhase.weTry
+                        ? _scene.haloed
+                        : const {},
+                  );
+                // The three shape stages are drawn by their own phases above
+                // and never reach here.
+                case LessonStage.fawns:
+                case LessonStage.shapeSequence:
+                case LessonStage.flatOrSolid:
+                case LessonStage.sortByAttribute:
+                  break;
               }
-              return _FawnStage(
-                sparkled: _sparkled,
-                badgeValue: _badgeValue,
-                pointerVisible: _pointerVisible,
-                pointerTargetId: _pointerTargetId,
-                handAtTarget: _handAtTarget,
-                pokeCounter: _pokeCounter,
-                burstCounters: _burstCounters,
+              // Creatures in a meadow, which is right for exactly the counting
+              // lessons it was built for. `lesson_scene_test.dart` holds the
+              // line: a lesson whose scene is not made of creatures must not
+              // land here.
+              return LessonFawnStage(
+                sparkled: _scene.sparkled,
+                badgeValue: _scene.badgeValue,
+                pointerVisible: _scene.pointerVisible,
+                pointerTargetId: _scene.pointerTargetId,
+                handAtTarget: _scene.handAtTarget,
+                pokeCounter: _scene.pokeCounter,
+                burstCounters: _scene.burstCounters,
+                count: _phase == _LessonPhase.weTry
+                    ? runtime.weTry.creatureCount
+                    : runtime.iShow.creatureCount,
+                targets: _targets,
               );
             },
           ),
+          // Her turn. Above every stage so all five families get the same
+          // affordance from one widget, and below the captions and the
+          // back-out button so neither is ever swallowed by the gate.
+          if (_phase == _LessonPhase.weTry)
+            Positioned.fill(
+              child: WeTryHaloLayer(
+                key: const ValueKey('we-try-layer'),
+                registry: _targets,
+                targets: _scene.haloed,
+                urgent: _weTry?.urgent ?? false,
+                onTouch: (_weTry?.waiting ?? false) ? _weTry!.touch : null,
+              ),
+            ),
           const CaptionOverlay(),
           // Persistent back-to-Sanctuary affordance — kids can bail from
           // any phase.
@@ -529,24 +522,22 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
             top: 12,
             left: 12,
             child: SafeArea(
-              child: _BackToSanctuaryButton(
+              child: RoundBackButton(
                 onPressed: () {
-                  ref.read(narrationPlayerProvider.notifier).clear();
-                  context.go('/sanctuary');
+                  ref.narration.clear();
+                  context.go(Routes.sanctuary);
                 },
               ),
             ),
           ),
-          if (_phase == _LessonPhase.iShow &&
-              _skipEnabled &&
-              !_continueEnabled)
+          if (_phase == _LessonPhase.iShow && _skipEnabled && !_continueEnabled)
             Positioned(
               top: 16,
               right: 16,
               child: SafeArea(
-                child: _PillButton(
+                child: LessonPillButton(
                   onPressed: _goToYouDo,
-                  label: "I've got this",
+                  label: kLabelIveGotThis,
                 ),
               ),
             ),
@@ -562,576 +553,15 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
                   child: NextArrowButton(
                     key: const ValueKey('lesson-continue-arrow'),
                     idleHintEnabled: true,
-                    onPressed: _goToYouDo,
-                    label: 'Continue',
+                    onPressed: _phase == _LessonPhase.iShow
+                        ? _afterIShow
+                        : _goToYouDo,
+                    label: kLabelContinue,
                   ),
                 ),
               ),
             ),
         ],
-      ),
-    );
-  }
-}
-
-// ============================================================================
-// Fawn stage (K.CC.4a)
-// ============================================================================
-
-class _FawnStage extends StatelessWidget {
-  const _FawnStage({
-    required this.sparkled,
-    required this.badgeValue,
-    required this.pointerVisible,
-    required this.pointerTargetId,
-    required this.handAtTarget,
-    required this.pokeCounter,
-    required this.burstCounters,
-  });
-
-  final Set<String> sparkled;
-  final int? badgeValue;
-  final bool pointerVisible;
-  final String? pointerTargetId;
-  final bool handAtTarget;
-  final int pokeCounter;
-  final Map<String, int> burstCounters;
-
-  static const int _fawnCount = 3;
-  static const double _fawnWidth = 120;
-  static const double _fawnHeight = 150;
-  static const double _handSize = 96;
-
-  int? _indexFor(String id) {
-    final m = RegExp(r'fawn-(\d+)$').firstMatch(id);
-    if (m == null) return null;
-    final n = int.tryParse(m.group(1)!);
-    if (n == null || n < 1 || n > _fawnCount) return null;
-    return n - 1;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
-        child: Column(
-          children: [
-            AnimatedOpacity(
-              duration: const Duration(milliseconds: 300),
-              opacity: badgeValue == null ? 0.0 : 1.0,
-              child: _CountBadge(value: badgeValue ?? 0, target: _fawnCount),
-            ),
-            const Spacer(),
-            Expanded(
-              flex: 5,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Image.asset(
-                    AssetPaths.sanctuaryKeeperMystic,
-                    height: 280,
-                    fit: BoxFit.contain,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(child: _buildStack()),
-                ],
-              ),
-            ),
-            const Spacer(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStack() {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final slotW = constraints.maxWidth / _fawnCount;
-        final fawnTop = constraints.maxHeight - _fawnHeight;
-        final fawnCenters = List<double>.generate(
-          _fawnCount,
-          (i) => (i + 0.5) * slotW,
-        );
-
-        final targetIdx =
-            pointerTargetId == null ? null : _indexFor(pointerTargetId!);
-        Offset handTarget;
-        if (targetIdx == null) {
-          handTarget = Offset(-_handSize - 20, fawnTop - 40);
-        } else {
-          final centerX = fawnCenters[targetIdx];
-          final dx = handAtTarget ? -_handSize / 2 + 6 : -_handSize / 2 - 50;
-          handTarget = Offset(centerX + dx, fawnTop - 50);
-        }
-
-        return Stack(
-          clipBehavior: Clip.none,
-          children: [
-            for (var i = 0; i < _fawnCount; i++)
-              Positioned(
-                left: fawnCenters[i] - _fawnWidth / 2,
-                top: fawnTop,
-                width: _fawnWidth,
-                height: _fawnHeight,
-                child: AnimatedFawn(
-                  key: ValueKey('lesson-fawn-$i'),
-                  active: sparkled.contains('fawn-${i + 1}'),
-                  pointed: pointerVisible && targetIdx == i,
-                  width: _fawnWidth,
-                  height: _fawnHeight,
-                ),
-              ),
-            for (var i = 0; i < _fawnCount; i++)
-              if ((burstCounters['fawn-${i + 1}'] ?? 0) > 0)
-                Positioned(
-                  left: fawnCenters[i] - 70,
-                  top: fawnTop + _fawnHeight / 2 - 70,
-                  width: 140,
-                  height: 140,
-                  child: GlitterBurst(
-                    key: ValueKey(
-                      'burst-fawn-$i-${burstCounters['fawn-${i + 1}']}',
-                    ),
-                  ),
-                ),
-            LessonHandPointer(
-              visible: pointerVisible,
-              target: handTarget,
-              pokeKey: pokeCounter,
-              size: _handSize,
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-// ============================================================================
-// Shapes-done celebration
-// ============================================================================
-
-/// Shown after every shape in the K.G.2 sequence has been introduced + found.
-/// A static congratulatory card; the Continue arrow drawn at the LessonScreen
-/// level handles the hand-off to the activity.
-class _ShapesDoneCelebration extends StatelessWidget {
-  const _ShapesDoneCelebration();
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Center(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 540),
-          padding: const EdgeInsets.fromLTRB(28, 28, 28, 28),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.93),
-            borderRadius: BorderRadius.circular(22),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 14,
-                offset: Offset(0, 4),
-              ),
-            ],
-          ),
-          child: const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.auto_awesome, size: 72, color: Colors.amber),
-              SizedBox(height: 16),
-              Text(
-                'You learned every shape in the garden!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black87,
-                ),
-              ),
-              SizedBox(height: 12),
-              Text(
-                "Tap Continue when you're ready to play.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                  height: 1.35,
-                  color: Colors.black87,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ============================================================================
-// Shared sub-widgets
-// ============================================================================
-
-class _CountBadge extends StatelessWidget {
-  const _CountBadge({required this.value, required this.target});
-
-  final int value;
-  final int target;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 8,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Text(
-        '$value / $target',
-        style: const TextStyle(
-          fontSize: 40,
-          fontWeight: FontWeight.w700,
-          color: Colors.black87,
-        ),
-      ),
-    );
-  }
-}
-
-/// Small chunky back arrow pinned to the top-left of the lesson.
-class _BackToSanctuaryButton extends StatelessWidget {
-  const _BackToSanctuaryButton({required this.onPressed});
-
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      shape: const CircleBorder(),
-      color: Colors.white.withValues(alpha: 0.88),
-      elevation: 3,
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onPressed,
-        child: const Padding(
-          padding: EdgeInsets.all(10),
-          child: Icon(
-            Icons.arrow_back,
-            size: 28,
-            color: Colors.black87,
-            semanticLabel: 'Back to the Sanctuary',
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Tucked-corner "skip" affordance — small on purpose so the kid doesn't
-/// confuse it with the big glowing Continue arrow.
-class _PillButton extends StatelessWidget {
-  const _PillButton({required this.onPressed, required this.label});
-
-  final VoidCallback onPressed;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.85),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: TextButton(
-        onPressed: onPressed,
-        style: TextButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-          textStyle: const TextStyle(fontSize: 18),
-        ),
-        child: Text(label),
-      ),
-    );
-  }
-}
-
-// ============================================================================
-// K.CC.1 cluster stage — 3 columns of 10 baby gryphons, count badge above
-// ============================================================================
-
-class _ClusterStage extends StatelessWidget {
-  const _ClusterStage({required this.badgeValue});
-
-  final int? badgeValue;
-
-  static const int _clusters = 3;
-  static const int _perCluster = 10;
-  static const double _spriteSize = 38;
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
-        child: Column(
-          children: [
-            AnimatedOpacity(
-              duration: const Duration(milliseconds: 300),
-              opacity: badgeValue == null ? 0.0 : 1.0,
-              child: _RunningBadge(value: badgeValue ?? 0, target: 30),
-            ),
-            const Spacer(),
-            Expanded(
-              flex: 5,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Image.asset(
-                    AssetPaths.sanctuaryKeeperMystic,
-                    height: 260,
-                    fit: BoxFit.contain,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        for (var c = 0; c < _clusters; c++)
-                          _Cluster(
-                            label: '${(c + 1) * 10}',
-                            spriteAsset: AssetPaths.countingParadeBabyGryphon,
-                            highlight: badgeValue != null &&
-                                badgeValue! >= (c + 1) * 10,
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Spacer(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _Cluster extends StatelessWidget {
-  const _Cluster({
-    required this.label,
-    required this.spriteAsset,
-    required this.highlight,
-  });
-
-  final String label;
-  final String spriteAsset;
-  final bool highlight;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 350),
-      padding: const EdgeInsets.fromLTRB(8, 6, 8, 10),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: highlight ? 0.65 : 0.3),
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: highlight
-            ? const [
-                BoxShadow(
-                  color: Colors.amberAccent,
-                  blurRadius: 22,
-                  spreadRadius: 2,
-                ),
-              ]
-            : null,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.w800,
-              color: highlight ? Colors.black87 : Colors.black54,
-            ),
-          ),
-          const SizedBox(height: 4),
-          SizedBox(
-            width: _ClusterStage._spriteSize * 2 + 12,
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 4,
-              runSpacing: 4,
-              children: [
-                for (var i = 0; i < _ClusterStage._perCluster; i++)
-                  Image.asset(
-                    spriteAsset,
-                    width: _ClusterStage._spriteSize,
-                    height: _ClusterStage._spriteSize,
-                    fit: BoxFit.contain,
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ============================================================================
-// K.CC.2 count-on stage — 4 pre-counted fawns + 3 new arrivals
-// ============================================================================
-
-class _CountOnStage extends StatelessWidget {
-  const _CountOnStage({required this.badgeValue});
-
-  final int? badgeValue;
-
-  static const int _preCount = 4;
-  static const int _arrivalsCount = 3;
-  static const double _spriteSize = 84;
-
-  @override
-  Widget build(BuildContext context) {
-    final value = badgeValue ?? _preCount;
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
-        child: Column(
-          children: [
-            AnimatedOpacity(
-              duration: const Duration(milliseconds: 300),
-              opacity: badgeValue == null ? 0.0 : 1.0,
-              child: _RunningBadge(value: value, target: 7),
-            ),
-            const Spacer(),
-            Expanded(
-              flex: 5,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Image.asset(
-                    AssetPaths.sanctuaryKeeperMystic,
-                    height: 260,
-                    fit: BoxFit.contain,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 12,
-                          children: [
-                            for (var i = 0; i < _preCount; i++)
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    '${i + 1}',
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.black54,
-                                    ),
-                                  ),
-                                  Opacity(
-                                    opacity: 0.55,
-                                    child: Image.asset(
-                                      AssetPaths.countingParadeFawn,
-                                      width: _spriteSize,
-                                      height: _spriteSize,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          '— new arrivals —',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black54,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 14,
-                          children: [
-                            for (var i = 0; i < _arrivalsCount; i++)
-                              AnimatedScale(
-                                duration:
-                                    const Duration(milliseconds: 350),
-                                scale: value >= _preCount + i + 1
-                                    ? 1.15
-                                    : 1.0,
-                                child: Image.asset(
-                                  AssetPaths.countingParadeFawn,
-                                  width: _spriteSize,
-                                  height: _spriteSize,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Spacer(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _RunningBadge extends StatelessWidget {
-  const _RunningBadge({required this.value, required this.target});
-
-  final int value;
-  final int target;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(22),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 8,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Text(
-        '$value / $target',
-        style: const TextStyle(
-          fontSize: 36,
-          fontWeight: FontWeight.w800,
-          color: Colors.black87,
-        ),
       ),
     );
   }

@@ -1,6 +1,5 @@
 # Auto-installed deps for tooling scripts.
 tools/scripts/node_modules/
-tools/scripts/package*.json
 
 # Tool outputs (regenerated; not source-of-truth).
 tools/tts/harvest-manifest.json
@@ -30,3 +29,31 @@ app/build/
 
 # Personal scratch notes (excluded by default; remove this line if you want them tracked).
 human-notes*.txt
+
+# Secrets. app/.env holds the ImageGeneration service credentials; it must never
+# be committed. Patterns are broad on purpose - a key that reaches the index is
+# a key that has to be rotated.
+.env
+.env.*
+!.env.example
+*.key
+*-key.txt
+
+# Art pipeline. The finished sprites are committed under app/assets/; these are
+# the working files behind them. The cached originals are large and always
+# reproducible from the manifest, so only the manifest is tracked - it carries
+# the provenance and the running cost, and Cache.get() checks that the file is
+# actually present before claiming a hit.
+tools/artgen/out/
+tools/artgen/cache/*.png
+
+# Kokoro narration renderer. node_modules is ~450MB (onnxruntime + the ONNX
+# model cache); the auditions are scratch takes for picking a voice by ear.
+# The rendered clips themselves ARE committed - see tools/tts/kokoro/README.md
+# for why - and script.json / rendered.json are the provenance for them.
+tools/tts/kokoro/node_modules/
+tools/tts/kokoro/audition/
+
+# Tool build caches
+tools/tts/.dart_tool/
+__pycache__/

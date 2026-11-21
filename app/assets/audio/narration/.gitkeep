@@ -1,0 +1,14 @@
+Recorded narration clips live here, one per cueId.
+
+Filename = the cueId with every character outside [A-Za-z0-9._-] replaced by
+an underscore, plus an audio extension. `parade:counting-prompt-r0` becomes
+`parade_counting-prompt-r0.wav`. See narrationClipStem() in
+app/lib/platform/narration_audio.dart and the identical transform in
+tools/tts/record/index.html.
+
+Nothing here is required. NarrationPlayer plays a clip when it finds one and
+speaks the line through system TTS when it doesn't, so clips can land one at a
+time. Drop files in, rebuild, and those lines are in a human voice.
+
+WAV is the safe format: Chrome, Safari and iOS all decode it, which webm/opus
+does not manage. This folder is NOT touched by scripts/sync-assets.sh.

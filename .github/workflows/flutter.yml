@@ -3,36 +3,34 @@ name: Flutter CI
 on:
   push:
     branches: [main]
-    paths:
-      - 'app/**'
-      - '.github/workflows/flutter.yml'
   pull_request:
-    paths:
-      - 'app/**'
-      - '.github/workflows/flutter.yml'
+
+concurrency:
+  group: flutter-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   ci:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: app
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
-          flutter-version: '3.24.x'
+          # Keep in step with the version that wrote app/pubspec.lock.
+          flutter-version: '3.44.1'
           cache: true
 
       - name: Resolve dependencies
         run: flutter pub get
-
-      - name: Run build_runner (code-gen)
-        run: dart run build_runner build --delete-conflicting-outputs
 
       - name: Format check
         run: dart format --output=none --set-exit-if-changed .
@@ -41,4 +39,4 @@ jobs:
         run: flutter analyze
 
       - name: Test
-        run: flutter test --reporter expanded
+        run: flutter test
