@@ -130,12 +130,20 @@ class SchemaCache {
   resolveSchemaPath(dataFilePath, schemaRef) {
     const dataDir = path.dirname(dataFilePath);
     const abs = path.resolve(dataDir, schemaRef);
-    // Normalize for cross-platform stable caching.
-    return path.normalize(abs).replace(/\\/g, '/').toLowerCase();
+    return path.normalize(abs);
+  }
+
+  // The cache key folds case only where the filesystem does. The real path is
+  // what gets opened: lowercasing it broke every lookup on Linux CI, where the
+  // checkout folder is LearnWorlds/LearnWorlds.
+  cacheKey(schemaPath) {
+    const key = schemaPath.replace(/\\/g, '/');
+    return process.platform === 'win32' ? key.toLowerCase() : key;
   }
 
   async getValidator(schemaPath) {
-    if (this.validators.has(schemaPath)) return this.validators.get(schemaPath);
+    const key = this.cacheKey(schemaPath);
+    if (this.validators.has(key)) return this.validators.get(key);
     if (!existsSync(schemaPath)) {
       throw new Error(`Schema file not found: ${schemaPath}`);
     }
@@ -158,7 +166,7 @@ class SchemaCache {
         throw new Error(`Failed to compile schema ${schemaPath}: ${e.message}`);
       }
     }
-    this.validators.set(schemaPath, validate);
+    this.validators.set(key, validate);
     return validate;
   }
 }
