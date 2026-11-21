@@ -12,12 +12,13 @@ import 'package:critmath/providers/progress_provider.dart';
 import 'package:critmath/providers/read_aloud_settings_provider.dart';
 import 'package:critmath/providers/session_provider.dart';
 import 'package:critmath/providers/wallet_provider.dart';
-import 'package:critmath/ui/widgets/keeper_aside.dart';
-import 'package:critmath/ui/widgets/progress_bar_to_reward.dart';
+import 'package:critmath/ui/rewards/progress_bar_to_reward.dart';
+import 'package:critmath/ui/round/keeper_aside.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'support/harness.dart';
 
 void main() {

@@ -45,10 +45,10 @@ import '../../providers/buddy_appearance_provider.dart';
 import '../../providers/buddy_wardrobe_provider.dart';
 import '../../providers/wallet_provider.dart';
 import '../../theme/app_colors.dart';
-import '../widgets/answer_feedback.dart';
-import '../widgets/buddy_widget.dart';
-import '../widgets/coin_hud.dart';
-import '../widgets/music_bed_scope.dart';
+import '../characters/buddy_widget.dart';
+import '../common/answer_feedback.dart';
+import '../rewards/coin_hud.dart';
+import '../scopes/music_bed_scope.dart';
 
 /// Which face of the screen to show. Defaults to `create` everywhere so a
 /// caller that predates the shop cannot accidentally drop a five-year-old

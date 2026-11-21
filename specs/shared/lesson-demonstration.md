@@ -35,9 +35,9 @@ When commissioning new demo art, **do not** ask for a second "with-rays" variant
 
 | Widget | File | Role |
 |---|---|---|
-| `LessonHandPointer` | `app/lib/ui/widgets/lesson_hand_pointer.dart` | Glides between targets (AnimatedPositioned), pokes on demand (AnimationController). Visibility, target, and pokeKey are owned by the LessonScreen state. |
-| `GlitterBurst` | `app/lib/ui/widgets/glitter_burst.dart` | One-shot radial star burst, self-running. Spawn a fresh instance per impact by keying it on a generation counter. |
-| `AnimatedFawn` (or actor-equivalent) | `app/lib/ui/widgets/animated_fawn.dart` | The actor's "I got touched" response. Flipping `active` from false→true plays a squash/stretch/hop. |
+| `LessonHandPointer` | `app/lib/ui/lesson/lesson_hand_pointer.dart` | Glides between targets (AnimatedPositioned), pokes on demand (AnimationController). Visibility, target, and pokeKey are owned by the LessonScreen state. |
+| `GlitterBurst` | `app/lib/ui/common/glitter_burst.dart` | One-shot radial star burst, self-running. Spawn a fresh instance per impact by keying it on a generation counter. |
+| `AnimatedFawn` (or actor-equivalent) | `app/lib/ui/characters/animated_fawn.dart` | The actor's "I got touched" response. Flipping `active` from false→true plays a squash/stretch/hop. |
 | `_LessonStage` in `LessonScreen` | `app/lib/ui/screens/lesson_screen.dart` | Owns the Stack, computes actor positions via LayoutBuilder, derives the hand's target Offset from `_pointerTarget` + `_handAtTarget`. |
 
 ---

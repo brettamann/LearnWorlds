@@ -18,11 +18,12 @@ import 'dart:io';
 import 'package:critmath/data/buddy_parts_catalog.dart';
 import 'package:critmath/data/buddy_shop_catalog.dart';
 import 'package:critmath/models/buddy_appearance.dart';
-import 'package:critmath/ui/widgets/buddy_widget.dart';
+import 'package:critmath/ui/characters/buddy_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'support/harness.dart';
 
 /// Every (id, left, right) the game can equip.

@@ -26,8 +26,6 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../data/activity_registry.dart';
-import '../data/playable_activities.dart';
 import '../engines/mastery/round_outcome.dart';
 import '../models/reward_track.dart';
 import '../providers/app_providers.dart';
@@ -36,6 +34,8 @@ import '../providers/reward_progress_provider.dart';
 import '../providers/save_provider.dart';
 import '../providers/sub_mode_progress_provider.dart';
 import '../providers/wallet_provider.dart';
+import 'activity_registry.dart';
+import 'playable_activities.dart';
 import 'sanctuary_sequence.dart';
 
 /// Production coin grant per round pass, so the dev tool grants the same

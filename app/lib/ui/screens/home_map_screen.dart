@@ -21,10 +21,10 @@ import 'package:go_router/go_router.dart';
 import '../../data/asset_paths.dart';
 import '../../data/map_labels.dart';
 import '../../navigation/routes.dart';
-import '../widgets/coin_hud.dart';
-import '../widgets/map_screen.dart';
-import '../widgets/map_side_rail.dart';
-import '../widgets/music_bed_scope.dart';
+import '../map/map_screen.dart';
+import '../map/map_side_rail.dart';
+import '../rewards/coin_hud.dart';
+import '../scopes/music_bed_scope.dart';
 
 class HomeMapScreen extends ConsumerWidget {
   const HomeMapScreen({super.key});

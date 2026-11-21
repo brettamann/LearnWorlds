@@ -13,7 +13,7 @@
 // never showed her a target cannot then tell her she missed it - and it would,
 // silently and in the warmest possible voice, every single time.
 
-import 'package:critmath/ui/widgets/lesson_target_registry.dart';
+import 'package:critmath/ui/lesson/lesson_target_registry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

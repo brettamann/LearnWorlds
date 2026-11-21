@@ -14,11 +14,11 @@
 
 import 'package:flutter/widgets.dart';
 
+import '../../activities/wheres_buddy/wheres_buddy_landmark_sprite.dart';
 import '../../data/build_a_habitat_blueprints.dart';
 import '../../models/lesson_runtime.dart';
-import '../widgets/clearing_lesson_stage.dart';
-import '../widgets/habitat_lesson_stage.dart';
-import '../widgets/wheres_buddy_landmark_sprite.dart';
+import 'clearing_lesson_stage.dart';
+import 'habitat_lesson_stage.dart';
 
 class LessonScene extends ChangeNotifier {
   // ---- Generic I-Show scene (fawns, clusters, count-on) ------------------

@@ -38,7 +38,7 @@ import 'package:critmath/models/activity.dart';
 import 'package:critmath/platform/narration_clip_key.dart';
 import 'package:critmath/providers/read_aloud_settings_provider.dart';
 import 'package:critmath/providers/setting_notifiers.dart';
-import 'package:critmath/ui/widgets/sub_mode_picker_sheet.dart';
+import 'package:critmath/ui/map/sub_mode_picker_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -205,7 +205,7 @@ void main() {
       // enumeration, so it renders fine, speaks fine, and speaks in the wrong
       // voice — the only symptom is a change of narrator mid-sentence.
       final source =
-          File('lib/ui/widgets/sub_mode_picker_sheet.dart').readAsStringSync();
+          File('lib/ui/map/sub_mode_picker_sheet.dart').readAsStringSync();
       expect(
         RegExp(r'''label:\s*['"]''').hasMatch(source),
         isFalse,

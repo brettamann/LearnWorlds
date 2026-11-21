@@ -171,7 +171,7 @@ of them covers the platforms we ship on:
 |---|---|
 | `SystemChrome.setPreferredOrientations` in `main.dart` | A real lock on iOS/Android **native**. A no-op on web. |
 | `"orientation": "landscape"` in `web/manifest.json` | Honoured by Chrome on Android. **Ignored by iOS Safari**, including for a page added to the home screen. |
-| `ui/widgets/landscape_gate.dart` | Wraps every route. In portrait it shows a rocking tablet icon instead of the game. This is the only thing that works on the iPad. |
+| `ui/scopes/landscape_gate.dart` | Wraps every route. In portrait it shows a rocking tablet icon instead of the game. This is the only thing that works on the iPad. |
 
 `web/index.html` also sets `user-scalable=no`. That one is not cosmetic: a stray
 two-finger touch zooming the meadow is not something a five-year-old can undo.
@@ -298,7 +298,7 @@ closer together than the shortest line takes to say.
 
 ### Tap targets
 
-`kMinTouchTarget` in `ui/widgets/touch_target.dart` is **60 logical pixels** -
+`kMinTouchTarget` in `ui/common/touch_target.dart` is **60 logical pixels** -
 about 12.6mm on the iPad. Apple asks for 44 points and Material for 48; both
 are written for adults, and this player is five.
 
@@ -478,15 +478,25 @@ See `../specs/shared/project-bootstrap.md` for the full layout. Quick reference:
 
 | Folder | Purpose |
 |---|---|
-| `lib/ui/` | Screens and widgets |
-| `lib/ui/common/` | Shared building blocks: `TimerScope`, `CountBadge`, `RoundBackButton` |
+| `lib/activities/` | One door per activity: `ActivityIds`, `sub_mode_ids.dart`, `ActivityLaunch`, and `kActivityRunners` (which widget plays which activity) |
+| `lib/activities/<activity>/` | That activity's runner widgets (its words and round data live in `lib/data/`) |
+| `lib/navigation/` | `Routes`, `context.goActivity` / `goLesson`, and `launchSubMode` (lesson first, or straight in) |
+| `lib/ui/screens/` | One file per route |
+| `lib/ui/round/` | `SanctuaryRoundShell` - the lifecycle every activity runs on - and its frame, keeper aside and overlays |
+| `lib/ui/lesson/` | Lesson stages, `LessonScene`, `IShowTimeline`, `WeTryRunner`, and the lesson-only layers |
+| `lib/ui/map/` | The Sanctuary map: path, fog, nodes, decor, the sub-mode picker |
+| `lib/ui/rewards/` | Coins, cards, the egg's progress |
+| `lib/ui/characters/` | Buddy, the fawn and the shape sprites |
+| `lib/ui/shapes/` | Shape boards shared by Shape Garden and the shape lessons |
+| `lib/ui/common/` | Small shared building blocks: `TimerScope`, `CountBadge`, `answerTargetHint`, buttons, halos, captions |
+| `lib/ui/scopes/` | App-wide wrappers: audio unlock, music bed, landscape gate |
 | `lib/theme/` | `AppColors` (palette by role), `AppDecor` / `AppShadows` (the floating white card) |
-| `lib/coordinators/` | Orchestrate engines for use cases |
-| `lib/engines/` | Pure logic (mastery, scaffolding, lesson runner, narration) |
+| `lib/coordinators/` | Use cases across engines and providers: `RoundCoordinator` (grading + payout), `Shop` (buying) |
+| `lib/engines/` | Pure logic (mastery, scaffolding, feedback, narration) |
 | `lib/data/` | Catalogs, registries, and the words the game speaks |
 | `lib/platform/` | Adapters (audio, TTS, haptics) — the swap boundary |
-| `lib/models/` | Value classes |
-| `lib/providers/` | Riverpod provider definitions, organized by scope |
+| `lib/models/` | Value classes, including `LessonRuntime` and its `LessonPresentation` |
+| `lib/providers/` | Riverpod providers; `save_provider.dart` holds `kSaveSlots`, the list of everything saved |
 | `tool/` | Dart-side dev scripts (narration script dump) |
 
 Anything under `lib/data/` must stay free of `package:flutter` if

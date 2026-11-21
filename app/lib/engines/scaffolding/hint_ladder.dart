@@ -34,7 +34,7 @@
 // child tapping quickly wants "Two." to interrupt "One." rather than queue
 // behind it.
 //
-// Modelled on the idle timer in ui/widgets/next_arrow_button.dart, which
+// Modelled on the idle timer in ui/common/next_arrow_button.dart, which
 // solves the same shape of problem for navigation.
 
 import 'dart:async';

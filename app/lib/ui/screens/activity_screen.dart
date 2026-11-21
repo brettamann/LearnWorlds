@@ -23,12 +23,12 @@ import '../../providers/exploration_provider.dart';
 import '../../providers/progress_provider.dart';
 import '../../providers/reward_progress_provider.dart';
 import '../../providers/sub_mode_progress_provider.dart';
-import '../widgets/caption_overlay.dart';
-import '../widgets/card_reveal_overlay.dart';
-import '../widgets/coin_fly_layer.dart';
-import '../widgets/coin_hud.dart';
-import '../widgets/glitter_burst.dart';
-import '../widgets/next_arrow_button.dart';
+import '../common/caption_overlay.dart';
+import '../common/glitter_burst.dart';
+import '../common/next_arrow_button.dart';
+import '../rewards/card_reveal_overlay.dart';
+import '../rewards/coin_fly_layer.dart';
+import '../rewards/coin_hud.dart';
 
 class ActivityScreen extends ConsumerWidget {
   const ActivityScreen({

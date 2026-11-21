@@ -4,7 +4,7 @@
 
 This is the **single canonical "effort → progress → reward" loop**. Kids learn it once on the Counting Parade and recognise it on every other activity in the Sanctuary, Wundletown, and Mathopolis.
 
-References: `specs/shared/ui-affordances.md`, `specs/shared/counting-sequence.md`, `app/lib/ui/widgets/progress_bar_to_reward.dart`.
+References: `specs/shared/ui-affordances.md`, `specs/shared/counting-sequence.md`, `app/lib/ui/rewards/progress_bar_to_reward.dart`.
 
 ---
 
@@ -22,7 +22,7 @@ The reward keeper line *names the reward* — "Here are 40 coins from the Sanctu
 
 ## The widget
 
-`app/lib/ui/widgets/progress_bar_to_reward.dart` — `ProgressBarToReward`.
+`app/lib/ui/rewards/progress_bar_to_reward.dart` — `ProgressBarToReward`.
 
 Props:
 

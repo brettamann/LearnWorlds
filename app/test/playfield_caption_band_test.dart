@@ -30,26 +30,26 @@
 // wants the inset area, a Column wants bottom padding - and what matters is
 // the child being able to reach the thing, not which of the two was used.
 
+import 'package:critmath/activities/build_a_habitat/build_a_habitat_runner.dart';
+import 'package:critmath/activities/care_pantry/care_pantry_runner.dart';
+import 'package:critmath/activities/caretakers_bench/caretakers_bench_runner.dart';
+import 'package:critmath/activities/counting_parade/count_forward_from_n_runner.dart';
+import 'package:critmath/activities/counting_parade/count_on_by_ones_runner.dart';
+import 'package:critmath/activities/counting_parade/count_out_n_runner.dart';
+import 'package:critmath/activities/counting_parade/counting_parade_runner.dart';
+import 'package:critmath/activities/counting_parade/long_parade_runner.dart';
+import 'package:critmath/activities/counting_parade/tens_parade_runner.dart';
+import 'package:critmath/activities/fluency/fluency_runner.dart';
+import 'package:critmath/activities/picnic_baskets/picnic_baskets_runner.dart';
+import 'package:critmath/activities/scribes_tower/scribes_tower_runner.dart';
+import 'package:critmath/activities/shape_garden/shape_garden_runner.dart';
+import 'package:critmath/activities/shape_garden/shape_garden_sort_by_attribute_runner.dart';
+import 'package:critmath/activities/shape_garden/two_attribute_hunt_runner.dart';
+import 'package:critmath/activities/storytellers_pond/storytellers_pond_runner.dart';
+import 'package:critmath/activities/ten_frame_pond/ten_frame_pond_runner.dart';
+import 'package:critmath/activities/wheres_buddy/wheres_buddy_runner.dart';
 import 'package:critmath/providers/session_provider.dart';
-import 'package:critmath/ui/widgets/build_a_habitat_runner.dart';
-import 'package:critmath/ui/widgets/caption_overlay.dart';
-import 'package:critmath/ui/widgets/care_pantry_runner.dart';
-import 'package:critmath/ui/widgets/caretakers_bench_runner.dart';
-import 'package:critmath/ui/widgets/count_forward_from_n_runner.dart';
-import 'package:critmath/ui/widgets/count_on_by_ones_runner.dart';
-import 'package:critmath/ui/widgets/count_out_n_runner.dart';
-import 'package:critmath/ui/widgets/counting_parade_runner.dart';
-import 'package:critmath/ui/widgets/fluency_runner.dart';
-import 'package:critmath/ui/widgets/long_parade_runner.dart';
-import 'package:critmath/ui/widgets/picnic_baskets_runner.dart';
-import 'package:critmath/ui/widgets/scribes_tower_runner.dart';
-import 'package:critmath/ui/widgets/shape_garden_runner.dart';
-import 'package:critmath/ui/widgets/shape_garden_sort_by_attribute_runner.dart';
-import 'package:critmath/ui/widgets/storytellers_pond_runner.dart';
-import 'package:critmath/ui/widgets/ten_frame_pond_runner.dart';
-import 'package:critmath/ui/widgets/tens_parade_runner.dart';
-import 'package:critmath/ui/widgets/two_attribute_hunt_runner.dart';
-import 'package:critmath/ui/widgets/wheres_buddy_runner.dart';
+import 'package:critmath/ui/common/caption_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

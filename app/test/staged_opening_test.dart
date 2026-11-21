@@ -16,18 +16,19 @@
 // they were written for is one failure and it would come back the same way in
 // either.
 
+import 'package:critmath/activities/counting_parade/count_forward_from_n_runner.dart';
+import 'package:critmath/activities/counting_parade/count_on_by_ones_runner.dart';
 import 'package:critmath/data/count_forward_from_n_rounds.dart';
 import 'package:critmath/data/count_on_by_ones_rounds.dart';
 import 'package:critmath/data/number_words.dart';
 import 'package:critmath/engines/narration/narration_cue_log.dart';
 import 'package:critmath/platform/narration_clip_key.dart';
 import 'package:critmath/providers/session_provider.dart';
-import 'package:critmath/ui/widgets/count_forward_from_n_runner.dart';
-import 'package:critmath/ui/widgets/count_on_by_ones_runner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'support/harness.dart';
 
 /// One sub-mode's staged opening, described in the terms the assertions need.

@@ -112,7 +112,7 @@ void main() {
     // fix is not "call it in more places" — it is that ReadAloudGate wraps
     // every piece of chrome in the game already, so one call there covers all
     // of it. If that moves back out to call sites this will notice.
-    final gate = _sources()['lib/ui/widgets/read_aloud_gate.dart']!;
+    final gate = _sources()['lib/ui/common/read_aloud_gate.dart']!;
     expect(
       gate,
       contains('uiTap()'),

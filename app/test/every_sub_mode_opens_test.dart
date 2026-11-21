@@ -26,8 +26,8 @@
 import 'package:critmath/activities/activity_launch.dart';
 import 'package:critmath/data/playable_activities.dart';
 import 'package:critmath/providers/session_provider.dart';
+import 'package:critmath/ui/common/next_arrow_button.dart';
 import 'package:critmath/ui/screens/activity_screen.dart';
-import 'package:critmath/ui/widgets/next_arrow_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

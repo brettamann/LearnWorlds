@@ -29,7 +29,7 @@ import '../../engines/narration/narration_player.dart';
 import '../../navigation/routes.dart';
 import '../../platform/sfx_engine.dart';
 import '../../theme/app_decor.dart';
-import '../widgets/next_arrow_button.dart';
+import '../common/next_arrow_button.dart';
 
 class RewardGiftScreen extends ConsumerStatefulWidget {
   const RewardGiftScreen({super.key});

@@ -19,10 +19,10 @@ import '../../engines/narration/narration_player.dart';
 import '../../navigation/routes.dart';
 import '../../providers/exploration_provider.dart';
 import '../../theme/app_decor.dart';
-import '../../ui/common/round_back_button.dart';
-import '../widgets/caption_overlay.dart';
-import '../widgets/music_bed_scope.dart';
-import '../widgets/next_arrow_button.dart';
+import '../common/caption_overlay.dart';
+import '../common/next_arrow_button.dart';
+import '../common/round_back_button.dart';
+import '../scopes/music_bed_scope.dart';
 
 /// Code of the Sanctuary's "story kickoff" anchor (the magenta `#FF00F0`).
 /// Marked explored after this screen's final page advances.

@@ -21,13 +21,13 @@
 import 'dart:io';
 
 import 'package:critmath/activities/sub_mode_ids.dart';
+import 'package:critmath/activities/wheres_buddy/wheres_buddy_landmark_sprite.dart';
+import 'package:critmath/activities/wheres_buddy/wheres_buddy_runner.dart';
 import 'package:critmath/data/asset_paths.dart';
 import 'package:critmath/data/wheres_buddy_landmarks.dart';
 import 'package:critmath/data/wheres_buddy_words.dart';
 import 'package:critmath/providers/session_provider.dart';
-import 'package:critmath/ui/widgets/caption_overlay.dart';
-import 'package:critmath/ui/widgets/wheres_buddy_landmark_sprite.dart';
-import 'package:critmath/ui/widgets/wheres_buddy_runner.dart';
+import 'package:critmath/ui/common/caption_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

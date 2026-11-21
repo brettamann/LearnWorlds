@@ -8,12 +8,12 @@ import 'package:flutter/material.dart';
 import '../../data/asset_paths.dart';
 import '../../data/button_labels.dart';
 import '../../theme/app_decor.dart';
-import '../../ui/common/count_badge.dart';
-import '../widgets/animated_fawn.dart';
-import '../widgets/glitter_burst.dart';
-import '../widgets/lesson_hand_pointer.dart';
-import '../widgets/lesson_target_registry.dart';
-import '../widgets/read_aloud_gate.dart';
+import '../characters/animated_fawn.dart';
+import '../common/count_badge.dart';
+import '../common/glitter_burst.dart';
+import '../common/read_aloud_gate.dart';
+import 'lesson_hand_pointer.dart';
+import 'lesson_target_registry.dart';
 
 // ============================================================================
 // Fawn stage (K.CC.4a)

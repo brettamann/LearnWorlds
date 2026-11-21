@@ -8,6 +8,9 @@ import 'package:go_router/go_router.dart';
 
 import 'activities/activity_launch.dart';
 import 'navigation/routes.dart';
+import 'ui/common/touch_target.dart';
+import 'ui/scopes/audio_unlock_scope.dart';
+import 'ui/scopes/landscape_gate.dart';
 import 'ui/screens/activity_screen.dart';
 import 'ui/screens/character_creator_screen.dart';
 import 'ui/screens/collection_screen.dart';
@@ -17,9 +20,6 @@ import 'ui/screens/reward_gift_screen.dart';
 import 'ui/screens/sanctuary_cutscene_screen.dart';
 import 'ui/screens/sanctuary_map_screen.dart';
 import 'ui/screens/settings_screen.dart';
-import 'ui/widgets/audio_unlock_scope.dart';
-import 'ui/widgets/landscape_gate.dart';
-import 'ui/widgets/touch_target.dart';
 
 /// The only theme this app sets, and it is about reach rather than looks.
 ///

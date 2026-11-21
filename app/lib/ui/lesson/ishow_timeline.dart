@@ -8,7 +8,7 @@
 import 'dart:async';
 
 import '../../models/lesson_runtime.dart';
-import '../widgets/lesson_hand_pointer.dart';
+import 'lesson_hand_pointer.dart';
 import 'lesson_scene.dart';
 
 class IShowTimeline {

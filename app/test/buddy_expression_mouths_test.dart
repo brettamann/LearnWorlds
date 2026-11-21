@@ -12,7 +12,7 @@ import 'dart:io';
 import 'package:critmath/data/buddy_parts_catalog.dart';
 import 'package:critmath/data/buddy_shop_catalog.dart';
 import 'package:critmath/models/buddy_mood.dart';
-import 'package:critmath/ui/widgets/buddy_widget.dart';
+import 'package:critmath/ui/characters/buddy_widget.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

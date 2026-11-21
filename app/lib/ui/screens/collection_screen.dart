@@ -21,7 +21,7 @@ import '../../engines/narration/narration_player.dart';
 import '../../navigation/routes.dart';
 import '../../providers/collection_provider.dart';
 import '../../theme/app_colors.dart';
-import '../widgets/music_bed_scope.dart';
+import '../scopes/music_bed_scope.dart';
 
 class CollectionScreen extends ConsumerWidget {
   const CollectionScreen({super.key});

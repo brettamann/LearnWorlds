@@ -4,7 +4,7 @@
 >
 > This doc captures the contract so future grades author their own track without re-deriving the state machine.
 
-References: `app/lib/models/reward_track.dart`, `app/lib/ui/widgets/reward_overlay.dart`, `specs/shared/reward-economy.md`.
+References: `app/lib/models/reward_track.dart`, `app/lib/ui/rewards/reward_overlay.dart`, `specs/shared/reward-economy.md`.
 
 ---
 

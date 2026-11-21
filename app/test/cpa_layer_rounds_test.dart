@@ -11,6 +11,8 @@
 // and a miss puts one layer back for that puzzle, because a child who is
 // stuck at abstract is exactly the child the acorns are for.
 
+import 'package:critmath/activities/fluency/fluency_runner.dart';
+import 'package:critmath/activities/storytellers_pond/storytellers_pond_runner.dart';
 import 'package:critmath/activities/sub_mode_ids.dart';
 import 'package:critmath/data/fluency_words.dart';
 import 'package:critmath/data/round_pick.dart';
@@ -19,10 +21,8 @@ import 'package:critmath/engines/mastery/concept_state.dart';
 import 'package:critmath/engines/mastery/round_outcome.dart';
 import 'package:critmath/providers/progress_provider.dart';
 import 'package:critmath/providers/session_provider.dart';
-import 'package:critmath/ui/widgets/fluency_runner.dart';
-import 'package:critmath/ui/widgets/number_choice.dart';
-import 'package:critmath/ui/widgets/sanctuary_round_shell.dart';
-import 'package:critmath/ui/widgets/storytellers_pond_runner.dart';
+import 'package:critmath/ui/common/number_choice.dart';
+import 'package:critmath/ui/round/sanctuary_round_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

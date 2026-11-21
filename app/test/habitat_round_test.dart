@@ -1,6 +1,7 @@
 // Build-a-Habitat on the round shell: each phase graded exactly once, and the
 // words the runner speaks are the words the recording script lists.
 
+import 'package:critmath/activities/build_a_habitat/build_a_habitat_runner.dart';
 import 'package:critmath/activities/sub_mode_ids.dart';
 import 'package:critmath/data/build_a_habitat_blueprints.dart';
 import 'package:critmath/data/habitat_words.dart';
@@ -10,8 +11,7 @@ import 'package:critmath/engines/narration/narration_line.dart';
 import 'package:critmath/engines/narration/narration_player.dart';
 import 'package:critmath/platform/narration_clip_key.dart';
 import 'package:critmath/providers/wallet_provider.dart';
-import 'package:critmath/ui/widgets/build_a_habitat_runner.dart';
-import 'package:critmath/ui/widgets/keeper_intro_overlay.dart';
+import 'package:critmath/ui/round/keeper_intro_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

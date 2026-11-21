@@ -1,8 +1,8 @@
 // LessonScene, the lesson stage's state, without a widget in sight.
 
 import 'package:critmath/models/lesson_runtime.dart';
+import 'package:critmath/ui/lesson/habitat_lesson_stage.dart';
 import 'package:critmath/ui/lesson/lesson_scene.dart';
-import 'package:critmath/ui/widgets/habitat_lesson_stage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 AnimationStep _step(String action, [Map<String, dynamic> params = const {}]) =>

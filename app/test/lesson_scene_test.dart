@@ -28,15 +28,16 @@ import 'dart:io';
 
 import 'package:critmath/data/wheres_buddy_landmarks.dart';
 import 'package:critmath/data/wheres_buddy_words.dart';
+import 'package:critmath/ui/characters/animated_fawn.dart';
+import 'package:critmath/ui/lesson/clearing_lesson_stage.dart';
+import 'package:critmath/ui/lesson/habitat_lesson_stage.dart';
 import 'package:critmath/ui/screens/lesson_screen.dart';
-import 'package:critmath/ui/widgets/animated_fawn.dart';
-import 'package:critmath/ui/widgets/clearing_lesson_stage.dart';
-import 'package:critmath/ui/widgets/habitat_lesson_stage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'support/harness.dart';
 
 /// Lessons a child can currently reach — the ones introducing the four

@@ -11,8 +11,8 @@
 // have seen it: the frog was above the band and a perfectly good size.
 
 import 'package:critmath/providers/session_provider.dart';
-import 'package:critmath/ui/widgets/buddy_companion.dart';
-import 'package:critmath/ui/widgets/caption_overlay.dart';
+import 'package:critmath/ui/characters/buddy_companion.dart';
+import 'package:critmath/ui/common/caption_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

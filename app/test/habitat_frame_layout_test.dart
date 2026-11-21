@@ -14,8 +14,8 @@
 // runner's, restated, and the first test below is what stops them drifting
 // back.
 
+import 'package:critmath/activities/build_a_habitat/habitat_frame_layout.dart';
 import 'package:critmath/data/build_a_habitat_blueprints.dart';
-import 'package:critmath/ui/widgets/habitat_frame_layout.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// `build_a_habitat_runner`'s own constants. Restated rather than imported

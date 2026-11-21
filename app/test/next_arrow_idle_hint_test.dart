@@ -11,7 +11,7 @@
 
 import 'package:critmath/engines/narration/narration_line.dart';
 import 'package:critmath/engines/narration/narration_player.dart';
-import 'package:critmath/ui/widgets/next_arrow_button.dart';
+import 'package:critmath/ui/common/next_arrow_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

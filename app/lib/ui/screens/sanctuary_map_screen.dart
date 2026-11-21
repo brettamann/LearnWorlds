@@ -49,16 +49,16 @@ import '../../providers/map_anchors_provider.dart';
 import '../../providers/sanctuary_decor_provider.dart';
 import '../../providers/sub_mode_progress_provider.dart';
 import '../../providers/wallet_provider.dart';
-import '../widgets/coin_hud.dart';
-import '../widgets/decor_tray.dart';
-import '../widgets/map_dotted_path_painter.dart';
-import '../widgets/map_fog_layer.dart';
-import '../widgets/map_node_with_banner.dart';
-import '../widgets/map_side_rail.dart';
-import '../widgets/music_bed_scope.dart';
-import '../widgets/reward_overlay.dart' show RewardOverlay;
-import '../widgets/sanctuary_decor_layer.dart';
-import '../widgets/sub_mode_picker_sheet.dart';
+import '../map/decor_tray.dart';
+import '../map/map_dotted_path_painter.dart';
+import '../map/map_fog_layer.dart';
+import '../map/map_node_with_banner.dart';
+import '../map/map_side_rail.dart';
+import '../map/sanctuary_decor_layer.dart';
+import '../map/sub_mode_picker_sheet.dart';
+import '../rewards/coin_hud.dart';
+import '../rewards/reward_overlay.dart' show RewardOverlay;
+import '../scopes/music_bed_scope.dart';
 
 /// Per-node banner side. Chosen by hand to avoid overlaps with the dotted
 /// path on the current Sanctuary map; flip a side here if a new arrangement

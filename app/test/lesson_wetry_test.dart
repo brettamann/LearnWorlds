@@ -24,13 +24,14 @@ import 'dart:io';
 
 import 'package:critmath/models/lesson_runtime.dart';
 import 'package:critmath/models/we_try_script.dart';
+import 'package:critmath/ui/common/touch_here_halo.dart';
 import 'package:critmath/ui/screens/lesson_screen.dart';
-import 'package:critmath/ui/widgets/touch_here_halo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'support/harness.dart';
 
 /// Lessons a child can currently reach - the ones introducing the four
@@ -147,9 +148,9 @@ void main() {
       // concept from the exclusion list fails here rather than shipping a
       // lesson with no practice at all.
       const bodies = <String, String>{
-        'K.G.2': 'lib/ui/widgets/shape_find_round.dart',
-        'K.G.3': 'lib/ui/widgets/kg3_flat_or_solid_lesson_layer.dart',
-        'K.G.4': 'lib/ui/widgets/kg4_sort_by_attribute_lesson_layer.dart',
+        'K.G.2': 'lib/ui/lesson/shape_find_round.dart',
+        'K.G.3': 'lib/ui/lesson/kg3_flat_or_solid_lesson_layer.dart',
+        'K.G.4': 'lib/ui/lesson/kg4_sort_by_attribute_lesson_layer.dart',
       };
       expect(bodies.keys.toSet(), _bespokePractice);
       for (final entry in bodies.entries) {

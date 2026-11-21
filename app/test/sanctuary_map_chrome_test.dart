@@ -14,14 +14,15 @@
 
 import 'package:critmath/data/sfx_catalog.dart';
 import 'package:critmath/platform/sfx_engine.dart';
+import 'package:critmath/ui/map/map_side_rail.dart';
+import 'package:critmath/ui/scopes/music_bed_scope.dart';
 import 'package:critmath/ui/screens/sanctuary_map_screen.dart';
-import 'package:critmath/ui/widgets/map_side_rail.dart';
-import 'package:critmath/ui/widgets/music_bed_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'support/harness.dart';
 
 /// Records what a screen asked the music bed to do, without needing audio.

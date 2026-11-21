@@ -6,16 +6,17 @@
 // mechanic couldn't be failed at all, every round resolved `success: true` and
 // the entire mastery ladder was unreachable.
 
+import 'package:critmath/activities/counting_parade/counting_parade_runner.dart';
 import 'package:critmath/engines/mastery/concept_state.dart';
 import 'package:critmath/providers/progress_provider.dart';
 import 'package:critmath/providers/session_provider.dart';
 import 'package:critmath/providers/wallet_provider.dart';
-import 'package:critmath/ui/widgets/answer_feedback.dart';
-import 'package:critmath/ui/widgets/counting_parade_runner.dart';
+import 'package:critmath/ui/common/answer_feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'support/harness.dart';
 
 void main() {

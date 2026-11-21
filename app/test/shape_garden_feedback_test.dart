@@ -8,16 +8,17 @@
 // These tests pin the two halves of the fix: a wrong tap is visible, and it
 // reaches the mastery engine.
 
+import 'package:critmath/activities/shape_garden/shape_garden_runner.dart';
 import 'package:critmath/engines/mastery/concept_state.dart';
 import 'package:critmath/providers/progress_provider.dart';
 import 'package:critmath/providers/session_provider.dart';
 import 'package:critmath/providers/wallet_provider.dart';
-import 'package:critmath/ui/widgets/answer_feedback.dart';
-import 'package:critmath/ui/widgets/shape_garden_runner.dart';
+import 'package:critmath/ui/common/answer_feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'support/harness.dart';
 
 void main() {

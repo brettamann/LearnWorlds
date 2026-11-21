@@ -1,6 +1,12 @@
 // The Counting Parade sub-modes on SanctuaryRoundShell: the behaviour each
 // one kept, and the bugs the hand-copied lifecycles had.
 
+import 'package:critmath/activities/counting_parade/count_forward_from_n_runner.dart';
+import 'package:critmath/activities/counting_parade/count_on_by_ones_runner.dart';
+import 'package:critmath/activities/counting_parade/count_out_n_runner.dart';
+import 'package:critmath/activities/counting_parade/counting_challenge_layer.dart';
+import 'package:critmath/activities/counting_parade/counting_parade_runner.dart';
+import 'package:critmath/activities/counting_parade/tens_parade_runner.dart';
 import 'package:critmath/data/count_forward_from_n_rounds.dart';
 import 'package:critmath/data/creature_card_catalog.dart';
 import 'package:critmath/data/parade_species.dart';
@@ -11,15 +17,9 @@ import 'package:critmath/platform/narration_clip_key.dart';
 import 'package:critmath/providers/collection_provider.dart';
 import 'package:critmath/providers/session_provider.dart';
 import 'package:critmath/providers/wallet_provider.dart';
-import 'package:critmath/ui/widgets/caption_overlay.dart';
-import 'package:critmath/ui/widgets/count_forward_from_n_runner.dart';
-import 'package:critmath/ui/widgets/count_on_by_ones_runner.dart';
-import 'package:critmath/ui/widgets/count_out_n_runner.dart';
-import 'package:critmath/ui/widgets/counting_challenge_layer.dart';
-import 'package:critmath/ui/widgets/counting_parade_runner.dart';
-import 'package:critmath/ui/widgets/keeper_aside.dart';
-import 'package:critmath/ui/widgets/keeper_intro_overlay.dart';
-import 'package:critmath/ui/widgets/tens_parade_runner.dart';
+import 'package:critmath/ui/common/caption_overlay.dart';
+import 'package:critmath/ui/round/keeper_aside.dart';
+import 'package:critmath/ui/round/keeper_intro_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

@@ -2,7 +2,7 @@
 
 > K and 1st grade kids can't read button labels reliably. Every interactive UI element in the game is wrapped in a `ReadAloudGate` that speaks the label on first tap (or hover, on desktop) and only fires the underlying action on the second tap within a 2.5 s window. 2nd grade onward turns it off via Settings. This doc captures the contract so future activities apply the pattern consistently.
 
-References: `specs/shared/ui-affordances.md`, `app/lib/ui/widgets/read_aloud_gate.dart`, `app/lib/ui/screens/settings_screen.dart`.
+References: `specs/shared/ui-affordances.md`, `app/lib/ui/common/read_aloud_gate.dart`, `app/lib/ui/screens/settings_screen.dart`.
 
 ---
 
@@ -31,9 +31,9 @@ Every interactive surface in the game wraps itself internally so callers don't h
 
 | Widget | Where the wrap lives |
 |---|---|
-| `NextArrowButton` | `app/lib/ui/widgets/next_arrow_button.dart` — `build()` returns `ReadAloudGate(label: …, onTap: …, child: <wiggling-arrow-visual>)`. |
-| `MapScreen` regions (`_RegionHit`) | `app/lib/ui/widgets/map_screen.dart` — enabled regions wrap their hit area in a gate; disabled regions skip the wrap entirely. |
-| `MapNodeWithBanner` | `app/lib/ui/widgets/map_node_with_banner.dart` — wraps each Positioned (banner + node) in its own gate sharing the same `label` + `onTap`. |
+| `NextArrowButton` | `app/lib/ui/common/next_arrow_button.dart` — `build()` returns `ReadAloudGate(label: …, onTap: …, child: <wiggling-arrow-visual>)`. |
+| `MapScreen` regions (`_RegionHit`) | `app/lib/ui/map/map_screen.dart` — enabled regions wrap their hit area in a gate; disabled regions skip the wrap entirely. |
+| `MapNodeWithBanner` | `app/lib/ui/map/map_node_with_banner.dart` — wraps each Positioned (banner + node) in its own gate sharing the same `label` + `onTap`. |
 
 When you build a new interactive widget, do the same — wrap your visual + its own gesture handler in a `ReadAloudGate` and pass the user-facing label + the real action through. Callers should see no API change.
 

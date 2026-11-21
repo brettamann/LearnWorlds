@@ -14,20 +14,21 @@
 //      after five seconds, so the whole content of the reward was a picture
 //      with no name.
 
+import 'package:critmath/activities/counting_parade/counting_parade_runner.dart';
 import 'package:critmath/data/creature_card_catalog.dart';
 import 'package:critmath/data/parade_species.dart';
 import 'package:critmath/engines/narration/narration_cue_log.dart';
 import 'package:critmath/providers/collection_provider.dart';
 import 'package:critmath/providers/session_provider.dart';
-import 'package:critmath/ui/widgets/buddy_companion.dart';
-import 'package:critmath/ui/widgets/caption_overlay.dart';
-import 'package:critmath/ui/widgets/card_reveal_overlay.dart';
-import 'package:critmath/ui/widgets/counting_parade_runner.dart';
-import 'package:critmath/ui/widgets/reveal_card.dart';
+import 'package:critmath/ui/characters/buddy_companion.dart';
+import 'package:critmath/ui/common/caption_overlay.dart';
+import 'package:critmath/ui/rewards/card_reveal_overlay.dart';
+import 'package:critmath/ui/rewards/reveal_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'support/harness.dart';
 
 void main() {

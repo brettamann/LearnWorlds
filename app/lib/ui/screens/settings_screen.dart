@@ -31,7 +31,7 @@ import '../../providers/app_providers.dart';
 import '../../providers/audio_settings_provider.dart';
 import '../../providers/read_aloud_settings_provider.dart';
 import '../../providers/tts_settings_provider.dart';
-import '../widgets/music_bed_scope.dart';
+import '../scopes/music_bed_scope.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});

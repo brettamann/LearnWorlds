@@ -8,7 +8,7 @@ References: `specs/shared/art-direction.md`, `specs/shared/system-architecture.m
 
 ## Continue / Next / Proceed → `NextArrowButton`
 
-**File**: `app/lib/ui/widgets/next_arrow_button.dart`.
+**File**: `app/lib/ui/common/next_arrow_button.dart`.
 
 **Use it for**: every moment where the kid has *finished the current thing* and the game wants them to advance — lesson Continue, round-complete sheet, sub-mode end, foundry confirmation, daily-quest finish, mastery-reached celebration, portal-chapter complete.
 
@@ -72,7 +72,7 @@ If you can answer "yes, via the shared widget" to every applicable line, you're 
 
 ## Minimum tap target → `kMinTouchTarget`
 
-**File**: `app/lib/ui/widgets/touch_target.dart`.
+**File**: `app/lib/ui/common/touch_target.dart`.
 
 **60 logical pixels**, about 12.6mm on the iPad Air this is built for. Apple's
 44 points and Material's 48 are adult minimums; the player here is five, and

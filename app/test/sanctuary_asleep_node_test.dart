@@ -18,13 +18,14 @@ import 'package:critmath/engines/narration/narration_player.dart';
 import 'package:critmath/platform/sfx_engine.dart';
 import 'package:critmath/providers/exploration_provider.dart';
 import 'package:critmath/providers/map_anchors_provider.dart';
+import 'package:critmath/ui/map/map_node_with_banner.dart';
 import 'package:critmath/ui/screens/sanctuary_map_screen.dart';
-import 'package:critmath/ui/widgets/map_node_with_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'support/harness.dart';
 
 /// The twelve anchors, on a widely spaced grid.

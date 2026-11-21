@@ -16,7 +16,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Every scene in this game is composed wide. This is a real lock on iOS and
   // Android native and a no-op on web, where nothing can lock orientation -
-  // see ui/widgets/landscape_gate.dart, which is the ask that has to stand in
+  // see ui/scopes/landscape_gate.dart, which is the ask that has to stand in
   // for it on the iPad.
   unawaited(
     SystemChrome.setPreferredOrientations(<DeviceOrientation>[

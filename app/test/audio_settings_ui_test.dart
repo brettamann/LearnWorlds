@@ -12,8 +12,8 @@
 import 'package:critmath/data/sfx_catalog.dart';
 import 'package:critmath/providers/audio_settings_provider.dart';
 import 'package:critmath/providers/save_provider.dart';
+import 'package:critmath/ui/scopes/music_bed_scope.dart';
 import 'package:critmath/ui/screens/settings_screen.dart';
-import 'package:critmath/ui/widgets/music_bed_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

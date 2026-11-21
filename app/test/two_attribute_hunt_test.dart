@@ -21,11 +21,11 @@
 
 import 'dart:io';
 
+import 'package:critmath/activities/shape_garden/two_attribute_hunt_runner.dart';
 import 'package:critmath/data/asset_paths.dart';
 import 'package:critmath/data/shape_colors.dart';
 import 'package:critmath/data/two_attribute_hunt_rounds.dart';
 import 'package:critmath/providers/wallet_provider.dart';
-import 'package:critmath/ui/widgets/two_attribute_hunt_runner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

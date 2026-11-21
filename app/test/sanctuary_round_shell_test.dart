@@ -3,8 +3,8 @@
 
 import 'package:critmath/engines/mastery/round_outcome.dart';
 import 'package:critmath/providers/wallet_provider.dart';
-import 'package:critmath/ui/widgets/keeper_aside.dart';
-import 'package:critmath/ui/widgets/sanctuary_round_shell.dart';
+import 'package:critmath/ui/round/keeper_aside.dart';
+import 'package:critmath/ui/round/sanctuary_round_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

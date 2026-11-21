@@ -2,7 +2,7 @@
 
 > The "tap a place on this picture to go there" pattern. The Mystical Island home map, the three region maps (Mystic Sanctuary, Wundletown, Mathopolis), the Foundry yard, and every portal world all use the same MapScreen widget with normalized clickable regions. This doc captures the contract so a new map drops in with the rectangles and the routing, nothing else.
 
-References: `specs/shared/asset-paths.md`, `specs/shared/ui-affordances.md`, `app/lib/ui/widgets/map_screen.dart`.
+References: `specs/shared/asset-paths.md`, `specs/shared/ui-affordances.md`, `app/lib/ui/map/map_screen.dart`.
 
 ---
 
@@ -27,7 +27,7 @@ Disabled regions stay on the map. They render with a faint dim overlay (per `Map
 
 ## The MapScreen widget
 
-`app/lib/ui/widgets/map_screen.dart` is the engine. It takes:
+`app/lib/ui/map/map_screen.dart` is the engine. It takes:
 
 - `imageAsset` — the backdrop PNG path.
 - `aspectRatio` — `width / height` of the backdrop. **Required**: the rectangles position against this aspect-correct box, so the regions stay lined up at any screen size.

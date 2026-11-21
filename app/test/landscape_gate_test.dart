@@ -7,9 +7,10 @@
 // page added to the home screen. On the iPad she will actually hold, asking is
 // the only lock there is.
 
-import 'package:critmath/ui/widgets/landscape_gate.dart';
+import 'package:critmath/ui/scopes/landscape_gate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import 'support/harness.dart';
 
 void main() {

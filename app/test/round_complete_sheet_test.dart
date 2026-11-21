@@ -18,12 +18,13 @@
 import 'package:critmath/data/button_labels.dart';
 import 'package:critmath/data/warm_lines.dart';
 import 'package:critmath/models/reward_track.dart';
+import 'package:critmath/ui/common/glitter_burst.dart';
 import 'package:critmath/ui/screens/activity_screen.dart';
-import 'package:critmath/ui/widgets/glitter_burst.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'support/harness.dart';
 
 void main() {

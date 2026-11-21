@@ -10,15 +10,16 @@
 // `numeralPointIn`, the function the tracer draws with - rather than along a
 // restatement of the strokes, so the test and the widget cannot disagree.
 
+import 'package:critmath/activities/scribes_tower/numeral_strokes.dart';
+import 'package:critmath/activities/scribes_tower/numeral_tracer.dart';
+import 'package:critmath/activities/scribes_tower/scribes_tower_runner.dart';
 import 'package:critmath/data/scribes_tower_words.dart';
 import 'package:critmath/engines/mastery/round_outcome.dart';
-import 'package:critmath/ui/widgets/numeral_strokes.dart';
-import 'package:critmath/ui/widgets/numeral_tracer.dart';
-import 'package:critmath/ui/widgets/sanctuary_round_shell.dart';
-import 'package:critmath/ui/widgets/scribes_tower_runner.dart';
+import 'package:critmath/ui/round/sanctuary_round_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import 'support/harness.dart';
 
 const Size _box = Size(560, 520);

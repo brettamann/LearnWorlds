@@ -34,23 +34,23 @@ import '../../engines/narration/narration_player.dart';
 import '../../models/lesson_runtime.dart';
 import '../../navigation/routes.dart';
 import '../../platform/sfx_engine.dart';
-import '../../ui/common/round_back_button.dart';
+import '../common/caption_overlay.dart';
+import '../common/next_arrow_button.dart';
+import '../common/round_back_button.dart';
+import '../lesson/clearing_lesson_stage.dart';
+import '../lesson/habitat_lesson_stage.dart';
 import '../lesson/ishow_timeline.dart';
+import '../lesson/kg3_flat_or_solid_lesson_layer.dart';
+import '../lesson/kg4_sort_by_attribute_lesson_layer.dart';
 import '../lesson/lesson_scene.dart';
 import '../lesson/lesson_stages.dart';
+import '../lesson/lesson_target_registry.dart';
+import '../lesson/shape_find_demo.dart';
+import '../lesson/shape_find_round.dart';
+import '../lesson/shape_intro_layer.dart';
+import '../lesson/we_try_halo.dart';
 import '../lesson/we_try_runner.dart';
-import '../widgets/caption_overlay.dart';
-import '../widgets/clearing_lesson_stage.dart';
-import '../widgets/habitat_lesson_stage.dart';
-import '../widgets/keeper_intro_overlay.dart';
-import '../widgets/kg3_flat_or_solid_lesson_layer.dart';
-import '../widgets/kg4_sort_by_attribute_lesson_layer.dart';
-import '../widgets/lesson_target_registry.dart';
-import '../widgets/next_arrow_button.dart';
-import '../widgets/shape_find_demo.dart';
-import '../widgets/shape_find_round.dart';
-import '../widgets/shape_intro_layer.dart';
-import '../widgets/we_try_halo.dart';
+import '../round/keeper_intro_overlay.dart';
 
 /// Order the K.G.2 lesson introduces shapes in. Simple → complex; circles
 /// first (no sides, easiest), then the polygon ladder, then the imperfect

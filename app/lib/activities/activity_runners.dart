@@ -10,19 +10,19 @@
 
 import 'package:flutter/widgets.dart';
 
-import '../ui/widgets/build_a_habitat_runner.dart';
-import '../ui/widgets/care_pantry_runner.dart';
-import '../ui/widgets/caretakers_bench_runner.dart';
-import '../ui/widgets/counting_parade_runner.dart';
-import '../ui/widgets/fluency_runner.dart';
-import '../ui/widgets/picnic_baskets_runner.dart';
-import '../ui/widgets/scribes_tower_runner.dart';
-import '../ui/widgets/shape_garden_runner.dart';
-import '../ui/widgets/storytellers_pond_runner.dart';
-import '../ui/widgets/ten_frame_pond_runner.dart';
-import '../ui/widgets/wheres_buddy_runner.dart';
 import 'activity_ids.dart';
 import 'activity_launch.dart';
+import 'build_a_habitat/build_a_habitat_runner.dart';
+import 'care_pantry/care_pantry_runner.dart';
+import 'caretakers_bench/caretakers_bench_runner.dart';
+import 'counting_parade/counting_parade_runner.dart';
+import 'fluency/fluency_runner.dart';
+import 'picnic_baskets/picnic_baskets_runner.dart';
+import 'scribes_tower/scribes_tower_runner.dart';
+import 'shape_garden/shape_garden_runner.dart';
+import 'storytellers_pond/storytellers_pond_runner.dart';
+import 'ten_frame_pond/ten_frame_pond_runner.dart';
+import 'wheres_buddy/wheres_buddy_runner.dart';
 
 /// What a runner is built from. [subModeId] is already resolved - a launch
 /// with no sub-mode has been given the activity's registry default.
