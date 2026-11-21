@@ -22,7 +22,6 @@ import '../../providers/app_providers.dart';
 import '../../providers/exploration_provider.dart';
 import '../../providers/progress_provider.dart';
 import '../../providers/reward_progress_provider.dart';
-import '../../providers/save_provider.dart';
 import '../../providers/sub_mode_progress_provider.dart';
 import '../widgets/caption_overlay.dart';
 import '../widgets/card_reveal_overlay.dart';
@@ -232,7 +231,6 @@ class ActivityScreen extends ConsumerWidget {
             activityId: activityId,
           );
     }
-    ref.read(saveCoordinatorProvider).persist();
   }
 
   /// True when every chain sub-mode of this activity has been completed at

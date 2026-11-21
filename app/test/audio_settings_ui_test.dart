@@ -11,12 +11,14 @@
 
 import 'package:critmath/data/sfx_catalog.dart';
 import 'package:critmath/providers/audio_settings_provider.dart';
+import 'package:critmath/providers/save_provider.dart';
 import 'package:critmath/ui/screens/settings_screen.dart';
 import 'package:critmath/ui/widgets/music_bed_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'support/harness.dart';
 
 void main() {
@@ -63,32 +65,35 @@ void main() {
     );
   });
 
-  testWidgets('dragging is heard immediately and saved only on release',
+  testWidgets('dragging is heard immediately and saved once it settles',
       (tester) async {
     final container = await pumpSettings(tester);
+    container.read(saveCoordinatorProvider).startAutosave();
     final slider = tester.widget<Slider>(sliderIn('music-volume'));
 
     // Mid-drag. onChanged fires per frame and must reach the provider, because
     // that is what pushes the level into the playing bed — a slider you cannot
     // hear while moving it is a slider you cannot set.
-    slider.onChanged!(0.8);
-    await tester.pump();
+    for (final level in [0.6, 0.7, 0.8]) {
+      slider.onChanged!(level);
+      await tester.pump(const Duration(milliseconds: 16));
+    }
     expect(container.read(musicVolumeProvider), closeTo(0.8, 0.001));
     expect(
       (await SharedPreferences.getInstance()).getKeys(),
       isEmpty,
-      reason: 'a per-frame persist rewrites the whole save blob sixty times a '
+      reason: 'a per-frame save rewrites the whole save blob sixty times a '
           'second',
     );
 
-    // Released.
-    tester.widget<Slider>(sliderIn('music-volume')).onChangeEnd!(0.8);
-    await tester.pumpAndSettle();
-    expect(
-      (await SharedPreferences.getInstance()).getKeys(),
-      isNotEmpty,
-      reason: 'letting go is what commits it',
+    // Let it settle: one write, of the level she chose.
+    await tester.pump(kAutosaveDelay * 2);
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    final raw = (await SharedPreferences.getInstance()).getString(
+      'critmath.save.v1',
     );
+    expect(raw, isNotNull, reason: 'settling is what commits it');
+    expect(raw, contains('"musicVolume":0.8'));
   });
 
   testWidgets('turning a channel off takes its slider away', (tester) async {

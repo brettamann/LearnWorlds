@@ -9,18 +9,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ReadAloudGateEnabled extends Notifier<bool> {
-  @override
-  bool build() => true;
-
-  void toggle() {
-    state = !state;
-  }
-
-  void set(bool value) {
-    state = value;
-  }
-}
+import 'setting_notifiers.dart';
 
 final readAloudGateEnabledProvider =
-    NotifierProvider<ReadAloudGateEnabled, bool>(ReadAloudGateEnabled.new);
+    NotifierProvider<BoolSetting, bool>(BoolSetting.new);

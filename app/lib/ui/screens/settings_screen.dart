@@ -30,7 +30,6 @@ import '../../platform/sfx_engine.dart';
 import '../../providers/app_providers.dart';
 import '../../providers/audio_settings_provider.dart';
 import '../../providers/read_aloud_settings_provider.dart';
-import '../../providers/save_provider.dart';
 import '../../providers/tts_settings_provider.dart';
 import '../widgets/music_bed_scope.dart';
 
@@ -43,8 +42,6 @@ class SettingsScreen extends ConsumerWidget {
     final tts = ref.watch(ttsEnabledProvider);
     final musicOn = ref.watch(musicEnabledProvider);
     final sfxOn = ref.watch(sfxEnabledProvider);
-
-    void persist() => ref.read(saveCoordinatorProvider).persist();
 
     return MusicBedScope(
       child: Scaffold(
@@ -72,7 +69,6 @@ class SettingsScreen extends ConsumerWidget {
                 value: musicOn,
                 onChanged: (v) {
                   ref.read(musicEnabledProvider.notifier).set(v);
-                  persist();
                 },
               ),
               if (musicOn)
@@ -85,9 +81,6 @@ class SettingsScreen extends ConsumerWidget {
                   // dragging is the level you are choosing.
                   onChanged: (v) =>
                       ref.read(musicVolumeProvider.notifier).set(v),
-                  // Persisted only on release. A slider fires per frame and
-                  // SharedPreferences is a whole-blob write.
-                  onSettled: (_) => persist(),
                 ),
               SwitchListTile(
                 title: const Text('Sound effects'),
@@ -97,7 +90,6 @@ class SettingsScreen extends ConsumerWidget {
                 value: sfxOn,
                 onChanged: (v) {
                   ref.read(sfxEnabledProvider.notifier).set(v);
-                  persist();
                 },
               ),
               if (sfxOn)
@@ -112,7 +104,6 @@ class SettingsScreen extends ConsumerWidget {
                     // on release — on release rather than per frame, or a drag
                     // becomes a machine gun.
                     ref.read(sfxEngineProvider).play(Sfx.coin);
-                    persist();
                   },
                 ),
               const Divider(height: 32),
@@ -125,7 +116,6 @@ class SettingsScreen extends ConsumerWidget {
                 value: readAloud,
                 onChanged: (v) {
                   ref.read(readAloudGateEnabledProvider.notifier).set(v);
-                  persist();
                 },
               ),
               SwitchListTile(
@@ -137,7 +127,6 @@ class SettingsScreen extends ConsumerWidget {
                 value: tts,
                 onChanged: (v) {
                   ref.read(ttsEnabledProvider.notifier).set(v);
-                  persist();
                 },
               ),
               const Divider(height: 32),
@@ -433,24 +422,23 @@ class SettingsScreen extends ConsumerWidget {
 /// One level slider, indented under the switch that owns it so the pairing
 /// reads without needing a heading.
 ///
-/// [onChanged] fires on every frame of the drag and [onSettled] once on
-/// release. That split is the whole point of this widget: the audible effect
-/// has to be immediate, and the disk write must not be — SharedPreferences
-/// stores the save as one blob, so a per-frame persist would rewrite the
-/// entire save state sixty times a second.
+/// [onChanged] fires on every frame of the drag, so the level you hear while
+/// dragging is the level you are choosing; [onSettled] fires once on release.
+/// Saving is not this widget's job: autosave waits for the drag to settle
+/// (see kAutosaveDelay), so a drag is one write, not sixty a second.
 class _VolumeRow extends StatelessWidget {
   const _VolumeRow({
     super.key,
     required this.icon,
     required this.value,
     required this.onChanged,
-    required this.onSettled,
+    this.onSettled,
   });
 
   final IconData icon;
   final double value;
   final ValueChanged<double> onChanged;
-  final ValueChanged<double> onSettled;
+  final ValueChanged<double>? onSettled;
 
   @override
   Widget build(BuildContext context) {

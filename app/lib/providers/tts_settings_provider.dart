@@ -8,17 +8,6 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class TtsEnabled extends Notifier<bool> {
-  @override
-  bool build() => true;
+import 'setting_notifiers.dart';
 
-  void toggle() {
-    state = !state;
-  }
-
-  void set(bool value) {
-    state = value;
-  }
-}
-
-final ttsEnabledProvider = NotifierProvider<TtsEnabled, bool>(TtsEnabled.new);
+final ttsEnabledProvider = NotifierProvider<BoolSetting, bool>(BoolSetting.new);

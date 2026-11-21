@@ -18,7 +18,6 @@ import '../../engines/narration/narration_line.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../navigation/routes.dart';
 import '../../providers/exploration_provider.dart';
-import '../../providers/save_provider.dart';
 import '../../theme/app_decor.dart';
 import '../../ui/common/round_back_button.dart';
 import '../widgets/caption_overlay.dart';
@@ -78,7 +77,6 @@ class _SanctuaryCutsceneScreenState
     // Final page — mark explored and return to the map.
     ref.narration.clear();
     ref.read(explorationProvider.notifier).markCompleted(kSanctuaryKickoffCode);
-    ref.read(saveCoordinatorProvider).persist();
     context.go(Routes.sanctuary);
   }
 

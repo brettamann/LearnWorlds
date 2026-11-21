@@ -25,7 +25,11 @@ Future<void> main() async {
     ]),
   );
   final container = ProviderContainer();
-  await container.read(saveCoordinatorProvider).hydrate();
+  final save = container.read(saveCoordinatorProvider);
+  await save.hydrate();
+  // Every change to anything saved is written from here on; nothing else in
+  // the app has to remember to save.
+  save.startAutosave();
   // Eagerly construct the TTS adapter so its async _init() starts running
   // before the first narration cue fires. Browser SpeechSynthesis especially
   // needs the warm-up to avoid clipping the first utterance.

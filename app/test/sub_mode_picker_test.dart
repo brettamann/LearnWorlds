@@ -37,6 +37,7 @@ import 'package:critmath/engines/narration/narration_cue_log.dart';
 import 'package:critmath/models/activity.dart';
 import 'package:critmath/platform/narration_clip_key.dart';
 import 'package:critmath/providers/read_aloud_settings_provider.dart';
+import 'package:critmath/providers/setting_notifiers.dart';
 import 'package:critmath/ui/widgets/sub_mode_picker_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -633,7 +634,7 @@ void main() {
 }
 
 /// Read-aloud turned off, the way the Settings screen turns it off.
-class _GateOff extends ReadAloudGateEnabled {
+class _GateOff extends BoolSetting {
   @override
   bool build() => false;
 }

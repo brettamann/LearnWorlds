@@ -22,7 +22,6 @@ import '../../engines/feedback/feedback_engine.dart';
 import '../../engines/narration/narration_player.dart';
 import '../../models/reward_track.dart';
 import '../../providers/reward_progress_provider.dart';
-import '../../providers/save_provider.dart';
 import 'next_arrow_button.dart';
 
 class RewardOverlay extends ConsumerStatefulWidget {
@@ -92,7 +91,6 @@ class _RewardOverlayState extends ConsumerState<RewardOverlay>
               trackId: widget.track.id,
               stage: target,
             );
-        ref.read(saveCoordinatorProvider).persist();
         setState(() {
           _animatingFromStage = null;
           _animatingToStage = null;
@@ -108,7 +106,6 @@ class _RewardOverlayState extends ConsumerState<RewardOverlay>
       ref
           .read(rewardProgressProvider.notifier)
           .markGraduated(trackId: widget.track.id);
-      ref.read(saveCoordinatorProvider).persist();
     }
   }
 

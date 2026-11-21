@@ -1,8 +1,19 @@
-// SaveCoordinator — persists the kid's progress + wallet to disk and
-// rehydrates them at boot. Backed by shared_preferences (cross-platform:
-// localStorage on web, native prefs on iOS/Android). Sprint 1 implements the
-// minimum needed for the vertical slice; multi-kid storage and the full save
-// schema arrive in later sprints.
+// SaveCoordinator — persists the kid's progress, wallet and settings to disk
+// and rehydrates them at boot. Backed by shared_preferences (localStorage on
+// web, native prefs on iOS/Android).
+//
+// What is saved is the list [kSaveSlots]: one entry per field, naming its
+// JSON key, the provider it watches, how to write it and how to read it back
+// (including what an older save that predates the field means). Adding a
+// saved field is one entry there. It used to be six edits to a hand-written
+// blob class, and a screen that forgot to call persist() after changing
+// something lost it.
+//
+// Saving is automatic once [startAutosave] has run (main.dart does, after
+// hydrating): any change to a slot's provider schedules a write
+// [kAutosaveDelay] later, so a burst of changes - a volume slider dragged for
+// a second, a round paying coins and a card together - is one write. [persist]
+// writes now and is still there for the few callers that must wait for disk.
 
 import 'dart:async';
 import 'dart:convert';
@@ -29,183 +40,246 @@ import 'wallet_provider.dart';
 
 const _saveKey = 'critmath.save.v1';
 
-class _SaveBlob {
-  const _SaveBlob({
-    required this.progress,
-    required this.coins,
-    required this.ttsEnabled,
-    required this.exploration,
-    required this.readAloudGateEnabled,
-    required this.rewards,
-    required this.subModes,
-    required this.buddy,
-    required this.owned,
-    required this.cards,
-    required this.decorOwned,
-    required this.decorPlacements,
-    required this.sfxEnabled,
-    required this.musicEnabled,
-    required this.sfxVolume,
-    required this.musicVolume,
+/// How long autosave waits after a change for more changes to arrive.
+const Duration kAutosaveDelay = Duration(milliseconds: 250);
+
+/// One saved field.
+class SaveSlot {
+  const SaveSlot({
+    required this.key,
+    required this.watch,
+    required this.write,
+    required this.read,
   });
 
-  factory _SaveBlob.fromJson(Map<String, dynamic> json) {
-    final progressJson = json['progress'] as Map<String, dynamic>? ?? const {};
-    final progress = <String, ConceptState>{};
-    progressJson.forEach((key, value) {
-      progress[key] = _conceptStateFromJson(value as Map<String, dynamic>);
-    });
-    final rewardsJson = json['rewards'] as Map<String, dynamic>? ?? const {};
-    final rewards = <String, RewardTrackState>{};
-    rewardsJson.forEach((key, value) {
-      rewards[key] = _rewardStateFromJson(value as Map<String, dynamic>);
-    });
-    final subModesJson = json['subModes'] as Map<String, dynamic>? ?? const {};
-    final subModes = <String, Set<String>>{};
-    subModesJson.forEach((activityId, value) {
-      subModes[activityId] = ((value as List<dynamic>?) ?? const [])
-          .map((e) => e as String)
-          .toSet();
-    });
-    final buddyJson = json['buddy'] as Map<String, dynamic>?;
-    final buddy = buddyJson != null
-        ? BuddyAppearance.fromJson(buddyJson)
-        : BuddyAppearance.defaults();
-    return _SaveBlob(
-      progress: progress,
-      coins: (json['coins'] as num?)?.toInt() ?? 0,
-      ttsEnabled: json['ttsEnabled'] as bool? ?? true,
-      exploration: ((json['exploration'] as List<dynamic>?) ?? const [])
-          .map((e) => (e as num).toInt())
-          .toSet(),
-      readAloudGateEnabled: json['readAloudGateEnabled'] as bool? ?? true,
-      rewards: rewards,
-      subModes: subModes,
-      buddy: buddy,
-      // Absent before the Buddy shop existed. An empty set is correct: the
-      // wardrobe folds in whatever the saved Buddy is already wearing, so a
-      // kid who picked a now-priced part keeps it.
-      owned: ((json['owned'] as List<dynamic>?) ?? const [])
-          .map((e) => e as String)
-          .toSet(),
-      // Absent before creature cards were implemented. An empty collection is
-      // the honest migration — nobody could have found one.
-      cards: ((json['cards'] as List<dynamic>?) ?? const [])
-          .map((e) => e as String)
-          .toSet(),
-      // Absent before the sanctuary could be decorated. Empty is correct in
-      // both cases: nothing was bought, and nothing was placed.
-      decorOwned: ((json['decorOwned'] as List<dynamic>?) ?? const [])
-          .map((e) => e as String)
-          .toSet(),
-      // Malformed rows are dropped, not thrown on. A save is the one file that
-      // must never fail to load, and losing the whole sanctuary over one bad
-      // decoration row would be far worse than losing one mushroom.
-      decorPlacements: <DecorPlacement>[
-        for (final raw
-            in (json['decorPlacements'] as List<dynamic>?) ?? const [])
-          if (DecorPlacement.fromJson(raw) case final p?) p,
-      ],
-      // Saves written before the audio layer existed have none of these keys.
-      // Default to ON so an upgrading player gets sound without visiting
-      // settings — silence is the bug we're fixing.
-      sfxEnabled: json['sfxEnabled'] as bool? ?? true,
-      musicEnabled: json['musicEnabled'] as bool? ?? true,
-      sfxVolume: (json['sfxVolume'] as num?)?.toDouble() ?? kDefaultSfxVolume,
-      musicVolume:
-          _hydrateMusicVolume((json['musicVolume'] as num?)?.toDouble()),
-    );
+  /// The field's name in the saved JSON. Never rename one: an old save would
+  /// silently lose it.
+  final String key;
+
+  /// The provider whose changes should trigger a save.
+  final ProviderListenable<Object?> watch;
+
+  /// The field's current value, as JSON.
+  final Object? Function(Ref ref) write;
+
+  /// Restores the field from [save], the whole decoded save. The key may be
+  /// absent (a save older than the field); each slot says what that means.
+  final void Function(Ref ref, Map<String, dynamic> save) read;
+}
+
+Set<String> _stringSet(Object? json) =>
+    ((json as List<dynamic>?) ?? const []).map((e) => e as String).toSet();
+
+List<String> _sorted(Iterable<String> values) => values.toList()..sort();
+
+BuddyAppearance _buddyFrom(Map<String, dynamic> save) {
+  final json = save['buddy'] as Map<String, dynamic>?;
+  return json != null
+      ? BuddyAppearance.fromJson(json)
+      : BuddyAppearance.defaults();
+}
+
+/// Every saved field. Order matters only on read: the wardrobe reads after
+/// the Buddy it dresses.
+final List<SaveSlot> kSaveSlots = <SaveSlot>[
+  SaveSlot(
+    key: 'progress',
+    watch: kidProgressProvider,
+    write: (ref) => {
+      for (final e in ref.read(kidProgressProvider).entries)
+        e.key: _conceptStateToJson(e.value),
+    },
+    read: (ref, save) {
+      final json = save['progress'] as Map<String, dynamic>? ?? const {};
+      ref.read(kidProgressProvider.notifier).replaceAll({
+        for (final e in json.entries)
+          e.key: _conceptStateFromJson(e.value as Map<String, dynamic>),
+      });
+    },
+  ),
+  SaveSlot(
+    key: 'coins',
+    watch: walletProvider,
+    write: (ref) => ref.read(walletProvider),
+    read: (ref, save) => ref
+        .read(walletProvider.notifier)
+        .set((save['coins'] as num?)?.toInt() ?? 0),
+  ),
+  SaveSlot(
+    key: 'exploration',
+    watch: explorationProvider,
+    write: (ref) => ref.read(explorationProvider).toList()..sort(),
+    read: (ref, save) => ref.read(explorationProvider.notifier).replaceAll(
+          ((save['exploration'] as List<dynamic>?) ?? const [])
+              .map((e) => (e as num).toInt())
+              .toSet(),
+        ),
+  ),
+  SaveSlot(
+    key: 'rewards',
+    watch: rewardProgressProvider,
+    write: (ref) => {
+      for (final e in ref.read(rewardProgressProvider).entries)
+        e.key: _rewardStateToJson(e.value),
+    },
+    read: (ref, save) {
+      final json = save['rewards'] as Map<String, dynamic>? ?? const {};
+      ref.read(rewardProgressProvider.notifier).replaceAll({
+        for (final e in json.entries)
+          e.key: _rewardStateFromJson(e.value as Map<String, dynamic>),
+      });
+    },
+  ),
+  SaveSlot(
+    key: 'subModes',
+    watch: subModeProgressProvider,
+    write: (ref) => {
+      for (final e in ref.read(subModeProgressProvider).entries)
+        e.key: _sorted(e.value),
+    },
+    read: (ref, save) {
+      final json = save['subModes'] as Map<String, dynamic>? ?? const {};
+      ref.read(subModeProgressProvider.notifier).replaceAll({
+        for (final e in json.entries) e.key: _stringSet(e.value),
+      });
+    },
+  ),
+  SaveSlot(
+    key: 'buddy',
+    watch: buddyAppearanceProvider,
+    write: (ref) => ref.read(buddyAppearanceProvider).toJson(),
+    read: (ref, save) =>
+        ref.read(buddyAppearanceProvider.notifier).hydrate(_buddyFrom(save)),
+  ),
+  SaveSlot(
+    key: 'owned',
+    watch: buddyWardrobeProvider,
+    write: (ref) => _sorted(ref.read(buddyWardrobeProvider)),
+    // Absent before the Buddy shop existed. An empty set is correct: the
+    // wardrobe folds in whatever the saved Buddy is already wearing, so a kid
+    // who picked a now-priced part keeps it.
+    read: (ref, save) => ref
+        .read(buddyWardrobeProvider.notifier)
+        .hydrate(_stringSet(save['owned']), appearance: _buddyFrom(save)),
+  ),
+  SaveSlot(
+    key: 'cards',
+    watch: cardCollectionProvider,
+    write: (ref) => _sorted(ref.read(cardCollectionProvider)),
+    // Absent before creature cards were implemented. An empty collection is
+    // the honest migration — nobody could have found one.
+    read: (ref, save) => ref
+        .read(cardCollectionProvider.notifier)
+        .hydrate(_stringSet(save['cards'])),
+  ),
+  SaveSlot(
+    key: 'decorOwned',
+    watch: decorOwnershipProvider,
+    write: (ref) => _sorted(ref.read(decorOwnershipProvider)),
+    // Absent before the sanctuary could be decorated: nothing was bought.
+    read: (ref, save) => ref
+        .read(decorOwnershipProvider.notifier)
+        .hydrate(_stringSet(save['decorOwned'])),
+  ),
+  SaveSlot(
+    key: 'decorPlacements',
+    watch: sanctuaryDecorProvider,
+    write: (ref) =>
+        [for (final p in ref.read(sanctuaryDecorProvider)) p.toJson()],
+    // Malformed rows are dropped, not thrown on. A save is the one file that
+    // must never fail to load, and losing the whole sanctuary over one bad
+    // decoration row would be far worse than losing one mushroom.
+    read: (ref, save) => ref.read(sanctuaryDecorProvider.notifier).hydrate([
+      for (final raw in (save['decorPlacements'] as List<dynamic>?) ?? const [])
+        if (DecorPlacement.fromJson(raw) case final p?) p,
+    ]),
+  ),
+  // Settings. Saves written before a setting existed default it ON: sound is
+  // the primary feedback channel for a pre-reader, and silence is the bug.
+  SaveSlot(
+    key: 'ttsEnabled',
+    watch: ttsEnabledProvider,
+    write: (ref) => ref.read(ttsEnabledProvider),
+    read: (ref, save) => ref
+        .read(ttsEnabledProvider.notifier)
+        .set(save['ttsEnabled'] as bool? ?? true),
+  ),
+  SaveSlot(
+    key: 'readAloudGateEnabled',
+    watch: readAloudGateEnabledProvider,
+    write: (ref) => ref.read(readAloudGateEnabledProvider),
+    read: (ref, save) => ref
+        .read(readAloudGateEnabledProvider.notifier)
+        .set(save['readAloudGateEnabled'] as bool? ?? true),
+  ),
+  SaveSlot(
+    key: 'sfxEnabled',
+    watch: sfxEnabledProvider,
+    write: (ref) => ref.read(sfxEnabledProvider),
+    read: (ref, save) => ref
+        .read(sfxEnabledProvider.notifier)
+        .set(save['sfxEnabled'] as bool? ?? true),
+  ),
+  SaveSlot(
+    key: 'musicEnabled',
+    watch: musicEnabledProvider,
+    write: (ref) => ref.read(musicEnabledProvider),
+    read: (ref, save) => ref
+        .read(musicEnabledProvider.notifier)
+        .set(save['musicEnabled'] as bool? ?? true),
+  ),
+  SaveSlot(
+    key: 'sfxVolume',
+    watch: sfxVolumeProvider,
+    write: (ref) => ref.read(sfxVolumeProvider),
+    read: (ref, save) => ref
+        .read(sfxVolumeProvider.notifier)
+        .set((save['sfxVolume'] as num?)?.toDouble() ?? kDefaultSfxVolume),
+  ),
+  SaveSlot(
+    key: 'musicVolume',
+    watch: musicVolumeProvider,
+    write: (ref) => ref.read(musicVolumeProvider),
+    read: (ref, save) => ref.read(musicVolumeProvider.notifier).set(
+          hydrateMusicVolume((save['musicVolume'] as num?)?.toDouble()),
+        ),
+  ),
+];
+
+/// Music levels that were once the shipped default.
+///
+/// Every save carries a musicVolume whether or not anyone ever touched the
+/// slider, because the whole settings block is persisted on the first save.
+/// So a stored value identical to an old default is almost certainly nobody's
+/// choice — it is the old default, written down. Retuning the bed would
+/// otherwise reach only players who have never played.
+///
+/// A value that is not on this list is treated as deliberate and left alone,
+/// which is why the list is exact rather than a range.
+const List<double> kSupersededMusicVolumes = <double>[0.35];
+
+double hydrateMusicVolume(double? stored) {
+  if (stored == null) return kDefaultMusicVolume;
+  for (final superseded in kSupersededMusicVolumes) {
+    if ((stored - superseded).abs() < 0.0005) return kDefaultMusicVolume;
   }
-
-  /// Music levels that were once the shipped default.
-  ///
-  /// Every save carries a musicVolume whether or not anyone ever touched the
-  /// slider, because the whole settings block is persisted on the first round
-  /// that resolves. So a stored value identical to an old default is almost
-  /// certainly nobody's choice — it is the old default, written down. Retuning
-  /// the bed would otherwise reach only players who have never played.
-  ///
-  /// A value that is not on this list is treated as deliberate and left alone,
-  /// which is why the list is exact rather than a range.
-  static const List<double> kSupersededMusicVolumes = <double>[0.35];
-
-  static double _hydrateMusicVolume(double? stored) {
-    if (stored == null) return kDefaultMusicVolume;
-    for (final superseded in kSupersededMusicVolumes) {
-      if ((stored - superseded).abs() < 0.0005) return kDefaultMusicVolume;
-    }
-    return stored;
-  }
-
-  final Map<String, ConceptState> progress;
-  final int coins;
-  final bool ttsEnabled;
-  final Set<int> exploration;
-  final bool readAloudGateEnabled;
-  final Map<String, RewardTrackState> rewards;
-  final Map<String, Set<String>> subModes;
-  final BuddyAppearance buddy;
-  final Set<String> owned;
-  final Set<String> cards;
-  final Set<String> decorOwned;
-  final List<DecorPlacement> decorPlacements;
-  final bool sfxEnabled;
-  final bool musicEnabled;
-  final double sfxVolume;
-  final double musicVolume;
-
-  Map<String, dynamic> toJson() {
-    final progressJson = <String, dynamic>{};
-    progress.forEach((key, value) {
-      progressJson[key] = _conceptStateToJson(value);
-    });
-    final rewardsJson = <String, dynamic>{};
-    rewards.forEach((key, value) {
-      rewardsJson[key] = _rewardStateToJson(value);
-    });
-    final subModesJson = <String, dynamic>{};
-    subModes.forEach((activityId, ids) {
-      subModesJson[activityId] = ids.toList()..sort();
-    });
-    return {
-      'progress': progressJson,
-      'coins': coins,
-      'ttsEnabled': ttsEnabled,
-      'exploration': exploration.toList()..sort(),
-      'readAloudGateEnabled': readAloudGateEnabled,
-      'rewards': rewardsJson,
-      'subModes': subModesJson,
-      'buddy': buddy.toJson(),
-      'owned': owned.toList()..sort(),
-      'cards': cards.toList()..sort(),
-      'decorOwned': decorOwned.toList()..sort(),
-      'decorPlacements': [for (final p in decorPlacements) p.toJson()],
-      'sfxEnabled': sfxEnabled,
-      'musicEnabled': musicEnabled,
-      'sfxVolume': sfxVolume,
-      'musicVolume': musicVolume,
-    };
-  }
+  return stored;
 }
 
 Map<String, dynamic> _rewardStateToJson(RewardTrackState s) => {
-      'completed': s.completedActivities.toList()..sort(),
-      'events': s.completionEvents.toList()..sort(),
+      'completed': _sorted(s.completedActivities),
+      'events': _sorted(s.completionEvents),
       'lastSeenStage': s.lastSeenStage,
       'graduated': s.graduated,
     };
 
 RewardTrackState _rewardStateFromJson(Map<String, dynamic> json) =>
     RewardTrackState(
-      completedActivities: ((json['completed'] as List<dynamic>?) ?? const [])
-          .map((e) => e as String)
-          .toSet(),
+      completedActivities: _stringSet(json['completed']),
       // Absent in saves written before per-sub-mode advancement existed. An
       // empty set just means the stageGrants floor decides the stage, which
       // is exactly what those saves already did.
-      completionEvents: ((json['events'] as List<dynamic>?) ?? const [])
-          .map((e) => e as String)
-          .toSet(),
+      completionEvents: _stringSet(json['events']),
       lastSeenStage: (json['lastSeenStage'] as num?)?.toInt() ?? 0,
       graduated: json['graduated'] as bool? ?? false,
     );
@@ -237,12 +311,8 @@ ConceptState _conceptStateFromJson(Map<String, dynamic> json) => ConceptState(
       consecutiveFailures: (json['consecutiveFailures'] as num?)?.toInt() ?? 0,
       abstractSuccessCount:
           (json['abstractSuccessCount'] as num?)?.toInt() ?? 0,
-      sessionIds: ((json['sessionIds'] as List<dynamic>?) ?? const [])
-          .map((e) => e as String)
-          .toSet(),
-      daysTouched: ((json['daysTouched'] as List<dynamic>?) ?? const [])
-          .map((e) => e as String)
-          .toSet(),
+      sessionIds: _stringSet(json['sessionIds']),
+      daysTouched: _stringSet(json['daysTouched']),
       firstTouchedAt: json['firstTouchedAt'] != null
           ? DateTime.parse(json['firstTouchedAt'] as String)
           : null,
@@ -252,85 +322,87 @@ ConceptState _conceptStateFromJson(Map<String, dynamic> json) => ConceptState(
     );
 
 class SaveCoordinator {
-  SaveCoordinator(this._ref);
+  SaveCoordinator(this._ref, {List<SaveSlot>? slots})
+      : _slots = slots ?? kSaveSlots;
 
   final Ref _ref;
-  Completer<void>? _inflight;
+  final List<SaveSlot> _slots;
+
+  Future<void>? _writing;
+  bool _writeAgain = false;
+  Timer? _pending;
+  bool _autosaving = false;
 
   Future<void> hydrate() async {
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getString(_saveKey);
     if (raw == null) return;
+    final Map<String, dynamic> save;
     try {
-      final blob = _SaveBlob.fromJson(jsonDecode(raw) as Map<String, dynamic>);
-      _ref.read(kidProgressProvider.notifier).replaceAll(blob.progress);
-      _ref.read(walletProvider.notifier).set(blob.coins);
-      _ref.read(ttsEnabledProvider.notifier).set(blob.ttsEnabled);
-      _ref.read(explorationProvider.notifier).replaceAll(blob.exploration);
-      _ref
-          .read(readAloudGateEnabledProvider.notifier)
-          .set(blob.readAloudGateEnabled);
-      _ref.read(rewardProgressProvider.notifier).replaceAll(blob.rewards);
-      _ref.read(subModeProgressProvider.notifier).replaceAll(blob.subModes);
-      _ref.read(buddyAppearanceProvider.notifier).hydrate(blob.buddy);
-      _ref
-          .read(buddyWardrobeProvider.notifier)
-          .hydrate(blob.owned, appearance: blob.buddy);
-      _ref.read(cardCollectionProvider.notifier).hydrate(blob.cards);
-      _ref.read(decorOwnershipProvider.notifier).hydrate(blob.decorOwned);
-      _ref.read(sanctuaryDecorProvider.notifier).hydrate(blob.decorPlacements);
-      _ref.read(sfxEnabledProvider.notifier).set(blob.sfxEnabled);
-      _ref.read(musicEnabledProvider.notifier).set(blob.musicEnabled);
-      _ref.read(sfxVolumeProvider.notifier).set(blob.sfxVolume);
-      _ref.read(musicVolumeProvider.notifier).set(blob.musicVolume);
+      save = jsonDecode(raw) as Map<String, dynamic>;
     } catch (_) {
       // Corrupt save: start fresh rather than crash the kid's session.
+      return;
+    }
+    for (final slot in _slots) {
+      // One field at a time, so a bad field costs that field and not the
+      // whole save.
+      try {
+        slot.read(_ref, save);
+      } catch (_) {}
     }
   }
 
-  Future<void> persist() async {
-    // Coalesce overlapping calls: if one save is in flight, return the same
-    // future. Stops round resolution + boot hydration from racing.
-    final inflight = _inflight;
-    if (inflight != null) return inflight.future;
-    final completer = Completer<void>();
-    _inflight = completer;
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final progress = _ref.read(kidProgressProvider);
-      final coins = _ref.read(walletProvider);
-      final ttsEnabled = _ref.read(ttsEnabledProvider);
-      final exploration = _ref.read(explorationProvider);
-      final readAloudGateEnabled = _ref.read(readAloudGateEnabledProvider);
-      final rewards = _ref.read(rewardProgressProvider);
-      final subModes = _ref.read(subModeProgressProvider);
-      final buddy = _ref.read(buddyAppearanceProvider);
-      final blob = _SaveBlob(
-        progress: progress,
-        coins: coins,
-        ttsEnabled: ttsEnabled,
-        exploration: exploration,
-        readAloudGateEnabled: readAloudGateEnabled,
-        rewards: rewards,
-        subModes: subModes,
-        buddy: buddy,
-        owned: _ref.read(buddyWardrobeProvider),
-        cards: _ref.read(cardCollectionProvider),
-        decorOwned: _ref.read(decorOwnershipProvider),
-        decorPlacements: _ref.read(sanctuaryDecorProvider),
-        sfxEnabled: _ref.read(sfxEnabledProvider),
-        musicEnabled: _ref.read(musicEnabledProvider),
-        sfxVolume: _ref.read(sfxVolumeProvider),
-        musicVolume: _ref.read(musicVolumeProvider),
-      );
-      await prefs.setString(_saveKey, jsonEncode(blob.toJson()));
-      completer.complete();
-    } catch (e, st) {
-      completer.completeError(e, st);
-    } finally {
-      _inflight = null;
+  /// From now on, save whenever any slot changes. Called once, after
+  /// [hydrate], so restoring the save does not immediately write it back.
+  void startAutosave() {
+    if (_autosaving) return;
+    _autosaving = true;
+    _ref.onDispose(() => _pending?.cancel());
+    for (final slot in _slots) {
+      _ref.listen<Object?>(slot.watch, (_, __) => _scheduleSave());
     }
-    return completer.future;
+  }
+
+  void _scheduleSave() {
+    _pending?.cancel();
+    _pending = Timer(kAutosaveDelay, () => unawaited(persist()));
+  }
+
+  /// Writes now; completes when what was current at the call is on disk.
+  ///
+  /// A call while a write is in flight does not get handed that write: the
+  /// in-flight one took its snapshot before this call's change, so another
+  /// write follows it, and the future completes after that one.
+  Future<void> persist() {
+    final writing = _writing;
+    if (writing != null) {
+      _writeAgain = true;
+      return writing;
+    }
+    // Marked as writing before the write starts, so a persist() that lands
+    // while the snapshot is being taken queues behind it rather than
+    // starting a second, concurrent write.
+    final done = Completer<void>();
+    _writing = done.future;
+    _writeUntilCurrent().then(done.complete, onError: done.completeError);
+    return done.future;
+  }
+
+  Future<void> _writeUntilCurrent() async {
+    try {
+      do {
+        _writeAgain = false;
+        // Snapshot before awaiting anything, so the write is of this moment.
+        final json = <String, Object?>{
+          for (final slot in _slots) slot.key: slot.write(_ref),
+        };
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(_saveKey, jsonEncode(json));
+      } while (_writeAgain);
+    } finally {
+      _writing = null;
+    }
   }
 }
 

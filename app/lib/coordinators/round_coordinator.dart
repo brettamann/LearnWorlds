@@ -13,7 +13,6 @@ import '../engines/mastery/mastery_engine.dart';
 import '../engines/mastery/round_outcome.dart';
 import '../providers/collection_provider.dart';
 import '../providers/progress_provider.dart';
-import '../providers/save_provider.dart';
 import '../providers/session_provider.dart';
 import '../providers/wallet_provider.dart';
 
@@ -59,9 +58,6 @@ class RoundCoordinator {
     // exists so the counter never freezes, while a card is a find, and finding
     // something for getting it wrong would make the find mean nothing.
     if (result != RoundResult.failure) _rollForCard(activityId);
-    // Fire-and-forget; the coordinator doesn't wait on disk before returning
-    // because the in-memory state is already the source of truth.
-    _ref.read(saveCoordinatorProvider).persist();
   }
 
   /// Maybe hand out a creature card. Only ever picks from cards she doesn't

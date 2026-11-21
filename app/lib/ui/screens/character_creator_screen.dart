@@ -36,13 +36,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../coordinators/shop.dart';
 import '../../data/buddy_shop_catalog.dart';
 import '../../engines/feedback/feedback_engine.dart';
 import '../../models/buddy_appearance.dart';
 import '../../navigation/routes.dart';
 import '../../providers/buddy_appearance_provider.dart';
 import '../../providers/buddy_wardrobe_provider.dart';
-import '../../providers/save_provider.dart';
 import '../../providers/wallet_provider.dart';
 import '../../theme/app_colors.dart';
 import '../widgets/answer_feedback.dart';
@@ -70,13 +70,6 @@ class _CharacterCreatorScreenState
   BuddyPartKind _category = BuddyPartKind.body;
 
   bool get _isShop => widget.mode == BuddyScreenMode.shop;
-
-  /// Persist on every change so the kid never loses a tweak. Fire-and-forget —
-  /// the save is small and the round-coordinator pattern keeps concurrent
-  /// writes coalesced.
-  void _persist() {
-    ref.read(saveCoordinatorProvider).persist();
-  }
 
   /// Which tabs are worth showing.
   ///
@@ -155,7 +148,6 @@ class _CharacterCreatorScreenState
                 categories: categories,
                 mode: widget.mode,
                 onCategorySelected: (c) => setState(() => _category = c),
-                onChanged: _persist,
               );
               if (isWide) {
                 return Row(
@@ -203,14 +195,12 @@ class _PickerPane extends ConsumerWidget {
     required this.categories,
     required this.mode,
     required this.onCategorySelected,
-    required this.onChanged,
   });
 
   final BuddyPartKind category;
   final List<BuddyPartKind> categories;
   final BuddyScreenMode mode;
   final ValueChanged<BuddyPartKind> onCategorySelected;
-  final VoidCallback onChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -244,7 +234,6 @@ class _PickerPane extends ConsumerWidget {
             child: _SwatchGrid(
               kind: category,
               mode: mode,
-              onChanged: onChanged,
             ),
           ),
         ),
@@ -315,12 +304,10 @@ class _SwatchGrid extends ConsumerStatefulWidget {
   const _SwatchGrid({
     required this.kind,
     required this.mode,
-    required this.onChanged,
   });
 
   final BuddyPartKind kind;
   final BuddyScreenMode mode;
-  final VoidCallback onChanged;
 
   @override
   ConsumerState<_SwatchGrid> createState() => _SwatchGridState();
@@ -348,7 +335,6 @@ class _SwatchGridState extends ConsumerState<_SwatchGrid> {
       case BuddyPartKind.hat:
         notifier.setHat(id);
     }
-    widget.onChanged();
   }
 
   void _onTap(BuddyPartKind kind, String id) {
@@ -362,18 +348,15 @@ class _SwatchGridState extends ConsumerState<_SwatchGrid> {
       return;
     }
 
-    // Locked. Charge first — Wallet.spend refuses rather than going negative,
-    // so an unaffordable tap cannot half-complete.
-    final price = buddyPartPrice(kind, id);
-    if (!ref.read(walletProvider.notifier).spend(price)) {
+    final bought =
+        ref.read(shopProvider).buyBuddyPart(key, buddyPartPrice(kind, id));
+    if (bought == PurchaseOutcome.cannotAfford) {
       // Not enough coins yet. Reuse the wrong-answer beat rather than an error
       // tone: a shop that scolds is a shop she stops opening.
       feedback.wrong();
       setState(() => _denied[key] = (_denied[key] ?? 0) + 1);
       return;
     }
-    wardrobe.grant(key);
-    feedback.purchase();
     // Auto-equip. She just spent her coins on it; making her tap a second time
     // to actually wear it is the kind of step an adult tolerates and a
     // five-year-old reads as the purchase not having worked.

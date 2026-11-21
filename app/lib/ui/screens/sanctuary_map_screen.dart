@@ -26,6 +26,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../coordinators/shop.dart';
 import '../../data/activity_registry.dart';
 import '../../data/asset_paths.dart';
 import '../../data/button_labels.dart';
@@ -46,7 +47,6 @@ import '../../providers/app_providers.dart';
 import '../../providers/exploration_provider.dart';
 import '../../providers/map_anchors_provider.dart';
 import '../../providers/sanctuary_decor_provider.dart';
-import '../../providers/save_provider.dart';
 import '../../providers/sub_mode_progress_provider.dart';
 import '../../providers/wallet_provider.dart';
 import '../widgets/coin_hud.dart';
@@ -257,7 +257,6 @@ class _SanctuaryMapScreenState extends ConsumerState<SanctuaryMapScreen> {
         ref.read(sanctuaryDecorProvider.notifier).place(item.id, at.x, at.y);
     if (placed == null) return;
     ref.read(feedbackEngineProvider).correct();
-    unawaited(ref.read(saveCoordinatorProvider).persist());
   }
 
   void _onDecorMoved(int instanceId, Offset global) {
@@ -266,31 +265,26 @@ class _SanctuaryMapScreenState extends ConsumerState<SanctuaryMapScreen> {
     // than deleting it. Deleting is the tray, and only the tray.
     if (at == null) return;
     ref.read(sanctuaryDecorProvider.notifier).move(instanceId, at.x, at.y);
-    unawaited(ref.read(saveCoordinatorProvider).persist());
   }
 
   void _onRemove(int instanceId) {
     ref.read(sanctuaryDecorProvider.notifier).remove(instanceId);
     ref.read(feedbackEngineProvider).wrong();
-    unawaited(ref.read(saveCoordinatorProvider).persist());
   }
 
   /// Buying, and the soft refusal when she cannot afford it yet.
   void _onBuy(DecorItem item) {
-    final ownership = ref.read(decorOwnershipProvider.notifier);
-    if (ownership.owns(item.id)) return;
-    final price = decorPrice(item.id);
-    if (!ref.read(walletProvider.notifier).spend(price)) {
-      // Reuses the wrong-answer beat rather than an error: a shop she cannot
-      // afford yet must stay a nice place to look at.
-      ref.read(feedbackEngineProvider).wrong();
-      _say(kDecorTooExpensiveLine);
-      return;
+    switch (ref.read(shopProvider).buyDecor(item.id)) {
+      case PurchaseOutcome.alreadyOwned:
+        return;
+      case PurchaseOutcome.cannotAfford:
+        // Reuses the wrong-answer beat rather than an error: a shop she
+        // cannot afford yet must stay a nice place to look at.
+        ref.read(feedbackEngineProvider).wrong();
+        _say(kDecorTooExpensiveLine);
+      case PurchaseOutcome.bought:
+        _say(decorNameLine(item));
     }
-    ownership.grant(item.id);
-    ref.read(feedbackEngineProvider).roundPass();
-    _say(decorNameLine(item));
-    unawaited(ref.read(saveCoordinatorProvider).persist());
   }
 
   Future<void> _onLessonTap(

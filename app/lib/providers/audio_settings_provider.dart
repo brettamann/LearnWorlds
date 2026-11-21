@@ -16,42 +16,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/sfx_catalog.dart';
+import 'setting_notifiers.dart';
 
-class SfxEnabled extends Notifier<bool> {
-  @override
-  bool build() => true;
-
-  void toggle() => state = !state;
-
-  void set(bool value) => state = value;
-}
-
-class MusicEnabled extends Notifier<bool> {
-  @override
-  bool build() => true;
-
-  void toggle() => state = !state;
-
-  void set(bool value) => state = value;
-}
-
-class SfxVolume extends Notifier<double> {
-  @override
-  double build() => kDefaultSfxVolume;
-
-  void set(double value) => state = value.clamp(0.0, 1.0);
-}
-
-class MusicVolume extends Notifier<double> {
-  @override
-  double build() => kDefaultMusicVolume;
-
-  void set(double value) => state = value.clamp(0.0, 1.0);
-}
-
-final sfxEnabledProvider = NotifierProvider<SfxEnabled, bool>(SfxEnabled.new);
+final sfxEnabledProvider = NotifierProvider<BoolSetting, bool>(BoolSetting.new);
 final musicEnabledProvider =
-    NotifierProvider<MusicEnabled, bool>(MusicEnabled.new);
-final sfxVolumeProvider = NotifierProvider<SfxVolume, double>(SfxVolume.new);
-final musicVolumeProvider =
-    NotifierProvider<MusicVolume, double>(MusicVolume.new);
+    NotifierProvider<BoolSetting, bool>(BoolSetting.new);
+final sfxVolumeProvider = NotifierProvider<VolumeSetting, double>(
+  () => VolumeSetting(kDefaultSfxVolume),
+);
+final musicVolumeProvider = NotifierProvider<VolumeSetting, double>(
+  () => VolumeSetting(kDefaultMusicVolume),
+);
